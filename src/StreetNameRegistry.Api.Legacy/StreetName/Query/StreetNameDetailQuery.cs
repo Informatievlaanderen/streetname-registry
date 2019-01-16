@@ -40,11 +40,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             var streetName = await _legacyContext
                 .StreetNameDetail
                 .AsNoTracking()
-                .Where(x => !x.Removed)
                 .SingleOrDefaultAsync(item => item.OsloId == osloId, ct);
 
             if (streetName == null)
                 throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
+
+            if (streetName.Removed)
+                throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
 
             var municipality = await _syndicationContext
                 .MunicipalitySyndicationItems

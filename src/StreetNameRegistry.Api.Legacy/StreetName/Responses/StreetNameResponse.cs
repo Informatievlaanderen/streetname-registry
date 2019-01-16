@@ -130,4 +130,18 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             };
         }
     }
+
+    public class StreetNameGoneResponseExamples : IExamplesProvider
+    {
+        public object GetExamples()
+        {
+            return new BasicApiProblem
+            {
+                HttpStatus = StatusCodes.Status410Gone,
+                Title = BasicApiProblem.DefaultTitle,
+                Detail = "Straatnaam verwijderd.",
+                ProblemInstanceUri = BasicApiProblem.GetProblemNumber()
+            };
+        }
+    }
 }
