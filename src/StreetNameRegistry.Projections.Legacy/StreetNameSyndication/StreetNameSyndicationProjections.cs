@@ -27,6 +27,15 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                     .AddAsync(streetNameSyndicationItem, ct);
             });
 
+            When<Envelope<StreetNameOsloIdWasAssigned>>(async (context, message, ct) =>
+            {
+                await context.CreateNewStreetNameSyndicationItem(
+                    message.Message.StreetNameId,
+                    message,
+                    x => x.OsloId = message.Message.OsloId,
+                    ct);
+            });
+
             When<Envelope<StreetNameNameWasNamed>>(async (context, message, ct) =>
             {
                 await context.CreateNewStreetNameSyndicationItem(
