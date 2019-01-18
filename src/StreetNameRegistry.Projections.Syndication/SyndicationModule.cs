@@ -48,7 +48,7 @@ namespace StreetNameRegistry.Projections.Syndication
                     .UseSqlServer(provider.GetRequiredService<TraceDbConnection>(), sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
-                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.Legacy, Schema.Legacy);
+                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.Syndication, Schema.Syndication);
                     }));
         }
 
