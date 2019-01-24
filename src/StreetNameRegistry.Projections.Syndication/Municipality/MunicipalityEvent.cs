@@ -8,6 +8,10 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
         MunicipalityNameWasCorrected,
         MunicipalityNameWasCorrectedToCleared,
         MunicipalityNisCodeWasDefined,
-        MunicipalityNisCodeWasCorrected
+        MunicipalityNisCodeWasCorrected,
+        MunicipalityOfficialLanguageWasAdded,
+        MunicipalityOfficialLanguageWasRemoved,
+        MunicipalityFacilitiesLanguageWasAdded,
+        MunicipalityFacilitiesLanguageWasRemoved,
     }
 }

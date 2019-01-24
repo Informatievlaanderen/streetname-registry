@@ -10,8 +10,8 @@ using StreetNameRegistry.Projections.Syndication;
 namespace StreetNameRegistry.Projections.Syndication.Migrations
 {
     [DbContext(typeof(SyndicationContext))]
-    [Migration("20190114102219_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20190124075655_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,28 +41,38 @@ namespace StreetNameRegistry.Projections.Syndication.Migrations
 
                     b.Property<string>("NameDutch");
 
+                    b.Property<string>("NameDutchSearch");
+
                     b.Property<string>("NameEnglish");
+
+                    b.Property<string>("NameEnglishSearch");
 
                     b.Property<string>("NameFrench");
 
+                    b.Property<string>("NameFrenchSearch");
+
                     b.Property<string>("NameGerman");
+
+                    b.Property<string>("NameGermanSearch");
 
                     b.Property<string>("NisCode");
 
                     b.Property<long>("Position");
+
+                    b.Property<int?>("PrimaryLanguage");
 
                     b.Property<DateTimeOffset?>("Version");
 
                     b.HasKey("MunicipalityId")
                         .HasAnnotation("SqlServer:Clustered", false);
 
-                    b.HasIndex("NameDutch");
+                    b.HasIndex("NameDutchSearch");
 
-                    b.HasIndex("NameEnglish");
+                    b.HasIndex("NameEnglishSearch");
 
-                    b.HasIndex("NameFrench");
+                    b.HasIndex("NameFrenchSearch");
 
-                    b.HasIndex("NameGerman");
+                    b.HasIndex("NameGermanSearch");
 
                     b.HasIndex("NisCode")
                         .HasAnnotation("SqlServer:Clustered", true);

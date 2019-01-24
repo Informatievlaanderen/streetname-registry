@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StreetNameRegistry.Projections.Syndication.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,9 +18,14 @@ namespace StreetNameRegistry.Projections.Syndication.Migrations
                     MunicipalityId = table.Column<Guid>(nullable: false),
                     NisCode = table.Column<string>(nullable: true),
                     NameDutch = table.Column<string>(nullable: true),
+                    NameDutchSearch = table.Column<string>(nullable: true),
                     NameFrench = table.Column<string>(nullable: true),
+                    NameFrenchSearch = table.Column<string>(nullable: true),
                     NameGerman = table.Column<string>(nullable: true),
+                    NameGermanSearch = table.Column<string>(nullable: true),
                     NameEnglish = table.Column<string>(nullable: true),
+                    NameEnglishSearch = table.Column<string>(nullable: true),
+                    PrimaryLanguage = table.Column<int>(nullable: true),
                     Version = table.Column<DateTimeOffset>(nullable: true),
                     Position = table.Column<long>(nullable: false)
                 },
@@ -65,28 +70,28 @@ namespace StreetNameRegistry.Projections.Syndication.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MunicipalityLatestSyndication_NameDutch",
+                name: "IX_MunicipalityLatestSyndication_NameDutchSearch",
                 schema: "StreetNameRegistrySyndication",
                 table: "MunicipalityLatestSyndication",
-                column: "NameDutch");
+                column: "NameDutchSearch");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MunicipalityLatestSyndication_NameEnglish",
+                name: "IX_MunicipalityLatestSyndication_NameEnglishSearch",
                 schema: "StreetNameRegistrySyndication",
                 table: "MunicipalityLatestSyndication",
-                column: "NameEnglish");
+                column: "NameEnglishSearch");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MunicipalityLatestSyndication_NameFrench",
+                name: "IX_MunicipalityLatestSyndication_NameFrenchSearch",
                 schema: "StreetNameRegistrySyndication",
                 table: "MunicipalityLatestSyndication",
-                column: "NameFrench");
+                column: "NameFrenchSearch");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MunicipalityLatestSyndication_NameGerman",
+                name: "IX_MunicipalityLatestSyndication_NameGermanSearch",
                 schema: "StreetNameRegistrySyndication",
                 table: "MunicipalityLatestSyndication",
-                column: "NameGerman");
+                column: "NameGermanSearch");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MunicipalityLatestSyndication_NisCode",

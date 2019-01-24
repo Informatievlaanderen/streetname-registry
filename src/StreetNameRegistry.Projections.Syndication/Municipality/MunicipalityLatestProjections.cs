@@ -19,6 +19,10 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
             When(MunicipalityEvent.MunicipalityNameWasCleared, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityNameWasCorrected, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityNameWasCorrectedToCleared, AddSyndicationItemEntry);
+            When(MunicipalityEvent.MunicipalityOfficialLanguageWasAdded, AddSyndicationItemEntry);
+            When(MunicipalityEvent.MunicipalityOfficialLanguageWasRemoved, AddSyndicationItemEntry);
+            When(MunicipalityEvent.MunicipalityFacilitiesLanguageWasAdded, AddSyndicationItemEntry);
+            When(MunicipalityEvent.MunicipalityFacilitiesLanguageWasRemoved, AddSyndicationItemEntry);
         }
 
         private static async Task AddSyndicationItemEntry(AtomEntry<Gemeente> entry, SyndicationContext context, CancellationToken ct)
@@ -34,7 +38,8 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
                     MunicipalityId = entry.Content.Id,
                     NisCode = entry.Content.Identificator?.ObjectId,
                     Version = entry.Content.Identificator?.Versie.Value,
-                    Position = long.Parse(entry.FeedEntry.Id)
+                    Position = long.Parse(entry.FeedEntry.Id),
+                    PrimaryLanguage = entry.Content.OfficialLanguages.FirstOrDefault()
                 };
 
                 UpdateNamesByGemeentenamen(municipalityLatestItem, entry.Content.Gemeentenamen);

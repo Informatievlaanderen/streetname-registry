@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Infrastructure;
     using System;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
 
     public class MunicipalityLatestItem
     {
@@ -19,6 +20,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
         public string NameEnglish { get; set; }
         public string NameEnglishSearch { get; set; }
 
+        public Taal? PrimaryLanguage { get; set; }
         public DateTimeOffset? Version { get; set; }
 
         public long Position { get; set; }
@@ -44,6 +46,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
             builder.Property(x => x.NameGermanSearch);
             builder.Property(x => x.NameEnglish);
             builder.Property(x => x.NameEnglishSearch);
+            builder.Property(x => x.PrimaryLanguage);
 
             builder.Property(x => x.Version);
             builder.Property(x => x.Position);
