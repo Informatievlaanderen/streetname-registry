@@ -30,6 +30,8 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
         public Gemeente()
         {
             Gemeentenamen = new List<GeografischeNaam>();
+            OfficialLanguages = new List<Taal>();
+            FacilitiesLanguages = new List<Taal>();
         }
     }
 }

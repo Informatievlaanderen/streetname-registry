@@ -53,6 +53,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
                 municipalityLatestItem.NisCode = entry.Content.Identificator?.ObjectId;
                 municipalityLatestItem.Version = entry.Content.Identificator?.Versie.Value;
                 municipalityLatestItem.Position = long.Parse(entry.FeedEntry.Id);
+                municipalityLatestItem.PrimaryLanguage = entry.Content.OfficialLanguages.FirstOrDefault();
 
                 UpdateNamesByGemeentenamen(municipalityLatestItem, entry.Content.Gemeentenamen);
             }
