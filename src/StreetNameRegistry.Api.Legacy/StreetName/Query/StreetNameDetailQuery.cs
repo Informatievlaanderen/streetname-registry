@@ -1,9 +1,5 @@
 namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
@@ -18,6 +14,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Projections.Syndication;
     using Projections.Syndication.Municipality;
     using Responses;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class StreetNameDetailQuery
     {
@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
 
             var municipality = await _syndicationContext
-                .MunicipalitySyndicationItems
+                .MunicipalityLatestItems
                 .AsNoTracking()
                 .OrderByDescending(m => m.Position)
                 .FirstOrDefaultAsync(m => m.NisCode == streetName.NisCode, ct);
@@ -78,17 +78,21 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 streetName.HomonymAdditionEnglish);
         }
 
-        private static KeyValuePair<Taal, string> GetDefaultMunicipalityName(MunicipalitySyndicationItem municipality)
+        private static KeyValuePair<Taal, string> GetDefaultMunicipalityName(MunicipalityLatestItem municipality)
         {
-            var names = new []
+            switch (municipality.PrimaryLanguage)
             {
-                new KeyValuePair<Taal,string>(Taal.NL, municipality.NameDutch),
-                new KeyValuePair<Taal,string>(Taal.FR, municipality.NameFrench),
-                new KeyValuePair<Taal,string>(Taal.DE, municipality.NameGerman),
-                new KeyValuePair<Taal,string>(Taal.EN, municipality.NameEnglish)
-            };
-
-            return names.FirstOrDefault(n => !string.IsNullOrEmpty(n.Value));
+                default:
+                case null:
+                case Taal.NL:
+                    return new KeyValuePair<Taal, string>(Taal.NL, municipality.NameDutch);
+                case Taal.FR:
+                    return new KeyValuePair<Taal, string>(Taal.FR, municipality.NameFrench);
+                case Taal.DE:
+                    return new KeyValuePair<Taal, string>(Taal.DE, municipality.NameGerman);
+                case Taal.EN:
+                    return new KeyValuePair<Taal, string>(Taal.EN, municipality.NameEnglish);
+            }
         }
     }
 }
