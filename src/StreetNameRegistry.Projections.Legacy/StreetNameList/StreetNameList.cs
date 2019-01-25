@@ -26,6 +26,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
         public bool Complete { get; set; }
         public bool Removed { get; set; }
 
+        public Language? PrimaryLanguage { get; set; }
+
         public string NisCode { get; set; }
 
         private DateTimeOffset VersionTimestampAsDateTimeOffset { get; set; }
@@ -66,6 +68,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
 
             builder.Property(x => x.Complete);
             builder.Property(x => x.Removed);
+
+            builder.Property(x => x.PrimaryLanguage);
 
             builder.Property(x => x.NisCode);
 

@@ -166,6 +166,38 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
                     },
                     ct);
             });
+
+            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity => entity.PrimaryLanguage = message.Message.PrimaryLanguage,
+                    ct);
+            });
+
+            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity => entity.PrimaryLanguage = null,
+                    ct);
+            });
+
+            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity => entity.PrimaryLanguage = message.Message.PrimaryLanguage,
+                    ct);
+            });
+
+            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity => entity.PrimaryLanguage = null,
+                    ct);
+            });
         }
 
         private static void UpdateNameByLanguage(StreetNameListItem entity, Language? language, string name)

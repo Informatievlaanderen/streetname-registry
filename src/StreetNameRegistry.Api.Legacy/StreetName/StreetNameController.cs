@@ -174,8 +174,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             Response.AddPaginationResponse(pagedStreetNames.PaginationInfo);
             Response.AddSortingResponse(sorting.SortBy, sorting.SortOrder);
 
-            taal = taal ?? Taal.NL;
-
             return Ok(
                 new StreetNameListResponse
                 {
@@ -185,8 +183,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                             m.OsloId,
                             responseOptions.Value.Naamruimte,
                             responseOptions.Value.DetailUrl,
-                            GetGeografischeNaamByTaal(m, taal.Value),
-                            GetHomoniemToevoegingByTaal(m, taal.Value),
+                            GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
+                            GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
                             m.VersionTimestamp.ToBelgianDateTimeOffset()))
                         .ToListAsync(cancellationToken),
                     TotaalAantal = pagedStreetNames.PaginationInfo.TotalItems,
@@ -321,53 +319,57 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             });
         }
 
-        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItem item, Taal taal)
+        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItem item, Language? taal)
         {
             switch (taal)
             {
-                case Taal.FR when !string.IsNullOrEmpty(item.NameFrench):
+                case null when !string.IsNullOrEmpty(item.NameDutch):
+                case Language.Dutch when !string.IsNullOrEmpty(item.NameDutch):
+                    return new GeografischeNaam(
+                        item.NameDutch,
+                        Taal.NL);
+
+                case Language.French when !string.IsNullOrEmpty(item.NameFrench):
                     return new GeografischeNaam(
                         item.NameFrench,
                         Taal.FR);
 
-                case Taal.DE when !string.IsNullOrEmpty(item.NameGerman):
+                case Language.German when !string.IsNullOrEmpty(item.NameGerman):
                     return new GeografischeNaam(
                         item.NameGerman,
                         Taal.DE);
 
-                case Taal.EN when !string.IsNullOrEmpty(item.NameEnglish):
+                case Language.English when !string.IsNullOrEmpty(item.NameEnglish):
                     return new GeografischeNaam(
                         item.NameEnglish,
                         Taal.EN);
 
                 default:
-                case Taal.NL:
-                    return new GeografischeNaam(
-                        item.NameDutch,
-                        Taal.NL);
+                    return null;
             }
         }
 
-        private static GeografischeNaam GetHomoniemToevoegingByTaal(StreetNameListItem item, Taal taal)
+        private static GeografischeNaam GetHomoniemToevoegingByTaal(StreetNameListItem item, Language? taal)
         {
             switch (taal)
             {
-                case Taal.NL when !string.IsNullOrEmpty(item.HomonymAdditionDutch):
+                case null when !string.IsNullOrEmpty(item.HomonymAdditionDutch):
+                case Language.Dutch when !string.IsNullOrEmpty(item.HomonymAdditionDutch):
                     return new GeografischeNaam(
                         item.HomonymAdditionDutch,
                         Taal.NL);
 
-                case Taal.FR when !string.IsNullOrEmpty(item.HomonymAdditionFrench):
+                case Language.French when !string.IsNullOrEmpty(item.HomonymAdditionFrench):
                     return new GeografischeNaam(
                         item.HomonymAdditionFrench,
                         Taal.FR);
 
-                case Taal.DE when !string.IsNullOrEmpty(item.HomonymAdditionGerman):
+                case Language.German when !string.IsNullOrEmpty(item.HomonymAdditionGerman):
                     return new GeografischeNaam(
                         item.NameGerman,
                         Taal.DE);
 
-                case Taal.EN when !string.IsNullOrEmpty(item.HomonymAdditionEnglish):
+                case Language.English when !string.IsNullOrEmpty(item.HomonymAdditionEnglish):
                     return new GeografischeNaam(
                         item.NameEnglish,
                         Taal.EN);
