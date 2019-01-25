@@ -5,8 +5,6 @@ namespace StreetNameRegistry.Projections.Syndication
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.EventHandling;
-    using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
@@ -17,7 +15,6 @@ namespace StreetNameRegistry.Projections.Syndication
     using Modules;
     using Municipality;
     using Serilog;
-    using Infrastructure.Modules;
 
     public class Program
     {
@@ -100,15 +97,12 @@ namespace StreetNameRegistry.Projections.Syndication
         {
             var services = new ServiceCollection();
             var builder = new ContainerBuilder();
-            var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
 
             builder.RegisterModule(new LoggingModule(configuration, services));
 
             var tempProvider = services.BuildServiceProvider();
             builder.RegisterModule(new SyndicationModule(configuration, services, tempProvider.GetService<ILoggerFactory>()));
 
-            builder.RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings));
-            builder.RegisterModule(new CommandHandlingModule(configuration));
 
             builder.Populate(services);
 
