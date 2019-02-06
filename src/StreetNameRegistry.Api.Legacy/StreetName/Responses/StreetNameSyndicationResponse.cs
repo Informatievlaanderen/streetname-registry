@@ -40,27 +40,27 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             };
 
             // TODO: Hier moet prolly version nog ergens in
-            if (!string.IsNullOrWhiteSpace(streetName.NisCode))
+            if (streetName.OsloId.HasValue)
             {
                 item.AddLink(
                     new SyndicationLink(
-                        new Uri($"{responseOptions.Value.Naamruimte}/{streetName.NisCode}"),
+                        new Uri($"{responseOptions.Value.Naamruimte}/{streetName.OsloId.Value}"),
                         AtomLinkTypes.Related));
 
                 item.AddLink(
                     new SyndicationLink(
-                        new Uri(string.Format(responseOptions.Value.DetailUrl, streetName.NisCode)),
+                        new Uri(string.Format(responseOptions.Value.DetailUrl, streetName.OsloId.Value)),
                         AtomLinkTypes.Self));
 
                 item.AddLink(
                     new SyndicationLink(
-                            new Uri(string.Format($"{responseOptions.Value.DetailUrl}.xml", streetName.NisCode)),
+                            new Uri(string.Format($"{responseOptions.Value.DetailUrl}.xml", streetName.OsloId.Value)),
                             AtomLinkTypes.Alternate)
                         { MediaType = MediaTypeNames.Application.Xml });
 
                 item.AddLink(
                     new SyndicationLink(
-                            new Uri(string.Format($"{responseOptions.Value.DetailUrl}.json", streetName.NisCode)),
+                            new Uri(string.Format($"{responseOptions.Value.DetailUrl}.json", streetName.OsloId.Value)),
                             AtomLinkTypes.Alternate)
                         { MediaType = MediaTypeNames.Application.Json });
             }

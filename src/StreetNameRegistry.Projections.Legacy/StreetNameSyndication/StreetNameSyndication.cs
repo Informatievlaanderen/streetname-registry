@@ -65,6 +65,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 StreetNameId = StreetNameId,
                 NisCode = NisCode,
 
+                OsloId = OsloId,
+
                 NameDutch = NameDutch,
                 NameEnglish = NameEnglish,
                 NameFrench = NameFrench,
