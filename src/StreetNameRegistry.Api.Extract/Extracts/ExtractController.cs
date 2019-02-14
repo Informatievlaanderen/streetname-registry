@@ -1,20 +1,16 @@
 namespace StreetNameRegistry.Api.Extract.Extracts
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
-    using ExtractFiles;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json.Converters;
     using Projections.Extract;
     using Responses;
     using Swashbuckle.AspNetCore.Filters;
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     [ApiVersion("1.0")]
     [AdvertiseApiVersions("1.0")]
@@ -40,19 +36,13 @@ namespace StreetNameRegistry.Api.Extract.Extracts
             [FromServices] ExtractContext context,
             CancellationToken cancellationToken = default)
         {
-            var streetNames = await context
-                .StreetNameExtract
-                .AsNoTracking()
-                .Where(m => m.Complete)
-                .OrderBy(m => m.StreetNameOsloId)
-                .ToListAsync(cancellationToken);
-
-            var zip = new List<ExtractFile>
+            var fileBuilder = new StreetNameRegistryExtractBuilder();
+            var zip = new StreetNameRegistryExtractArchive($"{ZipName}-{DateTime.Now:yyyy-MM-dd}")
             {
-                StreetNameRegistryExtractBuilder.CreateStreetNameFile(streetNames)
+                fileBuilder.CreateStreetNameFile(context)
             };
 
-            return zip.CreateResponse($"{ZipName}-{DateTime.Now:yyyy-MM-dd}");
+            return zip.CreateCallbackFileStreamResult(cancellationToken);
         }
     }
 }
