@@ -13,14 +13,17 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     {
         public ExtractFile CreateStreetNameFile(ExtractContext context)
         {
+            var streetNameExtractItems = context
+                .StreetNameExtract
+                .AsNoTracking()
+                .Where(x => x.Complete);
+
             return CreateDbfFile<StreetNameDbaseRecord>(
                 ExtractController.ZipName,
                 new StreetNameDbaseSchema(),
-                context
-                    .StreetNameExtract
-                    .AsNoTracking()
+                streetNameExtractItems
                     .Select(org => org.DbaseRecord),
-                context.StreetNameExtract.Count);
+                streetNameExtractItems.Count);
         }
 
         private static ExtractFile CreateDbfFile<TDbaseRecord>(
