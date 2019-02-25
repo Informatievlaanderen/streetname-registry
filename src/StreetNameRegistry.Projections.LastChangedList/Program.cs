@@ -53,10 +53,11 @@ namespace StreetNameRegistry.Projections.LastChangedList
             {
                 var runner = container.GetService<StreetNameLastChangedListRunner>();
 
-                await LastChangedListMigrationsHelper.RunAsync(
+                var lastChangedList = new LastChangedListMigrationsHelper(
                     configuration.GetConnectionString("LastChangedList"),
-                    container.GetService<ILoggerFactory>(),
-                    ct);
+                    container.GetService<ILoggerFactory>());
+
+                await lastChangedList.RunMigrationsAsync(ct);
 
                 await runner.StartAsync(
                     container.GetService<IStreamStore>(),
