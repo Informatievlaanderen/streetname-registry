@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     using Swashbuckle.AspNetCore.Filters;
     using System;
     using System.Threading;
-    using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.Api.Extract;
 
     [ApiVersion("1.0")]
     [AdvertiseApiVersions("1.0")]
@@ -32,17 +32,10 @@ namespace StreetNameRegistry.Api.Extract.Extracts
         [ProducesResponseType(typeof(BasicApiProblem), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameRegistryResponseExample), jsonConverter: typeof(StringEnumConverter))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples), jsonConverter: typeof(StringEnumConverter))]
-        public async Task<IActionResult> Get(
+        public IActionResult Get(
             [FromServices] ExtractContext context,
-            CancellationToken cancellationToken = default)
-        {
-            var fileBuilder = new StreetNameRegistryExtractBuilder();
-            var zip = new StreetNameRegistryExtractArchive($"{ZipName}-{DateTime.Now:yyyy-MM-dd}")
-            {
-                fileBuilder.CreateStreetNameFile(context)
-            };
-
-            return zip.CreateCallbackFileStreamResult(cancellationToken);
-        }
+            CancellationToken cancellationToken = default) =>
+            new ExtractArchive($"{ZipName}-{DateTime.Now:yyyy-MM-dd}") { StreetNameRegistryExtractBuilder.CreateStreetNameFile(context) }
+                .CreateFileCallbackResult(cancellationToken);
     }
 }
