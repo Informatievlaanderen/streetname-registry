@@ -143,23 +143,19 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         /// </summary>
         /// <param name="legacyContext"></param>
         /// <param name="syndicationContext"></param>
-        /// <param name="hostingEnvironment"></param>
         /// <param name="taal">Gewenste taal van de respons.</param>
         /// <param name="responseOptions"></param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Als de opvraging van een lijst met straatnamen gelukt is.</response>
         /// <response code="500">Als er een interne fout is opgetreden.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(List<StreetNameListResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BasicApiProblem), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(StreetNameListResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BasicApiProblem), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameListResponseExamples), jsonConverter: typeof(StringEnumConverter))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples), jsonConverter: typeof(StringEnumConverter))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples), jsonConverter: typeof(StringEnumConverter))]
         public async Task<IActionResult> List(
             [FromServices] SyndicationContext syndicationContext,
             [FromServices] LegacyContext legacyContext,
-            [FromServices] IHostingEnvironment hostingEnvironment,
             [FromServices] IOptions<ResponseOptions> responseOptions,
             Taal? taal,
             CancellationToken cancellationToken = default)
