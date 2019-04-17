@@ -3,13 +3,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using Infrastructure.Options;
+    using Microsoft.Extensions.Options;
     using Swashbuckle.AspNetCore.Filters;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
-    using Infrastructure.Options;
-    using Microsoft.Extensions.Options;
 
     [DataContract(Name = "StraatnaamCollectie", Namespace = "")]
     public class StreetNameBosaResponse
@@ -25,6 +25,11 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         /// </summary>
         [DataMember(Name = "TotaalAantal", Order = 2)]
         public long TotaalAantal { get; set; }
+
+        public StreetNameBosaResponse()
+        {
+            Straatnamen = new List<StreetNameBosaItemResponse>();
+        }
     }
 
     [DataContract(Name = "StraatnaamCollectieItem", Namespace = "")]

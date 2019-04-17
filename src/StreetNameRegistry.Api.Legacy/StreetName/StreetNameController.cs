@@ -6,6 +6,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.Api.Syndication;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common.Syndication;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
@@ -36,8 +38,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
-    using Be.Vlaanderen.Basisregisters.GrAr.Common;
-    using Be.Vlaanderen.Basisregisters.GrAr.Common.Syndication;
 
     [ApiVersion("1.0")]
     [AdvertiseApiVersions("1.0")]
@@ -300,19 +300,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             CancellationToken cancellationToken = default)
         {
             var filter = new StreetNameNameFilter(request);
-            var streetNames = (await
+            var streetNameBosaResponse = await
                 new StreetNameBosaQuery(
-                    legacyContext,
-                    syndicationContext,
-                    responseOptions)
-                .FilterAsync(filter, cancellationToken))
-                .ToList();
+                        legacyContext,
+                        syndicationContext,
+                        responseOptions)
+                    .FilterAsync(filter, cancellationToken);
 
-            return Ok(new StreetNameBosaResponse
-            {
-                Straatnamen = streetNames,
-                TotaalAantal = streetNames.Count
-            });
+            return Ok(streetNameBosaResponse);
         }
 
         private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItem item, Language? taal)

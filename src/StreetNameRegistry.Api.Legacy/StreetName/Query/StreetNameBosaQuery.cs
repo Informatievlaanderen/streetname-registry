@@ -35,7 +35,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             _responseOptionsProvider = responseOptionsProvider;
         }
 
-        public async Task<IEnumerable<StreetNameBosaItemResponse>> FilterAsync(StreetNameNameFilter filter, CancellationToken ct = default)
+        public async Task<StreetNameBosaResponse> FilterAsync(StreetNameNameFilter filter, CancellationToken ct = default)
         {
             var shouldFilterOnMunicipalityObjectId = !string.IsNullOrEmpty(filter.MunicipalityObjectId);
             var shouldFilterOnMunicipalityVersion =  filter.MunicipalityVersion.HasValue;
@@ -60,7 +60,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             if (shouldFilterOnMunicipalityObjectId || shouldFilterOnMunicipalityVersion)
             {
                 if (!municipalities.Any())
-                    return Enumerable.Empty<StreetNameBosaItemResponse>();
+                    return new StreetNameBosaResponse();
 
                 var nisCodes = municipalities.Select(m => m.NisCode).Distinct();
                 streetNames = streetNames.Where(s => nisCodes.Contains(s.NisCode));
@@ -69,7 +69,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             if (!string.IsNullOrEmpty(filter.ObjectId))
             {
                 if (!int.TryParse(filter.ObjectId, out var osloId))
-                    return Enumerable.Empty<StreetNameBosaItemResponse>().AsQueryable();
+                    return new StreetNameBosaResponse();
 
                 streetNames = streetNames.Where(s => s.OsloId == osloId);
             }
@@ -89,7 +89,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             else if (filter.Language.HasValue)
                 streetNames = ApplyLanguageFilter(streetNames, filter.Language.Value);
 
-            return await TransformAsync(streetNames, municipalities, filter.Language, ct);
+            var names = await TransformAsync(streetNames, municipalities, filter.Language, ct);
+
+            return new StreetNameBosaResponse
+            {
+                Straatnamen = names.ToList(),
+                TotaalAantal = await streetNames.CountAsync(ct)
+            };
         }
 
         private async Task<IEnumerable<StreetNameBosaItemResponse>> TransformAsync(
@@ -202,10 +208,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                         i.NameGermanSearch.Contains(searchValue) ||
                         i.NameEnglishSearch.Contains(searchValue))
                     : query.Where(i =>
-                        i.NameDutchSearch.Equals(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                        i.NameFrenchSearch.Equals(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                        i.NameGermanSearch.Equals(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                        i.NameEnglishSearch.Equals(searchValue, StringComparison.OrdinalIgnoreCase));
+                        i.NameDutchSearch.Equals(searchValue) ||
+                        i.NameFrenchSearch.Equals(searchValue) ||
+                        i.NameGermanSearch.Equals(searchValue) ||
+                        i.NameEnglishSearch.Equals(searchValue));
             }
 
             switch (language.Value)
@@ -214,22 +220,22 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 case Language.Dutch:
                     return isContainsFilter
                         ? query.Where(i => i.NameDutchSearch.Contains(searchValue))
-                        : query.Where(i => i.NameDutchSearch.Equals(searchValue, StringComparison.OrdinalIgnoreCase));
+                        : query.Where(i => i.NameDutchSearch.Equals(searchValue));
 
                 case Language.French:
                     return isContainsFilter
                         ? query.Where(i => i.NameFrenchSearch.Contains(searchValue))
-                        : query.Where(i => i.NameFrenchSearch.Equals(searchValue, StringComparison.OrdinalIgnoreCase));
+                        : query.Where(i => i.NameFrenchSearch.Equals(searchValue));
 
                 case Language.German:
                     return isContainsFilter
                         ? query.Where(i => i.NameGermanSearch.Contains(searchValue))
-                        : query.Where(i => i.NameGermanSearch.Equals(searchValue, StringComparison.OrdinalIgnoreCase));
+                        : query.Where(i => i.NameGermanSearch.Equals(searchValue));
 
                 case Language.English:
                     return isContainsFilter
                         ? query.Where(i => i.NameEnglishSearch.Contains(searchValue))
-                        : query.Where(i => i.NameEnglishSearch.Equals(searchValue, StringComparison.OrdinalIgnoreCase));
+                        : query.Where(i => i.NameEnglishSearch.Equals(searchValue));
             }
         }
     }

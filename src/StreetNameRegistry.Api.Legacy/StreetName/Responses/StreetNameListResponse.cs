@@ -1,13 +1,13 @@
 namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Infrastructure.Options;
     using Microsoft.Extensions.Options;
     using Swashbuckle.AspNetCore.Filters;
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
 
     [DataContract(Name = "StraatnaamCollectie", Namespace = "")]
     public class StreetNameListResponse
@@ -27,7 +27,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         /// <summary>
         /// De URL voor het ophalen van de volgende verzameling.
         /// </summary>
-        [DataMember(Name = "Volgende", Order = 3)]
+        [DataMember(Name = "Volgende", Order = 3, EmitDefaultValue = false)]
         public Uri Volgende { get; set; }
     }
 
