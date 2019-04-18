@@ -3,19 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreetNameRegistry.Projections.Extract;
 
 namespace StreetNameRegistry.Projections.Extract.Migrations
 {
     [DbContext(typeof(ExtractContext))]
-    partial class ExtractContextModelSnapshot : ModelSnapshot
+    [Migration("20190417131116_AddLanguageNames")]
+    partial class AddLanguageNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -40,16 +42,6 @@ namespace StreetNameRegistry.Projections.Extract.Migrations
                     b.Property<bool>("Complete");
 
                     b.Property<byte[]>("DbaseRecord");
-
-                    b.Property<string>("HomonymDutch");
-
-                    b.Property<string>("HomonymEnglish");
-
-                    b.Property<string>("HomonymFrench");
-
-                    b.Property<string>("HomonymGerman");
-
-                    b.Property<string>("HomonymUnknown");
 
                     b.Property<string>("NameDutch");
 

@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Extract\StreetNameRegistry.Projections.Extract.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\.paket\Paket.Restore.targets" />

@@ -11,6 +11,7 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     using System;
     using System.Threading;
     using Be.Vlaanderen.Basisregisters.Api.Extract;
+    using Projections.Syndication;
 
     [ApiVersion("1.0")]
     [AdvertiseApiVersions("1.0")]
@@ -34,8 +35,9 @@ namespace StreetNameRegistry.Api.Extract.Extracts
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples), jsonConverter: typeof(StringEnumConverter))]
         public IActionResult Get(
             [FromServices] ExtractContext context,
+            [FromServices] SyndicationContext syndicationContext,
             CancellationToken cancellationToken = default) =>
-            new ExtractArchive($"{ZipName}-{DateTime.Now:yyyy-MM-dd}") { StreetNameRegistryExtractBuilder.CreateStreetNameFile(context) }
+            new ExtractArchive($"{ZipName}-{DateTime.Now:yyyy-MM-dd}") { StreetNameRegistryExtractBuilder.CreateStreetNameFile(context, syndicationContext) }
                 .CreateFileCallbackResult(cancellationToken);
     }
 }

@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Projections.Extract
     {
         public DbaseField id => Fields[0];
         public DbaseField straatnmid => Fields[1];
-        public DbaseField versie => Fields[2];
+        public DbaseField versieid => Fields[2];
         public DbaseField gemeenteid => Fields[3];
         public DbaseField straatnm => Fields[4];
         public DbaseField homoniemtv => Fields[5];
@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Projections.Extract
         {
             DbaseField.CreateStringField(new DbaseFieldName(nameof(id)), new DbaseFieldLength(50)),
             DbaseField.CreateStringField(new DbaseFieldName(nameof(straatnmid)), new DbaseFieldLength(10)),
-            DbaseField.CreateDateTimeField(new DbaseFieldName(nameof(versie))),
+            DbaseField.CreateDateTimeField(new DbaseFieldName(nameof(versieid))),
             DbaseField.CreateStringField(new DbaseFieldName(nameof(gemeenteid)), new DbaseFieldLength(5)),
             DbaseField.CreateStringField(new DbaseFieldName(nameof(straatnm)), new DbaseFieldLength(80)),
             DbaseField.CreateStringField(new DbaseFieldName(nameof(homoniemtv)), new DbaseFieldLength(5)),

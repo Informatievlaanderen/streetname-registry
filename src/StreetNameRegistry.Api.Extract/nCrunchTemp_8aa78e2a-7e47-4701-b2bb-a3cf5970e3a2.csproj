@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build;NCrunchOutputDataQuery" Sdk="Microsoft.NET.Sdk.Web">
+  <Import Project="..\..\packages\Be.Vlaanderen.Basisregisters.Build.Pipeline\Content\Be.Vlaanderen.Basisregisters.Build.Pipeline.Settings.App.props" />
+  <PropertyGroup>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.2\StreetNameRegistry.Api.Extract.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_2</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.2\StreetNameRegistry.Api.Extract.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Dockerfile" CopyToOutputDirectory="Always" />
+    <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
+    <Content Include="appsettings.*.json" CopyToOutputDirectory="Always" />
+    <Content Include="paket.template" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Extract\StreetNameRegistry.Projections.Extract.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />
+  </ItemGroup>
+  <Target Name="AssignProjectConfiguration" DependsOnTargets="">
+  </Target>
+  <Target Name="ResolveTestReferences" DependsOnTargets="">
+  </Target>
+  <Target Name="NCrunchOutputDataQuery" DependsOnTargets="_SplitProjectReferencesByFileExistence;ResolveKeySource;$(ResolveReferencesDependsOn)">
+    <Message Text="#7f9e12db8eb6403db239bd69e8d8d951=$(Configuration)" />
+    <Message Text="#710ff99963234e528216d263d070084c=$(TargetFrameworkVersion)" />
+    <Message Text="#51d66a5000c64bb89a41782a50a3cb23=$(TargetFramework)" />
+    <Message Text="#9ed16cc7fc984e0bb3a57dcd2fef79a7=$(AssemblyName)" />
+    <Message Text="#95f4f46a142147f0980f3ad35db5b00f=$(DefaultItemExcludes)" />
+    <Message Text="#02c4bba314364e75be78bbb6b13bf452=$(DefaultItemExcludesInProjectFolder)" />
+    <Message Text="#b7e3fd61efeb4e4da9638f4e311689b6=$(EnableDefaultItems)" />
+    <Message Text="#5a0b604b89074a2499263c43c31034a8=$(OutputPath)" />
+    <Message Text="#e2b9aa1c49d8499e9dcb602eb50d610e=$(OutDir)" />
+    <Message Text="#00c819c8a16f49fb805abd4f4212f7ea=$(KeyOriginatorFile)" />
+    <Message Text="#50c04f9ca18f499283d3156a9b1bb24a=$(SignAssembly)" />
+    <Message Text="#88bd9076de0242b1b77f9fcc399755c7=$(PlatformTarget)" />
+    <Message Text="#57939c440a5a4b4ebf33aab1ac06e866=$(NuGetToolsPath)" />
+    <Message Text="#47a19fccc1a54fd482fbc38620851c24=$(Language)" />
+    <Message Text="#2179b6985db243598f0e5d5782c1d2c5=$(OtherFlags)" />
+    <Message Text="#00a1fc968b96454f915c9fa514b43f77=$(PreBuildEvent)" />
+    <Message Text="#b98909f030f142f186b2ac1cd6753c53=$(PostBuildEvent)" />
+    <Message Text="#ea132a1ba39e4c718f9cb3fcd72b76f0=$(LinkedServerProject)" />
+    <Message Text="#2d251f0608e24892b1e45e75729fac16=$(ResolveAssemblyReferencesStateFile)" />
+    <Message Text="#adb1124d6cdf4f55a815ac96f98de45a=$(SDKReferenceDirectoryRoot)" />
+    <Message Text="#e79f552622254a44a8b461768b9d2d14=$(__IntermediateAppConfig)" />
+    <Message Text="#dcb761eb89ab4e388bd4d152e430796c=$(PrepareForBuildDependsOn)" />
+    <Message Text="#cd7f3902e12b4d88a2f1dcd29c1584bc=$(CustomAfterMicrosoftCommonTargets)" />
+    <Message Text="#a7f32ec81ece45b78c40fa6ee0692de0=$(ProjectAssetsFile)" />
+    <Message Text="#7d98484d41524a73bba9fc4641ad401c=$(DefineConstants)" />
+    <Message Text="#f677d5f3361e44fdb0fca7c6a38b441c=$(NuGetPackageFolders)" />
+    <Message Text="#_ResolveComReferenceCache=;@(_ResolveComReferenceCache)" />
+    <Message Text="#AppxManifest=;@(AppxManifest)" />
+    <Message Text="#ReferencePath=;@(ReferencePath)" />
+    <Message Text="#ReferenceDependencyPaths=;@(ReferenceDependencyPaths)" />
+    <Message Text="#ComReferenceWrappers=;@(ComReferenceWrappers)" />
+    <Message Text="#ProjectReference=;@(ProjectReference)" />
+    <Message Text="#None=;@(None)" Condition="'%(None.Generator)'!=''" />
+    <Message Text="#Compile.ClCompile=;@(Compile);@(ClCompile)" />
+    <Message Text="#Content=;@(Content)" />
+    <Message Text="#None.EmbeddedResource.VSCTCompile.Page.ApplicationDefinition.Resource.ClInclude.ResourceCompile.Library.$ApplicationIcon.$Win32Resource.$ApplicationManifest.$KeyOriginatorFile.EntityDeploy.XamlAppdef.$ManifestKeyFile.SplashScreen.BaseApplicationManifest.Midl.ServiceDefinition.ServiceConfiguration.BlendEmbeddedFont.TypeScriptCompile.AndroidResource.InterfaceDefinition.BundleResource.ITunesArtwork.PRIResource.Image.FsYacc.FsLex.Analyzer.AdditionalFiles.Map.XLang.Pipeline.Schema=;@(None);@(EmbeddedResource);@(VSCTCompile);@(Page);@(ApplicationDefinition);@(Resource);@(ClInclude);@(ResourceCompile);@(Library);$(ApplicationIcon);$(Win32Resource);$(ApplicationManifest);$(KeyOriginatorFile);@(EntityDeploy);@(XamlAppdef);$(ManifestKeyFile);@(SplashScreen);@(BaseApplicationManifest);@(Midl);@(ServiceDefinition);@(ServiceConfiguration);@(BlendEmbeddedFont);@(TypeScriptCompile);@(AndroidResource);@(InterfaceDefinition);@(BundleResource);@(ITunesArtwork);@(PRIResource);@(Image);@(FsYacc);@(FsLex);@(Analyzer);@(AdditionalFiles);@(Map);@(XLang);@(Pipeline);@(Schema)" />
+    <Message Text="#LinkedFiles=;@(Compile-&gt;'%(Link)')" />
+    <Message Text="#DotNetCliToolReference=@(DotNetCliToolReference)|@(DotNetCliToolReference-&gt;'%(Version)')" Condition="'@(DotNetCliToolReference-&gt;'%(Version)')'!=''" />
+    <Message Text="#ReferencePathAliases=@(ReferencePath)|%(ReferencePath.Aliases)" Condition="'%(ReferencePath.Aliases)'!=''" />
+    <Message Text="#ReferencePathEmbedInteropTypes=@(ReferencePath)|%(ReferencePath.EmbedInteropTypes)" Condition="'%(ReferencePath.EmbedInteropTypes)'!=''" />
+    <Message Text="#ReferencePathPrivate=@(ReferencePath)|%(ReferencePath.Private)" Condition="'%(ReferencePath.Private)'!=''" />
+    <Message Text="#ReferencePathIsIgnoredNCrunchTestFrameworkReference=@(ReferencePath)|%(ReferencePath.IsIgnoredNCrunchTestFrameworkReference)" Condition="'%(ReferencePath.IsIgnoredNCrunchTestFrameworkReference)'!=''" />
+    <Message Text="#ProjectReferenceAliases=@(ProjectReference)|%(ProjectReference.Aliases)" Condition="'%(ProjectReference.Aliases)'!=''" />
+    <Message Text="#ProjectReferenceEmbedInteropTypes=@(ProjectReference)|%(ProjectReference.EmbedInteropTypes)" Condition="'%(ProjectReference.EmbedInteropTypes)'!=''" />
+    <Message Text="#ProjectReferencePrivate=@(ProjectReference)|%(ProjectReference.Private)" Condition="'%(ProjectReference.Private)'!=''" />
+    <Message Text="#ProjectReferenceIsIgnoredNCrunchTestFrameworkReference=@(ProjectReference)|%(ProjectReference.IsIgnoredNCrunchTestFrameworkReference)" Condition="'%(ProjectReference.IsIgnoredNCrunchTestFrameworkReference)'!=''" />
+    <Message Text="#_ConflictPackageFiles=;@(_ConflictPackageFiles)" />
+    <Message Text="#Expression_7e520829184d47abaecebffeec341cb1=..\..\packages\Be.Vlaanderen.Basisregisters.Build.Pipeline\Content\Be.Vlaanderen.Basisregisters.Build.Pipeline.Settings.App.props" />
+    <Message Text="#Expression_1905cd3b56614aa0a83bb69a9f907830=..\..\.paket\Paket.Restore.targets" />
+    <Message Text="#ad422d7c5251418ba589e972ce772ed1=$(TargetFramework)" />
+    <Message Text="#9c60e2809b694a65ba322bd2992d10d8=$(TargetFramework)" />
+    <Message Text="#75c5010bf0df4b319323adf8526df2d3=$(ImplicitFrameworkDefine)" />
+    <Message Text="#2bff416dea844e3ca323ee08016a1c86=$(CodeAnalysisRuleSet)" />
+    <Message Text="#CodeAnalysisDictionary=;@(CodeAnalysisDictionary)" />
+    <Message Text="#ffb0babf57184e95b7f7084667648ad9=$(CodeContractsReferenceAssembly)" />
+    <Message Text="#Fakes=;@(Fakes)" />
+    <Message Text="#0ae4ebc46bfa4f35b3e08e941b0f9c09=$(MvcBuildViews)" />
+    <Message Text="#24aa9fd590fd4ec98da3bd0ca95c179c=$(StyleCopEnabled)" />
+    <Message Text="#Shadow=;@(Shadow)" />
+  </Target>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>

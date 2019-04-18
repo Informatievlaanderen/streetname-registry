@@ -31,7 +31,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                         DbaseRecord = new StreetNameDbaseRecord
                         {
                             gemeenteid = { Value = message.Message.NisCode },
-                            versie = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().DateTime }
+                            versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().DateTime }
                         }.ToBytes(_encoding)
                     }, ct);
             });
@@ -268,25 +268,50 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         private void UpdateHomoniemtv(StreetNameExtractItem streetName, Language? language, string homonymAddition)
             => UpdateRecord(streetName, record =>
             {
-                if (language == Language.Dutch)
-                    record.homoniemtv.Value = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
-                else if (record.homoniemtv.Value == null)
-                    record.homoniemtv.Value = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
+                switch (language)
+                {
+                    case Language.Dutch:
+                        streetName.HomonymDutch = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
+                        break;
+                    case Language.French:
+                        streetName.HomonymFrench = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
+                        break;
+                    case Language.German:
+                        streetName.HomonymGerman = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
+                        break;
+                    case Language.English:
+                        streetName.HomonymEnglish = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
+                        break;
+                    case null:
+                        streetName.HomonymUnknown = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(language), language, null);
+                }
             });
 
         private void UpdateStraatnm(StreetNameExtractItem streetName, Language? language, string name)
             => UpdateRecord(streetName, record =>
             {
-                //prefer Dutch over other language or pick first language if no Dutch
-                if (language == Language.Dutch)
+                switch (language)
                 {
-                    record.straatnm.Value = name;
-                    streetName.ChosenLanguage = Language.Dutch;
-                }
-                else if (record.straatnm.Value == null || streetName.ChosenLanguage == language)
-                {
-                    record.straatnm.Value = name;
-                    streetName.ChosenLanguage = language;
+                    case Language.Dutch:
+                        streetName.NameDutch = name;
+                        break;
+                    case Language.French:
+                        streetName.NameFrench = name;
+                        break;
+                    case Language.German:
+                        streetName.NameGerman = name;
+                        break;
+                    case Language.English:
+                        streetName.NameEnglish = name;
+                        break;
+                    case null:
+                        streetName.NameUnknown = name;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(language), language, null);
                 }
             });
 
@@ -301,7 +326,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             });
 
         private void UpdateVersie(StreetNameExtractItem streetName, Instant timestamp)
-            => UpdateRecord(streetName, record => record.versie.Value = timestamp.ToBelgianDateTimeOffset().DateTime);
+            => UpdateRecord(streetName, record => record.versieid.Value = timestamp.ToBelgianDateTimeOffset().DateTime);
 
         private void UpdateRecord(StreetNameExtractItem municipality, Action<StreetNameDbaseRecord> updateFunc)
         {
