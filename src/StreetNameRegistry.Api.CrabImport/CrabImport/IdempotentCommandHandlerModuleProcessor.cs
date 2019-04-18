@@ -17,7 +17,7 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
     {
         private readonly ConcurrentUnitOfWork _concurrentUnitOfWork;
         private readonly StreetNameCommandHandlerModule _streetNameCommandHandlerModule;
-        private readonly Func<IHasCrabProvenance, StreetName, Provenance> _provenanceFactory = new StreetNameProvenanceFactory().CreateFrom;
+        private readonly Func<IHasCrabProvenance, StreetName, Provenance> _provenanceFactory;
         private readonly Func<IStreetNames> _getStreetNames;
 
         public IdempotentCommandHandlerModuleProcessor(
@@ -30,6 +30,7 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
         {
             _getStreetNames = getStreetNames;
             _concurrentUnitOfWork = concurrentUnitOfWork;
+            _provenanceFactory = provenanceFactory.CreateFrom;
 
             _streetNameCommandHandlerModule = new StreetNameCommandHandlerModule(
                 getStreetNames,
