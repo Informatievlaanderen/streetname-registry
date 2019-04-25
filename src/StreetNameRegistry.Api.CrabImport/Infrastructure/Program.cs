@@ -1,13 +1,11 @@
 namespace StreetNameRegistry.Api.CrabImport.Infrastructure
 {
-    using System;
-    using System.Security.Cryptography.X509Certificates;
     using Be.Vlaanderen.Basisregisters.Api;
     using Microsoft.AspNetCore.Hosting;
 
     public class Program
     {
-        private static readonly Tuple<string, string> DevelopmentCertificate = new Tuple<string, string>(
+        private static readonly DevelopmentCertificate DevelopmentCertificate = new DevelopmentCertificate(
             "api.dev.straatnaam.basisregisters.vlaanderen.be.pfx",
             "gemeenteregister!");
 
@@ -16,9 +14,18 @@ namespace StreetNameRegistry.Api.CrabImport.Infrastructure
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
             => new WebHostBuilder()
                 .UseDefaultForApi<Startup>(
-                    httpPort: 1092,
-                    httpsPort: 1446,
-                    httpsCertificate: () => new X509Certificate2(DevelopmentCertificate.Item1, DevelopmentCertificate.Item2),
-                    commandLineArgs: args);
+                    new ProgramOptions
+                    {
+                        Hosting =
+                        {
+                            HttpPort = 1092,
+                            HttpsPort = 1446,
+                            HttpsCertificate = DevelopmentCertificate.ToCertificate,
+                        },
+                        Runtime =
+                        {
+                            CommandLineArgs = args
+                        }
+                    });
     }
 }
