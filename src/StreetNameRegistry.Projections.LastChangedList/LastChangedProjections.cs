@@ -4,14 +4,14 @@ namespace StreetNameRegistry.Projections.LastChangedList
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using StreetName.Events;
 
-    public class Projections : LastChangedListConnectedProjection
+    public class LastChangedProjections : LastChangedListConnectedProjection
     {
         protected override string CacheKeyFormat => "legacy/streetname:{{0}}.{1}";
         protected override string UriFormat => "/v1/straatnamen/{{0}}";
 
         private static readonly AcceptType[] SupportedAcceptTypes = { AcceptType.Json, AcceptType.Xml };
 
-        public Projections()
+        public LastChangedProjections()
             : base (SupportedAcceptTypes)
         {
             When<Envelope<StreetNameOsloIdWasAssigned>>(async (context, message, ct) =>

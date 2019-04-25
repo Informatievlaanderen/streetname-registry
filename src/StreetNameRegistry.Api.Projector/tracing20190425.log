@@ -1,0 +1,1 @@
+2019-04-25 14:02:40.326 +02:00 [WRN] Overriding address(es) 'http://localhost:5000/'. Binding to endpoints defined in UseKestrel() instead.

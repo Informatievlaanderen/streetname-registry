@@ -1,0 +1,28 @@
+type file
+version 1.0.0
+
+id Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Projector
+title Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Projector
+
+authors Basisregisters Vlaanderen
+owners agentschap Informatie Vlaanderen <https://vlaanderen.be/informatie-vlaanderen>
+copyright Copyright (c) agentschap Informatie Vlaanderen
+requireLicenseAcceptance false
+projectUrl https://github.com/Informatievlaanderen/streetname-registry
+iconUrl https://raw.githubusercontent.com/Informatievlaanderen/build-pipeline/master/logo.png
+licenseUrl https://opensource.org/licenses/EUPL-1.2
+
+description StreetName Registry Projector API.
+
+dependencies
+  framework: netstandard20
+    Be.Vlaanderen.Basisregisters.Api ~> 6.0
+    Be.Vlaanderen.Basisregisters.EventHandling.Autofac ~> 1.0
+    Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac ~> 3.0
+    Be.Vlaanderen.Basisregisters.Projector ~> 2.0
+
+files
+  StreetNameRegistry.Api.Projector.dll => lib\netcoreapp2.2
+  StreetNameRegistry.Api.Projector.pdb => lib\netcoreapp2.2
+  StreetNameRegistry.Api.Projector.xml => lib\netcoreapp2.2
+  StreetNameRegistry.Api.Projector.xml => content
