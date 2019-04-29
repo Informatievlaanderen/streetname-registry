@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Projector.Infrastructure
+namespace StreetNameRegistry.Projector.Infrastructure
 {
     using Be.Vlaanderen.Basisregisters.Api;
     using Microsoft.AspNetCore.Hosting;

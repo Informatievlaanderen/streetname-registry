@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Projector.Infrastructure.Modules
+namespace StreetNameRegistry.Projector.Infrastructure.Modules
 {
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
