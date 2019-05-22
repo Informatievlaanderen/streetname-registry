@@ -58,13 +58,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                     new SyndicationLink(
                             new Uri(string.Format($"{responseOptions.Value.DetailUrl}.xml", streetName.OsloId.Value)),
                             AtomLinkTypes.Alternate)
-                        { MediaType = MediaTypeNames.Application.Xml });
+                    { MediaType = MediaTypeNames.Application.Xml });
 
                 item.AddLink(
                     new SyndicationLink(
                             new Uri(string.Format($"{responseOptions.Value.DetailUrl}.json", streetName.OsloId.Value)),
                             AtomLinkTypes.Alternate)
-                        { MediaType = MediaTypeNames.Application.Json });
+                    { MediaType = MediaTypeNames.Application.Json });
             }
 
             item.AddCategory(
@@ -86,7 +86,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 
             var content = new SyndicationContent();
 
-            if(streetName.ContainsObject)
+            if (streetName.ContainsObject)
                 content.Object = new StreetNameSyndicationContent(
                     streetName.StreetNameId.Value,
                     naamruimte,

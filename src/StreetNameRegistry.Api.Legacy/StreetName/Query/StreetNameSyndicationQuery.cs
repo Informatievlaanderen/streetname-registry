@@ -180,15 +180,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 organisation,
                 plan)
         {
-            ContainsObject = true;
             ContainsEvent = true;
 
             EventDataAsXml = eventDataAsXml;
         }
     }
 
-    public class StreetNameSyndicationQuery : Query<StreetNameSyndicationItem, StreetNameSyndicationFilter,
-        StreetNameSyndicationQueryResult>
+    public class StreetNameSyndicationQuery : Query<StreetNameSyndicationItem, StreetNameSyndicationFilter, StreetNameSyndicationQueryResult>
     {
         private readonly LegacyContext _context;
         private readonly bool _embedEvent;
