@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
 
-    public class MunicipalitySyndiciationItemProjections : AtomEntryProjectionHandlerModule<MunicipalityEvent, Gemeente, SyndicationContext>
+    public class MunicipalitySyndiciationItemProjections : AtomEntryProjectionHandlerModule<MunicipalityEvent, SyndicationContent<Gemeente>, SyndicationContext>
     {
         public MunicipalitySyndiciationItemProjections()
         {
@@ -26,17 +26,17 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
             When(MunicipalityEvent.MunicipalityFacilitiesLanguageWasRemoved, AddSyndicationItemEntry);
         }
 
-        private static async Task AddSyndicationItemEntry(AtomEntry<Gemeente> entry, SyndicationContext context, CancellationToken ct)
+        private static async Task AddSyndicationItemEntry(AtomEntry<SyndicationContent<Gemeente>> entry, SyndicationContext context, CancellationToken ct)
         {
             var municipalitySyndicationItem = new MunicipalitySyndicationItem
             {
-                MunicipalityId = entry.Content.Id,
-                NisCode = entry.Content.Identificator?.ObjectId,
-                Version = entry.Content.Identificator?.Versie.Value,
+                MunicipalityId = entry.Content.Object.Id,
+                NisCode = entry.Content.Object.Identificator?.ObjectId,
+                Version = entry.Content.Object.Identificator?.Versie.Value,
                 Position = long.Parse(entry.FeedEntry.Id)
             };
 
-            UpdateNamesByGemeentenamen(municipalitySyndicationItem, entry.Content.Gemeentenamen);
+            UpdateNamesByGemeentenamen(municipalitySyndicationItem, entry.Content.Object.Gemeentenamen);
 
             await context
                 .MunicipalitySyndicationItems

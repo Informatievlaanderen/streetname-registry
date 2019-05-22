@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Tests.Generate
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using NodaTime;
+    using Projections.Syndication;
 
     public static class Generate
     {
@@ -142,7 +143,7 @@ namespace StreetNameRegistry.Tests.Generate
                     LastUpdated = Produce.Date().Generate(r)
                 };
 
-                return new AtomEntry(atomEntry, new Gemeente());
+                return new AtomEntry(atomEntry, new SyndicationContent<Gemeente> { Object = new Gemeente() });
             });
         }
 
@@ -222,9 +223,9 @@ namespace StreetNameRegistry.Tests.Generate
             {
                 var provenance = new Provenance(
                     Instant.FromDateTimeOffset(DateTimeOffset.Now),
-                    (Application)Produce.Integer(1,5).Generate(new Random()),
+                    (Application)Produce.Integer(1, 5).Generate(new Random()),
                     (Plan)Produce.Integer(1, 5).Generate(new Random()),
-                    new Operator(Produce.AlphaNumericString(5,15).Generate(new Random())),
+                    new Operator(Produce.AlphaNumericString(5, 15).Generate(new Random())),
                     (Modification)Produce.Integer(1, 3).Generate(new Random()),
                     (Organisation)Produce.Integer(1, 10).Generate(new Random()));
 
@@ -361,9 +362,10 @@ namespace StreetNameRegistry.Tests.Generate
             return newEvent;
         }
 
-        public static AtomEntry WithId<TContent>(this AtomEntry entry, Guid id)
+        public static AtomEntry WithObjectId<TContent>(this AtomEntry entry, Guid id)
         {
-            if (!(entry.Content is TContent content))
+            var syndicationContent = (SyndicationContent<TContent>) entry.Content;
+            if (!(syndicationContent.Object is TContent content))
                 return entry;
 
             var idProperty = typeof(TContent).GetProperty("Id", typeof(Guid));

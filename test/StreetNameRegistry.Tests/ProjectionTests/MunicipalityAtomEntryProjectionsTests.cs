@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Xunit;
     using Xunit.Abstractions;
 
-    public class MunicipalityAtomEntryProjectionsTests : SyndicationProjectionTest<SyndicationContext, MunicipalityEvent, Gemeente, MunicipalitySyndiciationItemProjections>
+    public class MunicipalityAtomEntryProjectionsTests : SyndicationProjectionTest<SyndicationContext, MunicipalityEvent, SyndicationContent<Gemeente>, MunicipalitySyndiciationItemProjections>
     {
         public MunicipalityAtomEntryProjectionsTests(ITestOutputHelper output) : base(output)
         {
@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             await Given()
                 .Project(Generate.AtomEntry(@event, position)
                     .Select(e => e
-                        .WithId<Gemeente>(id))
+                        .WithObjectId<Gemeente>(id))
                     .Generate(new Random()))
                 .Then(async context =>
                 {

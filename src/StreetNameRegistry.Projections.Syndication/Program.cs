@@ -77,14 +77,14 @@ namespace StreetNameRegistry.Projections.Syndication
 
         private static IEnumerable<Task> StartRunners(IConfiguration configuration, IServiceProvider container, CancellationToken ct)
         {
-            var municipalityRunner = new FeedProjectionRunner<MunicipalityEvent, Gemeente, SyndicationContext>(
+            var municipalityRunner = new FeedProjectionRunner<MunicipalityEvent, SyndicationContent<Gemeente>, SyndicationContext>(
                 "municipality",
                 configuration.GetValue<Uri>("SyndicationFeeds:Municipality"),
                 configuration.GetValue<string>("SyndicationFeeds:MunicipalityAuthUserName"),
                 configuration.GetValue<string>("SyndicationFeeds:MunicipalityAuthPassword"),
                 configuration.GetValue<int>("SyndicationFeeds:MunicipalityPollingInMilliseconds"),
-                configuration.GetValue<bool>("SyndicationFeeds:MunicipalityEmbedEvent"),
-                configuration.GetValue<bool>("SyndicationFeeds:MunicipalityEmbedObject"),
+                true,
+                true,
                 container.GetService<ILogger<Program>>(),
                 container.GetService<IRegistryAtomFeedReader>(),
                 new MunicipalitySyndiciationItemProjections(),
