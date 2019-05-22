@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Xml.Linq;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
@@ -32,6 +33,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 applyEventInfoOn);
 
             newStreetNameSyndicationItem.ApplyProvenance(provenance);
+            newStreetNameSyndicationItem.SetEventData(message.Message);
 
             await context
                 .StreetNameSyndication
@@ -64,6 +66,9 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             item.Organisation = provenance.Organisation;
             item.Plan = provenance.Plan;
         }
+
+        public static void SetEventData<T>(this StreetNameSyndicationItem syndicationItem, T message)
+            => syndicationItem.EventDataAsXml = message.ToXml(message.GetType().Name).ToString(SaveOptions.DisableFormatting);
 
         private static ProjectionItemNotFoundException<StreetNameSyndicationProjections> DatabaseItemNotFound(Guid streetNameId)
             => new ProjectionItemNotFoundException<StreetNameSyndicationProjections>(streetNameId.ToString("D"));

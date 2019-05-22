@@ -21,6 +21,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 };
 
                 streetNameSyndicationItem.ApplyProvenance(message.Message.Provenance);
+                streetNameSyndicationItem.SetEventData(message.Message);
 
                 await context
                     .StreetNameSyndication

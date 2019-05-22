@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
     using System.Net.Mime;
     using System.Runtime.Serialization;
     using System.Threading.Tasks;
+    using System.Xml;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Syndication;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
@@ -17,6 +18,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
     using Microsoft.Extensions.Options;
     using Microsoft.SyndicationFeed;
     using Microsoft.SyndicationFeed.Atom;
+    using Projections.Legacy.StreetNameSyndication;
     using Query;
     using Swashbuckle.AspNetCore.Filters;
     using Provenance = Be.Vlaanderen.Basisregisters.GrAr.Provenance.Syndication.Provenance;
@@ -74,37 +76,59 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                     "informatie.vlaanderen@vlaanderen.be",
                     AtomContributorTypes.Author));
 
-            await writer.Write(new SyndicationContent(formatter.CreateContent(item)));
-
+            await writer.Write(item);
         }
 
         private static string BuildDescription(StreetNameSyndicationQueryResult streetName, string naamruimte)
         {
-            var content = new StreetNameSyndicationContent(
-                streetName.StreetNameId.Value,
-                naamruimte,
-                streetName.OsloId,
-                streetName.Status,
-                streetName.NisCode,
-                streetName.NameDutch,
-                streetName.NameFrench,
-                streetName.NameGerman,
-                streetName.NameEnglish,
-                streetName.HomonymAdditionDutch,
-                streetName.HomonymAdditionFrench,
-                streetName.HomonymAdditionEnglish,
-                streetName.HomonymAdditionGerman,
-                streetName.IsComplete,
-                streetName.LastChangedOn.ToBelgianDateTimeOffset(),
-                streetName.Organisation,
-                streetName.Plan);
+            if (!streetName.ContainsEvent && !streetName.ContainsObject)
+                return "No data embedded";
+
+            var content = new SyndicationContent();
+
+            if(streetName.ContainsObject)
+                content.Object = new StreetNameSyndicationContent(
+                    streetName.StreetNameId.Value,
+                    naamruimte,
+                    streetName.OsloId,
+                    streetName.Status,
+                    streetName.NisCode,
+                    streetName.NameDutch,
+                    streetName.NameFrench,
+                    streetName.NameGerman,
+                    streetName.NameEnglish,
+                    streetName.HomonymAdditionDutch,
+                    streetName.HomonymAdditionFrench,
+                    streetName.HomonymAdditionEnglish,
+                    streetName.HomonymAdditionGerman,
+                    streetName.IsComplete,
+                    streetName.LastChangedOn.ToBelgianDateTimeOffset(),
+                    streetName.Organisation,
+                    streetName.Plan);
+
+            if (streetName.ContainsEvent)
+            {
+                var doc = new XmlDocument();
+                doc.LoadXml(streetName.EventDataAsXml);
+                content.Event = doc.DocumentElement;
+            }
 
             return content.ToXml();
         }
     }
 
+    [DataContract(Name = "Content", Namespace = "")]
+    public class SyndicationContent : SyndicationContentBase
+    {
+        [DataMember(Name = "Event")]
+        public XmlElement Event { get; set; }
+
+        [DataMember(Name = "Object")]
+        public StreetNameSyndicationContent Object { get; set; }
+    }
+
     [DataContract(Name = "Straatnaam", Namespace = "")]
-    public class StreetNameSyndicationContent : SyndicationContentBase
+    public class StreetNameSyndicationContent
     {
         /// <summary>
         /// De technische id van de straatnaam.

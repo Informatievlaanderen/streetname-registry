@@ -241,7 +241,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         /// <param name="configuration"></param>
         /// <param name="context"></param>
         /// <param name="responseOptions"></param>
-        /// <param name="embed">Om volledige objecten terug te krijgen, zet embed op true.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("sync")]
@@ -256,14 +255,17 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             [FromServices] IConfiguration configuration,
             [FromServices] LegacyContext context,
             [FromServices] IOptions<ResponseOptions> responseOptions,
-            bool embed = false,
             CancellationToken cancellationToken = default)
         {
             var filtering = Request.ExtractFilteringRequest<StreetNameSyndicationFilter>();
             var sorting = Request.ExtractSortingRequest();
             var pagination = Request.ExtractPaginationRequest();
 
-            var pagedStreetNames = new StreetNameSyndicationQuery(context, embed).Fetch(filtering, sorting, pagination);
+            var pagedStreetNames = new StreetNameSyndicationQuery(
+                context,
+                filtering.Filter?.ContainsEvent ?? false,
+                filtering.Filter?.ContainsObject ?? false)
+                .Fetch(filtering, sorting, pagination);
 
             Response.AddPaginationResponse(pagedStreetNames.PaginationInfo);
             Response.AddSortingResponse(sorting.SortBy, sorting.SortOrder);

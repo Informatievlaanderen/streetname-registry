@@ -15,7 +15,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
     public class StreetNameSyndicationQueryResult
     {
-        public bool ContainsDetails { get; }
+        public bool ContainsEvent { get; }
+        public bool ContainsObject { get; }
 
         public Guid? StreetNameId { get; }
         public long Position { get; }
@@ -36,6 +37,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public bool IsComplete { get; }
         public Organisation? Organisation { get; }
         public Plan? Plan { get; }
+        public string EventDataAsXml { get; }
 
         public StreetNameSyndicationQueryResult(
             Guid? streetNameId,
@@ -49,7 +51,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             Organisation? organisation,
             Plan? plan)
         {
-            ContainsDetails = false;
+            ContainsEvent = false;
+            ContainsObject = false;
 
             StreetNameId = streetNameId;
             Position = position;
@@ -71,6 +74,33 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             string changeType,
             Instant recordCreatedAt,
             Instant lastChangedOn,
+            bool isComplete,
+            Organisation? organisation,
+            Plan? plan,
+            string eventDataAsXml)
+            : this(streetNameId,
+                position,
+                osloId,
+                nisCode,
+                changeType,
+                recordCreatedAt,
+                lastChangedOn,
+                isComplete,
+                organisation,
+                plan)
+        {
+            ContainsEvent = true;
+            EventDataAsXml = eventDataAsXml;
+        }
+
+        public StreetNameSyndicationQueryResult(
+            Guid? streetNameId,
+            long position,
+            int? osloId,
+            string nisCode,
+            string changeType,
+            Instant recordCreatedAt,
+            Instant lastChangedOn,
             StreetNameStatus? status,
             string nameDutch,
             string nameFrench,
@@ -82,8 +112,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             string homonymAdditionEnglish,
             bool isComplete,
             Organisation? organisation,
-            Plan? plan) :
-            this(
+            Plan? plan)
+            : this(
                 streetNameId,
                 position,
                 osloId,
@@ -95,7 +125,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 organisation,
                 plan)
         {
-            ContainsDetails = true;
+            ContainsObject = true;
 
             Status = status;
             NameDutch = nameDutch;
@@ -107,45 +137,139 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             HomonymAdditionGerman = homonymAdditionGerman;
             HomonymAdditionEnglish = homonymAdditionEnglish;
         }
+
+        public StreetNameSyndicationQueryResult(
+            Guid? streetNameId,
+            long position,
+            int? osloId,
+            string nisCode,
+            string changeType,
+            Instant recordCreatedAt,
+            Instant lastChangedOn,
+            StreetNameStatus? status,
+            string nameDutch,
+            string nameFrench,
+            string nameGerman,
+            string nameEnglish,
+            string homonymAdditionDutch,
+            string homonymAdditionFrench,
+            string homonymAdditionGerman,
+            string homonymAdditionEnglish,
+            bool isComplete,
+            Organisation? organisation,
+            Plan? plan,
+            string eventDataAsXml)
+            : this(
+                streetNameId,
+                position,
+                osloId,
+                nisCode,
+                changeType,
+                recordCreatedAt,
+                lastChangedOn,
+                status,
+                nameDutch,
+                nameFrench,
+                nameGerman,
+                nameEnglish,
+                homonymAdditionDutch,
+                homonymAdditionFrench,
+                homonymAdditionGerman,
+                homonymAdditionEnglish,
+                isComplete,
+                organisation,
+                plan)
+        {
+            ContainsObject = true;
+            ContainsEvent = true;
+
+            EventDataAsXml = eventDataAsXml;
+        }
     }
 
-    public class StreetNameSyndicationQuery : Query<StreetNameSyndicationItem, StreetNameSyndicationFilter, StreetNameSyndicationQueryResult>
+    public class StreetNameSyndicationQuery : Query<StreetNameSyndicationItem, StreetNameSyndicationFilter,
+        StreetNameSyndicationQueryResult>
     {
         private readonly LegacyContext _context;
-        private readonly bool _embed;
+        private readonly bool _embedEvent;
+        private readonly bool _embedObject;
 
-        public StreetNameSyndicationQuery(LegacyContext context, bool embed)
+        public StreetNameSyndicationQuery(
+            LegacyContext context,
+            bool embedEvent,
+            bool embedObject)
         {
             _context = context;
-            _embed = embed;
+            _embedEvent = embedEvent;
+            _embedObject = embedObject;
         }
 
         protected override ISorting Sorting => new StreetNameSyndicationSorting();
 
-        protected override Expression<Func<StreetNameSyndicationItem, StreetNameSyndicationQueryResult>> Transformation => _embed
-            ? (Expression<Func<StreetNameSyndicationItem, StreetNameSyndicationQueryResult>>)(x =>
-                new StreetNameSyndicationQueryResult(
-                    x.StreetNameId,
-                    x.Position,
-                    x.OsloId,
-                    x.NisCode,
-                    x.ChangeType,
-                    x.RecordCreatedAt,
-                    x.LastChangedOn,
-                    x.Status,
-                    x.NameDutch,
-                    x.NameFrench,
-                    x.NameGerman,
-                    x.NameEnglish,
-                    x.HomonymAdditionDutch,
-                    x.HomonymAdditionFrench,
-                    x.HomonymAdditionGerman,
-                    x.HomonymAdditionEnglish,
-                    x.IsComplete,
-                    x.Organisation,
-                    x.Plan))
-            : x =>
-                new StreetNameSyndicationQueryResult(
+        protected override Expression<Func<StreetNameSyndicationItem, StreetNameSyndicationQueryResult>> Transformation
+        {
+            get
+            {
+                if (_embedEvent && _embedObject)
+                    return x => new StreetNameSyndicationQueryResult(
+                        x.StreetNameId,
+                        x.Position,
+                        x.OsloId,
+                        x.NisCode,
+                        x.ChangeType,
+                        x.RecordCreatedAt,
+                        x.LastChangedOn,
+                        x.Status,
+                        x.NameDutch,
+                        x.NameFrench,
+                        x.NameGerman,
+                        x.NameEnglish,
+                        x.HomonymAdditionDutch,
+                        x.HomonymAdditionFrench,
+                        x.HomonymAdditionGerman,
+                        x.HomonymAdditionEnglish,
+                        x.IsComplete,
+                        x.Organisation,
+                        x.Plan,
+                        x.EventDataAsXml);
+
+                if (_embedEvent)
+                    return x => new StreetNameSyndicationQueryResult(
+                        x.StreetNameId,
+                        x.Position,
+                        x.OsloId,
+                        x.NisCode,
+                        x.ChangeType,
+                        x.RecordCreatedAt,
+                        x.LastChangedOn,
+                        x.IsComplete,
+                        x.Organisation,
+                        x.Plan,
+                        x.EventDataAsXml);
+
+                if (_embedObject)
+                    return x => new StreetNameSyndicationQueryResult(
+                        x.StreetNameId,
+                        x.Position,
+                        x.OsloId,
+                        x.NisCode,
+                        x.ChangeType,
+                        x.RecordCreatedAt,
+                        x.LastChangedOn,
+                        x.Status,
+                        x.NameDutch,
+                        x.NameFrench,
+                        x.NameGerman,
+                        x.NameEnglish,
+                        x.HomonymAdditionDutch,
+                        x.HomonymAdditionFrench,
+                        x.HomonymAdditionGerman,
+                        x.HomonymAdditionEnglish,
+                        x.IsComplete,
+                        x.Organisation,
+                        x.Plan);
+
+                return x => new StreetNameSyndicationQueryResult(
                     x.StreetNameId,
                     x.Position,
                     x.OsloId,
@@ -156,6 +280,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     x.IsComplete,
                     x.Organisation,
                     x.Plan);
+            }
+        }
 
         protected override IQueryable<StreetNameSyndicationItem> Filter(FilteringHeader<StreetNameSyndicationFilter> filtering)
         {
@@ -186,5 +312,12 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     public class StreetNameSyndicationFilter
     {
         public long? Position { get; set; }
+        public string Embed { get; set; }
+
+        public bool ContainsEvent =>
+            Embed.Contains("event", StringComparison.OrdinalIgnoreCase);
+
+        public bool ContainsObject =>
+            Embed.Contains("object", StringComparison.OrdinalIgnoreCase);
     }
 }
