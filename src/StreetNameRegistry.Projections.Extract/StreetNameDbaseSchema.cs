@@ -15,7 +15,7 @@ namespace StreetNameRegistry.Projections.Extract
         public StreetNameDbaseSchema() => Fields = new[]
         {
             DbaseField.CreateStringField(new DbaseFieldName(nameof(id)), new DbaseFieldLength(50)),
-            DbaseField.CreateStringField(new DbaseFieldName(nameof(straatnmid)), new DbaseFieldLength(10)),
+            DbaseField.CreateInt32Field(new DbaseFieldName(nameof(straatnmid)), new DbaseFieldLength(10)),
             DbaseField.CreateDateTimeField(new DbaseFieldName(nameof(versieid))),
             DbaseField.CreateStringField(new DbaseFieldName(nameof(gemeenteid)), new DbaseFieldLength(5)),
             DbaseField.CreateStringField(new DbaseFieldName(nameof(straatnm)), new DbaseFieldLength(80)),

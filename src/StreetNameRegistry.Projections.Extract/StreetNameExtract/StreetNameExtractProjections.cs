@@ -322,7 +322,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             => UpdateRecord(streetName, record =>
             {
                 record.id.Value = $"{IdUri}/{id}";
-                record.straatnmid.Value = id.ToString(CultureInfo.InvariantCulture);
+                record.straatnmid.Value = id;
             });
 
         private void UpdateVersie(StreetNameExtractItem streetName, Instant timestamp)

@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Projections.Extract
         public static readonly StreetNameDbaseSchema Schema = new StreetNameDbaseSchema();
 
         public DbaseString id { get; }
-        public DbaseString straatnmid { get; }
+        public DbaseInt32 straatnmid { get; }
         public DbaseDateTime versieid { get; }
         public DbaseString gemeenteid { get; }
         public DbaseString straatnm { get; }
@@ -17,7 +17,7 @@ namespace StreetNameRegistry.Projections.Extract
         public StreetNameDbaseRecord()
         {
             id = new DbaseString(Schema.id);
-            straatnmid = new DbaseString(Schema.straatnmid);
+            straatnmid = new DbaseInt32(Schema.straatnmid);
             versieid = new DbaseDateTime(Schema.versieid);
             gemeenteid = new DbaseString(Schema.gemeenteid);
             straatnm = new DbaseString(Schema.straatnm);
