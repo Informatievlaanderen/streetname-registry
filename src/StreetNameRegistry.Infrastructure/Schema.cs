@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Infrastructure
     public class Schema
     {
         public const string Default = "StreetNameRegistry";
+        public const string Import = "StreetNameRegistryImport";
 
         public const string Extract = "StreetNameRegistryExtract";
         public const string Legacy = "StreetNameRegistryLegacy";

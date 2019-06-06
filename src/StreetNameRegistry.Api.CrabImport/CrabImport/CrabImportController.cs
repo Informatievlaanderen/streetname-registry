@@ -1,5 +1,17 @@
 namespace StreetNameRegistry.Api.CrabImport.CrabImport
 {
+    using Be.Vlaanderen.Basisregisters.Api;
+    using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.AspNetCore.Mvc.Middleware;
+    using Be.Vlaanderen.Basisregisters.GrAr.Import.Api;
+    using Be.Vlaanderen.Basisregisters.GrAr.Import.Processing;
+    using Be.Vlaanderen.Basisregisters.GrAr.Import.Processing.CrabImport;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json.Converters;
+    using Requests;
+    using Swashbuckle.AspNetCore.Filters;
     using System;
     using System.Collections.Async;
     using System.Collections.Concurrent;
@@ -9,16 +21,6 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
     using System.Security.Claims;
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.Api;
-    using Be.Vlaanderen.Basisregisters.Api.Exceptions;
-    using Be.Vlaanderen.Basisregisters.AspNetCore.Mvc.Middleware;
-    using Be.Vlaanderen.Basisregisters.GrAr.Import.Api;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json.Converters;
-    using Requests;
-    using Swashbuckle.AspNetCore.Filters;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
 
     [ApiVersion("1.0")]
@@ -104,6 +106,24 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
                 GetElapsedMilliseconds(start, Stopwatch.GetTimestamp()));
 
             return Accepted(tags.Any() ? tags.Max() : null);
+        }
+
+        [HttpGet("batch/current")]
+        public IActionResult GetBatchStatus(
+            [FromServices] CrabImportContext context)
+        {
+            return Ok(context.LastBatch);
+        }
+
+        [HttpPost("batch/current")]
+        public IActionResult SetBatchStatus(
+            [FromServices] CrabImportContext context,
+            [FromBody] ImportBatchStatus batchStatus)
+        {
+            context.SetCurrent(batchStatus);
+            context.SaveChanges();
+
+            return Ok();
         }
 
         private IDictionary<string, object> GetMetadata()
