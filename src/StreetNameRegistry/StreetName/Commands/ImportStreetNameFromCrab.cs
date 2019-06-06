@@ -75,7 +75,7 @@ namespace StreetNameRegistry.StreetName.Commands
             yield return SecondaryTransStreetName;
             yield return PrimaryLanguage;
             yield return SecondaryLanguage;
-            yield return LifeTime;
+            yield return LifeTime.BeginDateTime.Print();
             yield return Timestamp;
             yield return Operator;
             yield return Modification;

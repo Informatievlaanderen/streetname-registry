@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Tests
         [Fact]
         public void Given_ImportStreetNameFromCrabCommand_Then_CommandId_is_expected()
         {
-            var expectedGuid = new Guid("4451cdbd-2fb1-566c-a854-72cdff37ed97");
+            var expectedGuid = new Guid("2a9d9a37-2588-5952-aa20-ff005e3997ab");
             var importStreetNameFromCrabCommand = new ImportStreetNameFromCrab(
                 new CrabStreetNameId(1),
                 new CrabMunicipalityId(1),
@@ -29,7 +29,7 @@ namespace StreetNameRegistry.Tests
                 CrabOrganisation.Municipality);
 
             var @string = importStreetNameFromCrabCommand.ToString();
-            @string.Should().Be(@"1, 1, 11001, Acacialaan (Dutch),  (English), ACACIAL (Dutch),  (English), Dutch, English, 1830-01-01T00:00:00.000000000 -> ø, 2013-04-12T18:06:58Z, VLM\CRABSSISservice, Correction, Municipality");
+            @string.Should().Be(@"1, 1, 11001, Acacialaan (Dutch),  (English), ACACIAL (Dutch),  (English), Dutch, English, 1830-01-01T00:00:00.000000000, 2013-04-12T18:06:58Z, VLM\CRABSSISservice, Correction, Municipality");
 
             var createdId = importStreetNameFromCrabCommand.CreateCommandId();
             createdId.Should().Be(expectedGuid);
@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Tests
         [Fact]
         public void Given_ImportStreetNameStatusFromCrabCommand_Then_CommandId_is_expected()
         {
-            var expectedGuid = new Guid("0ecd85de-4990-506c-9b7d-d2952a96b768");
+            var expectedGuid = new Guid("f0d2c06f-1ac9-517d-9366-5b107ed4410c");
             var importStreetNameStatusFromCrabCommand = new ImportStreetNameStatusFromCrab(
                 new CrabStreetNameStatusId(1),
                 new CrabStreetNameId(1),
@@ -50,7 +50,7 @@ namespace StreetNameRegistry.Tests
                 CrabOrganisation.Municipality);
 
             var @string = importStreetNameStatusFromCrabCommand.ToString();
-            @string.Should().Be(@"1, 1, InUse, 1830-01-01T00:00:00.000000000 -> ø, 2013-04-12T18:07:26Z, VLM\CRABSSISservice, Correction, Municipality");
+            @string.Should().Be(@"1, 1, InUse, 1830-01-01T00:00:00.000000000, 2013-04-12T18:07:26Z, VLM\CRABSSISservice, Correction, Municipality");
 
             var createdId = importStreetNameStatusFromCrabCommand.CreateCommandId();
             createdId.Should().Be(expectedGuid);

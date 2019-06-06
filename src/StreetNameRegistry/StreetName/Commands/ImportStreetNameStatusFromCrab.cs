@@ -51,7 +51,7 @@ namespace StreetNameRegistry.StreetName.Commands
             yield return StreetNameStatusId;
             yield return StreetNameId;
             yield return StreetNameStatus;
-            yield return LifeTime;
+            yield return LifeTime.BeginDateTime.Print();
             yield return Timestamp;
             yield return Operator;
             yield return Modification;
