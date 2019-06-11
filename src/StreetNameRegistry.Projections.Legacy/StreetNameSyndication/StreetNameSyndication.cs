@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
         public Modification? Modification { get; set; }
         public string Operator { get; set; }
         public Organisation? Organisation { get; set; }
-        public Plan? Plan { get; set; }
+        public string Reason { get; set; }
         public string EventDataAsXml { get; set; }
 
         public StreetNameSyndicationItem CloneAndApplyEventInfo(
@@ -81,7 +81,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 Status = Status,
                 IsComplete = IsComplete,
 
-                Plan = Plan,
+                Reason = Reason,
                 Modification = Modification,
                 Operator = Operator,
                 Organisation = Organisation,
@@ -133,7 +133,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             b.Property(x => x.Modification);
             b.Property(x => x.Operator);
             b.Property(x => x.Organisation);
-            b.Property(x => x.Plan);
+            b.Property(x => x.Reason);
             b.Property(x => x.EventDataAsXml);
 
             b.Ignore(x => x.RecordCreatedAt);

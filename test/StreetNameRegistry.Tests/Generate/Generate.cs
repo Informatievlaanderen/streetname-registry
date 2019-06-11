@@ -123,7 +123,7 @@ namespace StreetNameRegistry.Tests.Generate
             var provenance = new Provenance(
                 Instant.FromDateTimeOffset(DateTimeOffset.Now),
                 (Application)Produce.Integer(1, 5).Generate(r),
-                (Plan)Produce.Integer(1, 5).Generate(r),
+                new Reason(Produce.AlphaNumericString(5, 15).Generate(r)),
                 new Operator(Produce.AlphaNumericString(5, 15).Generate(r)),
                 (Modification)Produce.Integer(1, 3).Generate(r),
                 (Organisation)Produce.Integer(1, 10).Generate(r));
@@ -224,7 +224,7 @@ namespace StreetNameRegistry.Tests.Generate
                 var provenance = new Provenance(
                     Instant.FromDateTimeOffset(DateTimeOffset.Now),
                     (Application)Produce.Integer(1, 5).Generate(new Random()),
-                    (Plan)Produce.Integer(1, 5).Generate(new Random()),
+                    new Reason(Produce.AlphaNumericString(5, 15).Generate(new Random())),
                     new Operator(Produce.AlphaNumericString(5, 15).Generate(new Random())),
                     (Modification)Produce.Integer(1, 3).Generate(new Random()),
                     (Organisation)Produce.Integer(1, 10).Generate(new Random()));
@@ -364,7 +364,7 @@ namespace StreetNameRegistry.Tests.Generate
 
         public static AtomEntry WithObjectId<TContent>(this AtomEntry entry, Guid id)
         {
-            var syndicationContent = (SyndicationContent<TContent>) entry.Content;
+            var syndicationContent = (SyndicationContent<TContent>)entry.Content;
             if (!(syndicationContent.Object is TContent content))
                 return entry;
 

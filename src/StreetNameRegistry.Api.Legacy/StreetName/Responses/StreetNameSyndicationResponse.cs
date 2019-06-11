@@ -18,7 +18,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
     using Microsoft.Extensions.Options;
     using Microsoft.SyndicationFeed;
     using Microsoft.SyndicationFeed.Atom;
-    using Projections.Legacy.StreetNameSyndication;
     using Query;
     using Swashbuckle.AspNetCore.Filters;
     using Provenance = Be.Vlaanderen.Basisregisters.GrAr.Provenance.Syndication.Provenance;
@@ -104,7 +103,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                     streetName.IsComplete,
                     streetName.LastChangedOn.ToBelgianDateTimeOffset(),
                     streetName.Organisation,
-                    streetName.Plan);
+                    streetName.Reason);
 
             if (streetName.ContainsEvent)
             {
@@ -195,7 +194,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             bool isComplete,
             DateTimeOffset version,
             Organisation? organisation,
-            Plan? plan)
+            string reason)
         {
             StreetNameId = streetNameId;
             NisCode = nisCode;
@@ -223,7 +222,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 
             HomonymAdditions = homoniemToevoegingen.Where(x => !string.IsNullOrEmpty(x.Spelling)).ToList();
 
-            Provenance = new Provenance(organisation, plan);
+            Provenance = new Provenance(organisation, new Reason(reason));
         }
     }
 
@@ -280,7 +279,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                 <IsCompleet>false</IsCompleet>
                 <Creatie>
                 <Organisatie>Gemeente</Organisatie>
-                <Plan>Centrale bijhouding CRAB</Plan>
+                <Reden>Centrale bijhouding CRAB</Reden>
                 </Creatie>
                 </Straatnaam>
                 ]]></content>

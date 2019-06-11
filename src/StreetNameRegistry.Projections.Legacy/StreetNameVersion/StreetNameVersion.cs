@@ -43,7 +43,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
         public Modification? Modification { get; set; }
         public string Operator { get; set; }
         public Organisation? Organisation { get; set; }
-        public Plan? Plan { get; set; }
+        public string Reason { get; set; }
 
         public StreetNameVersion CloneAndApplyEventInfo(
             long newPosition,
@@ -79,7 +79,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
                 Modification = Modification,
                 Operator = Operator,
                 Organisation = Organisation,
-                Plan = Plan
+                Reason = Reason
             };
 
             editFunc(newItem);
@@ -121,7 +121,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
             builder.Property(x => x.Modification);
             builder.Property(x => x.Operator);
             builder.Property(x => x.Organisation);
-            builder.Property(x => x.Plan);
+            builder.Property(x => x.Reason);
 
             builder.Ignore(x => x.VersionTimestamp);
 

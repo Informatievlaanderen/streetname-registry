@@ -80,7 +80,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
         {
             streetNameVersion.Organisation = provenance.Organisation;
             streetNameVersion.Application = provenance.Application;
-            streetNameVersion.Plan = provenance.Plan;
+            streetNameVersion.Reason = provenance.Reason;
             streetNameVersion.Modification = provenance.Modification;
             streetNameVersion.Operator = provenance.Operator;
             streetNameVersion.VersionTimestamp = provenance.Timestamp;

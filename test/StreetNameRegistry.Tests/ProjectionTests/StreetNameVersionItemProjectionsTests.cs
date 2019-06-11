@@ -31,7 +31,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var id = Arrange(Generate.StreetNameId);
 
             var streetNameWasRegistered = Arrange(Generate.StreetNameWasRegistered.Select(e => e.WithId(id)));
-            var provenance = new Provenance(Instant.FromDateTimeOffset(DateTimeOffset.Now), Application.CrabWstEditService, Plan.DecentralManagmentCrab, new Operator("test"), Modification.Update, Organisation.Municipality);
+            var provenance = new Provenance(Instant.FromDateTimeOffset(DateTimeOffset.Now), Application.CrabWstEditService, Reason.DecentralManagmentCrab, new Operator("test"), Modification.Update, Organisation.Municipality);
             ((ISetProvenance)streetNameWasRegistered).SetProvenance(provenance);
 
             var projection = new StreetNameVersionProjections();
@@ -52,7 +52,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
 
                     streetNameVersion.Should().NotBeNull();
 
-                    streetNameVersion.Plan.Should().Be(provenance.Plan);
+                    streetNameVersion.Reason.Should().Be(provenance.Reason);
                     streetNameVersion.Application.Should().Be(provenance.Application);
                     streetNameVersion.VersionTimestamp.Should().Be(provenance.Timestamp);
                     streetNameVersion.Operator.Should().Be(provenance.Operator.ToString());

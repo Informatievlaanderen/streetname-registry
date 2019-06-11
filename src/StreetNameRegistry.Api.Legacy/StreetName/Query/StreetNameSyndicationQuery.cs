@@ -36,7 +36,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public string HomonymAdditionEnglish { get; }
         public bool IsComplete { get; }
         public Organisation? Organisation { get; }
-        public Plan? Plan { get; }
+        public string Reason { get; }
         public string EventDataAsXml { get; }
 
         public StreetNameSyndicationQueryResult(
@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             Instant lastChangedOn,
             bool isComplete,
             Organisation? organisation,
-            Plan? plan)
+            string reason)
         {
             ContainsEvent = false;
             ContainsObject = false;
@@ -63,7 +63,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             LastChangedOn = lastChangedOn;
             IsComplete = isComplete;
             Organisation = organisation;
-            Plan = plan;
+            Reason = reason;
         }
 
         public StreetNameSyndicationQueryResult(
@@ -76,7 +76,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             Instant lastChangedOn,
             bool isComplete,
             Organisation? organisation,
-            Plan? plan,
+            string reason,
             string eventDataAsXml)
             : this(streetNameId,
                 position,
@@ -87,7 +87,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 lastChangedOn,
                 isComplete,
                 organisation,
-                plan)
+                reason)
         {
             ContainsEvent = true;
             EventDataAsXml = eventDataAsXml;
@@ -112,7 +112,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             string homonymAdditionEnglish,
             bool isComplete,
             Organisation? organisation,
-            Plan? plan)
+            string reason)
             : this(
                 streetNameId,
                 position,
@@ -123,7 +123,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 lastChangedOn,
                 isComplete,
                 organisation,
-                plan)
+                reason)
         {
             ContainsObject = true;
 
@@ -157,7 +157,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             string homonymAdditionEnglish,
             bool isComplete,
             Organisation? organisation,
-            Plan? plan,
+            string reason,
             string eventDataAsXml)
             : this(
                 streetNameId,
@@ -178,7 +178,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 homonymAdditionEnglish,
                 isComplete,
                 organisation,
-                plan)
+                reason)
         {
             ContainsEvent = true;
 
@@ -228,7 +228,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                         x.HomonymAdditionEnglish,
                         x.IsComplete,
                         x.Organisation,
-                        x.Plan,
+                        x.Reason,
                         x.EventDataAsXml);
 
                 if (_embedEvent)
@@ -242,7 +242,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                         x.LastChangedOn,
                         x.IsComplete,
                         x.Organisation,
-                        x.Plan,
+                        x.Reason,
                         x.EventDataAsXml);
 
                 if (_embedObject)
@@ -265,7 +265,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                         x.HomonymAdditionEnglish,
                         x.IsComplete,
                         x.Organisation,
-                        x.Plan);
+                        x.Reason);
 
                 return x => new StreetNameSyndicationQueryResult(
                     x.StreetNameId,
@@ -277,7 +277,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     x.LastChangedOn,
                     x.IsComplete,
                     x.Organisation,
-                    x.Plan);
+                    x.Reason);
             }
         }
 
