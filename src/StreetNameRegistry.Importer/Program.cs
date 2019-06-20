@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Importer
     using Serilog.Events;
     using System;
     using System.Diagnostics;
+    using System.Reflection;
 
     internal class Program
     {
@@ -39,6 +40,7 @@ namespace StreetNameRegistry.Importer
                     .UseHttpApiProxyConfig(settings)
                     .UseCommandProcessorConfig(settings)
                     .UseDefaultSerializerSettingsForCrabImports()
+                    .ConfigureImportFeedFromAssembly(Assembly.GetExecutingAssembly())
                     .Build();
 
                 WaitForStart();

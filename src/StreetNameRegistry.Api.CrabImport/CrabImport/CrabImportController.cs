@@ -21,6 +21,7 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
     using System.Security.Claims;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.GrAr.Import.Processing.Api.Messages;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
 
     [ApiVersion("1.0")]
@@ -108,17 +109,18 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
             return Accepted(tags.Any() ? tags.Max() : null);
         }
 
-        [HttpGet("batch/current")]
+        [HttpGet("batch/{feed}")]
         public IActionResult GetBatchStatus(
-            [FromServices] CrabImportContext context)
+            [FromServices] CrabImportContext context,
+            [FromRoute] string feed)
         {
-            return Ok(context.LastBatch);
+            return Ok(context.LastBatchFor((ImportFeed)feed));
         }
 
-        [HttpPost("batch/current")]
+        [HttpPost("batch")]
         public IActionResult SetBatchStatus(
             [FromServices] CrabImportContext context,
-            [FromBody] ImportBatchStatus batchStatus)
+            [FromBody] BatchStatusUpdate batchStatus)
         {
             context.SetCurrent(batchStatus);
             context.SaveChanges();
