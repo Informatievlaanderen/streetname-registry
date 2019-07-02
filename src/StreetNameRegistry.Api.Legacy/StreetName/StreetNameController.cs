@@ -360,12 +360,12 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
 
                 case Language.German when !string.IsNullOrEmpty(item.HomonymAdditionGerman):
                     return new GeografischeNaam(
-                        item.NameGerman,
+                        item.HomonymAdditionGerman,
                         Taal.DE);
 
                 case Language.English when !string.IsNullOrEmpty(item.HomonymAdditionEnglish):
                     return new GeografischeNaam(
-                        item.NameEnglish,
+                        item.HomonymAdditionEnglish,
                         Taal.EN);
 
                 default:
