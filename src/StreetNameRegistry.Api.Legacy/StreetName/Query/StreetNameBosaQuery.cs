@@ -68,10 +68,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
             if (!string.IsNullOrEmpty(filter.ObjectId))
             {
-                if (!int.TryParse(filter.ObjectId, out var localId))
+                if (!int.TryParse(filter.ObjectId, out var persistentLocalId))
                     return new StreetNameBosaResponse();
 
-                streetNames = streetNames.Where(s => s.PersistentLocalId == localId);
+                streetNames = streetNames.Where(s => s.PersistentLocalId == persistentLocalId);
             }
 
             if (filter.StreetNameVersion.HasValue)
