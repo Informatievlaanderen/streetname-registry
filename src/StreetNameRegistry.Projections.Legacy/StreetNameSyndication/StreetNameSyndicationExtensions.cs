@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 applyEventInfoOn);
 
             newStreetNameSyndicationItem.ApplyProvenance(provenance);
-            newStreetNameSyndicationItem.SetEventData(message.Message);
+            newStreetNameSyndicationItem.SetEventData(message.Message, message.EventName);
 
             await context
                 .StreetNameSyndication
@@ -67,8 +67,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             item.Reason = provenance.Reason;
         }
 
-        public static void SetEventData<T>(this StreetNameSyndicationItem syndicationItem, T message)
-            => syndicationItem.EventDataAsXml = message.ToXml(message.GetType().Name).ToString(SaveOptions.DisableFormatting);
+        public static void SetEventData<T>(this StreetNameSyndicationItem syndicationItem, T message, string eventName)
+            => syndicationItem.EventDataAsXml = message.ToXml(eventName).ToString(SaveOptions.DisableFormatting);
 
         private static ProjectionItemNotFoundException<StreetNameSyndicationProjections> DatabaseItemNotFound(Guid streetNameId)
             => new ProjectionItemNotFoundException<StreetNameSyndicationProjections>(streetNameId.ToString("D"));
