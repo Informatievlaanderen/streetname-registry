@@ -28,12 +28,12 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                     .AddAsync(streetNameSyndicationItem, ct);
             });
 
-            When<Envelope<StreetNameOsloIdWasAssigned>>(async (context, message, ct) =>
+            When<Envelope<StreetNamePersistentLocalIdWasAssigned>>(async (context, message, ct) =>
             {
                 await context.CreateNewStreetNameSyndicationItem(
                     message.Message.StreetNameId,
                     message,
-                    x => x.OsloId = message.Message.OsloId,
+                    x => x.PersistentLocalId = message.Message.PersistentLocalId,
                     ct);
             });
 

@@ -41,27 +41,27 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             };
 
             // TODO: Hier moet prolly version nog ergens in
-            if (streetName.OsloId.HasValue)
+            if (streetName.PersistentLocalId.HasValue)
             {
                 item.AddLink(
                     new SyndicationLink(
-                        new Uri($"{responseOptions.Value.Naamruimte}/{streetName.OsloId.Value}"),
+                        new Uri($"{responseOptions.Value.Naamruimte}/{streetName.PersistentLocalId.Value}"),
                         AtomLinkTypes.Related));
 
                 item.AddLink(
                     new SyndicationLink(
-                        new Uri(string.Format(responseOptions.Value.DetailUrl, streetName.OsloId.Value)),
+                        new Uri(string.Format(responseOptions.Value.DetailUrl, streetName.PersistentLocalId.Value)),
                         AtomLinkTypes.Self));
 
                 item.AddLink(
                     new SyndicationLink(
-                            new Uri(string.Format($"{responseOptions.Value.DetailUrl}.xml", streetName.OsloId.Value)),
+                            new Uri(string.Format($"{responseOptions.Value.DetailUrl}.xml", streetName.PersistentLocalId.Value)),
                             AtomLinkTypes.Alternate)
                     { MediaType = MediaTypeNames.Application.Xml });
 
                 item.AddLink(
                     new SyndicationLink(
-                            new Uri(string.Format($"{responseOptions.Value.DetailUrl}.json", streetName.OsloId.Value)),
+                            new Uri(string.Format($"{responseOptions.Value.DetailUrl}.json", streetName.PersistentLocalId.Value)),
                             AtomLinkTypes.Alternate)
                     { MediaType = MediaTypeNames.Application.Json });
             }
@@ -89,7 +89,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                 content.Object = new StreetNameSyndicationContent(
                     streetName.StreetNameId.Value,
                     naamruimte,
-                    streetName.OsloId,
+                    streetName.PersistentLocalId,
                     streetName.Status,
                     streetName.NisCode,
                     streetName.NameDutch,
@@ -180,7 +180,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         public StreetNameSyndicationContent(
             Guid streetNameId,
             string naamruimte,
-            int? osloId,
+            int? persistentLocalId,
             StreetNameStatus? status,
             string nisCode,
             string nameDutch,
@@ -198,7 +198,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         {
             StreetNameId = streetNameId;
             NisCode = nisCode;
-            Identificator = new Identificator(naamruimte, osloId?.ToString(CultureInfo.InvariantCulture), version);
+            Identificator = new Identificator(naamruimte, persistentLocalId?.ToString(CultureInfo.InvariantCulture), version);
             StreetNameStatus = status?.ConvertFromStreetNameStatus();
             IsComplete = isComplete;
 

@@ -14,14 +14,14 @@ namespace StreetNameRegistry.Projections.LastChangedList
         public LastChangedProjections()
             : base (SupportedAcceptTypes)
         {
-            When<Envelope<StreetNameOsloIdWasAssigned>>(async (context, message, ct) =>
+            When<Envelope<StreetNamePersistentLocalIdWasAssigned>>(async (context, message, ct) =>
             {
                 var attachedRecords = await GetLastChangedRecordsAndUpdatePosition(message.Message.StreetNameId.ToString(), message.Position, context, ct);
 
                 foreach (var record in attachedRecords)
                 {
-                    record.CacheKey = string.Format(record.CacheKey, message.Message.OsloId);
-                    record.Uri = string.Format(record.Uri, message.Message.OsloId);
+                    record.CacheKey = string.Format(record.CacheKey, message.Message.PersistentLocalId);
+                    record.Uri = string.Format(record.Uri, message.Message.PersistentLocalId);
                 }
             });
 

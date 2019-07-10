@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
         public long Position { get; set; }
 
         public Guid StreetNameId { get; set; }
-        public int? OsloId { get; set; }
+        public int? PersistentLocalId { get; set; }
         public string NisCode { get; set; }
         public string ChangeType { get; set; }
 
@@ -66,7 +66,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 StreetNameId = StreetNameId,
                 NisCode = NisCode,
 
-                OsloId = OsloId,
+                PersistentLocalId = PersistentLocalId,
 
                 NameDutch = NameDutch,
                 NameEnglish = NameEnglish,

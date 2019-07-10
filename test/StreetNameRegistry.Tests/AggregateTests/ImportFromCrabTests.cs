@@ -17,12 +17,12 @@ namespace StreetNameRegistry.Tests.AggregateTests
         }
 
         [Fact]
-        public void AppliesOsloIdWasAssigned()
+        public void AppliesPersistentLocalIdWasAssigned()
         {
             var sut = RegisterWithId(Arrange(Generate.StreetNameId));
             sut = Act(sut, Arrange(Generate.CrabLifetime), Arrange(Generate.CrabModificationNullableExceptDeleteCorrection));
 
-            sut.Should().HaveSingleChange<StreetNameOsloIdWasAssigned>();
+            sut.Should().HaveSingleChange<StreetNamePersistentLocalIdWasAssigned>();
         }
 
         [Fact]

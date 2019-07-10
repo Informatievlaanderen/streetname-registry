@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public Guid? StreetNameId { get; }
         public long Position { get; }
         public string ChangeType { get; }
-        public int? OsloId { get; }
+        public int? PersistentLocalId { get; }
         public string NisCode { get; }
         public Instant RecordCreatedAt { get; }
         public Instant LastChangedOn { get; }
@@ -42,7 +42,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public StreetNameSyndicationQueryResult(
             Guid? streetNameId,
             long position,
-            int? osloId,
+            int? persistentLocalId,
             string nisCode,
             string changeType,
             Instant recordCreatedAt,
@@ -56,7 +56,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
             StreetNameId = streetNameId;
             Position = position;
-            OsloId = osloId;
+            PersistentLocalId = persistentLocalId;
             NisCode = nisCode;
             ChangeType = changeType;
             RecordCreatedAt = recordCreatedAt;
@@ -69,7 +69,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public StreetNameSyndicationQueryResult(
             Guid? streetNameId,
             long position,
-            int? osloId,
+            int? persistentLocalId,
             string nisCode,
             string changeType,
             Instant recordCreatedAt,
@@ -80,7 +80,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             string eventDataAsXml)
             : this(streetNameId,
                 position,
-                osloId,
+                persistentLocalId,
                 nisCode,
                 changeType,
                 recordCreatedAt,
@@ -96,7 +96,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public StreetNameSyndicationQueryResult(
             Guid? streetNameId,
             long position,
-            int? osloId,
+            int? persistentLocalId,
             string nisCode,
             string changeType,
             Instant recordCreatedAt,
@@ -116,7 +116,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             : this(
                 streetNameId,
                 position,
-                osloId,
+                persistentLocalId,
                 nisCode,
                 changeType,
                 recordCreatedAt,
@@ -141,7 +141,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public StreetNameSyndicationQueryResult(
             Guid? streetNameId,
             long position,
-            int? osloId,
+            int? persistentLocalId,
             string nisCode,
             string changeType,
             Instant recordCreatedAt,
@@ -162,7 +162,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             : this(
                 streetNameId,
                 position,
-                osloId,
+                persistentLocalId,
                 nisCode,
                 changeType,
                 recordCreatedAt,
@@ -212,7 +212,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     return x => new StreetNameSyndicationQueryResult(
                         x.StreetNameId,
                         x.Position,
-                        x.OsloId,
+                        x.PersistentLocalId,
                         x.NisCode,
                         x.ChangeType,
                         x.RecordCreatedAt,
@@ -235,7 +235,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     return x => new StreetNameSyndicationQueryResult(
                         x.StreetNameId,
                         x.Position,
-                        x.OsloId,
+                        x.PersistentLocalId,
                         x.NisCode,
                         x.ChangeType,
                         x.RecordCreatedAt,
@@ -249,7 +249,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     return x => new StreetNameSyndicationQueryResult(
                         x.StreetNameId,
                         x.Position,
-                        x.OsloId,
+                        x.PersistentLocalId,
                         x.NisCode,
                         x.ChangeType,
                         x.RecordCreatedAt,
@@ -270,7 +270,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 return x => new StreetNameSyndicationQueryResult(
                     x.StreetNameId,
                     x.Position,
-                    x.OsloId,
+                    x.PersistentLocalId,
                     x.NisCode,
                     x.ChangeType,
                     x.RecordCreatedAt,

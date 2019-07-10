@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
         public static string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
 
         public Guid StreetNameId { get; set; }
-        public int OsloId { get; set; }
+        public int PersistentLocalId { get; set; }
 
         public string NisCode { get; set; }
 
@@ -70,7 +70,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
                 .ForSqlServerIsClustered(false);
 
             builder.Property(p => p.NisCode);
-            builder.Property(p => p.OsloId);
+            builder.Property(p => p.PersistentLocalId);
             builder.Property(p => p.NameDutch);
             builder.Property(p => p.NameDutchSearch);
             builder.Property(p => p.NameFrench);
@@ -91,7 +91,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
             builder.Property(p => p.Removed);
 
             builder.HasIndex(p => p.NisCode);
-            builder.HasIndex(p => p.OsloId);
+            builder.HasIndex(p => p.PersistentLocalId);
             builder.HasIndex(p => p.Status);
             builder.HasIndex(p => p.IsFlemishRegion);
             builder.HasIndex(p => p.Removed);

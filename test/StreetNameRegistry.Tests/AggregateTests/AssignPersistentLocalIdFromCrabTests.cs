@@ -8,9 +8,9 @@ namespace StreetNameRegistry.Tests.AggregateTests
     using Xunit;
     using Xunit.Abstractions;
 
-    public class AssignOsloIdFromCrabTests : TestBase
+    public class AssignPersistentLocalIdFromCrabTests : TestBase
     {
-        public AssignOsloIdFromCrabTests(ITestOutputHelper output) : base(output)
+        public AssignPersistentLocalIdFromCrabTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -20,39 +20,39 @@ namespace StreetNameRegistry.Tests.AggregateTests
         }
 
         [Fact]
-        public void AppliesOsloIdWasAssigned()
+        public void AppliesPersistentLocalIdWasAssigned()
         {
             //Arrange
             var streetNameId = Arrange(Generate.StreetNameId);
             var sut = RegisterWithId(streetNameId);
             var date = Arrange(Produce.Instant());
-            var osloId = Arrange(Produce.Integer(10000, 15000));
+            var persistentLocalId = Arrange(Produce.Integer(10000, 15000));
 
             //Act
-            sut.AssignOsloId(new OsloId(osloId), new OsloAssignmentDate(date));
+            sut.AssignPersistentLocalId(new PersistentLocalId(persistentLocalId), new PersistentLocalIdAssignmentDate(date));
 
             //Assert
             sut.Should().HaveChanges();
-            sut.Should().HaveSingleChange<StreetNameOsloIdWasAssigned>()
+            sut.Should().HaveSingleChange<StreetNamePersistentLocalIdWasAssigned>()
                 .Which.Should().HaveStreetNameId(streetNameId)
-                .And.HaveOsloId(osloId)
+                .And.HavePersistentLocalId(persistentLocalId)
                 .And.HaveAssignmentDate(date);
         }
 
         [Fact]
-        public void AppliesOsloIdWhenAlreadyAssignedDoesNothing()
+        public void AppliesPersistentLocalIdWhenAlreadyAssignedDoesNothing()
         {
             //Arrange
             var streetNameId = Arrange(Generate.StreetNameId);
             var sut = RegisterWithId(streetNameId);
-            var osloId = Arrange(Produce.Integer(10000, 15000));
+            var persistentLocalId = Arrange(Produce.Integer(10000, 15000));
             var date = Arrange(Produce.Instant());
 
-            sut.AssignOsloId(new OsloId(osloId), new OsloAssignmentDate(date));
+            sut.AssignPersistentLocalId(new PersistentLocalId(persistentLocalId), new PersistentLocalIdAssignmentDate(date));
             sut.ClearChanges();
 
             //Act
-            sut.AssignOsloId(new OsloId(Arrange(Produce.Integer(10000, 15000))), new OsloAssignmentDate(date));
+            sut.AssignPersistentLocalId(new PersistentLocalId(Arrange(Produce.Integer(10000, 15000))), new PersistentLocalIdAssignmentDate(date));
 
             //Assert
             sut.Should().HaveCountOfChanges<object>(0);

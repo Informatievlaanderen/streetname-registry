@@ -52,13 +52,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         /// <param name="legacyContext"></param>
         /// <param name="syndicationContext"></param>
         /// <param name="responseOptions"></param>
-        /// <param name="osloId">De Oslo identificator van de straatnaam.</param>
+        /// <param name="persistentLocalId">De persistente lokale identificator van de straatnaam.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Als de straatnaam gevonden is.</response>
         /// <response code="404">Als de straatnaam niet gevonden kan worden.</response>
         /// <response code="410">Als de straatnaam verwijderd is.</response>
         /// <response code="500">Als er een interne fout is opgetreden.</response>
-        [HttpGet("{osloId}")]
+        [HttpGet("{persistentLocalId}")]
         [ProducesResponseType(typeof(StreetNameResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status410Gone)]
@@ -71,12 +71,12 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             [FromServices] LegacyContext legacyContext,
             [FromServices] SyndicationContext syndicationContext,
             [FromServices] IOptions<ResponseOptions> responseOptions,
-            [FromRoute] int osloId,
+            [FromRoute] int persistentLocalId,
             CancellationToken cancellationToken = default)
         {
             return Ok(await
                 new StreetNameDetailQuery(legacyContext, syndicationContext, responseOptions)
-                    .FilterAsync(osloId, cancellationToken));
+                    .FilterAsync(persistentLocalId, cancellationToken));
         }
 
         /// <summary>
@@ -84,13 +84,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         /// </summary>
         /// <param name="legacyContext"></param>
         /// <param name="responseOptions"></param>
-        /// <param name="osloId">De Oslo identificator van de straatnaam.</param>
+        /// <param name="persistentLocalId">De persistente lokale identificator van de straatnaam.</param>
         /// <param name="versie">De specifieke versie van de straatnaam.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Als de straatnaam gevonden is.</response>
         /// <response code="404">Als de straatnaam niet gevonden kan worden.</response>
         /// <response code="500">Als er een interne fout is opgetreden.</response>
-        [HttpGet("{osloId}/versies/{versie}")]
+        [HttpGet("{persistentLocalId}/versies/{versie}")]
         [ProducesResponseType(typeof(StreetNameResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
@@ -100,7 +100,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         public async Task<IActionResult> Get(
             [FromServices] LegacyContext legacyContext,
             [FromServices] IOptions<ResponseOptions> responseOptions,
-            [FromRoute] int osloId,
+            [FromRoute] int persistentLocalId,
             [FromRoute] DateTimeOffset versie,
             CancellationToken cancellationToken = default)
         {
@@ -108,7 +108,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                 .StreetNameVersions
                 .AsNoTracking()
                 .Where(x => !x.Removed)
-                .SingleOrDefaultAsync(item => item.OsloId == osloId && item.VersionTimestampAsDateTimeOffset == versie, cancellationToken);
+                .SingleOrDefaultAsync(item => item.PersistentLocalId == persistentLocalId && item.VersionTimestampAsDateTimeOffset == versie, cancellationToken);
 
             if (streetName == null)
                 throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
@@ -125,7 +125,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             return Ok(
                 new StreetNameResponse(
                     responseOptions.Value.Naamruimte,
-                    osloId,
+                    persistentLocalId,
                     streetName.Status.ConvertFromStreetNameStatus(),
                     gemeente,
                     streetName.VersionTimestampAsDateTimeOffset.Value,
@@ -177,7 +177,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                     Straatnamen = await pagedStreetNames
                         .Items
                         .Select(m => new StreetNameListItemResponse(
-                            m.OsloId,
+                            m.PersistentLocalId,
                             responseOptions.Value.Naamruimte,
                             responseOptions.Value.DetailUrl,
                             GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
@@ -195,11 +195,11 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         /// <param name="legacyContext"></param>
         /// <param name="hostingEnvironment"></param>
         /// <param name="responseOptions"></param>
-        /// <param name="osloId">De Oslo identifier van de straatnaam.</param>
+        /// <param name="persistentLocalId">De persistente lokale identifier van de straatnaam.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Als de opvraging van een lijst met versies van de straatnaam gelukt is.</response>
         /// <response code="500">Als er een interne fout is opgetreden.</response>
-        [HttpGet("{osloId}/versies")]
+        [HttpGet("{persistentLocalId}/versies")]
         [ProducesResponseType(typeof(List<StreetNameVersionListResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
@@ -210,14 +210,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             [FromServices] LegacyContext legacyContext,
             [FromServices] IHostingEnvironment hostingEnvironment,
             [FromServices] IOptions<ResponseOptions> responseOptions,
-            [FromRoute] int osloId,
+            [FromRoute] int persistentLocalId,
             CancellationToken cancellationToken = default)
         {
             var streetNameVersions =
                 await legacyContext
                     .StreetNameVersions
                     .AsNoTracking()
-                    .Where(p => !p.Removed && p.OsloId == osloId)
+                    .Where(p => !p.Removed && p.PersistentLocalId == persistentLocalId)
                     .ToListAsync(cancellationToken);
 
             if (!streetNameVersions.Any())
@@ -230,7 +230,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                         .Select(m => new StreetNameVersionResponse(
                             m.VersionTimestampAsDateTimeOffset,
                             responseOptions.Value.DetailUrl,
-                            osloId))
+                            persistentLocalId))
                         .ToList()
                 });
         }

@@ -74,10 +74,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             nameof(StreetNameListItem.NameEnglish),
             nameof(StreetNameListItem.NameFrench),
             nameof(StreetNameListItem.NameGerman),
-            nameof(StreetNameListItem.OsloId)
+            nameof(StreetNameListItem.PersistentLocalId)
         };
 
-        public SortingHeader DefaultSortingHeader { get; } = new SortingHeader(nameof(StreetNameListItem.OsloId), SortOrder.Ascending);
+        public SortingHeader DefaultSortingHeader { get; } = new SortingHeader(nameof(StreetNameListItem.PersistentLocalId), SortOrder.Ascending);
     }
 
     public class StreetNameFilter

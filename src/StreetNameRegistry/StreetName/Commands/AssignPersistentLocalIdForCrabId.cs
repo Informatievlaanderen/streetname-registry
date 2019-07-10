@@ -6,26 +6,26 @@ namespace StreetNameRegistry.StreetName.Commands
     using Be.Vlaanderen.Basisregisters.Generators.Guid;
     using Be.Vlaanderen.Basisregisters.Utilities;
 
-    public class AssignOsloIdForCrabId
+    public class AssignPersistentLocalIdForCrabId
     {
         private static readonly Guid Namespace = new Guid("06a988c7-40c2-4e6b-85a5-66a455faf74a");
 
         public CrabStreetNameId StreetNameId { get; }
-        public OsloId OsloId { get; }
-        public OsloAssignmentDate AssignmentDate { get; }
+        public PersistentLocalId PersistentLocalId { get; }
+        public PersistentLocalIdAssignmentDate AssignmentDate { get; }
 
-        public AssignOsloIdForCrabId(
+        public AssignPersistentLocalIdForCrabId(
             CrabStreetNameId streetNameId,
-            OsloId osloId,
-            OsloAssignmentDate assignmentDate)
+            PersistentLocalId persistentLocalId,
+            PersistentLocalIdAssignmentDate assignmentDate)
         {
             StreetNameId = streetNameId;
-            OsloId = osloId;
+            PersistentLocalId = persistentLocalId;
             AssignmentDate = assignmentDate;
         }
 
         public Guid CreateCommandId()
-            => Deterministic.Create(Namespace, $"AssignOsloId-{ToString()}");
+            => Deterministic.Create(Namespace, $"AssignPersistentLocalId-{ToString()}");
 
         public override string ToString()
             => ToStringBuilder.ToString(IdentityFields());
@@ -33,7 +33,7 @@ namespace StreetNameRegistry.StreetName.Commands
         private IEnumerable<object> IdentityFields()
         {
             yield return StreetNameId;
-            yield return OsloId;
+            yield return PersistentLocalId;
             yield return AssignmentDate;
         }
     }

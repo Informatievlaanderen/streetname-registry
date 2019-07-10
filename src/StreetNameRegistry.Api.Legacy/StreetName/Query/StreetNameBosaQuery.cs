@@ -68,10 +68,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
             if (!string.IsNullOrEmpty(filter.ObjectId))
             {
-                if (!int.TryParse(filter.ObjectId, out var osloId))
+                if (!int.TryParse(filter.ObjectId, out var localId))
                     return new StreetNameBosaResponse();
 
-                streetNames = streetNames.Where(s => s.OsloId == osloId);
+                streetNames = streetNames.Where(s => s.PersistentLocalId == localId);
             }
 
             if (filter.StreetNameVersion.HasValue)
@@ -117,7 +117,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 var municipality = municipalities.FirstOrDefault(m => m.NisCode == streetName.NisCode);
 
                 streetNameRespones.Add(new StreetNameBosaItemResponse(
-                    streetName.OsloId.ToString(),
+                    streetName.PersistentLocalId.ToString(),
                     streetName.NisCode,
                     _responseOptionsProvider.Value.Naamruimte,
                     _responseOptionsProvider.Value.GemeenteNaamruimte,

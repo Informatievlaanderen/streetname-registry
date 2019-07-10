@@ -35,12 +35,12 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             _responseOptions = responseOptionsProvider.Value;
         }
 
-        public async Task<StreetNameResponse> FilterAsync(int osloId, CancellationToken ct = default)
+        public async Task<StreetNameResponse> FilterAsync(int persistentLocalId, CancellationToken ct = default)
         {
             var streetName = await _legacyContext
                 .StreetNameDetail
                 .AsNoTracking()
-                .SingleOrDefaultAsync(item => item.OsloId == osloId, ct);
+                .SingleOrDefaultAsync(item => item.PersistentLocalId == persistentLocalId, ct);
 
             if (streetName == null)
                 throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
@@ -64,7 +64,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
             return new StreetNameResponse(
                 _responseOptions.Naamruimte,
-                streetName.OsloId.Value,
+                streetName.PersistentLocalId.Value,
                 streetName.Status.ConvertFromStreetNameStatus(),
                 gemeente,
                 streetName.VersionTimestamp.ToBelgianDateTimeOffset(),

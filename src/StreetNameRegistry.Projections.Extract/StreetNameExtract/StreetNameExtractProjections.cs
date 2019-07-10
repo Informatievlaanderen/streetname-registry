@@ -36,15 +36,15 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     }, ct);
             });
 
-            When<Envelope<StreetNameOsloIdWasAssigned>>(async (context, message, ct) =>
+            When<Envelope<StreetNamePersistentLocalIdWasAssigned>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameExtract(
                     message.Message.StreetNameId,
                     streetName =>
                     {
-                        var osloId = message.Message.OsloId;
-                        streetName.StreetNameOsloId = osloId;
-                        UpdateId(streetName, osloId);
+                        var persistentLocalId = message.Message.PersistentLocalId;
+                        streetName.StreetNamePersistentLocalId = persistentLocalId;
+                        UpdateId(streetName, persistentLocalId);
                     },
                     ct);
             });

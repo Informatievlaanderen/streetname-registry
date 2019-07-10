@@ -58,7 +58,7 @@ namespace StreetNameRegistry.StreetName
                 }
             }
 
-            AssignOsloId(new OsloId(streetNameId), new OsloAssignmentDate(timestamp));
+            AssignPersistentLocalId(new PersistentLocalId(streetNameId), new PersistentLocalIdAssignmentDate(timestamp));
 
             ApplyChange(new StreetNameWasImportedFromCrab(
                 streetNameId,
@@ -106,16 +106,16 @@ namespace StreetNameRegistry.StreetName
             ApplyChange(legacyEvent);
         }
 
-        public void AssignOsloId(
-            OsloId osloId,
-            OsloAssignmentDate assignmentDate)
+        public void AssignPersistentLocalId(
+            PersistentLocalId persistentLocalId,
+            PersistentLocalIdAssignmentDate assignmentDate)
         {
-            if (_osloId != null)
+            if (_persistentLocalId != null)
                 return;
 
-            ApplyChange(new StreetNameOsloIdWasAssigned(
+            ApplyChange(new StreetNamePersistentLocalIdWasAssigned(
                 _streetNameId,
-                osloId,
+                persistentLocalId,
                 assignmentDate));
         }
 

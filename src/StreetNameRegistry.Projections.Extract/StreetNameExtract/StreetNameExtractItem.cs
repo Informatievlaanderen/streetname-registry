@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     public class StreetNameExtractItem
     {
         public Guid? StreetNameId { get; set; }
-        public int StreetNameOsloId { get; set; }
+        public int StreetNamePersistentLocalId { get; set; }
         public bool Complete { get; set; }
         public string NameDutch { get; set; }
         public string NameFrench { get; set; }
@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 .HasKey(p => p.StreetNameId)
                 .ForSqlServerIsClustered(false);
 
-            builder.Property(p => p.StreetNameOsloId);
+            builder.Property(p => p.StreetNamePersistentLocalId);
             builder.Property(p => p.Complete);
             builder.Property(p => p.DbaseRecord);
             builder.Property(p => p.NameDutch);
@@ -47,7 +47,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             builder.Property(p => p.HomonymGerman);
             builder.Property(p => p.HomonymUnknown);
 
-            builder.HasIndex(p => p.StreetNameOsloId).ForSqlServerIsClustered();
+            builder.HasIndex(p => p.StreetNamePersistentLocalId).ForSqlServerIsClustered();
         }
     }
 }

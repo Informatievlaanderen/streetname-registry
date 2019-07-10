@@ -15,7 +15,7 @@ namespace StreetNameRegistry.StreetName
 
         private Language? _primaryLanguage;
         private Language? _secondaryLanguage;
-        private OsloId _osloId;
+        private PersistentLocalId _persistentLocalId;
 
         private readonly HomonymAdditions _homonymAdditions = new HomonymAdditions();
         private readonly Names _names = new Names();
@@ -61,7 +61,7 @@ namespace StreetNameRegistry.StreetName
             Register<StreetNameBecameComplete>(When);
             Register<StreetNameBecameIncomplete>(When);
 
-            Register<StreetNameOsloIdWasAssigned>(When);
+            Register<StreetNamePersistentLocalIdWasAssigned>(When);
 
             Register<StreetNameStatusWasImportedFromCrab>(When);
             Register<StreetNameWasImportedFromCrab>(@event => WhenCrabEventApplied(@event.Modification == CrabModification.Delete));
@@ -73,9 +73,9 @@ namespace StreetNameRegistry.StreetName
             WhenCrabEventApplied();
         }
 
-        private void When(StreetNameOsloIdWasAssigned @event)
+        private void When(StreetNamePersistentLocalIdWasAssigned @event)
         {
-            _osloId = new OsloId(@event.OsloId);
+            _persistentLocalId = new PersistentLocalId(@event.PersistentLocalId);
         }
 
         private void When(StreetNameBecameComplete @event)

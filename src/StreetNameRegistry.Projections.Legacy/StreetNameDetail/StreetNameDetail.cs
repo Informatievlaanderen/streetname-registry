@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
     {
         public static string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
 
-        public int? OsloId { get; set; }
+        public int? PersistentLocalId { get; set; }
         public Guid StreetNameId { get; set; }
 
         public string NisCode { get; set; }
@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
                 .HasKey(x => x.StreetNameId)
                 .ForSqlServerIsClustered(false);
 
-            builder.Property(x => x.OsloId);
+            builder.Property(x => x.PersistentLocalId);
 
             builder.Property(StreetNameDetail.VersionTimestampBackingPropertyName)
                 .HasColumnName("VersionTimestamp");
@@ -73,7 +73,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
 
             builder.Property(x => x.Removed);
 
-            builder.HasIndex(x => x.OsloId).ForSqlServerIsClustered();
+            builder.HasIndex(x => x.PersistentLocalId).ForSqlServerIsClustered();
             builder.HasIndex(x => x.Removed);
         }
     }

@@ -87,8 +87,8 @@ namespace StreetNameRegistry.Tests.Generate
         public static Generator<StreetNameWasRegistered> StreetNameWasRegistered = new Generator<StreetNameWasRegistered>(r =>
             new StreetNameWasRegistered(StreetNameId.Generate(r), MunicipalityId.Generate(r), NisCode.Generate(r)));
 
-        public static Generator<StreetNameOsloIdWasAssigned> StreetNameOsloIdWasAssigned = new Generator<StreetNameOsloIdWasAssigned>(r =>
-            new StreetNameOsloIdWasAssigned(StreetNameId.Generate(r), new OsloId(Produce.Integer(10000, 15000).Generate(r)), new OsloAssignmentDate(Produce.Instant().Generate(r))));
+        public static Generator<StreetNamePersistentLocalIdWasAssigned> StreetNamePersistentLocalIdWasAssigned = new Generator<StreetNamePersistentLocalIdWasAssigned>(r =>
+            new StreetNamePersistentLocalIdWasAssigned(StreetNameId.Generate(r), new PersistentLocalId(Produce.Integer(10000, 15000).Generate(r)), new PersistentLocalIdAssignmentDate(Produce.Instant().Generate(r))));
 
         public static Generator<StreetNameBecameComplete> StreetNameBecameComplete = new Generator<StreetNameBecameComplete>(r =>
             new StreetNameBecameComplete(StreetNameId.Generate(r)));
@@ -272,14 +272,14 @@ namespace StreetNameRegistry.Tests.Generate
             return newEvent;
         }
 
-        public static StreetNameOsloIdWasAssigned WithId(this StreetNameOsloIdWasAssigned e, Guid id)
+        public static StreetNamePersistentLocalIdWasAssigned WithId(this StreetNamePersistentLocalIdWasAssigned e, Guid id)
         {
-            return new StreetNameOsloIdWasAssigned(new StreetNameId(id), new OsloId(e.OsloId), new OsloAssignmentDate(e.AssignmentDate));
+            return new StreetNamePersistentLocalIdWasAssigned(new StreetNameId(id), new PersistentLocalId(e.PersistentLocalId), new PersistentLocalIdAssignmentDate(e.AssignmentDate));
         }
 
-        public static StreetNameOsloIdWasAssigned WithOsloId(this StreetNameOsloIdWasAssigned e, int osloId)
+        public static StreetNamePersistentLocalIdWasAssigned WithPersistentLocalId(this StreetNamePersistentLocalIdWasAssigned e, int persistentLocalId)
         {
-            return new StreetNameOsloIdWasAssigned(new StreetNameId(e.StreetNameId), new OsloId(osloId), new OsloAssignmentDate(e.AssignmentDate));
+            return new StreetNamePersistentLocalIdWasAssigned(new StreetNameId(e.StreetNameId), new PersistentLocalId(persistentLocalId), new PersistentLocalIdAssignmentDate(e.AssignmentDate));
         }
 
         public static StreetNameWasNamed WithId(this StreetNameWasNamed e, Guid id)

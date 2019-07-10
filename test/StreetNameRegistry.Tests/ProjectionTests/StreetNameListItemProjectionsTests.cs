@@ -75,20 +75,20 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         }
 
         [Fact]
-        public async Task StreetNameOsloIdWasAssignedAssignsOsloId()
+        public async Task StreetNamePersistentLocalIdWasAssignedAssignsOsloId()
         {
             var id = Arrange(Produce.Guid());
-            var osloId = Arrange(Produce.Integer(10000, 15000));
+            var persistentLocalId = Arrange(Produce.Integer(10000, 15000));
 
             await Given(Generate.EventsFor.StreetName(id))
-                .Project(Generate.StreetNameOsloIdWasAssigned
+                .Project(Generate.StreetNamePersistentLocalIdWasAssigned
                     .Select(e => e.WithId(id)
-                    .WithOsloId(osloId)))
+                    .WithPersistentLocalId(persistentLocalId)))
                 .Then(async ct =>
                 {
                     var entity = await ct.FindAsync<StreetNameListItem>(id);
                     entity.Should().NotBeNull();
-                    entity.OsloId.Should().Be(osloId);
+                    entity.PersistentLocalId.Should().Be(persistentLocalId);
                 });
         }
 
@@ -100,7 +100,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             try
             {
                 await Given()
-                    .Project(Generate.StreetNameOsloIdWasAssigned.Select(e => e.WithId(id)))
+                    .Project(Generate.StreetNamePersistentLocalIdWasAssigned.Select(e => e.WithId(id)))
                     .Then(async ct =>
                     {
                         var entity = await ct.FindAsync<StreetNameListItem>(id);

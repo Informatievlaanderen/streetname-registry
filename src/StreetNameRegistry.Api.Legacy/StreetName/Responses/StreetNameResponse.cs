@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 
         public StreetNameResponse(
             string naamruimte,
-            int osloId,
+            int persistentLocalId,
             StraatnaamStatus status,
             StraatnaamDetailGemeente gemeente,
             DateTimeOffset version,
@@ -62,7 +62,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             string homonymAdditionGerman = null,
             string homonymAdditionEnglish = null)
         {
-            Identificator = new Identificator(naamruimte, osloId.ToString(), version);
+            Identificator = new Identificator(naamruimte, persistentLocalId.ToString(), version);
             StraatnaamStatus = status;
             Gemeente = gemeente;
 

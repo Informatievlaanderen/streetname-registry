@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
 
     public class StreetNameVersion
     {
-        public int? OsloId { get; set; }
+        public int? PersistentLocalId { get; set; }
         public Guid StreetNameId { get; set; }
 
         public string NisCode { get; set; }
@@ -53,7 +53,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
             {
                 Position = newPosition,
 
-                OsloId = OsloId,
+                PersistentLocalId = PersistentLocalId,
                 StreetNameId = StreetNameId,
 
                 NisCode = NisCode,
@@ -98,7 +98,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
                 .HasKey(x => new { x.StreetNameId, x.Position })
                 .ForSqlServerIsClustered(false);
 
-            builder.Property(x => x.OsloId);
+            builder.Property(x => x.PersistentLocalId);
             builder.Property(x => x.NisCode);
 
             builder.Property(x => x.NameDutch);
@@ -125,7 +125,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
 
             builder.Ignore(x => x.VersionTimestamp);
 
-            builder.HasIndex(x => x.OsloId).ForSqlServerIsClustered();
+            builder.HasIndex(x => x.PersistentLocalId).ForSqlServerIsClustered();
             builder.HasIndex(x => x.Removed);
         }
     }

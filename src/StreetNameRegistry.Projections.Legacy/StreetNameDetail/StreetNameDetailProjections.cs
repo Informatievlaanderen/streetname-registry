@@ -156,13 +156,13 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
                     ct);
             });
 
-            When<Envelope<StreetNameOsloIdWasAssigned>>(async (context, message, ct) =>
+            When<Envelope<StreetNamePersistentLocalIdWasAssigned>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameDetail(
                     message.Message.StreetNameId,
                     entity =>
                     {
-                        entity.OsloId = message.Message.OsloId;
+                        entity.PersistentLocalId = message.Message.PersistentLocalId;
                     },
                     ct);
             });

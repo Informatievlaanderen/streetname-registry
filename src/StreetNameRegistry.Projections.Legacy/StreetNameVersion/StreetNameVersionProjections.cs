@@ -26,12 +26,12 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
                     .AddAsync(streetNameVersionItem, ct);
             });
 
-            When<Envelope<StreetNameOsloIdWasAssigned>>(async (context, message, ct) =>
+            When<Envelope<StreetNamePersistentLocalIdWasAssigned>>(async (context, message, ct) =>
             {
                 var entities = await context.AllVersions(message.Message.StreetNameId, ct);
 
                 foreach (var entity in entities)
-                    entity.OsloId = message.Message.OsloId;
+                    entity.PersistentLocalId = message.Message.PersistentLocalId;
             });
 
             When<Envelope<StreetNameWasNamed>>(async (context, message, ct) =>
