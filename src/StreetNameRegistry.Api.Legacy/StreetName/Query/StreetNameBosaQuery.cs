@@ -104,9 +104,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             Language? language,
             CancellationToken ct)
         {
-            var streetNameRespones = new List<StreetNameBosaItemResponse>();
+            var streetNameResponse = new List<StreetNameBosaItemResponse>();
             var streetNames = await streetNamesQueryable
-                .OrderBy(s => s.NisCode)
+                .OrderBy(s => s.PersistentLocalId)
                 .Take(1000)
                 .ToListAsync(ct);
 
@@ -116,7 +116,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             {
                 var municipality = municipalities.FirstOrDefault(m => m.NisCode == streetName.NisCode);
 
-                streetNameRespones.Add(new StreetNameBosaItemResponse(
+                streetNameResponse.Add(new StreetNameBosaItemResponse(
                     streetName.PersistentLocalId.ToString(),
                     streetName.NisCode,
                     _responseOptionsProvider.Value.Naamruimte,
@@ -124,11 +124,11 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     streetName.VersionTimestampAsDateTimeOffset,
                     municipality?.Version,
                     streetName.Status.ConvertFromStreetNameStatus(),
-                    GetStraatnamenByLanguage(streetName, language),
+                    GetStreetNamesByLanguage(streetName, language),
                     GetMunicipalityNames(municipality)));
             }
 
-            return streetNameRespones;
+            return streetNameResponse;
         }
 
         private static IEnumerable<GeografischeNaam> GetMunicipalityNames(MunicipalitySyndicationItem municipality)
@@ -153,7 +153,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             return municipalityNames;
         }
 
-        private static IEnumerable<GeografischeNaam> GetStraatnamenByLanguage(StreetNameName streetName, Language? language)
+        private static IEnumerable<GeografischeNaam> GetStreetNamesByLanguage(StreetNameName streetName, Language? language)
         {
             var streetNames = new List<GeografischeNaam>();
 
