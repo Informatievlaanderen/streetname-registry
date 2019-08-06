@@ -121,7 +121,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     streetName.NisCode,
                     _responseOptionsProvider.Value.Naamruimte,
                     _responseOptionsProvider.Value.GemeenteNaamruimte,
-                    streetName.VersionTimestampAsDateTimeOffset,
+                    streetName.VersionTimestamp.ToBelgianDateTimeOffset(),
                     municipality?.Version,
                     streetName.Status.ConvertFromStreetNameStatus(),
                     GetStreetNamesByLanguage(streetName, language),
