@@ -41,7 +41,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             var shouldFilterOnMunicipalityVersion =  filter.MunicipalityVersion.HasValue;
 
             var municipalitiesQueryable = _syndicationContext
-                .MunicipalitySyndicationItems
+                .MunicipalityLatestItems
                 .AsNoTracking();
 
             if (shouldFilterOnMunicipalityObjectId)
@@ -100,7 +100,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
         private async Task<IEnumerable<StreetNameBosaItemResponse>> TransformAsync(
             IQueryable<StreetNameName> streetNamesQueryable,
-            IReadOnlyCollection<MunicipalitySyndicationItem> municipalities,
+            IReadOnlyCollection<MunicipalityLatestItem> municipalities,
             Language? language,
             CancellationToken ct)
         {
@@ -131,7 +131,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             return streetNameResponse;
         }
 
-        private static IEnumerable<GeografischeNaam> GetMunicipalityNames(MunicipalitySyndicationItem municipality)
+        private static IEnumerable<GeografischeNaam> GetMunicipalityNames(MunicipalityLatestItem municipality)
         {
             var municipalityNames = new List<GeografischeNaam>();
 
