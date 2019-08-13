@@ -24,6 +24,11 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
             When(MunicipalityEvent.MunicipalityOfficialLanguageWasRemoved, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityFacilitiesLanguageWasAdded, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityFacilitiesLanguageWasRemoved, AddSyndicationItemEntry);
+
+            When(MunicipalityEvent.MunicipalityBecameCurrent, DoNothing);
+            When(MunicipalityEvent.MunicipalityWasCorrectedToCurrent, DoNothing);
+            When(MunicipalityEvent.MunicipalityWasRetired, DoNothing);
+            When(MunicipalityEvent.MunicipalityWasCorrectedToRetired, DoNothing);
         }
 
         private static async Task AddSyndicationItemEntry(AtomEntry<SyndicationContent<Gemeente>> entry, SyndicationContext context, CancellationToken ct)
@@ -71,5 +76,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
                 }
             }
         }
+
+        private static Task DoNothing(AtomEntry<SyndicationContent<Gemeente>> entry, SyndicationContext context, CancellationToken ct) => Task.CompletedTask;
     }
 }

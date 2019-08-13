@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using System;
     using System.Globalization;
     using System.Text;
+    using StreetName.Events.Crab;
 
     public class StreetNameExtractProjections : ConnectedProjection<ExtractContext>
     {
@@ -263,6 +264,30 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     },
                     ct);
             });
+
+            When<Envelope<StreetNameBecameIncomplete>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.StreetNameId,
+                    streetName =>
+                    {
+                        streetName.Complete = false;
+                        UpdateVersie(streetName, message.Message.Provenance.Timestamp);
+                    },
+                    ct);
+            });
+
+            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
+
+            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
         }
 
         private void UpdateHomoniemtv(StreetNameExtractItem streetName, Language? language, string homonymAddition)
@@ -337,5 +362,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             municipality.DbaseRecord = record.ToBytes(_encoding);
         }
+
+        private static void DoNothing() { }
     }
 }

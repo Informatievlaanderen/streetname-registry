@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using NodaTime;
     using StreetName.Events;
+    using StreetName.Events.Crab;
 
     public class StreetNameListProjections : ConnectedProjection<LegacyContext>
     {
@@ -198,6 +199,23 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
                     entity => entity.PrimaryLanguage = null,
                     ct);
             });
+
+            When<Envelope<StreetNameBecameCurrent>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameWasCorrectedToCurrent>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameWasProposed>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameWasCorrectedToProposed>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameWasRetired>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameWasCorrectedToRetired>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameStatusWasRemoved>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameStatusWasCorrectedToRemoved>>(async (context, message, ct) => DoNothing());
+
+            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
+
+            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
         }
 
         private static void UpdateNameByLanguage(StreetNameListItem entity, Language? language, string name)
@@ -246,5 +264,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
 
         private static void UpdateVersionTimestamp(StreetNameListItem streetNameListItem, Instant timestamp)
             => streetNameListItem.VersionTimestamp = timestamp;
+
+        private static void DoNothing() { }
     }
 }

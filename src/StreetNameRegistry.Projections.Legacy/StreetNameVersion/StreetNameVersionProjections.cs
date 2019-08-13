@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using StreetName.Events;
+    using StreetName.Events.Crab;
 
     public class StreetNameVersionProjections : ConnectedProjection<LegacyContext>
     {
@@ -204,6 +205,18 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
                     version => version.Status = null,
                     ct);
             });
+
+            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
+
+            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
         }
 
         private static void UpdateNameByLanguage(StreetNameVersion entity, Language? language, string name)
@@ -249,5 +262,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameVersion
                     break;
             }
         }
+
+        private static void DoNothing() { }
     }
 }

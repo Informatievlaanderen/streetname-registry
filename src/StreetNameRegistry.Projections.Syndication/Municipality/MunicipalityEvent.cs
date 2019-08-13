@@ -13,5 +13,10 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
         MunicipalityOfficialLanguageWasRemoved,
         MunicipalityFacilitiesLanguageWasAdded,
         MunicipalityFacilitiesLanguageWasRemoved,
+
+        MunicipalityBecameCurrent,
+        MunicipalityWasCorrectedToCurrent,
+        MunicipalityWasRetired,
+        MunicipalityWasCorrectedToRetired,
     }
 }
