@@ -253,14 +253,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
         public StreetNameNameFilter(BosaStreetNameRequest request)
         {
-            ObjectId = request.StraatnaamCode?.ObjectId;
-            StreetNameVersion = request.StraatnaamCode?.VersieId;
-            StreetName = request.Straatnaam?.Spelling;
-            Language = request.Straatnaam?.Taal?.ConvertFromTaal();
-            Status = request.StraatnaamStatus?.ConvertFromStraatnaamStatus();
-            MunicipalityObjectId = request.GemeenteCode?.ObjectId;
-            MunicipalityVersion = request.GemeenteCode?.VersieId;
-            IsContainsFilter = (request.Straatnaam?.SearchType ?? BosaSearchType.Bevat) == BosaSearchType.Bevat;
+            ObjectId = request?.StraatnaamCode?.ObjectId;
+            StreetNameVersion = request?.StraatnaamCode?.VersieId;
+            StreetName = request?.Straatnaam?.Spelling;
+            Language = request?.Straatnaam?.Taal?.ConvertFromTaal();
+            Status = request?.StraatnaamStatus?.ConvertFromStraatnaamStatus();
+            MunicipalityObjectId = request?.GemeenteCode?.ObjectId;
+            MunicipalityVersion = request?.GemeenteCode?.VersieId;
+            IsContainsFilter = (request?.Straatnaam?.SearchType ?? BosaSearchType.Bevat) == BosaSearchType.Bevat;
         }
     }
 }
