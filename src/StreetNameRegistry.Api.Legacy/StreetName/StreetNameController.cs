@@ -302,6 +302,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             [FromBody] BosaStreetNameRequest request,
             CancellationToken cancellationToken = default)
         {
+            if (Request.ContentLength.HasValue && Request.ContentLength > 0 && request == null)
+                return Ok(new StreetNameBosaResponse());
+
             var filter = new StreetNameNameFilter(request);
             var streetNameBosaResponse = await
                 new StreetNameBosaQuery(
