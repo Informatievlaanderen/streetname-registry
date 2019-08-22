@@ -6,8 +6,8 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using NodaTime;
     using StreetName.Events;
     using System;
-    using System.Globalization;
     using System.Text;
+    using Microsoft.Extensions.Options;
     using StreetName.Events.Crab;
 
     public class StreetNameExtractProjections : ConnectedProjection<ExtractContext>
@@ -15,11 +15,12 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         private const string InUse = "InGebruik";
         private const string Proposed = "Voorgesteld";
         private const string Retired = "Gehistoreerd";
-        private const string IdUri = "https://data.vlaanderen.be/id/straatnaam";
+        private readonly ExtractConfig _extractConfig;
         private readonly Encoding _encoding;
 
-        public StreetNameExtractProjections(Encoding encoding)
+        public StreetNameExtractProjections(IOptions<ExtractConfig> extractConfig, Encoding encoding)
         {
+            _extractConfig = extractConfig.Value;
             _encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
 
             When<Envelope<StreetNameWasRegistered>>(async (context, message, ct) =>
@@ -346,7 +347,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         private void UpdateId(StreetNameExtractItem streetName, int id)
             => UpdateRecord(streetName, record =>
             {
-                record.id.Value = $"{IdUri}/{id}";
+                record.id.Value = $"{_extractConfig.DataVlaanderenNamespace}/{id}";
                 record.straatnmid.Value = id;
             });
 

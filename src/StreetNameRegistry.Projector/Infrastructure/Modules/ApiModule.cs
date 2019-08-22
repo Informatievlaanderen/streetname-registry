@@ -13,6 +13,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Projections.Extract;
     using StreetNameRegistry.Projections.Extract.StreetNameExtract;
@@ -80,7 +81,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                     _configuration,
                     _loggerFactory)
                 .RegisterProjections<StreetNameExtractProjections, ExtractContext>(
-                    () => new StreetNameExtractProjections(DbaseCodePage.Western_European_ANSI.ToEncoding()));
+                    context => new StreetNameExtractProjections(context.Resolve<IOptions<ExtractConfig>>(), DbaseCodePage.Western_European_ANSI.ToEncoding()));
         }
 
         private void RegisterLastChangedProjections(ContainerBuilder builder)
