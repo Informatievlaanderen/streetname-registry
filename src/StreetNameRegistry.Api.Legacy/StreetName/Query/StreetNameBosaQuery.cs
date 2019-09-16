@@ -83,7 +83,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             if (!string.IsNullOrEmpty(filter.StreetName))
                 streetNames = CompareByCompareType(
                     streetNames,
-                    filter.StreetName.SanitizeForBosaSearch(),
+                    filter.StreetName,
                     filter.Language,
                     filter.IsContainsFilter);
             else if (filter.Language.HasValue)
