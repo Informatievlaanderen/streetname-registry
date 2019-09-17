@@ -199,14 +199,15 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
         private static IQueryable<StreetNameName> CompareByCompareType(IQueryable<StreetNameName> query, string searchValue, Language? language, bool isContainsFilter)
         {
+            var containsValue = searchValue.SanitizeForBosaSearch();
             if (!language.HasValue)
             {
                 return isContainsFilter
                     ? query.Where(i =>
-                        i.NameDutchSearch.Contains(searchValue) ||
-                        i.NameFrenchSearch.Contains(searchValue) ||
-                        i.NameGermanSearch.Contains(searchValue) ||
-                        i.NameEnglishSearch.Contains(searchValue))
+                        i.NameDutchSearch.Contains(containsValue) ||
+                        i.NameFrenchSearch.Contains(containsValue) ||
+                        i.NameGermanSearch.Contains(containsValue) ||
+                        i.NameEnglishSearch.Contains(containsValue))
                     : query.Where(i =>
                         i.NameDutch.Equals(searchValue) ||
                         i.NameFrench.Equals(searchValue) ||
@@ -219,22 +220,22 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 default:
                 case Language.Dutch:
                     return isContainsFilter
-                        ? query.Where(i => i.NameDutchSearch.Contains(searchValue))
+                        ? query.Where(i => i.NameDutchSearch.Contains(containsValue))
                         : query.Where(i => i.NameDutch.Equals(searchValue));
 
                 case Language.French:
                     return isContainsFilter
-                        ? query.Where(i => i.NameFrenchSearch.Contains(searchValue))
+                        ? query.Where(i => i.NameFrenchSearch.Contains(containsValue))
                         : query.Where(i => i.NameFrench.Equals(searchValue));
 
                 case Language.German:
                     return isContainsFilter
-                        ? query.Where(i => i.NameGermanSearch.Contains(searchValue))
+                        ? query.Where(i => i.NameGermanSearch.Contains(containsValue))
                         : query.Where(i => i.NameGerman.Equals(searchValue));
 
                 case Language.English:
                     return isContainsFilter
-                        ? query.Where(i => i.NameEnglishSearch.Contains(searchValue))
+                        ? query.Where(i => i.NameEnglishSearch.Contains(containsValue))
                         : query.Where(i => i.NameEnglish.Equals(searchValue));
             }
         }
