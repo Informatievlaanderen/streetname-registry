@@ -106,7 +106,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                 .Where(x => !x.Removed)
                 .SingleOrDefaultAsync(item => item.PersistentLocalId == persistentLocalId && item.VersionTimestampAsDateTimeOffset == versie, cancellationToken);
 
-            if (streetName == null)
+            if (streetName != null && streetName.Removed)
+                throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
+
+            if (streetName == null || !streetName.Complete)
                 throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
 
             var gemeente = new StraatnaamDetailGemeente
