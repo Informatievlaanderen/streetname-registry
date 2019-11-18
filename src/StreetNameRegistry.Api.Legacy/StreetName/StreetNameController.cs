@@ -183,7 +183,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                             GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
                             m.VersionTimestamp.ToBelgianDateTimeOffset()))
                         .ToListAsync(cancellationToken),
-                    TotaalAantal = pagedStreetNames.PaginationInfo.TotalItems,
+                    TotaalAantal = filtering.ShouldFilter ? pagedStreetNames.PaginationInfo.TotalItems : legacyContext.StreetNameListViewCount.Single().Count,
                     Volgende = BuildVolgendeUri(pagedStreetNames.PaginationInfo, responseOptions.Value.VolgendeUrl)
                 });
         }

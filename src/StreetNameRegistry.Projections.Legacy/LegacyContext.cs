@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Projections.Legacy
     public class LegacyContext : RunnerDbContext<LegacyContext>
     {
         public override string ProjectionStateSchema => Schema.Legacy;
+        internal const string StreetNameListViewCountName = "vw_StreetNameListIds";
 
         public DbSet<StreetNameListItem> StreetNameList { get; set; }
         public DbSet<StreetNameDetail.StreetNameDetail> StreetNameDetail { get; set; }
@@ -16,11 +17,21 @@ namespace StreetNameRegistry.Projections.Legacy
         public DbSet<StreetNameName.StreetNameName> StreetNameNames { get; set; }
         public DbSet<StreetNameSyndicationItem> StreetNameSyndication { get; set; }
 
+        public DbQuery<StreetNameListViewCount> StreetNameListViewCount { get; set; }
+
         // This needs to be here to please EF
         public LegacyContext() { }
 
         // This needs to be DbContextOptions<T> for Autofac!
         public LegacyContext(DbContextOptions<LegacyContext> options)
-            : base(options) { }
+            : base(options)
+        { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Query<StreetNameListViewCount>()
+                .ToView(StreetNameListViewCountName, Schema.Legacy);
+        }
     }
 }

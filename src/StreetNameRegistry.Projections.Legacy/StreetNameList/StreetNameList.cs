@@ -41,7 +41,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
 
     public class StreetNameListConfiguration : IEntityTypeConfiguration<StreetNameListItem>
     {
-        private const string TableName = "StreetNameList";
+        internal const string TableName = "StreetNameList";
 
         public void Configure(EntityTypeBuilder<StreetNameListItem> builder)
         {
