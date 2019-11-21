@@ -164,8 +164,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             var sorting = Request.ExtractSortingRequest();
             var pagination = Request.ExtractPaginationRequest();
 
+            int Count(IQueryable<StreetNameListItem> items) => (int) legacyContext.StreetNameListViewCount.Single().Count;
+
             var pagedStreetNames = new StreetNameListQuery(legacyContext, syndicationContext)
-                .Fetch(filtering, sorting, pagination);
+                .Fetch(filtering,
+                    sorting,
+                    pagination,
+                    filtering.ShouldFilter ? null : (Func<IQueryable<StreetNameListItem>, int>) Count);
 
             Response.AddPaginationResponse(pagedStreetNames.PaginationInfo);
             Response.AddSortingResponse(sorting.SortBy, sorting.SortOrder);
@@ -183,7 +188,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                             GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
                             m.VersionTimestamp.ToBelgianDateTimeOffset()))
                         .ToListAsync(cancellationToken),
-                    TotaalAantal = filtering.ShouldFilter ? pagedStreetNames.PaginationInfo.TotalItems : legacyContext.StreetNameListViewCount.Single().Count,
+                    TotaalAantal = pagedStreetNames.PaginationInfo.TotalItems,
                     Volgende = BuildVolgendeUri(pagedStreetNames.PaginationInfo, responseOptions.Value.VolgendeUrl)
                 });
         }

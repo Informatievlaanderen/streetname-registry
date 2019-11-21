@@ -45,7 +45,7 @@ nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing ~> 3.2
 nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing.SqlStreamStore.Autofac ~> 3.2
 nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing.Xunit ~> 3.2
 
-nuget Be.Vlaanderen.Basisregisters.Api ~> 7.8
+nuget Be.Vlaanderen.Basisregisters.Api ~> 7.10
 
 nuget Be.Vlaanderen.Basisregisters.CommandHandling ~> 3.2
 nuget Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency ~> 3.2
