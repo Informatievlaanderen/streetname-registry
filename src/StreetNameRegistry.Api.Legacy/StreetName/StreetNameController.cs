@@ -164,13 +164,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             var sorting = Request.ExtractSortingRequest();
             var pagination = Request.ExtractPaginationRequest();
 
-            int Count(IQueryable<StreetNameListItem> items) => (int) legacyContext.StreetNameListViewCount.Single().Count;
+            long Count(IQueryable<StreetNameListItem> items) => legacyContext.StreetNameListViewCount.Single().Count;
 
             var pagedStreetNames = new StreetNameListQuery(legacyContext, syndicationContext)
                 .Fetch(filtering,
                     sorting,
                     pagination,
-                    filtering.ShouldFilter ? null : (Func<IQueryable<StreetNameListItem>, int>) Count);
+                    filtering.ShouldFilter ? null : (Func<IQueryable<StreetNameListItem>, long>) Count);
 
             Response.AddPaginationResponse(pagedStreetNames.PaginationInfo);
             Response.AddSortingResponse(sorting.SortBy, sorting.SortOrder);
