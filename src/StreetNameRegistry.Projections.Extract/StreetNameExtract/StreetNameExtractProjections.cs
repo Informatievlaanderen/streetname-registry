@@ -184,14 +184,13 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameStatusWasRemoved>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(
-                    message.Message.StreetNameId,
-                    streetName =>
-                    {
-                        UpdateStatus(streetName, null);
-                        UpdateVersie(streetName, message.Message.Provenance.Timestamp);
-                    },
-                    ct);
+                var streetName = await context.StreetNameExtract.FindAsync(message.Message.StreetNameId, ct);
+
+                if (streetName != null) // it's possible that streetname is already removed
+                {
+                    UpdateStatus(streetName, null);
+                    UpdateVersie(streetName, message.Message.Provenance.Timestamp);
+                }
             });
 
             When<Envelope<StreetNameStatusWasCorrectedToRemoved>>(async (context, message, ct) =>
