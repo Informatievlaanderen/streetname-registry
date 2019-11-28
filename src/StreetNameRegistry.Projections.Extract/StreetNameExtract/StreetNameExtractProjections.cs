@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using StreetName.Events;
     using System;
     using System.Text;
+    using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
     using Microsoft.Extensions.Options;
     using StreetName.Events.Crab;
 
@@ -33,7 +34,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                         DbaseRecord = new StreetNameDbaseRecord
                         {
                             gemeenteid = { Value = message.Message.NisCode },
-                            versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().DateTime }
+                            versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
                         }.ToBytes(_encoding)
                     }, ct);
             });
@@ -350,7 +351,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             });
 
         private void UpdateVersie(StreetNameExtractItem streetName, Instant timestamp)
-            => UpdateRecord(streetName, record => record.versieid.Value = timestamp.ToBelgianDateTimeOffset().DateTime);
+            => UpdateRecord(streetName, record => record.versieid.SetValue(timestamp.ToBelgianDateTimeOffset()));
 
         private void UpdateRecord(StreetNameExtractItem municipality, Action<StreetNameDbaseRecord> updateFunc)
         {

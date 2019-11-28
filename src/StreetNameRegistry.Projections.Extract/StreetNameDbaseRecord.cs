@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Projections.Extract
 
         public DbaseString id { get; }
         public DbaseInt32 straatnmid { get; }
-        public DbaseDateTime versieid { get; }
+        public DbaseString versieid { get; }
         public DbaseString gemeenteid { get; }
         public DbaseString straatnm { get; }
         public DbaseString homoniemtv { get; }
@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Projections.Extract
         {
             id = new DbaseString(Schema.id);
             straatnmid = new DbaseInt32(Schema.straatnmid);
-            versieid = new DbaseDateTime(Schema.versieid);
+            versieid = new DbaseString(Schema.versieid);
             gemeenteid = new DbaseString(Schema.gemeenteid);
             straatnm = new DbaseString(Schema.straatnm);
             homoniemtv = new DbaseString(Schema.homoniemtv);
