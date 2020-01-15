@@ -75,14 +75,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         }
     }
 
-    public class StreetNameListResponseExamples : IExamplesProvider
+    public class StreetNameListResponseExamples : IExamplesProvider<StreetNameListResponse>
     {
         private readonly ResponseOptions _responseOptions;
 
         public StreetNameListResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
          => _responseOptions = responseOptionsProvider.Value;
 
-        public object GetExamples()
+        public StreetNameListResponse GetExamples()
         {
             var rnd = new Random();
 

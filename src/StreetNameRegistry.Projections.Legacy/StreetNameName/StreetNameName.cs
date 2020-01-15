@@ -13,16 +13,16 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
         public Guid StreetNameId { get; set; }
         public int PersistentLocalId { get; set; }
 
-        public string NisCode { get; set; }
+        public string? NisCode { get; set; }
 
-        public string NameDutch { get; set; }
-        public string NameDutchSearch { get; set; }
-        public string NameFrench { get; set; }
-        public string NameFrenchSearch { get; set; }
-        public string NameGerman { get; set; }
-        public string NameGermanSearch { get; set; }
-        public string NameEnglish { get; set; }
-        public string NameEnglishSearch { get; set; }
+        public string? NameDutch { get; set; }
+        public string? NameDutchSearch { get; set; }
+        public string? NameFrench { get; set; }
+        public string? NameFrenchSearch { get; set; }
+        public string? NameGerman { get; set; }
+        public string? NameGermanSearch { get; set; }
+        public string? NameEnglish { get; set; }
+        public string? NameEnglishSearch { get; set; }
 
         public StreetNameStatus? Status { get; set; }
 
@@ -67,7 +67,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
         {
             builder.ToTable(TableName, Schema.Legacy)
                 .HasKey(p => p.StreetNameId)
-                .ForSqlServerIsClustered(false);
+                .IsClustered(false);
 
             builder.Property(p => p.NisCode);
             builder.Property(p => p.PersistentLocalId);
@@ -98,7 +98,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
 
             builder.HasIndex(StreetNameName.VersionTimestampBackingPropertyName);
             builder.HasIndex(p => p.Status);
-            
+
             builder.HasIndex(p => p.NameDutch);
             builder.HasIndex(p => p.NameFrench);
             builder.HasIndex(p => p.NameGerman);

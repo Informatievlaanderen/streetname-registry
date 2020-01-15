@@ -13,22 +13,22 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
         public int? PersistentLocalId { get; set; }
         public Guid StreetNameId { get; set; }
 
-        public string NameDutch { get; set; }
-        public string NameFrench { get; set; }
-        public string NameGerman { get; set; }
-        public string NameEnglish { get; set; }
+        public string? NameDutch { get; set; }
+        public string? NameFrench { get; set; }
+        public string? NameGerman { get; set; }
+        public string? NameEnglish { get; set; }
 
-        public string HomonymAdditionDutch { get; set; }
-        public string HomonymAdditionFrench { get; set; }
-        public string HomonymAdditionGerman { get; set; }
-        public string HomonymAdditionEnglish { get; set; }
+        public string? HomonymAdditionDutch { get; set; }
+        public string? HomonymAdditionFrench { get; set; }
+        public string? HomonymAdditionGerman { get; set; }
+        public string? HomonymAdditionEnglish { get; set; }
 
         public bool Complete { get; set; }
         public bool Removed { get; set; }
 
         public Language? PrimaryLanguage { get; set; }
 
-        public string NisCode { get; set; }
+        public string? NisCode { get; set; }
 
         private DateTimeOffset VersionTimestampAsDateTimeOffset { get; set; }
 
@@ -47,7 +47,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
         {
             builder.ToTable(TableName, Schema.Legacy)
                 .HasKey(x => x.StreetNameId)
-                .ForSqlServerIsClustered(false);
+                .IsClustered(false);
 
             builder.Property(x => x.PersistentLocalId);
 
@@ -73,7 +73,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
 
             builder.Property(x => x.NisCode);
 
-            builder.HasIndex(x => x.PersistentLocalId).ForSqlServerIsClustered();
+            builder.HasIndex(x => x.PersistentLocalId).IsClustered();
             builder.HasIndex(x => x.NisCode);
 
             // This index speeds up the hardcoded first filter in StreetNameListQuery

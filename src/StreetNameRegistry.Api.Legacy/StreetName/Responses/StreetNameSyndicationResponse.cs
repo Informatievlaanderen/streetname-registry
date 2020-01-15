@@ -226,7 +226,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         }
     }
 
-    public class StreetNameSyndicationResponseExamples : IExamplesProvider
+    public class StreetNameSyndicationResponseExamples : IExamplesProvider<object>
     {
         private readonly ResponseOptions _responseOptions;
 

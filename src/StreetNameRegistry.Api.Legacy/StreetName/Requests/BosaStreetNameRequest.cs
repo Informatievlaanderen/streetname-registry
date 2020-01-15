@@ -14,9 +14,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Requests
         public StraatnaamStatus? StraatnaamStatus { get; set; }
     }
 
-    public class StreetNameBosaRequestExamples : IExamplesProvider
+    public class StreetNameBosaRequestExamples : IExamplesProvider<BosaStreetNameRequest>
     {
-        public object GetExamples()
+        public BosaStreetNameRequest GetExamples()
             => new BosaStreetNameRequest
             {
                 Straatnaam = new ZoekGeografischeNaam

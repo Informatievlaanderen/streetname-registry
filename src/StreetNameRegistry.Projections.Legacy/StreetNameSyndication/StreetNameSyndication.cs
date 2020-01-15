@@ -14,18 +14,18 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 
         public Guid StreetNameId { get; set; }
         public int? PersistentLocalId { get; set; }
-        public string NisCode { get; set; }
-        public string ChangeType { get; set; }
+        public string? NisCode { get; set; }
+        public string? ChangeType { get; set; }
 
-        public string NameDutch { get; set; }
-        public string NameFrench { get; set; }
-        public string NameGerman { get; set; }
-        public string NameEnglish { get; set; }
+        public string? NameDutch { get; set; }
+        public string? NameFrench { get; set; }
+        public string? NameGerman { get; set; }
+        public string? NameEnglish { get; set; }
 
-        public string HomonymAdditionDutch { get; set; }
-        public string HomonymAdditionFrench { get; set; }
-        public string HomonymAdditionGerman { get; set; }
-        public string HomonymAdditionEnglish { get; set; }
+        public string? HomonymAdditionDutch { get; set; }
+        public string? HomonymAdditionFrench { get; set; }
+        public string? HomonymAdditionGerman { get; set; }
+        public string? HomonymAdditionEnglish { get; set; }
 
         public StreetNameStatus? Status { get; set; }
 
@@ -48,10 +48,10 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 
         public Application? Application { get; set; }
         public Modification? Modification { get; set; }
-        public string Operator { get; set; }
+        public string? Operator { get; set; }
         public Organisation? Organisation { get; set; }
-        public string Reason { get; set; }
-        public string EventDataAsXml { get; set; }
+        public string? Reason { get; set; }
+        public string? EventDataAsXml { get; set; }
 
         public StreetNameSyndicationItem CloneAndApplyEventInfo(
             long newPosition,
@@ -106,7 +106,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
         {
             b.ToTable(TableName, Schema.Legacy)
                 .HasKey(x => x.Position)
-                .ForSqlServerIsClustered();
+                .IsClustered();
 
             b.Property(x => x.Position).ValueGeneratedNever();
             b.HasIndex(x => x.Position).IsColumnStore($"CI_{TableName}_Position");

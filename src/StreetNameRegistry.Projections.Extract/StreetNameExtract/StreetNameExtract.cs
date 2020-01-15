@@ -10,16 +10,16 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         public Guid? StreetNameId { get; set; }
         public int StreetNamePersistentLocalId { get; set; }
         public bool Complete { get; set; }
-        public string NameDutch { get; set; }
-        public string NameFrench { get; set; }
-        public string NameEnglish { get; set; }
-        public string NameGerman { get; set; }
-        public string NameUnknown { get; set; }
-        public string HomonymDutch { get; set; }
-        public string HomonymFrench { get; set; }
-        public string HomonymEnglish { get; set; }
-        public string HomonymGerman { get; set; }
-        public string HomonymUnknown { get; set; }
+        public string? NameDutch { get; set; }
+        public string? NameFrench { get; set; }
+        public string? NameEnglish { get; set; }
+        public string? NameGerman { get; set; }
+        public string? NameUnknown { get; set; }
+        public string? HomonymDutch { get; set; }
+        public string? HomonymFrench { get; set; }
+        public string? HomonymEnglish { get; set; }
+        public string? HomonymGerman { get; set; }
+        public string? HomonymUnknown { get; set; }
         public byte[] DbaseRecord { get; set; }
     }
 
@@ -31,7 +31,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         {
             builder.ToTable(TableName, Schema.Extract)
                 .HasKey(p => p.StreetNameId)
-                .ForSqlServerIsClustered(false);
+                .IsClustered(false);
 
             builder.Property(p => p.StreetNamePersistentLocalId);
             builder.Property(p => p.Complete);
@@ -47,7 +47,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             builder.Property(p => p.HomonymGerman);
             builder.Property(p => p.HomonymUnknown);
 
-            builder.HasIndex(p => p.StreetNamePersistentLocalId).ForSqlServerIsClustered();
+            builder.HasIndex(p => p.StreetNamePersistentLocalId).IsClustered();
         }
     }
 }

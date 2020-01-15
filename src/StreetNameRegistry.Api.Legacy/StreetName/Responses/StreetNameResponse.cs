@@ -4,13 +4,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
-    using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Infrastructure.Options;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Options;
+    using Projections.Legacy.StreetNameDetail;
     using Swashbuckle.AspNetCore.Filters;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
 
@@ -90,14 +90,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         }
     }
 
-    public class StreetNameResponseExamples : IExamplesProvider
+    public class StreetNameResponseExamples : IExamplesProvider<StreetNameResponse>
     {
         private readonly ResponseOptions _responseOptions;
 
         public StreetNameResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
             => _responseOptions = responseOptionsProvider.Value;
 
-        public object GetExamples()
+        public StreetNameResponse GetExamples()
         {
             var gemeente = new StraatnaamDetailGemeente
             {
@@ -118,9 +118,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         }
     }
 
-    public class StreetNameNotFoundResponseExamples : IExamplesProvider
+    public class StreetNameNotFoundResponseExamples : IExamplesProvider<ProblemDetails>
     {
-        public object GetExamples()
+        public ProblemDetails GetExamples()
             => new ProblemDetails
             {
                 HttpStatus = StatusCodes.Status404NotFound,
@@ -130,9 +130,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             };
     }
 
-    public class StreetNameGoneResponseExamples : IExamplesProvider
+    public class StreetNameGoneResponseExamples : IExamplesProvider<ProblemDetails>
     {
-        public object GetExamples()
+        public ProblemDetails GetExamples()
             => new ProblemDetails
             {
                 HttpStatus = StatusCodes.Status410Gone,

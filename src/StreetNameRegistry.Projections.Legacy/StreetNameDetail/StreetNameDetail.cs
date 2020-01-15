@@ -13,17 +13,17 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
         public int? PersistentLocalId { get; set; }
         public Guid StreetNameId { get; set; }
 
-        public string NisCode { get; set; }
+        public string? NisCode { get; set; }
 
-        public string NameDutch { get; set; }
-        public string NameFrench { get; set; }
-        public string NameGerman { get; set; }
-        public string NameEnglish { get; set; }
+        public string? NameDutch { get; set; }
+        public string? NameFrench { get; set; }
+        public string? NameGerman { get; set; }
+        public string? NameEnglish { get; set; }
 
-        public string HomonymAdditionDutch { get; set; }
-        public string HomonymAdditionFrench { get; set; }
-        public string HomonymAdditionGerman { get; set; }
-        public string HomonymAdditionEnglish { get; set; }
+        public string? HomonymAdditionDutch { get; set; }
+        public string? HomonymAdditionFrench { get; set; }
+        public string? HomonymAdditionGerman { get; set; }
+        public string? HomonymAdditionEnglish { get; set; }
 
         public StreetNameStatus? Status { get; set; }
 
@@ -47,7 +47,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
         {
             builder.ToTable(TableName, Schema.Legacy)
                 .HasKey(x => x.StreetNameId)
-                .ForSqlServerIsClustered(false);
+                .IsClustered(false);
 
             builder.Property(x => x.PersistentLocalId);
 
@@ -73,7 +73,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
 
             builder.Property(x => x.Removed);
 
-            builder.HasIndex(x => x.PersistentLocalId).ForSqlServerIsClustered();
+            builder.HasIndex(x => x.PersistentLocalId).IsClustered();
             builder.HasIndex(x => x.Removed);
         }
     }

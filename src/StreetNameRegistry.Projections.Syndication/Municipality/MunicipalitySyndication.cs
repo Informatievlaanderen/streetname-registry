@@ -8,11 +8,11 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
     public class MunicipalitySyndicationItem
     {
         public Guid MunicipalityId { get; set; }
-        public string NisCode { get; set; }
-        public string NameDutch { get; set; }
-        public string NameFrench { get; set; }
-        public string NameGerman { get; set; }
-        public string NameEnglish { get; set; }
+        public string? NisCode { get; set; }
+        public string? NameDutch { get; set; }
+        public string? NameFrench { get; set; }
+        public string? NameGerman { get; set; }
+        public string? NameEnglish { get; set; }
         public DateTimeOffset? Version { get; set; }
         public long Position { get; set; }
     }
@@ -25,7 +25,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
         {
             builder.ToTable(TableName, Schema.Syndication)
                 .HasKey(x => new { x.MunicipalityId, x.Position })
-                .ForSqlServerIsClustered(false);
+                .IsClustered(false);
 
             builder.Property(x => x.NisCode);
 
@@ -39,7 +39,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
 
             builder.HasIndex(x => x.Position);
             builder.HasIndex(x => x.Version);
-            builder.HasIndex(x => x.NisCode).ForSqlServerIsClustered();
+            builder.HasIndex(x => x.NisCode).IsClustered();
         }
     }
 }

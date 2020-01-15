@@ -84,14 +84,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         }
     }
 
-    public class StreetNameBosaResponseExamples : IExamplesProvider
+    public class StreetNameBosaResponseExamples : IExamplesProvider<StreetNameBosaResponse>
     {
         private readonly ResponseOptions _responseOptions;
 
         public StreetNameBosaResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
             => _responseOptions = responseOptionsProvider.Value;
 
-        public object GetExamples()
+        public StreetNameBosaResponse GetExamples()
         {
             var streetNameExamples = new List<StreetNameBosaItemResponse>
             {
