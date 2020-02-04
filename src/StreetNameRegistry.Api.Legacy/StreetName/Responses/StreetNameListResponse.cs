@@ -109,7 +109,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                         _responseOptions.Naamruimte,
                         _responseOptions.DetailUrl,
                         new GeografischeNaam("Wetstraat", Taal.NL),
-                        null,
+                        new GeografischeNaam("BR", Taal.NL),
                         DateTimeOffset.Now.LocalDateTime)
                 };
 
