@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
+    using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
@@ -132,7 +133,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                 HttpStatus = StatusCodes.Status404NotFound,
                 Title = ProblemDetails.DefaultTitle,
                 Detail = "Onbestaande straatnaam.",
-                ProblemInstanceUri = ProblemDetails.GetProblemNumber()
+                ProblemInstanceUri = new DefaultHttpContext().GetProblemInstanceUri()
             };
     }
 
@@ -145,7 +146,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                 HttpStatus = StatusCodes.Status410Gone,
                 Title = ProblemDetails.DefaultTitle,
                 Detail = "Straatnaam verwijderd.",
-                ProblemInstanceUri = ProblemDetails.GetProblemNumber()
+                ProblemInstanceUri = new DefaultHttpContext().GetProblemInstanceUri()
             };
     }
 }
