@@ -31,7 +31,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         /// De URL voor het ophalen van de volgende verzameling.
         /// </summary>
         [DataMember(Name = "Volgende", Order = 3, EmitDefaultValue = false)]
-        [JsonProperty(Required = Required.Default)]
+        [JsonProperty(Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Uri Volgende { get; set; }
     }
 
@@ -63,7 +63,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         /// De homoniemtoevoeging in het Nederlands.
         /// </summary>
         [DataMember(Name = "HomoniemToevoeging", Order = 4, EmitDefaultValue = false)]
-        [JsonProperty(Required = Required.Default)]
+        [JsonProperty(Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public HomoniemToevoeging HomoniemToevoeging { get; set; }
 
         public StreetNameListItemResponse(
