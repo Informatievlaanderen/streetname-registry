@@ -94,7 +94,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
             builder.HasIndex(p => new { p.Removed, p.IsFlemishRegion, p.Complete });
 
             builder.HasIndex(p => p.NisCode);
-            builder.HasIndex(p => p.PersistentLocalId);
+            builder.HasIndex(p => p.PersistentLocalId).IsClustered();
 
             builder.HasIndex(StreetNameName.VersionTimestampBackingPropertyName);
             builder.HasIndex(p => p.Status);

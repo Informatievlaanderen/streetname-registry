@@ -16,7 +16,8 @@ namespace StreetNameRegistry.Api.Extract.Extracts
             var extractItems = context
                 .StreetNameExtract
                 .AsNoTracking()
-                .Where(x => x.Complete);
+                .Where(x => x.Complete)
+                .OrderBy(x => x.StreetNamePersistentLocalId);
 
             var cachedMunicipalities = syndicationContext.MunicipalityLatestItems.AsNoTracking().ToList();
 

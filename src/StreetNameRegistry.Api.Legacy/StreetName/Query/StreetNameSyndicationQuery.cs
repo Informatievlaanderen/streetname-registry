@@ -285,6 +285,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         {
             var streetNames = _context
                 .StreetNameSyndication
+                .OrderBy(x => x.Position)
                 .AsNoTracking();
 
             if (!filtering.ShouldFilter)
