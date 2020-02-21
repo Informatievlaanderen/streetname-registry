@@ -23,8 +23,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         /// <summary>
         /// Het totaal aantal straatnamen die overeenkomen met de vraag.
         /// </summary>
-        [DataMember(Name = "TotaalAantal", Order = 2)]
-        public long TotaalAantal { get; set; }
+        //[DataMember(Name = "TotaalAantal", Order = 2)]
+        //public long TotaalAantal { get; set; }
 
         public StreetNameBosaResponse()
         {
@@ -133,7 +133,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             return new StreetNameBosaResponse
             {
                 Straatnamen = streetNameExamples,
-                TotaalAantal = 3
             };
         }
     }

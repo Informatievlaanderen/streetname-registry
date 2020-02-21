@@ -94,7 +94,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             return new StreetNameBosaResponse
             {
                 Straatnamen = names.ToList(),
-                TotaalAantal = await streetNames.CountAsync(ct)
             };
         }
 

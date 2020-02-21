@@ -165,13 +165,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             var sorting = Request.ExtractSortingRequest();
             var pagination = Request.ExtractPaginationRequest();
 
-            long Count(IQueryable<StreetNameListItem> items) => legacyContext.StreetNameListViewCount.Single().Count;
-
             var pagedStreetNames = new StreetNameListQuery(legacyContext, syndicationContext)
-                .Fetch(filtering,
-                    sorting,
-                    pagination,
-                    filtering.ShouldFilter ? null : (Func<IQueryable<StreetNameListItem>, long>) Count);
+                .Fetch(filtering, sorting, pagination);
 
             Response.AddPagedQueryResultHeaders(pagedStreetNames);
 
@@ -188,7 +183,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                             GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
                             m.VersionTimestamp.ToBelgianDateTimeOffset()))
                         .ToListAsync(cancellationToken),
-                    TotaalAantal = pagedStreetNames.PaginationInfo.TotalItems,
                     Volgende = BuildVolgendeUri(pagedStreetNames.PaginationInfo, responseOptions.Value.VolgendeUrl)
                 });
         }
@@ -269,7 +263,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                 context,
                 filtering.Filter?.ContainsEvent ?? false,
                 filtering.Filter?.ContainsObject ?? false)
-                .Fetch(filtering, sorting, pagination, items => 0);
+                .Fetch(filtering, sorting, pagination);
 
             Response.AddPaginationResponse(pagedStreetNames.PaginationInfo);
             Response.AddSortingResponse(sorting.SortBy, sorting.SortOrder);
@@ -418,7 +412,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             var offset = paginationInfo.Offset;
             var limit = paginationInfo.Limit;
 
-            return offset + limit < paginationInfo.TotalItems
+            return paginationInfo.HasNextPage
                 ? new Uri(string.Format(volgendeUrlBase, offset + limit, limit))
                 : null;
         }
