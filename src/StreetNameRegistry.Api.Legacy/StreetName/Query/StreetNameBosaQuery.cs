@@ -106,10 +106,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             var streetNameResponse = new List<StreetNameBosaItemResponse>();
             var streetNames = await streetNamesQueryable
                 .OrderBy(s => s.PersistentLocalId)
-                .Take(1000)
+                .Take(1001)
                 .ToListAsync(ct);
 
-            // BOSA endpoints return max 1000 elements.
+            // BOSA endpoints return max 1001 elements.
             // The OrderBy clause ensures predictable results.
             foreach (var streetName in streetNames)
             {
