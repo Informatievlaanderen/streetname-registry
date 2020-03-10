@@ -188,6 +188,43 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         }
 
         /// <summary>
+        /// Vraag het totaal aantal van straatnamen op.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="syndicationContext"></param>
+        /// <param name="cancellationToken"></param>
+        /// <response code="200">Als de opvraging van het totaal aantal gelukt is.</response>
+        /// <response code="500">Als er een interne fout is opgetreden.</response>
+        [HttpGet("totaal-aantal")]
+        [ProducesResponseType(typeof(TotaalAantalResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(TotalCountResponseExample), jsonConverter: typeof(StringEnumConverter))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples), jsonConverter: typeof(StringEnumConverter))]
+        public async Task<IActionResult> Count(
+            [FromServices] LegacyContext context,
+            [FromServices] SyndicationContext syndicationContext,
+            CancellationToken cancellationToken = default)
+        {
+            var filtering = Request.ExtractFilteringRequest<StreetNameFilter>();
+            var sorting = Request.ExtractSortingRequest();
+            var pagination = Request.ExtractPaginationRequest();
+
+            return Ok(
+                new TotaalAantalResponse
+                {
+                    Aantal = filtering.ShouldFilter
+                        ? await new StreetNameListQuery(context, syndicationContext)
+                            .Fetch(filtering, sorting, pagination)
+                            .Items
+                            .CountAsync(cancellationToken)
+                        : Convert.ToInt32(context
+                            .StreetNameListViewCount
+                            .First()
+                            .Count)
+                });
+        }
+
+        /// <summary>
         /// Vraag een lijst met versies van een straatnaam op.
         /// </summary>
         /// <param name="legacyContext"></param>
