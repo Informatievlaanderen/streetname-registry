@@ -207,7 +207,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         {
             var filtering = Request.ExtractFilteringRequest<StreetNameFilter>();
             var sorting = Request.ExtractSortingRequest();
-            var pagination = Request.ExtractPaginationRequest();
+            var pagination = new PaginationRequest(0, int.MaxValue);
 
             return Ok(
                 new TotaalAantalResponse
