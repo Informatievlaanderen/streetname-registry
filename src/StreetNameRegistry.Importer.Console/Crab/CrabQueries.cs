@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Importer.Crab
+namespace StreetNameRegistry.Importer.Console.Crab
 {
     using System;
     using System.Collections.Generic;
@@ -8,11 +8,11 @@ namespace StreetNameRegistry.Importer.Crab
 
     public static class CrabQueries
     {
-        public static List<int> GetChangedStraatnaamIdsBetween(DateTime since, DateTime until)
+        public static List<int> GetChangedStraatnaamIdsBetween(DateTime since, DateTime until, Func<CRABEntities> crabEntitiesFactory)
         {
             var straatnaamIds = new List<int>();
 
-            using (var crabEntities = new CRABEntities())
+            using (var crabEntities = crabEntitiesFactory())
             {
                 crabEntities
                     .tblStraatNaam

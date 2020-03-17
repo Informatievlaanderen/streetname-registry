@@ -1,13 +1,16 @@
-namespace StreetNameRegistry.Importer
+namespace StreetNameRegistry.Importer.Console
 {
+    using Aiv.Vbr.CentraalBeheer.Crab.Entity;
     using Be.Vlaanderen.Basisregisters.GrAr.Import.Processing;
     using Be.Vlaanderen.Basisregisters.GrAr.Import.Processing.CommandLine;
     using Be.Vlaanderen.Basisregisters.GrAr.Import.Processing.Serilog;
     using Crab;
+    using Microsoft.Extensions.Configuration;
     using Serilog;
     using Serilog.Events;
     using System;
     using System.Diagnostics;
+    using System.IO;
     using System.Reflection;
 
     internal class Program
@@ -17,7 +20,18 @@ namespace StreetNameRegistry.Importer
 
         private static void Main(string[] args)
         {
-            var settings = new SettingsBasedConfig();
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+                .AddJsonFile($"appsettings.{Environment.MachineName.ToLowerInvariant()}.json", optional: true, reloadOnChange: false)
+                .AddEnvironmentVariables()
+                .AddCommandLine(args ?? new string[0])
+                .Build();
+
+            var crabConnectionString = configuration.GetConnectionString("CRABEntities");
+            Func<CRABEntities> crabEntitiesFactory = () => new CRABEntities(crabConnectionString);
+
+            var settings = new SettingsBasedConfig(configuration.GetSection("ApplicationSettings"));
             try
             {
                 var options = new ImportOptions(
@@ -26,7 +40,7 @@ namespace StreetNameRegistry.Importer
 
                 MapLogging.Log = s => _commandCounter++;
 
-                var commandProcessor = new CommandProcessorBuilder<int>(new StreetNameCommandGenerator())
+                var commandProcessor = new CommandProcessorBuilder<int>(new StreetNameCommandGenerator(crabEntitiesFactory))
                     .WithCommandLineOptions(options.ImportArguments)
                     .UseSerilog(cfg => cfg
                         .WriteTo.File("tracing.log", LogEventLevel.Verbose)

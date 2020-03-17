@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StreetNameRegistry.Importer.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "init -c"
+    }
+  }
+}

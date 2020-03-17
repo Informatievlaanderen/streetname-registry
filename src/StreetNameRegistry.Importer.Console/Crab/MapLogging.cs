@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Importer.Crab
+namespace StreetNameRegistry.Importer.Console.Crab
 {
     using System;
 

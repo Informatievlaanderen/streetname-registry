@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Importer
+namespace StreetNameRegistry.Importer.Console
 {
     using System;
     using System.Collections.Generic;
@@ -12,10 +12,16 @@ namespace StreetNameRegistry.Importer
 
     internal class StreetNameCommandGenerator : ICommandGenerator<int>
     {
+        private readonly Func<CRABEntities> _crabEntitiesFactory;
         public string Name => GetType().Name;
 
+        public StreetNameCommandGenerator(Func<CRABEntities> crabEntitiesFactory)
+        {
+            _crabEntitiesFactory = crabEntitiesFactory;
+        }
+
         public IEnumerable<int> GetChangedKeys(DateTime from, DateTime until) =>
-            CrabQueries.GetChangedStraatnaamIdsBetween(from, until).Distinct();
+            CrabQueries.GetChangedStraatnaamIdsBetween(from, until, _crabEntitiesFactory).Distinct();
 
         public IEnumerable<dynamic> GenerateInitCommandsFor(int key, DateTime from, DateTime until) =>
             CreateCommands(key, from, until);
@@ -23,14 +29,14 @@ namespace StreetNameRegistry.Importer
         public IEnumerable<dynamic> GenerateUpdateCommandsFor(int key, DateTime from, DateTime until) =>
             CreateCommands(key, from, until);
 
-        private static List<dynamic> CreateCommands(int streetNameId, DateTime from, DateTime until)
+        private List<dynamic> CreateCommands(int streetNameId, DateTime from, DateTime until)
         {
             var streetNameCommands = new List<ImportStreetNameFromCrab>();
             var streetNameHistCommands = new List<ImportStreetNameFromCrab>();
             var streetNameStatusCommands = new List<ImportStreetNameStatusFromCrab>();
             var streetNameStatusHistCommands = new List<ImportStreetNameStatusFromCrab>();
 
-            using (var context = new CRABEntities())
+            using (var context = _crabEntitiesFactory())
             {
                 string primaryLanguage, secondaryLanguage, nisCode;
 

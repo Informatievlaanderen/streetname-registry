@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Importer
+namespace StreetNameRegistry.Importer.Console
 {
     using System;
     using System.Collections.Generic;

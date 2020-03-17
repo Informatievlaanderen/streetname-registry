@@ -1,11 +1,11 @@
-namespace StreetNameRegistry.Importer.Crab
+namespace StreetNameRegistry.Importer.Console.Crab
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Aiv.Vbr.CentraalBeheer.Crab.Entity;
-    using Be.Vlaanderen.Basisregisters.Crab;
     using Aiv.Vbr.CrabModel;
+    using Be.Vlaanderen.Basisregisters.Crab;
     using StreetName.Commands;
 
     internal class StreetNameMappings
