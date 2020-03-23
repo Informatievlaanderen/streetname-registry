@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.Utilities;
     using Convertors;
     using Infrastructure.Options;
     using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public async Task<StreetNameBosaResponse> FilterAsync(StreetNameNameFilter filter, CancellationToken ct = default)
         {
             var shouldFilterOnMunicipalityObjectId = !string.IsNullOrEmpty(filter.MunicipalityObjectId);
-            var shouldFilterOnMunicipalityVersion =  filter.MunicipalityVersion.HasValue;
+            var shouldFilterOnMunicipalityVersion =  !string.IsNullOrEmpty(filter.MunicipalityVersion);
 
             var municipalitiesQueryable = _syndicationContext
                 .MunicipalityLatestItems
@@ -48,7 +49,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 municipalitiesQueryable = municipalitiesQueryable.Where(m => m.NisCode == filter.MunicipalityObjectId);
 
             if (shouldFilterOnMunicipalityVersion)
-                municipalitiesQueryable = municipalitiesQueryable.Where(m => m.Version == filter.MunicipalityVersion.Value);
+                municipalitiesQueryable = municipalitiesQueryable.Where(m => m.Version == filter.MunicipalityVersion);
 
             var streetNames = _legacyContext
                 .StreetNameNames
@@ -248,7 +249,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public StreetNameStatus? Status { get; set; }
         public Language? Language { get; set; }
         public string MunicipalityObjectId { get; set; }
-        public DateTimeOffset? MunicipalityVersion { get; set; }
+        public string MunicipalityVersion { get; set; }
         public bool IsContainsFilter { get; set; }
 
         public StreetNameNameFilter(BosaStreetNameRequest request)
@@ -259,7 +260,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             Language = request?.Straatnaam?.Taal?.ConvertFromTaal();
             Status = request?.StraatnaamStatus?.ConvertFromStraatnaamStatus();
             MunicipalityObjectId = request?.GemeenteCode?.ObjectId;
-            MunicipalityVersion = request?.GemeenteCode?.VersieId;
+            MunicipalityVersion = request?.GemeenteCode?.VersieId != null ? new Rfc3339SerializableDateTimeOffset(request.GemeenteCode.VersieId.Value).ToString() : string.Empty;
             IsContainsFilter = (request?.Straatnaam?.SearchType ?? BosaSearchType.Bevat) == BosaSearchType.Bevat;
         }
     }

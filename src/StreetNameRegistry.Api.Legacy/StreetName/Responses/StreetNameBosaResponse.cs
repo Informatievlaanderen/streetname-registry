@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
+    using Be.Vlaanderen.Basisregisters.Utilities;
 
     [DataContract(Name = "StraatnaamCollectie", Namespace = "")]
     public class StreetNameBosaResponse
@@ -71,7 +72,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             string naamruimte,
             string gemeenteNaamruimte,
             DateTimeOffset? version,
-            DateTimeOffset? gemeenteVersion,
+            string gemeenteVersion,
             StraatnaamStatus status,
             IEnumerable<GeografischeNaam> straatnamen,
             IEnumerable<GeografischeNaam> gemeenteNamen)
@@ -101,7 +102,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                     _responseOptions.Naamruimte,
                     _responseOptions.GemeenteNaamruimte,
                     DateTimeOffset.Now,
-                    new DateTimeOffset(1830, 1, 1, 0, 0, 0, TimeSpan.FromHours(1)),
+                    new Rfc3339SerializableDateTimeOffset(new DateTimeOffset(1830, 1, 1, 0, 0, 0, TimeSpan.FromHours(1))).ToString(),
                     StraatnaamStatus.InGebruik,
                     new[]
                     {
@@ -118,7 +119,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                     _responseOptions.Naamruimte,
                     _responseOptions.GemeenteNaamruimte,
                     DateTimeOffset.Now,
-                    new DateTimeOffset(1830, 1, 1, 0, 0, 0, TimeSpan.FromHours(1)),
+                    new Rfc3339SerializableDateTimeOffset(new DateTimeOffset(1830, 1, 1, 0, 0, 0, TimeSpan.FromHours(1))).ToString(),
                     StraatnaamStatus.InGebruik,
                     new[]
                     {
