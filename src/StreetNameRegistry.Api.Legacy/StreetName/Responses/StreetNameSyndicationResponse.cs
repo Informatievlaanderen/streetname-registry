@@ -35,8 +35,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             {
                 Id = streetName.Position.ToString(CultureInfo.InvariantCulture),
                 Title = $"{streetName.ChangeType}-{streetName.Position}",
-                Published = streetName.RecordCreatedAt.ToDateTimeOffset(),
-                LastUpdated = streetName.LastChangedOn.ToDateTimeOffset(),
+                Published = streetName.RecordCreatedAt.ToBelgianDateTimeOffset(),
+                LastUpdated = streetName.LastChangedOn.ToBelgianDateTimeOffset(),
                 Description = BuildDescription(streetName, responseOptions.Value.Naamruimte)
             };
 
