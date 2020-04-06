@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Importer.Console
                     mailSettings["subject"],
                     mailSettings["fromEmail"],
                     mailSettings["toEmail"],
-                    (LogEventLevel) Enum.Parse(typeof(LogEventLevel), mailSettings["restrictedToMinimumLevel"], true))
+                    (LogEventLevel)Enum.Parse(typeof(LogEventLevel), mailSettings["restrictedToMinimumLevel"], true))
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
 
@@ -62,7 +62,7 @@ namespace StreetNameRegistry.Importer.Console
                     .UseHttpApiProxyConfig(settings)
                     .UseCommandProcessorConfig(settings)
                     .UseDefaultSerializerSettingsForCrabImports()
-                    .ConfigureImportFeedFromAssembly(Assembly.GetExecutingAssembly())
+                    .UseImportFeed(new ImportFeed { Name = settings.FeedName })
                     //.UseApiProxyFactory(FileBasedProxyFactory.BuildFileBasedProxyFactory)
                     .Build();
 
