@@ -35,8 +35,7 @@ namespace StreetNameRegistry.Importer.Console
             }
         }
 
-        public ICommandProcessorOptions<TKey> InitializeImport<TKey>(
-            ImportOptions options,
+        public ICommandProcessorOptions<TKey> GetImportOptions<TKey>(ImportOptions options,
             ICommandProcessorBatchConfiguration<TKey> configuration)
         {
             var batchStatus = new BatchStatus
@@ -51,6 +50,9 @@ namespace StreetNameRegistry.Importer.Console
 
             return options.CreateProcessorOptions(batchStatus, configuration);
         }
+
+        public void InitializeImport<TKey>(ICommandProcessorOptions<TKey> options)
+        { }
 
         public void FinalizeImport<TKey>(ICommandProcessorOptions<TKey> options) { }
     }
