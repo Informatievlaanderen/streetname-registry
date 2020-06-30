@@ -183,7 +183,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                             GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
                             m.VersionTimestamp.ToBelgianDateTimeOffset()))
                         .ToListAsync(cancellationToken),
-                    Volgende = BuildVolgendeUri(pagedStreetNames.PaginationInfo, responseOptions.Value.VolgendeUrl)
+                    Volgende = BuildNextUri(pagedStreetNames.PaginationInfo, responseOptions.Value.VolgendeUrl)
                 });
         }
 
@@ -296,14 +296,12 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             var sorting = Request.ExtractSortingRequest();
             var pagination = Request.ExtractPaginationRequest();
 
-            var pagedStreetNames = new StreetNameSyndicationQuery(
-                context,
-                filtering.Filter?.ContainsEvent ?? false,
-                filtering.Filter?.ContainsObject ?? false)
+            var pagedStreetNames =
+                new StreetNameSyndicationQuery(
+                    context,
+                    filtering.Filter?.ContainsEvent ?? false,
+                    filtering.Filter?.ContainsObject ?? false)
                 .Fetch(filtering, sorting, pagination);
-
-            Response.AddPaginationResponse(pagedStreetNames.PaginationInfo);
-            Response.AddSortingResponse(sorting.SortBy, sorting.SortOrder);
 
             return new ContentResult
             {
@@ -431,11 +429,17 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                     new Uri(syndicationConfiguration["Self"]),
                     syndicationConfiguration.GetSection("Related").GetChildren().Select(c => c.Value).ToArray());
 
-                var nextUri = BuildVolgendeUri(pagedStreetNames.PaginationInfo, syndicationConfiguration["NextUri"]);
+                var streetNames = pagedStreetNames.Items.ToList();
+
+                var nextFrom = streetNames.Any()
+                    ? streetNames.Max(s => s.Position) + 1
+                    : (long?)null;
+
+                var nextUri = BuildNextSyncUri(pagedStreetNames.PaginationInfo.Limit, nextFrom, syndicationConfiguration["NextUri"]);
                 if (nextUri != null)
                     await writer.Write(new SyndicationLink(nextUri, GrArAtomLinkTypes.Next));
 
-                foreach (var streetName in pagedStreetNames.Items)
+                foreach (var streetName in streetNames)
                     await writer.WriteStreetName(responseOptions, formatter, syndicationConfiguration["Category"], streetName);
 
                 xmlWriter.Flush();
@@ -444,13 +448,20 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             return sw.ToString();
         }
 
-        private static Uri BuildVolgendeUri(PaginationInfo paginationInfo, string volgendeUrlBase)
+        private static Uri BuildNextUri(PaginationInfo paginationInfo, string nextUrlBase)
         {
             var offset = paginationInfo.Offset;
             var limit = paginationInfo.Limit;
 
             return paginationInfo.HasNextPage
-                ? new Uri(string.Format(volgendeUrlBase, offset + limit, limit))
+                ? new Uri(string.Format(nextUrlBase, offset + limit, limit))
+                : null;
+        }
+
+        private static Uri BuildNextSyncUri(int limit, long? from, string nextUrlBase)
+        {
+            return from.HasValue
+                ? new Uri(string.Format(nextUrlBase, from, limit))
                 : null;
         }
     }
