@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 {
+    using System;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using StreetName.Events;
@@ -18,7 +19,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                     NisCode = message.Message.NisCode,
                     RecordCreatedAt = message.Message.Provenance.Timestamp,
                     LastChangedOn = message.Message.Provenance.Timestamp,
-                    ChangeType = message.EventName
+                    ChangeType = message.EventName,
+                    SyndicationItemCreatedAt = DateTimeOffset.UtcNow
                 };
 
                 streetNameSyndicationItem.ApplyProvenance(message.Message.Provenance);

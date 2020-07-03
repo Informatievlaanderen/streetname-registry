@@ -90,7 +90,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 Application = Application,
 
                 RecordCreatedAt = RecordCreatedAt,
-                LastChangedOn = lastChangedOn
+                LastChangedOn = lastChangedOn,
+                SyndicationItemCreatedAt = DateTimeOffset.UtcNow
             };
 
             editFunc(newItem);
