@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StreetNameRegistry.Projections.Legacy.Migrations
@@ -7,12 +7,21 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // set value to UtcNow for all existing records
             migrationBuilder.AddColumn<DateTimeOffset>(
                 name: "SyndicationItemCreatedAt",
                 schema: "StreetNameRegistryLegacy",
                 table: "StreetNameSyndication",
                 nullable: false,
-                defaultValue: new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
+                defaultValue: DateTimeOffset.UtcNow);
+
+            // remove the default value
+            migrationBuilder.AlterColumn<DateTimeOffset>(
+                name: "SyndicationItemCreatedAt",
+                schema: "StreetNameRegistryLegacy",
+                table: "StreetNameSyndication",
+                nullable: false,
+                defaultValue: null);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
