@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Be.Vlaanderen.Basisregisters.Projector;
+    using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
     using Be.Vlaanderen.Basisregisters.Projector.Modules;
     using Be.Vlaanderen.Basisregisters.Shaperon;
     using Microsoft.Extensions.Configuration;
@@ -81,7 +82,8 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                     _configuration,
                     _loggerFactory)
                 .RegisterProjections<StreetNameExtractProjections, ExtractContext>(
-                    context => new StreetNameExtractProjections(context.Resolve<IOptions<ExtractConfig>>(), DbaseCodePage.Western_European_ANSI.ToEncoding()));
+                    context => new StreetNameExtractProjections(context.Resolve<IOptions<ExtractConfig>>(), DbaseCodePage.Western_European_ANSI.ToEncoding()),
+                    RetryPolicy.NoRetries);
         }
 
         private void RegisterLastChangedProjections(ContainerBuilder builder)
@@ -97,7 +99,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjectionMigrator<StreetNameRegistry.Projections.LastChangedList.LastChangedListContextMigrationFactory>(
                     _configuration,
                     _loggerFactory)
-                .RegisterProjections<LastChangedProjections, LastChangedListContext>();
+                .RegisterProjections<LastChangedProjections, LastChangedListContext>(RetryPolicy.NoRetries);
         }
 
         private void RegisterLegacyProjections(ContainerBuilder builder)
@@ -112,11 +114,11 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjectionMigrator<LegacyContextMigrationFactory>(
                     _configuration,
                     _loggerFactory)
-                .RegisterProjections<StreetNameDetailProjections, LegacyContext>()
-                .RegisterProjections<StreetNameListProjections, LegacyContext>()
-                .RegisterProjections<StreetNameNameProjections, LegacyContext>()
-                .RegisterProjections<StreetNameSyndicationProjections, LegacyContext>()
-                .RegisterProjections<StreetNameVersionProjections, LegacyContext>();
+                .RegisterProjections<StreetNameDetailProjections, LegacyContext>(RetryPolicy.NoRetries)
+                .RegisterProjections<StreetNameListProjections, LegacyContext>(RetryPolicy.NoRetries)
+                .RegisterProjections<StreetNameNameProjections, LegacyContext>(RetryPolicy.NoRetries)
+                .RegisterProjections<StreetNameSyndicationProjections, LegacyContext>(RetryPolicy.NoRetries)
+                .RegisterProjections<StreetNameVersionProjections, LegacyContext>(RetryPolicy.NoRetries);
         }
     }
 }
