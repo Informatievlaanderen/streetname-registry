@@ -194,12 +194,11 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
         public StreetNameSyndicationQuery(
             LegacyContext context,
-            bool embedEvent,
-            bool embedObject)
+            EmbedValue embed)
         {
             _context = context;
-            _embedEvent = embedEvent;
-            _embedObject = embedObject;
+            _embedEvent = embed?.Event ?? false;
+            _embedObject = embed?.Object ?? false;
         }
 
         protected override ISorting Sorting => new StreetNameSyndicationSorting();
@@ -311,12 +310,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     public class StreetNameSyndicationFilter
     {
         public long? Position { get; set; }
-        public string Embed { get; set; }
-
-        public bool ContainsEvent =>
-            Embed.Contains("event", StringComparison.OrdinalIgnoreCase);
-
-        public bool ContainsObject =>
-            Embed.Contains("object", StringComparison.OrdinalIgnoreCase);
+        public EmbedValue Embed { get; set; }
     }
 }

@@ -310,8 +310,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             var pagedStreetNames =
                 new StreetNameSyndicationQuery(
                     context,
-                    filtering.Filter?.ContainsEvent ?? false,
-                    filtering.Filter?.ContainsObject ?? false)
+                    filtering.Filter?.Embed)
                 .Fetch(filtering, sorting, pagination);
 
             return new ContentResult
