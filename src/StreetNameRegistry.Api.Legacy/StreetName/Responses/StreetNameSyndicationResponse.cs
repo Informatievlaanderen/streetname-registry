@@ -220,7 +220,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 
             HomonymAdditions = homoniemToevoegingen.Where(x => !string.IsNullOrEmpty(x.Spelling)).ToList();
 
-            Provenance = new Provenance(organisation, new Reason(reason));
+            Provenance = new Provenance(version, organisation, new Reason(reason));
         }
     }
 
