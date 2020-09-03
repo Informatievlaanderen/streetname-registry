@@ -69,7 +69,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 
             item.AddContributor(
                 new SyndicationPerson(
-                    streetName.Organisation?.ToName(),
+                    streetName.Organisation == null ? Organisation.Unknown.ToName() : streetName.Organisation.Value.ToName(),
                     string.Empty,
                     AtomContributorTypes.Author));
 
