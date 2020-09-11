@@ -21,15 +21,15 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             typeof(LocalDate),
             typeof(LocalDateTime),
             typeof(DateTimeOffset),
-            typeof(Organisation),
-            typeof(Modification)
+            typeof(Organisation)
         };
 
         /// <summary>
         /// Preferred way to exclude properties
         /// </summary>
         private static readonly Type[] ExcludeTypes = {
-            typeof(Application)
+            typeof(Application),
+            typeof(Modification)
         };
 
         /// <summary>
