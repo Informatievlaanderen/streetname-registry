@@ -114,7 +114,7 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
             [FromServices] CrabImportContext context,
             [FromRoute] string feed)
         {
-            return Ok(context.LastBatchFor((ImportFeed)feed));
+            return Ok(context.LastBatchFor((ImportFeed) feed));
         }
 
         [HttpPost("batch")]
@@ -127,6 +127,17 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
 
             return Ok();
         }
+        
+        [HttpGet("status/{feed}")]
+        public IActionResult GetStatus(
+            [FromServices] CrabImportContext context,
+            [FromRoute] string feed)
+            => Ok(context.StatusFor((ImportFeed) feed));
+
+        [HttpGet("status")]
+        public IActionResult GetStatus(
+            [FromServices] CrabImportContext context)
+            => Ok(context.StatusForAllFeeds());
 
         private IDictionary<string, object> GetMetadata()
         {
