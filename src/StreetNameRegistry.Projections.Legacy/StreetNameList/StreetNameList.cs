@@ -23,6 +23,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
         public string? HomonymAdditionGerman { get; set; }
         public string? HomonymAdditionEnglish { get; set; }
 
+        public StreetNameStatus? Status { get; set; }
+
         public bool Complete { get; set; }
         public bool Removed { get; set; }
 
@@ -65,6 +67,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
             builder.Property(x => x.HomonymAdditionFrench);
             builder.Property(x => x.HomonymAdditionGerman);
             builder.Property(x => x.HomonymAdditionEnglish);
+
+            builder.Property(x => x.Status);
 
             builder.Property(x => x.Complete);
             builder.Property(x => x.Removed);

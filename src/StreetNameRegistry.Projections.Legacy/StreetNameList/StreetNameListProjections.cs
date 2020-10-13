@@ -200,14 +200,94 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameBecameCurrent>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameWasCorrectedToCurrent>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameWasProposed>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameWasCorrectedToProposed>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameWasRetired>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameWasCorrectedToRetired>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameStatusWasRemoved>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameStatusWasCorrectedToRemoved>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameBecameCurrent>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity =>
+                    {
+                        entity.Status = StreetNameStatus.Current;
+                        UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
+                    },
+                    ct);
+            });
+
+            When<Envelope<StreetNameWasCorrectedToCurrent>>(async (context, message, ct) => {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity =>
+                    {
+                        entity.Status = StreetNameStatus.Current;
+                        UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
+                    },
+                    ct);
+            });
+
+            When<Envelope<StreetNameWasProposed>>(async (context, message, ct) => {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity =>
+                    {
+                        entity.Status = StreetNameStatus.Proposed;
+                        UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
+                    },
+                    ct);
+            });
+
+            When<Envelope<StreetNameWasCorrectedToProposed>>(async (context, message, ct) => {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity =>
+                    {
+                        entity.Status = StreetNameStatus.Proposed;
+                        UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
+                    },
+                    ct);
+            });
+
+            When<Envelope<StreetNameWasRetired>>(async (context, message, ct) => {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity =>
+                    {
+                        entity.Status = StreetNameStatus.Retired;
+                        UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
+                    },
+                    ct);
+            });
+
+            When<Envelope<StreetNameWasCorrectedToRetired>>(async (context, message, ct) => {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity =>
+                    {
+                        entity.Status = StreetNameStatus.Retired;
+                        UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
+                    },
+                    ct);
+            });
+
+            When<Envelope<StreetNameStatusWasRemoved>>(async (context, message, ct) => {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity =>
+                    {
+                        entity.Status = null;
+                        UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
+                    },
+                    ct);
+            });
+
+            When<Envelope<StreetNameStatusWasCorrectedToRemoved>>(async (context, message, ct) => {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.StreetNameId,
+                    entity =>
+                    {
+                        entity.Status = null;
+                        UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
+                    },
+                    ct);
+            });
 
             When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
             When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());

@@ -66,17 +66,26 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         [JsonProperty(Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public HomoniemToevoeging HomoniemToevoeging { get; set; }
 
+        /// <summary>
+        /// De huidige fase in de levensloop van een straatnaam.
+        /// </summary>
+        [DataMember(Name = "StraatnaamStatus", Order = 5)]
+        [JsonProperty(Required = Required.DisallowNull)]
+        public StraatnaamStatus StraatnaamStatus { get; set; }
+
         public StreetNameListItemResponse(
             int? id,
             string naamruimte,
             string detail,
             GeografischeNaam geografischeNaam,
             GeografischeNaam homoniemToevoeging,
+            StraatnaamStatus status,
             DateTimeOffset? version)
         {
             Identificator = new StraatnaamIdentificator(naamruimte, id?.ToString(), version);
             Detail = new Uri(string.Format(detail, id));
             Straatnaam = new Straatnaam(geografischeNaam);
+            StraatnaamStatus = status;
 
             if (homoniemToevoeging != null)
                 HomoniemToevoeging = new HomoniemToevoeging(homoniemToevoeging);
@@ -102,6 +111,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                         _responseOptions.DetailUrl,
                         new GeografischeNaam("Kerkstraat", Taal.NL),
                         null,
+                        StraatnaamStatus.InGebruik,
                         DateTimeOffset.Now.LocalDateTime),
 
                     new StreetNameListItemResponse(
@@ -110,6 +120,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                         _responseOptions.DetailUrl,
                         new GeografischeNaam("Wetstraat", Taal.NL),
                         new GeografischeNaam("BR", Taal.NL),
+                        StraatnaamStatus.Voorgesteld,
                         DateTimeOffset.Now.LocalDateTime)
                 };
 

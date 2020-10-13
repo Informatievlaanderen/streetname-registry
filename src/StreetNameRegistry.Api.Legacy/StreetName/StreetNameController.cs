@@ -182,6 +182,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                             responseOptions.Value.DetailUrl,
                             GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
                             GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
+                            m.Status.ConvertFromStreetNameStatus(),
                             m.VersionTimestamp.ToBelgianDateTimeOffset()))
                         .ToListAsync(cancellationToken),
                     Volgende = BuildNextUri(pagedStreetNames.PaginationInfo, responseOptions.Value.VolgendeUrl)

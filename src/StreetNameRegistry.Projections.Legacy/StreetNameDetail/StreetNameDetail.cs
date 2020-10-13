@@ -41,7 +41,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
 
     public class StreetNameDetailConfiguration : IEntityTypeConfiguration<StreetNameDetail>
     {
-        private const string TableName = "StreetNameDetails";
+        internal const string TableName = "StreetNameDetails";
 
         public void Configure(EntityTypeBuilder<StreetNameDetail> builder)
         {
