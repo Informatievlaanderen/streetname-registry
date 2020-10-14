@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
                                             ON list.[StreetNameId] = detail.[StreetNameId]
                                     WHEN MATCHED THEN
                                         UPDATE
-                                            SET list.[Status] = detail.[Status]");
+                                            SET list.[Status] = detail.[Status];");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
