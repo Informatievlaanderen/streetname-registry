@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         public string? HomonymEnglish { get; set; }
         public string? HomonymGerman { get; set; }
         public string? HomonymUnknown { get; set; }
-        public byte[] DbaseRecord { get; set; }
+        public byte[]? DbaseRecord { get; set; }
     }
 
     public class StreetNameExtractItemConfiguration : IEntityTypeConfiguration<StreetNameExtractItem>
