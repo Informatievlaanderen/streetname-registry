@@ -224,63 +224,65 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         }
     }
 
-    public class StreetNameSyndicationResponseExamples : IExamplesProvider<object>
+    public class StreetNameSyndicationResponseExamples : IExamplesProvider<XmlElement>
     {
-        private readonly ResponseOptions _responseOptions;
-
-        public StreetNameSyndicationResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
-            => _responseOptions = responseOptionsProvider.Value;
-
-        public object GetExamples()
-        {
-            return $@"<?xml version=""1.0"" encoding=""utf-8""?>
+        private const string RawXml = @"<?xml version=""1.0"" encoding=""utf-8""?>
 <feed xmlns=""http://www.w3.org/2005/Atom"">
-  <id>https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen.atom</id>
-  <title>Basisregisters Vlaanderen - feed 'straatnamen'</title>
-  <subtitle>Deze Atom feed geeft leestoegang tot events op de resource 'straatnamen'.</subtitle>
-  <generator>Basisregisters Vlaanderen</generator>
-  <rights>Gratis hergebruik volgens https://overheid.vlaanderen.be/sites/default/files/documenten/ict-egov/licenties/hergebruik/modellicentie_gratis_hergebruik_v1_0.html</rights>
-  <updated>2018-10-05T14:06:53Z</updated>
-  <author>
-    <name>agentschap Informatie Vlaanderen</name>
-    <email>informatie.vlaanderen@vlaanderen.be</email>
-  </author>
-  <link href=""https://api.basisregisters.dev-vlaanderen.be/v1/feeds/straatnamen"" rel=""self""/>
-  <link href=""https://api.basisregisters.dev-vlaanderen.be/v1/feeds/straatnamen.atom"" rel=""alternate"" type=""application/atom+xml""/>
-  <link href=""https://api.basisregisters.dev-vlaanderen.be/v1/feeds/straatnamen.xml"" rel=""alternate"" type=""application/xml""/>
-  <link href=""https://docs.basisregisters.dev-vlaanderen.be/"" rel=""related""/>
-  <link href=""https://api.basisregisters.dev-vlaanderen.be/v1/feeds/straatnamen?from=100&limit=100"" rel=""next""/>
-  <entry>
-    <id>4</id>
-    <title>StreetNameWasRegistered-4</title>
-    <updated>2018-10-04T13:12:17Z</updated>
-    <published>2018-10-04T13:12:17Z</published>
-    <link href=""{_responseOptions.Naamruimte}/13023"" rel=""related"" />
+    <id>https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen.atom</id>
+    <title>Basisregisters Vlaanderen - feed 'straatnamen'</title>
+    <subtitle>Deze Atom feed geeft leestoegang tot events op de resource 'straatnamen'.</subtitle>
+    <generator uri=""https://basisregisters.vlaanderen.be"" version=""2.2.15.0"">Basisregisters Vlaanderen</generator>
+    <rights>Gratis hergebruik volgens https://overheid.vlaanderen.be/sites/default/files/documenten/ict-egov/licenties/hergebruik/modellicentie_gratis_hergebruik_v1_0.html</rights>
+    <updated>2020-11-12T09:25:05Z</updated>
     <author>
-      <name>agentschap Informatie Vlaanderen</name>
+        <name>agentschap Informatie Vlaanderen</name>
+        <email>informatie.vlaanderen@vlaanderen.be</email>
+    </author>
+    <link href=""https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen"" rel=""self"" />
+    <link href=""https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen.atom"" rel=""alternate"" type=""application/atom+xml"" />
+    <link href=""https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen.xml"" rel=""alternate"" type=""application/xml"" />
+    <link href=""https://docs.basisregisters.vlaanderen.be/"" rel=""related"" />
+    <link href=""https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen?from=2&amp;limit=100&amp;embed=event,object"" rel=""next"" />
+    <entry>
+        <id>0</id>
+        <title>StreetNameWasRegistered-0</title>
+        <updated>2002-11-21T11:23:45+01:00</updated>
+        <published>2002-11-21T11:23:45+01:00</published>
+        <author>
+            <name>Vlaamse Landmaatschappij</name>
+        </author>
+        <category term=""straatnamen"" />
+        <content>
+            <![CDATA[<Content xmlns:i=""http://www.w3.org/2001/XMLSchema-instance""><Event><StreetNameWasRegistered><StreetNameId>2a2f28ac-f084-5404-a229-434bd194f213</StreetNameId><MunicipalityId>ca6a4d57-e46d-571f-98df-e64c0e5fa3da</MunicipalityId><NisCode>62022</NisCode><Provenance><Timestamp>2002-11-21T10:23:45Z</Timestamp><Organisation>Vlm</Organisation><Reason>Centrale bijhouding CRAB</Reason></Provenance>
+    </StreetNameWasRegistered>
+  </Event><Object><Id>2a2f28ac-f084-5404-a229-434bd194f213</Id><Identificator><Id>https://data.vlaanderen.be/id/straatnaam/</Id><Naamruimte>https://data.vlaanderen.be/id/straatnaam</Naamruimte><ObjectId i:nil=""true"" /><VersieId>2002-11-21T11:23:45+01:00</VersieId></Identificator><Straatnamen /><StraatnaamStatus i:nil=""true"" /><HomoniemToevoegingen /><NisCode>62022</NisCode><IsCompleet>false</IsCompleet><Creatie><Tijdstip>2002-11-21T11:23:45+01:00</Tijdstip><Organisatie>Vlaamse Landmaatschappij</Organisatie><Reden>Centrale bijhouding CRAB</Reden></Creatie>
+  </Object></Content>]]>
+</content>
+</entry>
+<entry>
+    <id>1</id>
+    <title>StreetNameWasNamed-1</title>
+    <updated>2002-11-21T11:23:45+01:00</updated>
+    <published>2002-11-21T11:23:45+01:00</published>
+    <author>
+        <name>Vlaamse Landmaatschappij</name>
     </author>
     <category term=""straatnamen"" />
-    <content><![CDATA[
-<Straatnaam xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
-                <Id>6e04b6ff-0c9c-5770-a2ae-a7deba165469</Id>
-                <Identificator>
-                <Id>http://data.vlaanderen.be/id/straatnaam/12023</Id>
-                <Naamruimte>http://data.vlaanderen.be/id/straatnaam</Naamruimte>
-                <ObjectId>12023</ObjectId>
-                <VersieId>4</VersieId>
-                </Identificator>
-                <Straatnamen />
-                <StraatnaamStatus i:nil=""true"" />
-                <HomoniemToevoegingen />
-                <IsCompleet>false</IsCompleet>
-                <Creatie>
-                <Organisatie>Gemeente</Organisatie>
-                <Reden>Centrale bijhouding CRAB</Reden>
-                </Creatie>
-                </Straatnaam>
-                ]]></content>
-  </entry>
+    <content>
+        <![CDATA[<Content xmlns:i=""http://www.w3.org/2001/XMLSchema-instance""><Event><StreetNameWasNamed><StreetNameId>2a2f28ac-f084-5404-a229-434bd194f213</StreetNameId><Name>Drève de Méhagne</Name><Language>French</Language><Provenance><Timestamp>2002-11-21T10:23:45Z</Timestamp><Organisation>Vlm</Organisation><Reason>Centrale bijhouding CRAB</Reason></Provenance>
+    </StreetNameWasNamed>
+  </Event><Object><Id>2a2f28ac-f084-5404-a229-434bd194f213</Id><Identificator><Id>https://data.vlaanderen.be/id/straatnaam/</Id><Naamruimte>https://data.vlaanderen.be/id/straatnaam</Naamruimte><ObjectId i:nil=""true"" /><VersieId>2002-11-21T11:23:45+01:00</VersieId></Identificator><Straatnamen><GeografischeNaam><Spelling>Drève de Méhagne</Spelling><Taal>fr</Taal></GeografischeNaam>
+    </Straatnamen><StraatnaamStatus i:nil=""true"" /><HomoniemToevoegingen /><NisCode>62022</NisCode><IsCompleet>false</IsCompleet><Creatie><Tijdstip>2002-11-21T11:23:45+01:00</Tijdstip><Organisatie>Vlaamse Landmaatschappij</Organisatie><Reden>Centrale bijhouding CRAB</Reden></Creatie>
+  </Object></Content>]]>
+</content>
+</entry>
 </feed>";
+
+        public XmlElement GetExamples()
+        {
+            var example = new XmlDocument();
+            example.LoadXml(RawXml);
+            return example.DocumentElement;
         }
     }
 }
