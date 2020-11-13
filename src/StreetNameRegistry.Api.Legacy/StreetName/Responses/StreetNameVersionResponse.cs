@@ -2,10 +2,12 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
     using Infrastructure.Options;
     using Microsoft.Extensions.Options;
     using Swashbuckle.AspNetCore.Filters;
 
+    [DataContract]
     public class StreetNameVersionListResponse
     {
         /// <summary>
@@ -14,6 +16,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         public List<StreetNameVersionResponse> StraatnaamVersies { get; set; }
     }
 
+    [DataContract]
     public class StreetNameVersionResponse
     {
         /// <summary>

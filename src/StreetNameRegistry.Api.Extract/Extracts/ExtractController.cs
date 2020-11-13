@@ -4,7 +4,6 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json.Converters;
     using Projections.Extract;
     using Responses;
     using Swashbuckle.AspNetCore.Filters;
@@ -33,8 +32,8 @@ namespace StreetNameRegistry.Api.Extract.Extracts
         [HttpGet]
         [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameRegistryResponseExample), jsonConverter: typeof(StringEnumConverter))]
-        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples), jsonConverter: typeof(StringEnumConverter))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameRegistryResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         public IActionResult Get(
             [FromServices] ExtractContext context,
             [FromServices] SyndicationContext syndicationContext,
