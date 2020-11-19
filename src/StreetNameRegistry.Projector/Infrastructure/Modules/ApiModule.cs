@@ -83,7 +83,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                     _loggerFactory)
                 .RegisterProjections<StreetNameExtractProjections, ExtractContext>(
                     context => new StreetNameExtractProjections(context.Resolve<IOptions<ExtractConfig>>(), DbaseCodePage.Western_European_ANSI.ToEncoding()),
-                    RetryPolicy.NoRetries);
+                    ConnectedProjectionSettings.Default);
         }
 
         private void RegisterLastChangedProjections(ContainerBuilder builder)
@@ -99,7 +99,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjectionMigrator<StreetNameRegistry.Projections.LastChangedList.LastChangedListContextMigrationFactory>(
                     _configuration,
                     _loggerFactory)
-                .RegisterProjections<LastChangedProjections, LastChangedListContext>(RetryPolicy.NoRetries);
+                .RegisterProjections<LastChangedProjections, LastChangedListContext>(ConnectedProjectionSettings.Default);
         }
 
         private void RegisterLegacyProjections(ContainerBuilder builder)
@@ -114,11 +114,11 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjectionMigrator<LegacyContextMigrationFactory>(
                     _configuration,
                     _loggerFactory)
-                .RegisterProjections<StreetNameDetailProjections, LegacyContext>(RetryPolicy.NoRetries)
-                .RegisterProjections<StreetNameListProjections, LegacyContext>(RetryPolicy.NoRetries)
-                .RegisterProjections<StreetNameNameProjections, LegacyContext>(RetryPolicy.NoRetries)
-                .RegisterProjections<StreetNameSyndicationProjections, LegacyContext>(RetryPolicy.NoRetries)
-                .RegisterProjections<StreetNameVersionProjections, LegacyContext>(RetryPolicy.NoRetries);
+                .RegisterProjections<StreetNameDetailProjections, LegacyContext>(ConnectedProjectionSettings.Default)
+                .RegisterProjections<StreetNameListProjections, LegacyContext>(ConnectedProjectionSettings.Default)
+                .RegisterProjections<StreetNameNameProjections, LegacyContext>(ConnectedProjectionSettings.Default)
+                .RegisterProjections<StreetNameSyndicationProjections, LegacyContext>(ConnectedProjectionSettings.Default)
+                .RegisterProjections<StreetNameVersionProjections, LegacyContext>(ConnectedProjectionSettings.Default);
         }
     }
 }
