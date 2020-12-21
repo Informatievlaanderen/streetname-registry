@@ -15,14 +15,14 @@ licenseUrl https://opensource.org/licenses/EUPL-1.2
 description StreetName Registry.
 
 dependencies
-  framework: netcoreapp31
+  framework: net5.0
     Be.Vlaanderen.Basisregisters.Shaperon >= LOCKEDVERSION
 
 files
-  StreetNameRegistry.Api.Extract.dll => lib\netcoreapp3.1
-  StreetNameRegistry.Api.Extract.pdb => lib\netcoreapp3.1
-  StreetNameRegistry.Api.Extract.xml => lib\netcoreapp3.1
+  StreetNameRegistry.Api.Extract.dll => lib\net5.0
+  StreetNameRegistry.Api.Extract.pdb => lib\net5.0
+  StreetNameRegistry.Api.Extract.xml => lib\net5.0
   StreetNameRegistry.Api.Extract.xml => content
 
-  StreetNameRegistry.Projections.Extract.dll => lib\netcoreapp3.1
-  StreetNameRegistry.Projections.Extract.pdb => lib\netcoreapp3.1
+  StreetNameRegistry.Projections.Extract.dll => lib\net5.0
+  StreetNameRegistry.Projections.Extract.pdb => lib\net5.0

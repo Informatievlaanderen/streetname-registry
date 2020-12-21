@@ -15,20 +15,20 @@ licenseUrl https://opensource.org/licenses/EUPL-1.2
 description StreetName Registry.
 
 dependencies
-  framework: netcoreapp31
+  framework: net5.0
     Be.Vlaanderen.Basisregisters.GrAr.Legacy >= LOCKEDVERSION
 
 files
-  StreetNameRegistry.Api.Legacy.dll => lib\netcoreapp3.1
-  StreetNameRegistry.Api.Legacy.pdb => lib\netcoreapp3.1
-  StreetNameRegistry.Api.Legacy.xml => lib\netcoreapp3.1
+  StreetNameRegistry.Api.Legacy.dll => lib\net5.0
+  StreetNameRegistry.Api.Legacy.pdb => lib\net5.0
+  StreetNameRegistry.Api.Legacy.xml => lib\net5.0
   StreetNameRegistry.Api.Legacy.xml => content
 
-  StreetNameRegistry.Projections.Legacy.dll => lib\netcoreapp3.1
-  StreetNameRegistry.Projections.Legacy.pdb => lib\netcoreapp3.1
+  StreetNameRegistry.Projections.Legacy.dll => lib\net5.0
+  StreetNameRegistry.Projections.Legacy.pdb => lib\net5.0
 
-  StreetNameRegistry.Projections.Syndication.dll => lib\netcoreapp3.1
-  StreetNameRegistry.Projections.Syndication.pdb => lib\netcoreapp3.1
+  StreetNameRegistry.Projections.Syndication.dll => lib\net5.0
+  StreetNameRegistry.Projections.Syndication.pdb => lib\net5.0
   
-  StreetNameRegistry.dll => lib\netcoreapp3.1
-  StreetNameRegistry.pdb => lib\netcoreapp3.1
+  StreetNameRegistry.dll => lib\net5.0
+  StreetNameRegistry.pdb => lib\net5.0

@@ -15,10 +15,10 @@ licenseUrl https://opensource.org/licenses/EUPL-1.2
 description StreetName Registry.
 
 files
-  StreetNameRegistry.Api.CrabImport.dll => lib\netcoreapp3.1
-  StreetNameRegistry.Api.CrabImport.pdb => lib\netcoreapp3.1
-  StreetNameRegistry.Api.CrabImport.xml => lib\netcoreapp3.1
+  StreetNameRegistry.Api.CrabImport.dll => lib\net5.0
+  StreetNameRegistry.Api.CrabImport.pdb => lib\net5.0
+  StreetNameRegistry.Api.CrabImport.xml => lib\net5.0
   StreetNameRegistry.Api.CrabImport.xml => content
 
-  StreetNameRegistry.dll => lib\netcoreapp3.1
-  StreetNameRegistry.pdb => lib\netcoreapp3.1
+  StreetNameRegistry.dll => lib\net5.0
+  StreetNameRegistry.pdb => lib\net5.0

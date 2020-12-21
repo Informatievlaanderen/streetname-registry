@@ -17,7 +17,7 @@ namespace StreetNameRegistry.Projections.Legacy
         public DbSet<StreetNameName.StreetNameName> StreetNameNames { get; set; }
         public DbSet<StreetNameSyndicationItem> StreetNameSyndication { get; set; }
 
-        public DbQuery<StreetNameListViewCount> StreetNameListViewCount { get; set; }
+        public DbSet<StreetNameListViewCount> StreetNameListViewCount { get; set; }
 
         // This needs to be here to please EF
         public LegacyContext() { }
@@ -30,7 +30,8 @@ namespace StreetNameRegistry.Projections.Legacy
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Query<StreetNameListViewCount>()
+            modelBuilder.Entity<StreetNameListViewCount>()
+                .HasNoKey()
                 .ToView(StreetNameListViewCountName, Schema.Legacy);
         }
     }
