@@ -5,6 +5,7 @@ namespace StreetNameRegistry.StreetName.Events
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
 
+    [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameWasRegistered")]
     [EventDescription("De straatnaam werd aangemaakt in het register.")]
     public class StreetNameWasRegistered : IHasProvenance, ISetProvenance
@@ -14,10 +15,10 @@ namespace StreetNameRegistry.StreetName.Events
 
         [EventPropertyDescription("Interne GUID van de gemeente aan dewelke de straatnaam is toegewezen.")]
         public Guid MunicipalityId { get; }
-        
+
         [EventPropertyDescription("NIS-code (= objectidentificator) van de gemeente aan dewelke de straatnaam is toegewezen.")]
         public string NisCode { get; }
-        
+
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 

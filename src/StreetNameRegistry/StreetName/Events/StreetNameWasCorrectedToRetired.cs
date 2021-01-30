@@ -5,13 +5,14 @@ namespace StreetNameRegistry.StreetName.Events
     using Newtonsoft.Json;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
 
+    [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameWasCorrectedToRetired")]
     [EventDescription("De straatnaam kreeg status 'gehistoreerd' (via correctie).")]
     public class StreetNameWasCorrectedToRetired : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }
-        
+
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 

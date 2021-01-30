@@ -5,13 +5,14 @@ namespace StreetNameRegistry.StreetName.Events
     using Newtonsoft.Json;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
 
+    [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameBecameComplete")]
     [EventDescription("De straatnaam voldoet aan het informatiemodel (wegens volledig).")]
     public class StreetNameBecameComplete : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }
-        
+
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 

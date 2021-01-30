@@ -5,16 +5,17 @@ namespace StreetNameRegistry.StreetName.Events
     using Newtonsoft.Json;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
 
+    [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameHomonymAdditionWasCleared")]
     [EventDescription("De homoniemtoevoeging van de straatnaam werd gewist.")]
     public class StreetNameHomonymAdditionWasCleared : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }
-        
+
         [EventPropertyDescription("Taal (voluit, EN) waarin de officiële straatnaam staat.")]
         public Language? Language { get; }
-        
+
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 

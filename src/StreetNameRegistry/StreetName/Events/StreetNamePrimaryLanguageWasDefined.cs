@@ -5,6 +5,7 @@ namespace StreetNameRegistry.StreetName.Events
     using Newtonsoft.Json;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
 
+    [EventTags(EventTag.For.Sync)]
     [EventName("StreetNamePrimaryLanguageWasDefined")]
     [EventDescription("De primaire taal waarin de straatnaam beschikbaar is, werd bepaald.")]
     public class StreetNamePrimaryLanguageWasDefined : IHasStreetNameId, IHasProvenance, ISetProvenance
@@ -14,7 +15,7 @@ namespace StreetNameRegistry.StreetName.Events
 
         [EventPropertyDescription("Primaire officiële taal (voluit, EN) van de straatnaam.")]
         public Language PrimaryLanguage { get; }
-        
+
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 

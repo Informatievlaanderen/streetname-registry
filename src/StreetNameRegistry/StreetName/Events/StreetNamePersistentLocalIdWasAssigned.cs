@@ -6,19 +6,20 @@ namespace StreetNameRegistry.StreetName.Events
     using Newtonsoft.Json;
     using NodaTime;
 
+    [EventTags(EventTag.For.Sync)]
     [EventName("StreetNamePersistentLocalIdentifierWasAssigned")]
     [EventDescription("De straatnaam kreeg een persistente lokale identificator toegekend.")]
     public class StreetNamePersistentLocalIdWasAssigned : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }
-        
+
         [EventPropertyDescription("Objectidentificator van de straatnaam.")]
         public int PersistentLocalId { get; }
-        
+
         [EventPropertyDescription("Tijdstip waarop de objectidentificator van de straatnaam werd toegekend.")]
         public Instant AssignmentDate { get; }
-        
+
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 
