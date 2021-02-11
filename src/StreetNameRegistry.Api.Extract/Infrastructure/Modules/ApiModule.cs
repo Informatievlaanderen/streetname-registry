@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Api.Extract.Infrastructure.Modules
 {
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
+    using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,10 @@ namespace StreetNameRegistry.Api.Extract.Infrastructure.Modules
 
             containerBuilder
                 .RegisterModule(new SyndicationModule(_configuration, _services, _loggerFactory));
+
+            containerBuilder
+                .RegisterType<ProblemDetailsHelper>()
+                .AsSelf();
 
             containerBuilder.Populate(_services);
         }
