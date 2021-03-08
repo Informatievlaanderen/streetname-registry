@@ -9,11 +9,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Syndication;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Convertors;
     using Infrastructure.Options;
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
@@ -29,7 +26,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     using Responses;
     using Swashbuckle.AspNetCore.Filters;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Net.Mime;
     using System.Text;
@@ -74,69 +70,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             [FromRoute] int persistentLocalId,
             CancellationToken cancellationToken = default)
             => Ok(await new StreetNameDetailQuery(legacyContext, syndicationContext, responseOptions).FilterAsync(persistentLocalId, cancellationToken));
-
-        /// <summary>
-        /// Vraag een specifieke versie van een straatnaam op.
-        /// </summary>
-        /// <param name="legacyContext"></param>
-        /// <param name="responseOptions"></param>
-        /// <param name="persistentLocalId">De persistente lokale identificator van de straatnaam.</param>
-        /// <param name="versie">De specifieke versie van de straatnaam.</param>
-        /// <param name="cancellationToken"></param>
-        /// <response code="200">Als de straatnaam gevonden is.</response>
-        /// <response code="404">Als de straatnaam niet gevonden kan worden.</response>
-        /// <response code="500">Als er een interne fout is opgetreden.</response>
-        [HttpGet("{persistentLocalId}/versies/{versie}")]
-        [ProducesResponseType(typeof(StreetNameResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameResponseExamples))]
-        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(StreetNameNotFoundResponseExamples))]
-        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
-        public async Task<IActionResult> Get(
-            [FromServices] LegacyContext legacyContext,
-            [FromServices] IOptions<ResponseOptions> responseOptions,
-            [FromRoute] int persistentLocalId,
-            [FromRoute] DateTimeOffset versie,
-            CancellationToken cancellationToken = default)
-        {
-            var streetName = await legacyContext
-                .StreetNameVersions
-                .AsNoTracking()
-                .Where(x => !x.Removed)
-                .SingleOrDefaultAsync(item => item.PersistentLocalId == persistentLocalId && item.VersionTimestampAsDateTimeOffset == versie, cancellationToken);
-
-            if (streetName != null && streetName.Removed)
-                throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
-
-            if (streetName == null || !streetName.Complete)
-                throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
-
-            var gemeente = new StraatnaamDetailGemeente
-            {
-                ObjectId = streetName.NisCode,
-                Detail = string.Format(responseOptions.Value.GemeenteDetailUrl, streetName.NisCode),
-                // TODO: get the name for this nisCode's municipality.
-                // Not feasible yet, at least not yet without calling the Municipality Api.
-                Gemeentenaam = new Gemeentenaam(new GeografischeNaam(null, Taal.NL))
-            };
-
-            return Ok(
-                new StreetNameResponse(
-                    responseOptions.Value.Naamruimte,
-                    persistentLocalId,
-                    streetName.Status.ConvertFromStreetNameStatus(),
-                    gemeente,
-                    streetName.VersionTimestampAsDateTimeOffset.Value,
-                    streetName.NameDutch,
-                    streetName.NameFrench,
-                    streetName.NameGerman,
-                    streetName.NameEnglish,
-                    streetName.HomonymAdditionDutch,
-                    streetName.HomonymAdditionFrench,
-                    streetName.HomonymAdditionGerman,
-                    streetName.HomonymAdditionEnglish));
-        }
 
         /// <summary>
         /// Vraag een lijst met straatnamen op.
@@ -223,53 +156,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                             .Count)
                 });
         }
-
-        /// <summary>
-        /// Vraag een lijst met versies van een straatnaam op.
-        /// </summary>
-        /// <param name="legacyContext"></param>
-        /// <param name="hostingEnvironment"></param>
-        /// <param name="responseOptions"></param>
-        /// <param name="persistentLocalId">De persistente lokale identifier van de straatnaam.</param>
-        /// <param name="cancellationToken"></param>
-        /// <response code="200">Als de opvraging van een lijst met versies van de straatnaam gelukt is.</response>
-        /// <response code="500">Als er een interne fout is opgetreden.</response>
-        [HttpGet("{persistentLocalId}/versies")]
-        [ProducesResponseType(typeof(List<StreetNameVersionListResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameVersionListResponseExamples))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
-        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
-        public async Task<IActionResult> List(
-            [FromServices] LegacyContext legacyContext,
-            [FromServices] IHostingEnvironment hostingEnvironment,
-            [FromServices] IOptions<ResponseOptions> responseOptions,
-            [FromRoute] int persistentLocalId,
-            CancellationToken cancellationToken = default)
-        {
-            var streetNameVersions =
-                await legacyContext
-                    .StreetNameVersions
-                    .AsNoTracking()
-                    .Where(p => !p.Removed && p.PersistentLocalId == persistentLocalId)
-                    .ToListAsync(cancellationToken);
-
-            if (!streetNameVersions.Any())
-                throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
-
-            return Ok(
-                new StreetNameVersionListResponse
-                {
-                    StraatnaamVersies = streetNameVersions
-                        .Select(m => new StreetNameVersionResponse(
-                            m.VersionTimestampAsDateTimeOffset,
-                            responseOptions.Value.DetailUrl,
-                            persistentLocalId))
-                        .ToList()
-                });
-        }
-
+        
         /// <summary>
         /// Vraag een lijst met wijzigingen van straatnamen op.
         /// </summary>

@@ -25,7 +25,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using StreetNameRegistry.Projections.Legacy.StreetNameList;
     using StreetNameRegistry.Projections.Legacy.StreetNameName;
     using StreetNameRegistry.Projections.Legacy.StreetNameSyndication;
-    using StreetNameRegistry.Projections.Legacy.StreetNameVersion;
 
     public class ApiModule : Module
     {
@@ -122,8 +121,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjections<StreetNameDetailProjections, LegacyContext>(ConnectedProjectionSettings.Default)
                 .RegisterProjections<StreetNameListProjections, LegacyContext>(ConnectedProjectionSettings.Default)
                 .RegisterProjections<StreetNameNameProjections, LegacyContext>(ConnectedProjectionSettings.Default)
-                .RegisterProjections<StreetNameSyndicationProjections, LegacyContext>(ConnectedProjectionSettings.Default)
-                .RegisterProjections<StreetNameVersionProjections, LegacyContext>(ConnectedProjectionSettings.Default);
+                .RegisterProjections<StreetNameSyndicationProjections, LegacyContext>(ConnectedProjectionSettings.Default);
         }
     }
 }

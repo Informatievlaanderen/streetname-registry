@@ -35,37 +35,4 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             VersieDetail = new Uri($"{string.Format(detailUrl, objectId)}/versies/{versie}");
         }
     }
-
-    public class StreetNameVersionListResponseExamples : IExamplesProvider<StreetNameVersionListResponse>
-    {
-        private readonly ResponseOptions _responseOptions;
-
-        public StreetNameVersionListResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
-            => _responseOptions = responseOptionsProvider.Value;
-
-        public StreetNameVersionListResponse GetExamples()
-        {
-            var rnd = new Random();
-            var objectId = rnd.Next(10000, 15000);
-
-            var responseVersion0 = new StreetNameVersionResponse(
-                DateTime.Now.AddDays(-20),
-                _responseOptions.DetailUrl,
-                objectId);
-
-            var responseVersion1 = new StreetNameVersionResponse(
-                DateTime.Now.AddDays(-50),
-                _responseOptions.DetailUrl,
-                objectId);
-
-            return new StreetNameVersionListResponse
-            {
-                StraatnaamVersies = new List<StreetNameVersionResponse>
-                {
-                    responseVersion0,
-                    responseVersion1
-                }
-            };
-        }
-    }
 }

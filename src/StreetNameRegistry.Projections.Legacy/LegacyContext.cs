@@ -13,7 +13,6 @@ namespace StreetNameRegistry.Projections.Legacy
 
         public DbSet<StreetNameListItem> StreetNameList { get; set; }
         public DbSet<StreetNameDetail.StreetNameDetail> StreetNameDetail { get; set; }
-        public DbSet<StreetNameVersion.StreetNameVersion> StreetNameVersions { get; set; }
         public DbSet<StreetNameName.StreetNameName> StreetNameNames { get; set; }
         public DbSet<StreetNameSyndicationItem> StreetNameSyndication { get; set; }
 
