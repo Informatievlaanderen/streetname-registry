@@ -11,6 +11,8 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using Microsoft.Extensions.Options;
     using StreetName.Events.Crab;
 
+    [ConnectedProjectionName("Extract - StreetNameExtract")]
+    [ConnectedProjectionDescription("Straatnaam data voor testbestand.")]
     public class StreetNameExtractProjections : ConnectedProjection<ExtractContext>
     {
         private const string InUse = "InGebruik";

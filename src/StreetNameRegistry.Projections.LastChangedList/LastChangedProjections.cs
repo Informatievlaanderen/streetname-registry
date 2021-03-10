@@ -1,10 +1,13 @@
 namespace StreetNameRegistry.Projections.LastChangedList
 {
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using StreetName.Events;
     using StreetName.Events.Crab;
 
+    [ConnectedProjectionName("LastChangedList")]
+    [ConnectedProjectionDescription("Markeert de straatnaam waarvan de cached data moet geupdate worden.")]
     public class LastChangedProjections : LastChangedListConnectedProjection
     {
         protected override string CacheKeyFormat => "legacy/streetname:{{0}}.{1}";

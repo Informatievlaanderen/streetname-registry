@@ -6,6 +6,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     using StreetName.Events;
     using StreetName.Events.Crab;
 
+    [ConnectedProjectionName("Legacy - StreetNameSyndication")]
+    [ConnectedProjectionDescription("Straatnaam data voor de feed.")]
     public class StreetNameSyndicationProjections : ConnectedProjection<LegacyContext>
     {
         public StreetNameSyndicationProjections()

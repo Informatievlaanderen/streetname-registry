@@ -6,6 +6,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
     using StreetName.Events;
     using StreetName.Events.Crab;
 
+    [ConnectedProjectionName("Legacy - StreetNameDetail")]
+    [ConnectedProjectionDescription("Straatnaam detail data.")]
     public class StreetNameDetailProjections : ConnectedProjection<LegacyContext>
     {
         public StreetNameDetailProjections()
