@@ -5,7 +5,7 @@ namespace StreetNameRegistry.StreetName.Events
     using Newtonsoft.Json;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
 
-    [EventTags(EventTag.For.Sync)]
+    [EventTags(EventTag.For.Crab)]
     [EventName("StreetNameSecondaryLanguageWasCleared")]
     [EventDescription("De secundaire taal waarin de straatnaam beschikbaar is, werd gewist.")]
     public class StreetNameSecondaryLanguageWasCleared : IHasStreetNameId, IHasProvenance, ISetProvenance
