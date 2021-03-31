@@ -6,8 +6,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
     using StreetName.Events;
     using StreetName.Events.Crab;
 
-    [ConnectedProjectionName("Legacy - StreetNameList")]
-    [ConnectedProjectionDescription("Straatnaam lijst data.")]
+    [ConnectedProjectionName("API endpoint lijst straatnamen")]
+    [ConnectedProjectionDescription("Projectie die de straatnamen data voor de straatnamen lijst voorziet.")]
     public class StreetNameListProjections : ConnectedProjection<LegacyContext>
     {
         public StreetNameListProjections()

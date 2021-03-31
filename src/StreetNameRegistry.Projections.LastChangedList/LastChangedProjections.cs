@@ -6,8 +6,8 @@ namespace StreetNameRegistry.Projections.LastChangedList
     using StreetName.Events;
     using StreetName.Events.Crab;
 
-    [ConnectedProjectionName("LastChangedList")]
-    [ConnectedProjectionDescription("Markeert de straatnaam waarvan de cached data moet geupdate worden.")]
+    [ConnectedProjectionName("Cache markering straatnamen")]
+    [ConnectedProjectionDescription("Projectie die markeert voor hoeveel straatnamen de gecachte data nog geüpdated moeten worden.")]
     public class LastChangedProjections : LastChangedListConnectedProjection
     {
         protected override string CacheKeyFormat => "legacy/streetname:{{0}}.{1}";

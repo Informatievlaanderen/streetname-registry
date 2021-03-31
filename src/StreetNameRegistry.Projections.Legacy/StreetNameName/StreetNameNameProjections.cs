@@ -8,8 +8,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
     using StreetName.Events;
     using StreetName.Events.Crab;
 
-    [ConnectedProjectionName("Legacy - StreetNameName")]
-    [ConnectedProjectionDescription("Straatnaam naam data (BOSA).")]
+    [ConnectedProjectionName("API endpoint straatnamen ifv BOSA DT")]
+    [ConnectedProjectionDescription("Projectie die de straatnamen data voor straatnamen ifv BOSA DT voorziet.")]
     public class StreetNameNameProjections : ConnectedProjection<LegacyContext>
     {
         public StreetNameNameProjections()
