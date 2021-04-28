@@ -1,11 +1,14 @@
 namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.Api.Search;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using Convertors;
     using Microsoft.EntityFrameworkCore;
     using Projections.Legacy;
     using Projections.Legacy.StreetNameList;
@@ -63,6 +66,18 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 streetNames = streetNames.Where(x => municipalityNisCodes.Contains(x.NisCode));
             }
 
+            if (!string.IsNullOrEmpty(filtering.Filter.Status))
+            {
+                if (Enum.TryParse(typeof(StraatnaamStatus), filtering.Filter.Status, true, out var status))
+                {
+                    var streetNameStatus = ((StraatnaamStatus)status).ConvertFromStraatnaamStatus();
+                    streetNames = streetNames.Where(m => m.Status.HasValue && m.Status.Value == streetNameStatus);
+                }
+                else
+                    //have to filter on EF cannot return new List<>().AsQueryable() cause non-EF provider does not support .CountAsync()
+                    streetNames = streetNames.Where(m => m.Status.HasValue && (int)m.Status.Value == -1);
+            }
+
             return streetNames;
         }
     }
@@ -88,5 +103,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public string NameFrench { get; set; }
         public string NameGerman { get; set; }
         public string NameEnglish { get; set; }
+        public string Status { get; set; }
     }
 }
