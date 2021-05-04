@@ -194,7 +194,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
         public StreetNameSyndicationQuery(
             LegacyContext context,
-            EmbedValue embed)
+            SyncEmbedValue embed)
         {
             _context = context;
             _embedEvent = embed?.Event ?? false;
@@ -310,6 +310,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     public class StreetNameSyndicationFilter
     {
         public long? Position { get; set; }
-        public EmbedValue Embed { get; set; }
+        public SyncEmbedValue Embed { get; set; }
     }
 }
