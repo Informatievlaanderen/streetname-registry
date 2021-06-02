@@ -69,6 +69,16 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 streetNames = streetNames.Where(x => municipalityNisCodes.Contains(x.NisCode));
             }
 
+            var filterStreetName = filtering.Filter.StreetNameName.RemoveDiacritics();
+            if (!string.IsNullOrEmpty(filtering.Filter.StreetNameName))
+            {
+                streetNames = streetNames
+                    .Where(x => x.NameDutchSearch == filterStreetName ||
+                               x.NameFrenchSearch == filterStreetName ||
+                               x.NameEnglishSearch == filterStreetName ||
+                               x.NameGermanSearch == filterStreetName);
+            }
+
             if (!string.IsNullOrEmpty(filtering.Filter.Status))
             {
                 if (Enum.TryParse(typeof(StraatnaamStatus), filtering.Filter.Status, true, out var status))
@@ -101,6 +111,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
     public class StreetNameFilter
     {
+        public string StreetNameName { get; set; }
         public string MunicipalityName { get; set; }
         public string NameDutch { get; set; }
         public string NameFrench { get; set; }

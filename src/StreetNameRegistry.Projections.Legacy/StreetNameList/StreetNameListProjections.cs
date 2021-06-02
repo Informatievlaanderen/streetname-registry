@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Projections.Legacy.StreetNameList
 {
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using NodaTime;
@@ -306,18 +307,22 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
             {
                 case Language.Dutch:
                     entity.NameDutch = name;
+                    entity.NameDutchSearch = name.RemoveDiacritics();
                     break;
 
                 case Language.French:
                     entity.NameFrench = name;
+                    entity.NameFrenchSearch = name.RemoveDiacritics();
                     break;
 
                 case Language.German:
                     entity.NameGerman = name;
+                    entity.NameGermanSearch = name.RemoveDiacritics();
                     break;
 
                 case Language.English:
                     entity.NameEnglish = name;
+                    entity.NameEnglishSearch = name.RemoveDiacritics();
                     break;
             }
         }

@@ -18,6 +18,11 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
         public string? NameGerman { get; set; }
         public string? NameEnglish { get; set; }
 
+        public string? NameDutchSearch { get; set; }
+        public string? NameFrenchSearch { get; set; }
+        public string? NameGermanSearch { get; set; }
+        public string? NameEnglishSearch { get; set; }
+
         public string? HomonymAdditionDutch { get; set; }
         public string? HomonymAdditionFrench { get; set; }
         public string? HomonymAdditionGerman { get; set; }
@@ -63,6 +68,11 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
             builder.Property(x => x.NameGerman);
             builder.Property(x => x.NameEnglish);
 
+            builder.Property(x => x.NameDutchSearch);
+            builder.Property(x => x.NameFrenchSearch);
+            builder.Property(x => x.NameGermanSearch);
+            builder.Property(x => x.NameEnglishSearch);
+
             builder.Property(x => x.HomonymAdditionDutch);
             builder.Property(x => x.HomonymAdditionFrench);
             builder.Property(x => x.HomonymAdditionGerman);
@@ -80,6 +90,11 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
             builder.HasIndex(x => x.PersistentLocalId).IsClustered();
             builder.HasIndex(x => x.NisCode);
             builder.HasIndex(x => x.Status);
+
+            builder.HasIndex(x => x.NameDutchSearch);
+            builder.HasIndex(x => x.NameFrenchSearch);
+            builder.HasIndex(x => x.NameGermanSearch);
+            builder.HasIndex(x => x.NameEnglishSearch);
 
             // This index speeds up the hardcoded first filter in StreetNameListQuery
             builder.HasIndex(x => new { x.Complete, x.Removed });
