@@ -39,7 +39,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 return streetNames;
 
             if (!string.IsNullOrEmpty(filtering.Filter.NisCode))
-                streetNames = streetNames.Where(m => m.NisCode.Contains(filtering.Filter.NisCode));
+                streetNames = streetNames.Where(m => m.NisCode == filtering.Filter.NisCode);
 
             if (!string.IsNullOrEmpty(filtering.Filter.NameDutch))
                 streetNames = streetNames.Where(s => s.NameDutch.Contains(filtering.Filter.NameDutch));
