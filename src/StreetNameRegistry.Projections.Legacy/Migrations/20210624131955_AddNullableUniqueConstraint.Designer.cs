@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreetNameRegistry.Projections.Legacy;
 
 namespace StreetNameRegistry.Projections.Legacy.Migrations
 {
     [DbContext(typeof(LegacyContext))]
-    partial class LegacyContextModelSnapshot : ModelSnapshot
+    [Migration("20210624131955_AddNullableUniqueConstraint")]
+    partial class AddNullableUniqueConstraint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,10 +100,10 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
                         .IsClustered();
 
                     b.HasIndex("PersistentLocalId")
-                        .IsClustered(false)
                         .IsUnique()
                         .HasDatabaseName("IX_StreetNameDetails_PersistentLocalId_1")
-                        .HasFilter("([PersistentLocalId] IS NOT NULL)");
+                        .HasFilter("([PersistentLocalId] IS NOT NULL)")
+                        .IsClustered(false);
 
                     b.HasIndex("Removed");
 

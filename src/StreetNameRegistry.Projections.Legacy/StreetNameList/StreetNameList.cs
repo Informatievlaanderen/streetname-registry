@@ -87,7 +87,14 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
 
             builder.Property(x => x.NisCode);
 
-            builder.HasIndex(x => x.PersistentLocalId).IsClustered();
+            builder.HasIndex(p => p.PersistentLocalId)
+                .IsUnique()
+                .HasFilter($"([{nameof(StreetNameListItem.PersistentLocalId)}] IS NOT NULL)")
+                .HasDatabaseName($"IX_StreetNameList_PersistentLocalId_1");
+
+            builder.HasIndex(p => p.PersistentLocalId)
+                .IsClustered();
+
             builder.HasIndex(x => x.NisCode);
             builder.HasIndex(x => x.Status);
 

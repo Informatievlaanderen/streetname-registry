@@ -73,7 +73,14 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
 
             builder.Property(x => x.Removed);
 
-            builder.HasIndex(x => x.PersistentLocalId).IsClustered();
+            builder.HasIndex(p => p.PersistentLocalId)
+                .IsUnique()
+                .HasFilter($"([{nameof(StreetNameDetail.PersistentLocalId)}] IS NOT NULL)")
+                .HasDatabaseName($"IX_StreetNameDetails_PersistentLocalId_1");;
+
+            builder.HasIndex(p => p.PersistentLocalId)
+                .IsClustered();
+
             builder.HasIndex(x => x.Removed);
         }
     }
