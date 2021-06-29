@@ -14,36 +14,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.x
-      uses: actions/setup-python@v2
-      with:
-        # Semantic version range syntax or exact version of a Python version
-        python-version: '3.x'         
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip setuptools wheel
-        pip install awscurl
-
-    - name: Deploy Staging
-      id: deployStaging
-      shell: bash
+    - name: sample
       env:
-        BODY: "{\"environment\":\"stg\",\"version\":\"${{ github.event.inputs.version }}\"}"
-        AWS_BUILD_API: ${{ secrets.VBR_AWS_BUILD_API }}
-        AWS_BUILD_USER_ACCESS_KEY_ID: ${{ secrets.VBR_AWS_BUILD_USER_ACCESS_KEY_ID }}
-        AWS_BUILD_USER_SECRET_ACCESS_KEY: ${{ secrets.VBR_AWS_BUILD_USER_SECRET_ACCESS_KEY }}
-      run: echo RESPONSE=$(awscurl --access_key $AWS_BUILD_USER_ACCESS_KEY_ID --secret_key $AWS_BUILD_USER_SECRET_ACCESS_KEY --region eu-west-1 --service execute-api -X POST -d $BODY $AWS_BUILD_API/streetname-registry-api) >> $GITHUB_ENV
-
-    - name: Check Response
-      run: |
-        echo ${{ env.RESPONSE }}
-        echo ${{ fromJSON(env.RESPONSE).statusCode }}
-        echo ${{ fromJSON(env.RESPONSE).body.BuildUuid }}
-    - if: ${{ fromJSON(env.RESPONSE).statusCode != '200' }}    
-      run: exit 1
-    - if: ${{ fromJSON(env.RESPONSE).statusCode == '200' }}
-      run: |
-        echo "exit"
-        exit 1
-      
+        BUILD_URL: ${{ secrets.VBR_AWS_BUILD_API }}/streetname-registry-api
+        STATUS_URL: ${{ secrets.VBR_AWS_BUILD_API }}/streetname-registry-api
+      uses: informatievlaanderen/awscurl-polling-action@main
+      with:
+          environment: stg
+          version: ${{ github.event.inputs.version }}
+          status-url: ${{ secrets.STATUS_URL }}
+          deploy-url: $BUILD_URL
+          access-key: ${{ secrets.VBR_AWS_BUILD_USER_ACCESS_KEY_ID }}
+          secret-key: ${{ secrets.VBR_AWS_BUILD_USER_SECRET_ACCESS_KEY }}
+          region: eu-west-1
+          interval: 2
