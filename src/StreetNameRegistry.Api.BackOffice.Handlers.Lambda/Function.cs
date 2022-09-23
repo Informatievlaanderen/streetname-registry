@@ -14,20 +14,23 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Consumer;
-    using Handlers;
     using Infrastructure;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-    using Requests;
+    using Sqs.Requests;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
 
     public sealed class Function : FunctionBase
     {
+        public Function()
+            : base(new List<Assembly>{ typeof(SqsRequest).Assembly })
+        { }
+
         protected override IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var configuration = new ConfigurationBuilder()
@@ -95,10 +98,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
 
             builder.RegisterEventstreamModule(configuration);
             builder.RegisterSnapshotModule(configuration);
-
-            builder.RegisterType<SqsStreetNameProposeLambdaHandler>()
-                .As<IRequestHandler<SqsLambdaStreetNameProposeRequest>>()
-                .AsSelf();
 
             builder.Populate(services);
 
