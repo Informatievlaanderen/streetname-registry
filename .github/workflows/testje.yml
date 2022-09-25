@@ -519,10 +519,36 @@ jobs:
       run: |
         dotnet tool restore
         dotnet paket install
+    
+    - name: Prepare push packages to Github
+      shell: bash
+      run: dotnet nuget add source --username InformatieVlaanderen --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/informatievlaanderen/index.json" 
+      
+    - name: Publish packages to GitHub
+      shell: bash
+      run: |
+        echo SEMVER $SEMVER
+        echo NUGET_API_KEY $NUGET_API_KEY
+        echo {{ secrets.NUGET_API_KEY }} ${{ secrets.NUGET_API_KEY }}
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg --source github
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source github
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source github
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source github
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source github
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source github
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source github
+      env:
+        SEMVER: ${{ needs.build.outputs.version }}
+        WORKSPACE: ${{ github.workspace }}
+        NUGET_HOST: https://nuget.pkg.github.com/informatievlaanderen/index.json
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
     - name: Publish packages to NuGet
       shell: bash
       run: |
+        echo SEMVER $SEMVER
+        echo NUGET_API_KEY $NUGET_API_KEY
+        echo {{ secrets.NUGET_API_KEY }} ${{ secrets.NUGET_API_KEY }}
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
@@ -535,22 +561,6 @@ jobs:
         WORKSPACE: ${{ github.workspace }}
         NUGET_HOST: ${{ secrets.NUGET_HOST }}
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-      
-#    - name: Publish packages to GitHub
-#      shell: bash
-#      run: |
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg $NUGET_HOST
-#      env:
-#        SEMVER: ${{ needs.build.outputs.version }}
-#        WORKSPACE: ${{ github.workspace }}
-#        NUGET_HOST: https://nuget.pkg.github.com/informatievlaanderen/index.json
-#        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
   
   push_images_to_test:
     if: needs.build.outputs.version != 'none'
