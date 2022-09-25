@@ -131,16 +131,6 @@ jobs:
     # Upload NuGet packages
     #
 
-    - name: Debug folders
-      shell: bash
-      run: |
-        echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist || true
-        ls -al /home/runner/work/streetname-registry/streetname-registry/dist || true
-#        echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/nuget || true
-#        ls -al /home/runner/work/streetname-registry/streetname-registry/dist/nuget || true
-      env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
-      
     - name: Upload NuGet package Api.BackOffice
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
@@ -822,7 +812,6 @@ jobs:
           SEMVER: ${{ needs.build.outputs.version }}
           WORKSPACE: ${{ github.workspace }}
           
- 
   deploy_to_test:
     if: github.repository_owner == 'Informatievlaanderen'
     needs: [push_images_to_test, build]
@@ -856,8 +845,6 @@ jobs:
         echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
         echo ${{ steps.awscurl-polling-action.outputs.final-message }}
 
-  - name: Deploy lambda
-    steps:
     - name: CD Lambda(s) Configure credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -919,9 +906,6 @@ jobs:
         echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
         echo ${{ steps.awscurl-polling-action.outputs.final-message }}
 
-  lambda:
-    runs-on: ubuntu-latest
-    steps:
     - name: CD Lambda(s) Configure credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
