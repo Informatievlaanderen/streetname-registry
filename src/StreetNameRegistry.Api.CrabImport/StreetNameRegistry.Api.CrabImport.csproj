@@ -7,6 +7,9 @@
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
     <LangVersion>8</LangVersion>
+    <PackageProjectUrl>https://github.com/informatievlaanderen/streetname-registry.git</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/informatievlaanderen/streetname-registry.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
