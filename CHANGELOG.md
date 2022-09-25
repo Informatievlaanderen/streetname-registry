@@ -1,3 +1,10 @@
+## [3.10.35](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.34...v3.10.35) (2022-09-25)
+
+
+### Bug Fixes
+
+* separate github & nuget ([8096e6d](https://github.com/informatievlaanderen/streetname-registry/commit/8096e6d8989131a300a1c48fc2b5564fef7a6013))
+
 ## [3.10.34](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.33...v3.10.34) (2022-09-25)
 
 
