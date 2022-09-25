@@ -523,13 +523,13 @@ jobs:
     - name: Publish packages to NuGet
       shell: bash
       run: |
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
       env:
         SEMVER: ${{ needs.build.outputs.version }}
         WORKSPACE: ${{ github.workspace }}
