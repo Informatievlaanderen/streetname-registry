@@ -375,17 +375,17 @@ jobs:
           CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
           CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
 
-#      - name: Create Jira Release
-#        if: env.RELEASE_VERSION != 'none'
-#        shell: bash
-#        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-jira.sh
-#        env:
-#          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
-#          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
-#          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
-#          JIRA_PREFIX: StreetName
-#          JIRA_PROJECT: GAWR
-#          JIRA_VERSION: ${{ env.RELEASE_VERSION }}
+      - name: Create Jira Release
+        if: env.RELEASE_VERSION != 'none'
+        shell: bash
+        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-jira.sh
+        env:
+          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
+          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
+          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
+          JIRA_PREFIX: StreetName
+          JIRA_PROJECT: GAWR
+          JIRA_VERSION: ${{ needs.build.outputs.version }}
 
   publish_to_nuget:
     if: needs.build.outputs.version != 'none'
@@ -812,12 +812,6 @@ jobs:
           SEMVER: ${{ needs.build.outputs.version }}
           WORKSPACE: ${{ github.workspace }}
           
-#  deploy_to_test:
-#    if: needs.build.outputs.version != 'none'
-#    needs: [push_images_to_test, build]
-#    uses: ./.github/workflows/test.yml
-#    with:
-#      version: env.RELEASE_VERSION
  
   deploy_to_test:
     if: github.repository_owner == 'Informatievlaanderen'
@@ -840,7 +834,7 @@ jobs:
       uses: informatievlaanderen/awscurl-polling-action/polling-action@main
       with:
           environment: test
-          version: ${{ github.event.inputs.version }}
+          version: ${{ needs.build.outputs.version }}
           status-url: $STATUS_URL
           deploy-url: $BUILD_URL
           access-key: ${{ secrets.VBR_AWS_BUILD_USER_ACCESS_KEY_ID }}
@@ -871,7 +865,7 @@ jobs:
 #        echo aws s3 cp s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
 #        aws s3 cp s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
 #      env:
-#        VERSION: ${{ github.event.inputs.version }}
+#        VERSION: ${{ needs.build.outputs.version }}
 #        
 #    - name: Promote Lambda(s)
 #      shell: bash
