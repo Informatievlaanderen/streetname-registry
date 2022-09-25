@@ -532,7 +532,7 @@ jobs:
   publish_to_github:
     if: needs.build.outputs.version != 'none'
     needs: build
-    name: Publish to NuGet
+    name: Publish to Github
     runs-on: ubuntu-latest
     
     steps:
@@ -672,18 +672,19 @@ jobs:
         echo SEMVER $SEMVER
         echo NUGET_API_KEY $NUGET_API_KEY
         echo {{ secrets.NUGET_API_KEY }} ${{ secrets.NUGET_API_KEY }}
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg --source github
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source github
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source github
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source github
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source github
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source github
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source github
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
       env:
         SEMVER: ${{ needs.build.outputs.version }}
         WORKSPACE: ${{ github.workspace }}
         NUGET_HOST: https://nuget.pkg.github.com/informatievlaanderen/index.json
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   push_images_to_test:
     if: needs.build.outputs.version != 'none'
