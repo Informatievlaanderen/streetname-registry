@@ -33,7 +33,8 @@ namespace StreetNameRegistry.Projections.Wfs.StreetName
         public bool Removed { get; set; }
 
 
-        public static string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
+        public const string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
+
         private DateTimeOffset VersionTimestampAsDateTimeOffset { get; set; }
 
         public Instant Version
