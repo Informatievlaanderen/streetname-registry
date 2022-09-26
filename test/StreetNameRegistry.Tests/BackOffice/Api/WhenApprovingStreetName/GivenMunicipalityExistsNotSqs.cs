@@ -44,7 +44,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 MockPassingRequestValidator<StreetNameApproveRequest>(),
                 new StreetNameApproveRequest
                 {
-                    PersistentLocalId = persistentLocalId,
+                    PersistentLocalId = persistentLocalId
                 },
                 ifMatchHeaderValue: null,
                 CancellationToken.None);
