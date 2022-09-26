@@ -387,73 +387,14 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Cache NPM
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-npm
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-
-    - name: Cache Paket
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-paket
-      with:
-        path: packages
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('paket.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-
-    - name: Cache Python
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-pip
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-build-${{ env.cache-name }}
-
-    - name: Parse repository name
-      run: echo REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//") >> $GITHUB_ENV
-      shell: bash
-      #REPOSITORY_NAME = streetname-registry
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: ${{ secrets.VBR_DOTNET_VERSION }}
 
-    - name: Setup Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
-
-    - name: Node version
-      shell: bash
-      run: node --version
-
     - name: .NET version
       shell: bash
       run: dotnet --info
-
-    - name: Python version
-      shell: bash
-      run: python --version
-
-    - name: Install NPM dependencies
-      shell: bash
-      run: npm ci
-
-    - name: Install Python dependencies
-      shell: bash
-      run: |
-        python -m pip install --upgrade pip
-        pip install requests markdown argparse
 
     - name: Download NuGet package Api.BackOffice
       if: env.RELEASE_VERSION != 'none'
@@ -504,18 +445,9 @@ jobs:
         name: nuget-projector
         path: ~/
 
-    - name: Restore packages
-      shell: bash
-      run: |
-        dotnet tool restore
-        dotnet paket install
-    
     - name: Publish packages to NuGet
       shell: bash
       run: |
-        echo SEMVER $SEMVER
-        echo NUGET_API_KEY $NUGET_API_KEY
-        echo {{ secrets.NUGET_API_KEY }} ${{ secrets.NUGET_API_KEY }}
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
@@ -526,7 +458,6 @@ jobs:
       env:
         SEMVER: ${{ needs.build.outputs.version }}
         WORKSPACE: ${{ github.workspace }}
-        NUGET_HOST: ${{ secrets.NUGET_HOST }}
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
   publish_to_github:
@@ -539,73 +470,14 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Cache NPM
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-npm
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-
-    - name: Cache Paket
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-paket
-      with:
-        path: packages
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('paket.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-
-    - name: Cache Python
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-pip
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-build-${{ env.cache-name }}
-
-    - name: Parse repository name
-      run: echo REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//") >> $GITHUB_ENV
-      shell: bash
-      #REPOSITORY_NAME = streetname-registry
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: ${{ secrets.VBR_DOTNET_VERSION }}
 
-    - name: Setup Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
-
-    - name: Node version
-      shell: bash
-      run: node --version
-
     - name: .NET version
       shell: bash
       run: dotnet --info
-
-    - name: Python version
-      shell: bash
-      run: python --version
-
-    - name: Install NPM dependencies
-      shell: bash
-      run: npm ci
-
-    - name: Install Python dependencies
-      shell: bash
-      run: |
-        python -m pip install --upgrade pip
-        pip install requests markdown argparse
 
     - name: Download NuGet package Api.BackOffice
       if: env.RELEASE_VERSION != 'none'
@@ -655,12 +527,6 @@ jobs:
       with:
         name: nuget-projector
         path: ~/
-
-    - name: Restore packages
-      shell: bash
-      run: |
-        dotnet tool restore
-        dotnet paket install
     
     - name: Prepare push packages to Github
       shell: bash
@@ -672,18 +538,16 @@ jobs:
         echo SEMVER $SEMVER
         echo NUGET_API_KEY $NUGET_API_KEY
         echo {{ secrets.NUGET_API_KEY }} ${{ secrets.NUGET_API_KEY }}
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source github --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
       env:
         SEMVER: ${{ needs.build.outputs.version }}
         WORKSPACE: ${{ github.workspace }}
-        NUGET_HOST: https://nuget.pkg.github.com/informatievlaanderen/index.json
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   push_images_to_test:
