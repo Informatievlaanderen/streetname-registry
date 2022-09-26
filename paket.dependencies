@@ -79,8 +79,8 @@ nuget Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple 4.3.2
 
 nuget Be.Vlaanderen.Basisregisters.Shaperon 9.0.1
 
-nuget Be.Vlaanderen.Basisregisters.TicketingService.Abstractions 1.7.1
-nuget Be.Vlaanderen.Basisregisters.TicketingService.Proxy.HttpProxy 1.7.1
+nuget Be.Vlaanderen.Basisregisters.TicketingService.Abstractions 1.7.4
+nuget Be.Vlaanderen.Basisregisters.TicketingService.Proxy.HttpProxy 1.7.4
 
 // LAMBDA STUFF
 nuget Microsoft.Extensions.Configuration.Binder 6.0.0
