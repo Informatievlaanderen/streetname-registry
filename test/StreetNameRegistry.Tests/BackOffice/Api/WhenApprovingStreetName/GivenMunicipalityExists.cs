@@ -1,13 +1,13 @@
 namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
 {
     using System;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
+    using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using FluentAssertions;
-    using FluentValidation;
     using global::AutoFixture;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
     using NodaTime;
@@ -55,7 +55,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         }
 
         [Fact]
-        public void WithAggregateIdIsNotFound_ThenThrowsValidationException()
+        public void WithAggregateIdIsNotFound_ThenThrowsApiException()
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<SqsStreetNameApproveRequest>(), CancellationToken.None))
@@ -75,12 +75,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             //Assert
             act
                 .Should()
-                .ThrowAsync<ValidationException>()
+                .ThrowAsync<ApiException>()
                 .Result
                 .Where(x =>
-                    x.Errors.Any(e =>
-                        e.ErrorCode == ""
-                        && e.ErrorMessage.Contains($"De waarde '{request.PersistentLocalId}' is ongeldig.")));
+                    x.Message.Contains("Onbestaande straatnaam.")
+                    && x.StatusCode == StatusCodes.Status404NotFound);
         }
 
         [Fact]

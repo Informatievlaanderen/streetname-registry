@@ -2,14 +2,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
+    using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentAssertions;
-    using FluentValidation;
     using global::AutoFixture;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
     using StreetNameRegistry.Api.BackOffice;
@@ -62,7 +62,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
         }
 
         [Fact]
-        public void WithAggregateIdIsNotFound_ThenThrowsValidationException()
+        public void WithAggregateIdIsNotFound_ThenThrowsApiException()
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<SqsStreetNameCorrectNamesRequest>(), CancellationToken.None))
@@ -84,12 +84,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             //Assert
             act
                 .Should()
-                .ThrowAsync<ValidationException>()
+                .ThrowAsync<ApiException>()
                 .Result
                 .Where(x =>
-                    x.Errors.Any(e =>
-                        e.ErrorCode == ""
-                        && e.ErrorMessage.Contains($"De waarde '{persistentLocalId}' is ongeldig.")));
+                    x.Message.Contains("Onbestaande straatnaam.")
+                    && x.StatusCode == StatusCodes.Status404NotFound);
         }
 
         [Fact]
