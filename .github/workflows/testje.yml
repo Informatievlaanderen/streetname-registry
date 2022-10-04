@@ -278,23 +278,23 @@ jobs:
         zip -r lambda.zip .
         popd
 
-#    - name: Push Lambda functions to Test
-#      if: env.RELEASE_VERSION != 'none'
-#      shell: bash
-#      run: |
-#        echo Push Lambda functions to Test
-#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
-#        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-#        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-#        popd
-#      env:
-#        SEMVER: ${{ env.RELEASE_VERSION }}
-#
+    - name: Push Lambda functions to S3 Test
+      if: env.RELEASE_VERSION != 'none'
+      shell: bash
+      run: |
+        echo Push Lambda functions to Test
+        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
+        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        popd
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
+
 #    - name: Push Lambda functions to Staging
 #      if: env.RELEASE_VERSION != 'none'
 #      shell: bash
 #      run: |
-#        echo Push Lambda functions to Staging
+#        echo Push Lambda functions to S3 Staging
 #        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
 #        echo aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
 #        aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
@@ -306,7 +306,7 @@ jobs:
 #      if: env.RELEASE_VERSION != 'none'
 #      shell: bash
 #      run: |
-#        #echo Push Lambda functions to Production
+#        #echo Push Lambda functions to S3 Production
 #        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
 #        #echo aws s3 cp lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
 #        #aws s3 cp lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
@@ -460,95 +460,94 @@ jobs:
         WORKSPACE: ${{ github.workspace }}
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
-  publish_to_github:
-    if: needs.build.outputs.version != 'none'
-    needs: build
-    name: Publish to Github
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: ${{ secrets.VBR_DOTNET_VERSION }}
-
-    - name: .NET version
-      shell: bash
-      run: dotnet --info
-
-    - name: Download NuGet package Api.BackOffice
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-api-backoffice
-        path: ~/
-
-    - name: Download NuGet package Api.BackOffice.Abstractions
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-api-backoffice-abstractions
-        path: ~/
-
-    - name: Download NuGet package Api.Legacy
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-api-legacy
-        path: ~/
-
-    - name: Download NuGet package Api.Oslo
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-api-oslo
-        path: ~/
-
-    - name: Download NuGet package Api.Extract
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-api-extract
-        path: ~/
-
-    - name: Download NuGet package Api.CrabImport
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-api-crab-import
-        path: ~/
-
-    - name: Download NuGet package Projector
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-projector
-        path: ~/
-    
-    - name: Prepare push packages to Github
-      shell: bash
-      run: dotnet nuget add source --username InformatieVlaanderen --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/informatievlaanderen/index.json" 
-      
-    - name: Publish packages to GitHub
-      shell: bash
-      run: |
-        echo SEMVER $SEMVER
-        echo NUGET_API_KEY $NUGET_API_KEY
-        echo {{ secrets.NUGET_API_KEY }} ${{ secrets.NUGET_API_KEY }}
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
-      env:
-        SEMVER: ${{ needs.build.outputs.version }}
-        WORKSPACE: ${{ github.workspace }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#  publish_to_github:
+#    if: needs.build.outputs.version != 'none'
+#    needs: build
+#    name: Publish to Github
+#    runs-on: ubuntu-latest
+#    
+#    steps:
+#    - name: Checkout Code
+#      uses: actions/checkout@v3
+#
+#    - name: Setup .NET Core
+#      uses: actions/setup-dotnet@v2
+#      with:
+#        dotnet-version: ${{ secrets.VBR_DOTNET_VERSION }}
+#
+#    - name: .NET version
+#      shell: bash
+#      run: dotnet --info
+#
+#    - name: Download NuGet package Api.BackOffice
+#      if: env.RELEASE_VERSION != 'none'
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: nuget-api-backoffice
+#        path: ~/
+#
+#    - name: Download NuGet package Api.BackOffice.Abstractions
+#      if: env.RELEASE_VERSION != 'none'
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: nuget-api-backoffice-abstractions
+#        path: ~/
+#
+#    - name: Download NuGet package Api.Legacy
+#      if: env.RELEASE_VERSION != 'none'
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: nuget-api-legacy
+#        path: ~/
+#
+#    - name: Download NuGet package Api.Oslo
+#      if: env.RELEASE_VERSION != 'none'
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: nuget-api-oslo
+#        path: ~/
+#
+#    - name: Download NuGet package Api.Extract
+#      if: env.RELEASE_VERSION != 'none'
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: nuget-api-extract
+#        path: ~/
+#
+#    - name: Download NuGet package Api.CrabImport
+#      if: env.RELEASE_VERSION != 'none'
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: nuget-api-crab-import
+#        path: ~/
+#
+#    - name: Download NuGet package Projector
+#      if: env.RELEASE_VERSION != 'none'
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: nuget-projector
+#        path: ~/
+#    
+#    - name: Prepare push packages to Github
+#      shell: bash
+#      run: dotnet nuget add source --username InformatieVlaanderen --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/informatievlaanderen/index.json" 
+#      
+#    - name: Publish packages to GitHub
+#      shell: bash
+#      run: |
+#        echo SEMVER $SEMVER
+#        echo GITHUB_TOKEN $GITHUB_TOKEN
+#        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+#        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+#        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+#        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+#        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+#        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+#        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
+#      env:
+#        SEMVER: ${{ needs.build.outputs.version }}
+#        WORKSPACE: ${{ github.workspace }}
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   push_images_to_test:
     if: needs.build.outputs.version != 'none'
@@ -843,33 +842,37 @@ jobs:
         echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
         echo ${{ steps.awscurl-polling-action.outputs.final-message }}
 
-#    - name: CD Lambda(s) Configure credentials
-#      uses: aws-actions/configure-aws-credentials@v1
-#      with:
-#        aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
-#        aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
-#        aws-region: eu-west-1
-#        
-#    - name: Prepare Lambda(s)
-#      shell: bash
-#      run: |
-#        echo aws s3 cp s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
-#        aws s3 cp s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
-#      env:
-#        VERSION: ${{ needs.build.outputs.version }}
-#        
-#    - name: Promote Lambda(s)
-#      shell: bash
-#      run: |
-#        echo pulling awscurl docker image
-#        docker pull ghcr.io/okigan/awscurl:latest
-#        echo docker run --rm okigan/awscurl --access_key $ACCESS_KEY_ID --secret_key $SECRET_ACCESS_KEY_ID --region $REGION -X POST -d '{ "functionName": "sr-sqsbackofficehandlerfunction", "project": "basisregisters", "domain": "basisregisters" }' $PROMOTEURL/test
-#        docker run --rm okigan/awscurl --access_key $ACCESS_KEY_ID --secret_key $SECRET_ACCESS_KEY_ID --region $REGION -X POST -d '{ "functionName": "sr-sqsbackofficehandlerfunction", "project": "basisregisters", "domain": "basisregisters" }' $PROMOTEURL/test
-#      env:
-#        ACCESS_KEY_ID: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
-#        SECRET_ACCESS_KEY_ID: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
-#        REGION: eu-west-1
-#        PROMOTEURL: ${{ secrets.VBR_AWS_PROMOTE_LAMBDA_BASEURL }}
+  lambda:
+    runs-on: ubuntu-latest
+    steps:
+    - name: CD Lambda(s) Configure credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
+        aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
+        #aws-region: ${{ secrets.VBR_AWS_REGION_PRD }}
+        aws-region: eu-west-1
+        
+    - name: Prepare Lambda(s)
+      shell: bash
+      run: |
+        echo aws s3 cp s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
+        aws s3 cp s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
+      env:
+        VERSION: ${{ needs.build.outputs.version }}
+        
+    - name: Promote Lambda(s)
+      shell: bash
+      run: |
+        echo pulling awscurl docker image
+        docker pull ghcr.io/okigan/awscurl:latest
+        echo docker run --rm okigan/awscurl --access_key $ACCESS_KEY_ID --secret_key $SECRET_ACCESS_KEY_ID --region $REGION -X POST -d '{ "functionName": "sr-sqsbackofficehandlerfunction", "project": "basisregisters", "domain": "basisregisters" }' $PROMOTEURL/test
+        docker run --rm okigan/awscurl --access_key $ACCESS_KEY_ID --secret_key $SECRET_ACCESS_KEY_ID --region $REGION -X POST -d '{ "functionName": "sr-sqsbackofficehandlerfunction", "project": "basisregisters", "domain": "basisregisters" }' $PROMOTEURL/test
+      env:
+        ACCESS_KEY_ID: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
+        SECRET_ACCESS_KEY_ID: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
+        REGION: eu-west-1
+        PROMOTEURL: ${{ secrets.VBR_AWS_PROMOTE_LAMBDA_BASEURL }}
 
   deploy_to_staging:
     if: github.repository_owner == 'Informatievlaanderen'
