@@ -1,10 +1,10 @@
-﻿namespace StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions
+namespace StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions
 {
     using System;
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class AggregateIdIsNotFoundException : Exception
+    public sealed class AggregateIdIsNotFoundException : Exception
     {
         public AggregateIdIsNotFoundException()
         { }
