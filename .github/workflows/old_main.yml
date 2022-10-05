@@ -1,4 +1,4 @@
-name: CI
+name: Old CI
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     if: github.repository_owner == 'Informatievlaanderen'
-    name: Build
+    name: Old Build
     runs-on: ubuntu-latest
 
     steps:
