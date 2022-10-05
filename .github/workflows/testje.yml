@@ -950,7 +950,7 @@ jobs:
   deploy_lambda_to_staging:
     if: github.repository_owner == 'Informatievlaanderen'
     needs: [deploy_to_staging, build]
-    name: Deploy to staging
+    name: Deploy lambda to staging
     environment: stg
     runs-on: ubuntu-latest
 

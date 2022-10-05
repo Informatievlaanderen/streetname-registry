@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
 {
+    using System.Configuration;
     using Abstractions;
     using Abstractions.Exceptions;
     using Abstractions.Response;
@@ -38,7 +39,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             DetailUrlFormat = configuration["DetailUrl"];
             if (string.IsNullOrEmpty(DetailUrlFormat))
             {
-                throw new NullReferenceException("'DetailUrl' cannot be found in the configuration");
+                throw new ConfigurationErrorsException("'DetailUrl' cannot be found in the configuration");
             }
         }
 
@@ -97,7 +98,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
         private async Task ValidateIfMatchHeaderValue(TSqsLambdaRequest request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.IfMatchHeaderValue) || request is not IHasStreetNamePersistentLocalId id)
+            {
                 return;
+            }
 
             var latestEventHash = await GetStreetNameHash(
                 request.MunicipalityId,
