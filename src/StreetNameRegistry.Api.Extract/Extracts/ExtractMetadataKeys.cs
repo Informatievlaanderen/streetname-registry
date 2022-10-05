@@ -1,6 +1,6 @@
 namespace StreetNameRegistry.Api.Extract.Extracts
 {
-    internal class ExtractMetadataKeys
+    internal static class ExtractMetadataKeys
     {
         public const string LatestEventId = "Latest_event_id";
     }

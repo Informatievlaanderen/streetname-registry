@@ -296,8 +296,8 @@ jobs:
       run: |
         echo Push Lambda functions to Test
         pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
-        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip --debug
-        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip --debug
+        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
         popd
       env:
         SEMVER: ${{ env.RELEASE_VERSION }}
@@ -878,13 +878,20 @@ jobs:
         echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
         echo ${{ steps.awscurl-polling-action.outputs.final-message }}
 
+  deploy_lambda_to_test:
+    if: github.repository_owner == 'Informatievlaanderen'
+    needs: [deploy_to_test, build]
+    name: Deploy lambda to test
+    environment: test
+    runs-on: ubuntu-latest
+    
+    steps:
     - name: CD Lambda(s) Configure credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
         aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
-        #aws-region: ${{ secrets.VBR_AWS_REGION_PRD }}
-        aws-region: eu-west-1
+        aws-region: ${{ secrets.VBR_AWS_REGION_PRD }}
         
     - name: Prepare Lambda(s)
       shell: bash
@@ -904,7 +911,7 @@ jobs:
       env:
         ACCESS_KEY_ID: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
         SECRET_ACCESS_KEY_ID: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
-        REGION: eu-west-1
+        REGION: ${{ secrets.VBR_AWS_REGION_PRD }}
         PROMOTEURL: ${{ secrets.VBR_AWS_PROMOTE_LAMBDA_BASEURL }}
 
   deploy_to_staging:
@@ -940,6 +947,14 @@ jobs:
         echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
         echo ${{ steps.awscurl-polling-action.outputs.final-message }}
 
+  deploy_lambda_to_staging:
+    if: github.repository_owner == 'Informatievlaanderen'
+    needs: [deploy_to_staging, build]
+    name: Deploy to staging
+    environment: stg
+    runs-on: ubuntu-latest
+
+    steps:
     - name: CD Lambda(s) Configure credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
