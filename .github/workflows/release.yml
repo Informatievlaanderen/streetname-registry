@@ -347,7 +347,7 @@ jobs:
         echo aws s3 cp lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
         aws s3 cp lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
         popd
-     env:
+      env:
        SEMVER: ${{ env.RELEASE_VERSION }}
 
   publish_to_atlassian:
