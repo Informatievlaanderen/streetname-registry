@@ -10,10 +10,11 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
 
         public static class StreetName
         {
-            public const string StreetNameNotFound = "OnbestaandeStraatnaam"; // ToBeReviewed
-            public const string StreetNameIsRemoved = "VerwijderdeStraatnaam"; // ToBeReviewed
+            public const string StreetNameNotFound = "OnbestaandeStraatnaam";
+            public const string StreetNameIsRemoved = "VerwijderdeStraatnaam";
             public const string StreetNameAlreadyExists = "StraatnaamBestaatReedsInGemeente";
-            public const string StreetNameCannotBeApproved = "StraatnaamGehistoreerdOfAfgekeurd"; // ToBeReviewed
+            public const string StreetNameCannotBeApproved = "StraatnaamGehistoreerdOfAfgekeurd";
+            public const string StreetNameApprovalCannotBeCorrect = "StraatnaamGehistoreerdOfAfgekeurd";
             public const string StreetNameCannotBeCorrected = "StraatnaamGehistoreerdOfAfgekeurd";
             public const string StreetNameCannotBeRejected = "StraatnaamInGebruikOfGehistoreerd";
             public const string StreetNameCannotBeRetired = "StraatnaamVoorgesteldOfAfgekeurd";
@@ -34,8 +35,9 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
         {
             public const string StreetNameNotFound = "Onbestaande straatnaam.";
             public const string StreetNameIsRemoved = "Verwijderde straatnaam.";
-            public const string StreetNameCannotBeApproved = "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'."; // ToBeReviewed
-            public const string StreetNameCannotBeCorrected = "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'."; // ToBeReviewed
+            public const string StreetNameCannotBeApproved = "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.";
+            public const string StreetNameApprovalCannotBeCorrect = "Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'.";
+            public const string StreetNameCannotBeCorrected = "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'.";
             public const string StreetNameCannotBeRetired = "Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'.";
             public const string StreetNameCannotBeRejected = "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.";
             public static string StreetNameAlreadyExists(string name) => $"Straatnaam '{name}' bestaat reeds in de gemeente.";

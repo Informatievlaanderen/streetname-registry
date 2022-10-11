@@ -67,6 +67,15 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasCorrectedFromApprovedToProposed>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameName(message.Message.PersistentLocalId, streetNameNameV2 =>
+                {
+                    UpdateStatus(streetNameNameV2, StreetNameStatus.Proposed);
+                    UpdateVersionTimestamp(streetNameNameV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasRejected>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameName(message.Message.PersistentLocalId, streetNameNameV2 =>

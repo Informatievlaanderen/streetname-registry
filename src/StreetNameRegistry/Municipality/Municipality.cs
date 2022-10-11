@@ -47,12 +47,7 @@ namespace StreetNameRegistry.Municipality
 
         public void ApproveStreetName(PersistentLocalId persistentLocalId)
         {
-            var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
-
-            if (streetName is null)
-            {
-                throw new StreetNameIsNotFoundException(persistentLocalId);
-            }
+            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
             if (MunicipalityStatus != MunicipalityStatus.Current)
             {
@@ -62,14 +57,21 @@ namespace StreetNameRegistry.Municipality
             streetName.Approve();
         }
 
+        public void CorrectStreetNameApproval(PersistentLocalId persistentLocalId)
+        {
+            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
+
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                throw new MunicipalityHasInvalidStatusException();
+            }
+
+            streetName.CorrectApproval();
+        }
+
         public void RejectStreetName(PersistentLocalId persistentLocalId)
         {
-            var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
-
-            if (streetName is null)
-            {
-                throw new StreetNameIsNotFoundException(persistentLocalId);
-            }
+            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
             if (MunicipalityStatus != MunicipalityStatus.Current)
             {
@@ -81,12 +83,7 @@ namespace StreetNameRegistry.Municipality
 
         public void RetireStreetName(PersistentLocalId persistentLocalId)
         {
-            var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
-
-            if (streetName is null)
-            {
-                throw new StreetNameIsNotFoundException(persistentLocalId);
-            }
+            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
             if (MunicipalityStatus != MunicipalityStatus.Current)
             {
@@ -98,14 +95,9 @@ namespace StreetNameRegistry.Municipality
 
         public void CorrectStreetNameName(Names streetNameNames, PersistentLocalId persistentLocalId)
         {
-            var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
-
-            if (streetName is null)
-            {
-                throw new StreetNameIsNotFoundException(persistentLocalId);
-            }
-
-            streetName.CorrectNames(streetNameNames, GuardStreetNameNames);
+            StreetNames
+                .GetNotRemovedByPersistentLocalId(persistentLocalId)
+                .CorrectNames(streetNameNames, GuardStreetNameNames);
         }
 
         private void GuardStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
@@ -242,10 +234,6 @@ namespace StreetNameRegistry.Municipality
         public string GetStreetNameHash(PersistentLocalId persistentLocalId)
         {
             var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
-            if (streetName == null)
-            {
-                throw new AggregateSourceException($"Cannot find a streetname entity with id {persistentLocalId}");
-            }
 
             return streetName.LastEventHash;
         }

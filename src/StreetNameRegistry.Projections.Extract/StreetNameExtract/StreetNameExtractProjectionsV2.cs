@@ -38,6 +38,15 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasCorrectedFromApprovedToProposed>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                {
+                    UpdateStatus(x, Proposed);
+                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasRejected>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>

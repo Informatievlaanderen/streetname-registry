@@ -36,6 +36,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasMigratedToMunicipality>(When);
             Register<StreetNameWasProposedV2>(When);
             Register<StreetNameWasApproved>(When);
+            Register<StreetNameWasCorrectedFromApprovedToProposed>(When);
             Register<StreetNameWasRejected>(When);
             Register<StreetNameWasRetiredV2>(When);
             Register<StreetNameNamesWereCorrected>(When);
@@ -69,6 +70,12 @@ namespace StreetNameRegistry.Municipality
             _lastEvent = @event;
         }
 
+        private void When(StreetNameWasCorrectedFromApprovedToProposed @event)
+        {
+            Status = StreetNameStatus.Proposed;
+            _lastEvent = @event;
+        }
+
         private void When(StreetNameWasRejected @event)
         {
             Status = StreetNameStatus.Rejected;
@@ -93,11 +100,6 @@ namespace StreetNameRegistry.Municipality
 
         public void Approve()
         {
-            if (IsRemoved)
-            {
-                throw new StreetNameIsRemovedException(PersistentLocalId);
-            }
-
             if (Status == StreetNameStatus.Current)
             {
                 return;
@@ -111,13 +113,24 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
         }
 
-        public void Reject()
+
+        public void CorrectApproval()
         {
-            if (IsRemoved)
+            if (Status == StreetNameStatus.Proposed)
             {
-                throw new StreetNameIsRemovedException(PersistentLocalId);
+                return;
             }
 
+            if (Status != StreetNameStatus.Current)
+            {
+                throw new StreetNameHasInvalidStatusException(PersistentLocalId);
+            }
+
+            Apply(new StreetNameWasCorrectedFromApprovedToProposed(_municipalityId, PersistentLocalId));
+        }
+
+        public void Reject()
+        {
             if (Status == StreetNameStatus.Rejected)
             {
                 return;
@@ -133,11 +146,6 @@ namespace StreetNameRegistry.Municipality
 
         public void Retire()
         {
-            if (IsRemoved)
-            {
-                throw new StreetNameIsRemovedException(PersistentLocalId);
-            }
-
             if (Status == StreetNameStatus.Retired)
             {
                 return;
@@ -153,11 +161,6 @@ namespace StreetNameRegistry.Municipality
 
         public void CorrectNames(Names names, Action<Names, PersistentLocalId> guardStreetNameNames)
         {
-            if (IsRemoved)
-            {
-                throw new StreetNameIsRemovedException(PersistentLocalId);
-            }
-
             var validStatuses = new[] { StreetNameStatus.Proposed, StreetNameStatus.Current };
 
             if (!validStatuses.Contains(Status))
