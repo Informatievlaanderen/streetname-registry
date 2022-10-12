@@ -100,6 +100,15 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers
             DispatchArrangeCommand(approveCommand);
         }
 
+        protected void RejectStreetName(MunicipalityId municipalityId, PersistentLocalId persistentLocalId)
+        {
+            var rejectCommand = new RejectStreetName(
+                municipalityId,
+                persistentLocalId,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(rejectCommand);
+        }
+
         protected void CorrectStreetNameName(
             MunicipalityId municipalityId,
             Names streetNameNames,

@@ -92,6 +92,18 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
                     }, cancellationToken);
                     break;
 
+                case SqsStreetNameCorrectRejectionRequest request:
+                    await mediator.Send(new SqsLambdaStreetNameCorrectRejectionRequest
+                    {
+                        Request = request.Request,
+                        TicketId = request.TicketId,
+                        MessageGroupId = messageMetadata.MessageGroupId!,
+                        IfMatchHeaderValue = request.IfMatchHeaderValue,
+                        Metadata = request.Metadata,
+                        Provenance = request.ProvenanceData.ToProvenance()
+                    }, cancellationToken);
+                    break;
+
                 case SqsStreetNameRetireRequest request:
                     await mediator.Send(new SqsLambdaStreetNameRetireRequest
                     {

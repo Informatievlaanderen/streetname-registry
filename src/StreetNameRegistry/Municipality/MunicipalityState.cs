@@ -42,6 +42,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasApproved>(When);
             Register<StreetNameWasCorrectedFromApprovedToProposed>(When);
             Register<StreetNameWasRejected>(When);
+            Register<StreetNameWasCorrectedFromRejectedToProposed>(When);
             Register<StreetNameWasRetiredV2>(When);
             Register<StreetNameWasCorrectedFromRetiredToCurrent>(When);
             Register<StreetNameNamesWereCorrected>(When);
@@ -132,6 +133,12 @@ namespace StreetNameRegistry.Municipality
         }
 
         private void When(StreetNameWasRejected @event)
+        {
+            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
+            streetName.Route(@event);
+        }
+
+        private void When(StreetNameWasCorrectedFromRejectedToProposed @event)
         {
             var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
             streetName.Route(@event);

@@ -81,6 +81,18 @@ namespace StreetNameRegistry.Municipality
             streetName.Reject();
         }
 
+        public void CorrectStreetNameRejection(PersistentLocalId persistentLocalId)
+        {
+            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
+
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                throw new MunicipalityHasInvalidStatusException();
+            }
+
+            streetName.CorrectRejection(() => GuardUniqueActiveStreetNameNames(streetName.Names, persistentLocalId));
+        }
+
         public void RetireStreetName(PersistentLocalId persistentLocalId)
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
@@ -91,28 +103,6 @@ namespace StreetNameRegistry.Municipality
             }
 
             streetName.Retire();
-        }
-
-        public void CorrectStreetNameName(Names streetNameNames, PersistentLocalId persistentLocalId)
-        {
-            StreetNames
-                .GetNotRemovedByPersistentLocalId(persistentLocalId)
-                .CorrectNames(streetNameNames, GuardStreetNameNames);
-        }
-
-        private void GuardStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
-        {
-            GuardUniqueActiveStreetNameNames(streetNameNames, persistentLocalId);
-
-            foreach (var streetNameName in streetNameNames)
-            {
-                if (!_officialLanguages.Contains(streetNameName.Language)
-                    && !_facilityLanguages.Contains(streetNameName.Language))
-                {
-                    throw new StreetNameNameLanguageIsNotSupportedException(
-                        $"The language '{streetNameName.Language}' is not an official or facility language of municipality '{_municipalityId}'.");
-                }
-            }
         }
 
         public void CorrectStreetNameRetirement(PersistentLocalId persistentLocalId)
@@ -134,6 +124,28 @@ namespace StreetNameRegistry.Municipality
                 if (StreetNames.HasActiveStreetNameName(streetNameName, persistentLocalId))
                 {
                     throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
+                }
+            }
+        }
+
+        public void CorrectStreetNameName(Names streetNameNames, PersistentLocalId persistentLocalId)
+        {
+            StreetNames
+                .GetNotRemovedByPersistentLocalId(persistentLocalId)
+                .CorrectNames(streetNameNames, GuardStreetNameNames);
+        }
+
+        private void GuardStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
+        {
+            GuardUniqueActiveStreetNameNames(streetNameNames, persistentLocalId);
+
+            foreach (var streetNameName in streetNameNames)
+            {
+                if (!_officialLanguages.Contains(streetNameName.Language)
+                    && !_facilityLanguages.Contains(streetNameName.Language))
+                {
+                    throw new StreetNameNameLanguageIsNotSupportedException(
+                        $"The language '{streetNameName.Language}' is not an official or facility language of municipality '{_municipalityId}'.");
                 }
             }
         }

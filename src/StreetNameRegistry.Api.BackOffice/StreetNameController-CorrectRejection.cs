@@ -23,28 +23,28 @@ namespace StreetNameRegistry.Api.BackOffice
     public partial class StreetNameController
     {
         /// <summary>
-        /// Corrigeer de goedkeuring van een straatnaam.
+        /// Corrigeer de afkeuring van een straatnaam.
         /// </summary>
         /// <param name="ifMatchHeaderValidator"></param>
         /// <param name="validator"></param>
         /// <param name="request"></param>
         /// <param name="ifMatchHeaderValue"></param>
         /// <param name="cancellationToken"></param>
-        /// <response code="202">Aanvraag tot correctie goedkeuring wordt reeds verwerkt.</response>
-        /// <response code="400">Als de straatnaam status niet 'inGebruik' is.</response>
+        /// <response code="202">Aanvraag tot correctie afkeuring wordt reeds verwerkt.</response>
+        /// <response code="400">Als de straatnaam status niet 'afgekeurd' is.</response>
         /// <response code="412">Als de If-Match header niet overeenkomt met de laatste ETag.</response>
         /// <returns></returns>
-        [HttpPost("{persistentLocalId}/acties/corrigeren/goedkeuring")]
+        [HttpPost("{persistentLocalId}/acties/corrigeren/afkeuring")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
-        public async Task<IActionResult> CorrectApproval(
+        public async Task<IActionResult> CorrectRejection(
             [FromServices] IIfMatchHeaderValidator ifMatchHeaderValidator,
-            [FromServices] IValidator<StreetNameCorrectApprovalRequest> validator,
-            [FromRoute] StreetNameCorrectApprovalRequest request,
+            [FromServices] IValidator<StreetNameCorrectRejectionRequest> validator,
+            [FromRoute] StreetNameCorrectRejectionRequest request,
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
             CancellationToken cancellationToken = default)
         {
@@ -60,7 +60,7 @@ namespace StreetNameRegistry.Api.BackOffice
                 if (_useSqsToggle.FeatureEnabled)
                 {
                     var result = await _mediator.Send(
-                        new SqsStreetNameCorrectApprovalRequest
+                        new SqsStreetNameCorrectRejectionRequest
                         {
                             Request = request,
                             Metadata = GetMetadata(),
@@ -98,9 +98,14 @@ namespace StreetNameRegistry.Api.BackOffice
                         ValidationErrorMessages.Municipality.MunicipalityStatusNotCurrent),
 
                     StreetNameHasInvalidStatusException => CreateValidationException(
-                        ValidationErrorCodes.StreetName.StreetNameApprovalCannotBeCorrect,
+                        ValidationErrorCodes.StreetName.StreetNameRejectionCannotBeCorrect,
                         string.Empty,
-                        ValidationErrorMessages.StreetName.StreetNameApprovalCannotBeCorrect),
+                        ValidationErrorMessages.StreetName.StreetNameRejectionCannotBeCorrect),
+
+                    StreetNameNameAlreadyExistsException streetNameNameAlreadyExistsException => CreateValidationException(
+                        ValidationErrorCodes.StreetName.StreetNameAlreadyExists,
+                        nameof(streetNameNameAlreadyExistsException.Name),
+                        ValidationErrorMessages.StreetName.StreetNameAlreadyExists(streetNameNameAlreadyExistsException.Name)),
 
                     _ => new ValidationException(new List<ValidationFailure>
                     {

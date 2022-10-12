@@ -138,6 +138,9 @@ namespace StreetNameRegistry.Producer.Extensions
         public static Contracts.StreetNameWasRejected ToContract(this StreetNameWasRejected message) =>
             new Contracts.StreetNameWasRejected(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
 
+        public static Contracts.StreetNameWasCorrectedFromRejectedToProposed ToContract(this StreetNameWasCorrectedFromRejectedToProposed message) =>
+            new Contracts.StreetNameWasCorrectedFromRejectedToProposed(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
+
         public static Contracts.StreetNameWasRetiredV2 ToContract(this StreetNameWasRetiredV2 message) =>
             new Contracts.StreetNameWasRetiredV2(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
 

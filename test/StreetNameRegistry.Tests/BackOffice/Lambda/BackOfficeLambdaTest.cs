@@ -124,6 +124,15 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             DispatchArrangeCommand(approveCommand);
         }
 
+        protected void RejectStreetName(MunicipalityId municipalityId, PersistentLocalId persistentLocalId)
+        {
+            var rejectCommand = new RejectStreetName(
+                municipalityId,
+                persistentLocalId,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(rejectCommand);
+        }
+
         protected void RetireStreetName(MunicipalityId municipalityId, PersistentLocalId persistentLocalId)
         {
             var retireStreetName = new RetireStreetName(
