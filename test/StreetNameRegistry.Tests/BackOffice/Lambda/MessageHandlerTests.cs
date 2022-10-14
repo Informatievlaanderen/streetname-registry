@@ -1,9 +1,11 @@
 namespace StreetNameRegistry.Tests.BackOffice.Lambda
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.Aws.Lambda;
+    using FluentAssertions;
     using global::AutoFixture;
     using MediatR;
     using Moq;
@@ -22,7 +24,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
         [Fact]
         public async Task WhenProcessingUnknownMessage_ThenNothingIsSent()
         {
-            // Arrang
+            // Arrange
             var mediator = new Mock<IMediator>();
             var containerBuilder = new ContainerBuilder();
             containerBuilder.Register(_ => mediator.Object);
@@ -41,6 +43,30 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             // Assert
             mediator.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task WhenProcessingSqsRequestWithoutCorrespondingSqsLambdaRequest_ThenThrowsNotImplementedException()
+        {
+            // Arrange
+            var mediator = new Mock<IMediator>();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Register(_ => mediator.Object);
+            var container = containerBuilder.Build();
+
+            var messageData = Fixture.Create<TestSqsRequest>();
+            var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
+
+            var sut = new MessageHandler(container);
+
+            // Act
+            var act = async () => await sut.HandleMessage(
+                messageData,
+                messageMetadata,
+                CancellationToken.None);
+
+            // Assert
+            await act.Should().ThrowAsync<NotImplementedException>();
         }
 
         [Fact]
@@ -267,5 +293,40 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.Metadata == messageData.Metadata
                 ), CancellationToken.None), Times.Once);
         }
+
+        [Fact]
+        public async Task WhenProcessingSqsStreetNameCorrectRetirementRequest_ThenSqsLambdaStreetNameCorrectRetirementRequestIsSent()
+        {
+            // Arrange
+            var mediator = new Mock<IMediator>();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Register(_ => mediator.Object);
+            var container = containerBuilder.Build();
+
+            var messageData = Fixture.Create<SqsStreetNameCorrectRetirementRequest>();
+            var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
+
+            var sut = new MessageHandler(container);
+
+            // Act
+            await sut.HandleMessage(
+                messageData,
+                messageMetadata,
+                CancellationToken.None);
+
+            // Assert
+            mediator
+                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameCorrectRetirementRequest>(request =>
+                    request.TicketId == messageData.TicketId &&
+                    request.MessageGroupId == messageMetadata.MessageGroupId &&
+                    request.Request == messageData.Request &&
+                    request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
+                    request.Provenance == messageData.ProvenanceData.ToProvenance() &&
+                    request.Metadata == messageData.Metadata
+                ), CancellationToken.None), Times.Once);
+        }
     }
+
+    public class TestSqsRequest : SqsRequest
+    { }
 }
