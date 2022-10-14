@@ -61,6 +61,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 StreetNameHasInvalidStatusException => new TicketError(
                     ValidationErrorMessages.StreetName.StreetNameRetirementCannotBeCorrect,
                     ValidationErrorCodes.StreetName.StreetNameRetirementCannotBeCorrect),
+                StreetNameNameAlreadyExistsException streetNameNameAlreadyExistsException => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameAlreadyExists(streetNameNameAlreadyExistsException.Name),
+                    ValidationErrorCodes.StreetName.StreetNameAlreadyExists),
                 _ => null
             };
         }

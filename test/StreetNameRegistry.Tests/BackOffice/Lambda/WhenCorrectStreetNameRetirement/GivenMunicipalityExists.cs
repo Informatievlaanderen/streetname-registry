@@ -123,6 +123,39 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
         }
 
         [Fact]
+        public async Task WhenStreetNameNameAlreadyExists_ThenTicketingErrorIsExpected()
+        {
+            // Arrange
+            var ticketing = new Mock<ITicketing>();
+
+            var sut = new SqsStreetNameCorrectRetirementLambdaHandler(
+                Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
+                ticketing.Object,
+                Mock.Of<IMunicipalities>(),
+                MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException("SomeStreetName")).Object);
+
+            // Act
+            await sut.Handle(new SqsLambdaStreetNameCorrectRetirementRequest
+            {
+                Request = new StreetNameBackOfficeCorrectRetirementRequest(),
+                MessageGroupId = Guid.NewGuid().ToString(),
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
+            }, CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError(
+                        "Straatnaam 'SomeStreetName' bestaat reeds in de gemeente.",
+                        "StraatnaamBestaatReedsInGemeente"),
+                    CancellationToken.None));
+        }
+
+        [Fact]
         public async Task WhenMunicipalityHasInvalidStatus_ThenTicketingErrorIsExpected()
         {
             // Arrange
