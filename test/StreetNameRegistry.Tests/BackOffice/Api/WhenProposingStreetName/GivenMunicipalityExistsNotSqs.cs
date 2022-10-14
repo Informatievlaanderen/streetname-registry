@@ -96,7 +96,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains("De gemeente is gehistoreerd."));
+                .Where(x => x.Message.Contains("Deze actie is enkel toegestaan binnen gemeenten met status 'voorgesteld' of 'inGebruik'."));
         }
 
         [Fact]

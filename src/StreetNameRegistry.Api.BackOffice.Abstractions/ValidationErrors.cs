@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
         public static class Municipality
         {
             public const string MunicipalityStatusNotCurrent = "StraatnaamGemeenteInGebruik";
-            public const string MunicipalityHasInvalidStatus = "StraatnaamGemeenteGehistoreerd";
+            public const string MunicipalityHasInvalidStatus = "StraatnaamGemeenteVoorgesteldOfInGebruik";
         }
 
         public static class StreetName
@@ -30,7 +30,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
         public static class Municipality
         {
             public const string MunicipalityStatusNotCurrent = "Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'.";
-            public const string MunicipalityHasInvalidStatus = "De gemeente is gehistoreerd.";
+            public const string MunicipalityHasInvalidStatus = "Deze actie is enkel toegestaan binnen gemeenten met status 'voorgesteld' of 'inGebruik'.";
         }
 
         public static class StreetName

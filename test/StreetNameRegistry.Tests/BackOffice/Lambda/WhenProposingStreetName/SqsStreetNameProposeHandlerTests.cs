@@ -162,7 +162,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             ticketing.Verify(x =>
                 x.Error(
                     It.IsAny<Guid>(),
-                    new TicketError("De gemeente is gehistoreerd.", "StraatnaamGemeenteGehistoreerd"),
+                    new TicketError("Deze actie is enkel toegestaan binnen gemeenten met status 'voorgesteld' of 'inGebruik'.", "StraatnaamGemeenteVoorgesteldOfInGebruik"),
                     CancellationToken.None));
         }
 
