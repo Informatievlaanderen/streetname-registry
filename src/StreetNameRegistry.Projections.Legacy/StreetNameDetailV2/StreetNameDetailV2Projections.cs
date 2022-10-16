@@ -10,7 +10,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
     using Municipality;
     using Municipality.Events;
     using NodaTime;
-    using StreetName.Events;
     using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("API endpoint detail straatnamen")]

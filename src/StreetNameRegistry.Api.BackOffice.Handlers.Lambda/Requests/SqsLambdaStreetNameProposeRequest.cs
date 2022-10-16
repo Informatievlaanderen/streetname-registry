@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
 {
     using Abstractions.Convertors;
     using Abstractions.Requests;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Requests;
     using Municipality;
     using Municipality.Commands;
 
@@ -22,7 +23,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
                 Request.Straatnamen.Select(x => new StreetNameName(x.Value, TaalMapper.ToLanguage(x.Key))));
 
             return new ProposeStreetName(
-                MunicipalityId,
+                this.MunicipalityPersistentLocalId(),
                 names,
                 persistentLocalId,
                 Provenance);

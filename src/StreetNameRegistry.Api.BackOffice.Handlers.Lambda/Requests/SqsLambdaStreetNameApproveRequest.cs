@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
 {
     using Abstractions;
     using Abstractions.Requests;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Requests;
     using Municipality;
     using Municipality.Commands;
 
@@ -20,7 +21,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
         /// <returns>ApproveStreetName.</returns>
         public ApproveStreetName ToCommand()
         {
-            return new ApproveStreetName(MunicipalityId, new PersistentLocalId(StreetNamePersistentLocalId), Provenance);
+            return new ApproveStreetName(this.MunicipalityPersistentLocalId(), new PersistentLocalId(StreetNamePersistentLocalId), Provenance);
         }
     }
 }

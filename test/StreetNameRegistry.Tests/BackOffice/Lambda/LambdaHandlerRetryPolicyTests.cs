@@ -5,12 +5,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using System.Reflection;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using FluentAssertions;
     using Microsoft.Data.SqlClient;
     using Municipality;
     using Municipality.Exceptions;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Infrastructure;
     using Xunit;
 
     public sealed class LambdaHandlerRetryPolicyTests

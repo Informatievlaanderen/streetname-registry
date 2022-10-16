@@ -2,6 +2,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
 {
     using System.Collections.Generic;
     using Abstractions;
+    using Be.Vlaanderen.Basisregisters.Sqs;
+    using Be.Vlaanderen.Basisregisters.Sqs.Handlers;
     using Requests;
     using TicketingService.Abstractions;
 

@@ -5,9 +5,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers
     using Abstractions;
     using Abstractions.Extensions;
     using Abstractions.Requests;
-    using Abstractions.Response;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using MediatR;
     using Municipality;
 

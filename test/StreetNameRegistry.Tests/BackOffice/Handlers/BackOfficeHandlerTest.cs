@@ -5,12 +5,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers
     using Autofac;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using global::AutoFixture;
     using Moq;
     using Municipality;
     using Municipality.Commands;
     using Newtonsoft.Json;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using Testing;
     using TicketingService.Abstractions;
     using Xunit.Abstractions;

@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using System.Threading.Tasks;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.Aws.Lambda;
+    using Be.Vlaanderen.Basisregisters.Sqs.Requests;
     using FluentAssertions;
     using global::AutoFixture;
     using MediatR;
@@ -327,6 +328,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
         }
     }
 
-    public class TestSqsRequest : SqsRequest
+    internal class TestSqsRequest : SqsRequest
     { }
 }

@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameReject
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using FluentAssertions;
     using FluentValidation;
     using global::AutoFixture;
@@ -13,7 +14,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameReject
     using Moq;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using Municipality.Exceptions;
     using Xunit;
     using Xunit.Abstractions;

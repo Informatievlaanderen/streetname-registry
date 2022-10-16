@@ -5,12 +5,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
+    using Be.Vlaanderen.Basisregisters.Sqs;
+    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using FluentAssertions;
     using global::AutoFixture;
     using Moq;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using Testing;

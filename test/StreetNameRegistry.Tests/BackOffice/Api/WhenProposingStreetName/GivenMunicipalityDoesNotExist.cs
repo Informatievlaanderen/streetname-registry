@@ -6,11 +6,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using FluentAssertions;
     using FluentValidation;
     using Moq;
     using StreetNameRegistry.Api.BackOffice;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using Xunit;

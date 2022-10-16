@@ -3,8 +3,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions;
-    using Abstractions.Response;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
+    using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using Microsoft.Extensions.Configuration;
     using Municipality;
     using Municipality.Exceptions;
@@ -51,10 +52,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             // Insert PersistentLocalId with MunicipalityId
             await _backOfficeContext
                 .MunicipalityIdByPersistentLocalId
-                .AddAsync(new MunicipalityIdByPersistentLocalId(persistentLocalId, request.MunicipalityId), cancellationToken);
+                .AddAsync(new MunicipalityIdByPersistentLocalId(persistentLocalId, request.MunicipalityPersistentLocalId()), cancellationToken);
             await _backOfficeContext.SaveChangesAsync(cancellationToken);
 
-            var lastHash = await GetStreetNameHash(request.MunicipalityId, persistentLocalId, cancellationToken);
+            var lastHash = await GetStreetNameHash(request.MunicipalityPersistentLocalId(), persistentLocalId, cancellationToken);
             return new ETagResponse(string.Format(DetailUrlFormat, persistentLocalId), lastHash);
         }
 

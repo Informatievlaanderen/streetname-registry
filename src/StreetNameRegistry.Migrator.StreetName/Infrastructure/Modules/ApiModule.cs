@@ -1,7 +1,6 @@
 namespace StreetNameRegistry.Migrator.StreetName.Infrastructure.Modules
 {
     using Api.BackOffice.Abstractions;
-    using Api.BackOffice.Infrastructure.Modules;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;

@@ -13,6 +13,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Consumer;
     using Infrastructure;
     using MediatR;
@@ -21,14 +22,14 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Sqs.Requests;
-    using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
+    using ICustomRetryPolicy = Infrastructure.ICustomRetryPolicy;
 
     public sealed class Function : FunctionBase
     {
         public Function()
-            : base(new List<Assembly>{ typeof(SqsRequest).Assembly })
+            : base(new List<Assembly>{ typeof(SqsStreetNameApproveRequest).Assembly })
         { }
 
         protected override IServiceProvider ConfigureServices(IServiceCollection services)

@@ -1,7 +1,6 @@
 namespace StreetNameRegistry.Consumer.Projections
 {
     using System;
-    using System.Security;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;

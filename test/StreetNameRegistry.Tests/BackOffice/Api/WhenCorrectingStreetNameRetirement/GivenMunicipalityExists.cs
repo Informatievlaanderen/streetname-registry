@@ -5,6 +5,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameRetire
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Sqs.Requests;
     using FluentAssertions;
     using global::AutoFixture;
     using Microsoft.AspNetCore.Http;
@@ -12,7 +14,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameRetire
     using Moq;
     using NodaTime;
     using StreetNameRegistry.Api.BackOffice;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using Xunit;

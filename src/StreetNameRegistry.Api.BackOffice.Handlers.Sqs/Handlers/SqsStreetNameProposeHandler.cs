@@ -4,6 +4,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
     using System.Linq;
     using Abstractions.Convertors;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
+    using Be.Vlaanderen.Basisregisters.Sqs;
+    using Be.Vlaanderen.Basisregisters.Sqs.Handlers;
     using Consumer;
     using Microsoft.EntityFrameworkCore;
     using Requests;

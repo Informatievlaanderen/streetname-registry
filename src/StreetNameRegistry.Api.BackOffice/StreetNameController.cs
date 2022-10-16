@@ -1,12 +1,10 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
-    using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api;
+    using Be.Vlaanderen.Basisregisters.Sqs.Requests;
     using FluentValidation;
     using FluentValidation.Results;
-    using Handlers.Sqs.Requests;
     using Infrastructure.FeatureToggles;
     using Infrastructure.Options;
     using MediatR;

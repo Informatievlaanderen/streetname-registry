@@ -2,15 +2,17 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
 {
     using System.Configuration;
     using Abstractions;
-    using Abstractions.Exceptions;
-    using Abstractions.Response;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
+    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Requests;
+    using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Municipality;
     using Municipality.Exceptions;
-    using Requests;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
     using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
 
@@ -103,7 +105,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             }
 
             var latestEventHash = await GetStreetNameHash(
-                request.MunicipalityId,
+                request.MunicipalityPersistentLocalId(),
                 new PersistentLocalId(id.StreetNamePersistentLocalId),
                 cancellationToken);
 

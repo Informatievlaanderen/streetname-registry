@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using FluentAssertions;
     using FluentValidation;
     using Microsoft.AspNetCore.Http;
@@ -13,7 +14,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
     using Municipality.Exceptions;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using Xunit;
     using Xunit.Abstractions;
     using MunicipalityId = Municipality.MunicipalityId;
