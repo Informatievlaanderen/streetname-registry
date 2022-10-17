@@ -1020,7 +1020,7 @@ jobs:
     if: github.repository_owner == 'Informatievlaanderen'
     needs: [deploy_to_test, build]
     name: Deploy lambda to test
-    environment: test
+    environment: test-lambda
     runs-on: ubuntu-latest
     
     steps:
@@ -1089,7 +1089,7 @@ jobs:
     if: github.repository_owner == 'Informatievlaanderen'
     needs: [deploy_to_staging, build]
     name: Deploy lambda to staging
-    environment: stg
+    environment: stg-lambda
     runs-on: ubuntu-latest
 
     steps:
@@ -1158,7 +1158,7 @@ jobs:
 #    if: github.repository_owner == 'Informatievlaanderen'
 #    needs: [deploy_to_production, build]
 #    name: Deploy lambda to production
-#    environment: prd
+#    environment: prd-lambda
 #    runs-on: ubuntu-latest
 #
 #    steps:
