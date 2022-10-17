@@ -101,7 +101,8 @@ jobs:
       id: set-version
       run: |
         [ ! -f semver ] && echo none > semver
-        echo ::set-output name=version::$(cat semver)
+        #echo ::set-output name=version::$(cat semver)
+        echo "name=version::$(cat semver)" >>$GITHUB_OUTPUT
         echo RELEASE_VERSION=$(cat semver) >> $GITHUB_ENV
       shell: bash
 
