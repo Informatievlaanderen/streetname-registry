@@ -13,6 +13,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Consumer;
     using Infrastructure;
@@ -22,6 +23,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Sqs.Requests;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers;
+    using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
     using ICustomRetryPolicy = Infrastructure.ICustomRetryPolicy;
@@ -88,6 +91,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
                 .RegisterModule(new SequenceModule(configuration, services, loggerFactory))
                 .RegisterModule(new BackOfficeModule(configuration, services, loggerFactory))
                 .RegisterModule(new ConsumerModule(configuration, services, loggerFactory));
+
+            builder.RegisterType<IdempotentCommandHandler>()
+                .As<IIdempotentCommandHandler>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
 
             builder.RegisterModule(new IdempotencyModule(
                 services,

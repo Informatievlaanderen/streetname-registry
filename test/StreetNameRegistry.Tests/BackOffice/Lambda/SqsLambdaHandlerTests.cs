@@ -227,7 +227,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             return Task.FromResult(new ETagResponse("bla", "etag"));
         }
 
-        protected override TicketError? MapDomainException(DomainException exception)
+        protected override TicketError? InnerMapDomainException(DomainException exception)
         {
             throw new NotImplementedException();
         }

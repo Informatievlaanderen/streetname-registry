@@ -47,7 +47,13 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
 
         protected abstract Task<ETagResponse> InnerHandle(TSqsLambdaRequest request, CancellationToken cancellationToken);
 
-        protected abstract TicketError? MapDomainException(DomainException exception);
+        protected abstract TicketError? InnerMapDomainException(DomainException exception);
+
+        protected TicketError? MapDomainException(DomainException exception, TSqsLambdaRequest request)
+        {
+            var error = InnerMapDomainException(exception);
+            return error ?? null;
+        }
 
         public async Task<Unit> Handle(TSqsLambdaRequest request, CancellationToken cancellationToken)
         {
@@ -83,7 +89,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                     StreetNameIsRemovedException => new TicketError(
                         ValidationErrorMessages.StreetName.StreetNameIsRemoved,
                         ValidationErrorCodes.StreetName.StreetNameIsRemoved),
-                    _ => MapDomainException(exception)
+                    _ => InnerMapDomainException(exception)
                 };
 
                 ticketError ??= new TicketError(exception.Message, "");
