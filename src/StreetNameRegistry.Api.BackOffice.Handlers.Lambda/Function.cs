@@ -21,6 +21,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Sqs.Requests;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
@@ -88,6 +89,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
                 .RegisterModule(new BackOfficeModule(configuration, services, loggerFactory))
                 .RegisterModule(new ConsumerModule(configuration, services, loggerFactory));
 
+            builder.RegisterType<IdempotentCommandHandler>()
+                .As<IIdempotentCommandHandler>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
             builder.RegisterModule(new IdempotencyModule(
                 services,
                 configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()

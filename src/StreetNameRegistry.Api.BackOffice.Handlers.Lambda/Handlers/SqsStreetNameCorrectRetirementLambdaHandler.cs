@@ -51,7 +51,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             return new ETagResponse(string.Format(DetailUrlFormat, streetNamePersistentLocalId), lastHash);
         }
 
-        protected override TicketError? MapDomainException(DomainException exception)
+        protected override TicketError? InnerMapDomainException(DomainException exception)
         {
             return exception switch
             {
