@@ -20,8 +20,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
         public ProducerProjections(IConfiguration configuration, ISnapshotManager snapshotManager)
         {
             var bootstrapServers = configuration["Kafka:BootstrapServers"];
-            var osloNamespace = configuration["OsloNamespace"];
-            osloNamespace = osloNamespace.TrimEnd('/');
+            //var osloNamespace = configuration["OsloNamespace"].TrimEnd('/');
 
             var topic = $"{configuration[_streetNameTopicKey]}" ?? throw new ArgumentException($"Configuration has no value for {_streetNameTopicKey}");
             _kafkaOptions = new KafkaProducerOptions(
