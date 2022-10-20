@@ -119,12 +119,9 @@ namespace StreetNameRegistry.Municipality
 
         private void GuardUniqueActiveStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
         {
-            foreach (var streetNameName in streetNameNames)
+            foreach (var streetNameName in streetNameNames.Where(streetNameName => StreetNames.HasActiveStreetNameName(streetNameName, persistentLocalId)))
             {
-                if (StreetNames.HasActiveStreetNameName(streetNameName, persistentLocalId))
-                {
-                    throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
-                }
+                throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
             }
         }
 
@@ -139,13 +136,11 @@ namespace StreetNameRegistry.Municipality
         {
             GuardUniqueActiveStreetNameNames(streetNameNames, persistentLocalId);
 
-            foreach (var streetNameName in streetNameNames)
+            foreach (var language in streetNameNames.Select(x => x.Language))
             {
-                if (!_officialLanguages.Contains(streetNameName.Language)
-                    && !_facilityLanguages.Contains(streetNameName.Language))
+                if (!_officialLanguages.Contains(language) && !_facilityLanguages.Contains(language))
                 {
-                    throw new StreetNameNameLanguageIsNotSupportedException(
-                        $"The language '{streetNameName.Language}' is not an official or facility language of municipality '{_municipalityId}'.");
+                    throw new StreetNameNameLanguageIsNotSupportedException("The language '{language}' is not an official or facility language of municipality '{_municipalityId}'.");
                 }
             }
         }
