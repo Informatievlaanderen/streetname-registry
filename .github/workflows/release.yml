@@ -1039,6 +1039,14 @@ jobs:
         services: ['streetname-registry-api', 'streetname-registry-import-api', 'streetname-registry-projections', 'streetname-registry-producer', 'streetname-registry-producer-snapshot-oslo']
     
     steps:
+    - name: Notify deployment started
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        channel-id: '#team-dinosaur-dev'
+        slack-message: Deployment to test started
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
+
     - name: Deploy services
       env:
         BUILD_URL: ${{ secrets.VBR_AWS_BUILD_API }}/${{matrix.services}}
@@ -1060,6 +1068,14 @@ jobs:
         echo build-uuid: ${{ steps.awscurl-polling-action.outputs.build-uuid }}
         echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
         echo ${{ steps.awscurl-polling-action.outputs.final-message }}
+
+    - name: Notify deployment finished
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        channel-id: '#team-dinosaur-dev'
+        slack-message: Deployment to test finished
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
 
   deploy_lambda_to_test:
     if: github.repository_owner == 'Informatievlaanderen'
@@ -1095,7 +1111,7 @@ jobs:
         SECRET_ACCESS_KEY_ID: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
         REGION: ${{ secrets.VBR_AWS_REGION_PRD }}
         PROMOTEURL: ${{ secrets.VBR_AWS_PROMOTE_LAMBDA_BASEURL }}
-
+        
   deploy_to_staging:
     if: github.repository_owner == 'Informatievlaanderen'
     needs: [push_images_to_staging, deploy_to_test, build]
@@ -1107,6 +1123,14 @@ jobs:
         services: ['streetname-registry-api', 'streetname-registry-projections', 'streetname-registry-backoffice-api', 'streetname-registry-consumer', 'streetname-registry-producer', 'streetname-registry-migrator-streetname', 'streetname-registry-producer-snapshot-oslo']
 
     steps:
+    - name: Notify deployment started
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        channel-id: '#team-dinosaur-dev'
+        slack-message: Deployment to staging started
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
+
     - name: CD services
       env:
         BUILD_URL: ${{ secrets.VBR_AWS_BUILD_API }}/${{matrix.services}}
@@ -1129,6 +1153,14 @@ jobs:
         echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
         echo ${{ steps.awscurl-polling-action.outputs.final-message }}
 
+    - name: Notify deployment finished
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        channel-id: '#team-dinosaur-dev'
+        slack-message: Deployment to staging finished
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
+        
   deploy_lambda_to_staging:
     if: github.repository_owner == 'Informatievlaanderen'
     needs: [deploy_to_staging, build]
@@ -1175,6 +1207,14 @@ jobs:
 #        services: ['streetname-registry-api', 'streetname-registry-import-api', 'streetname-registry-projections']
 #
 #    steps:
+#    - name: Notify deployment started
+#      uses: slackapi/slack-github-action@v1.23.0
+#      with:
+#        channel-id: '#team-dinosaur-dev'
+#        slack-message: Deployment to production started
+#      env:
+#        SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
+#
 #    - name: CD services
 #      env:
 #        BUILD_URL: ${{ secrets.VBR_AWS_BUILD_API }}/${{matrix.services}}
@@ -1196,6 +1236,14 @@ jobs:
 #        echo build-uuid: ${{ steps.awscurl-polling-action.outputs.build-uuid }}
 #        echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
 #        echo ${{ steps.awscurl-polling-action.outputs.final-message }}
+#
+#    - name: Notify deployment finished
+#      uses: slackapi/slack-github-action@v1.23.0
+#      with:
+#        channel-id: '#team-dinosaur-dev'
+#        slack-message: Deployment to production finished
+#      env:
+#        SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
 #
 #  deploy_lambda_to_production:
 #    if: github.repository_owner == 'Informatievlaanderen'
