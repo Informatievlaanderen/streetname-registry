@@ -17,8 +17,9 @@ jobs:
     - name: slack-send
       uses: slackapi/slack-github-action@v1.23.0
       with:
-        channel-id: '#team-dinosaur-dev'
+        channel-id: $SLACK_CHANNEL
         slack-message: Testje on $REPOSITORY_NAME was completed
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        SLACK_CHANNEL: ${{ secrets.VBR_NOTIFIER_CHANNEL_NAME }}
         REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
