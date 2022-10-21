@@ -17,3 +17,5 @@ jobs:
         channel-id: C0323QUJSLE
         # Message to post into Slack. Needed if using bot token
         slack-message: Testje was completed
+      env:
+        SLACK_BOT_TOKEN: xoxe.xoxp-1-Mi0yLTQ1OTUwNzQ1NTQzLTI2MjMyODg4NTE2NTItNDI1MjgzMTY1MTU3My00MjQ5MTc0NTI4NzkwLWViNjY2YWE1NzBkYWUzMmZlNjZjODk3OTBiYzk3YThlODc5OTJiOWM3NWQ4MzQ3YTdhYTYxMWZmMzc2NGEzM2E
