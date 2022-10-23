@@ -44,9 +44,6 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure.Modules
                 .RegisterType<ProblemDetailsHelper>()
                 .AsSelf();
 
-            builder.Register(c => c.Resolve<IHttpClientFactory>().CreateClient())
-                .As<HttpClient>();
-
             builder.Populate(_services);
         }
 

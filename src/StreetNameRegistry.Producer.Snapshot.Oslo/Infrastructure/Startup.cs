@@ -101,7 +101,8 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure
                                     tags: new[] { DatabaseTag, "sql", "sqlserver" });
                             }
                         }
-                    }).AddOsloProxy(_configuration["OsloApiUrl"]);
+                    })
+                .AddOsloProxy(_configuration["OsloApiUrl"]);
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new LoggingModule(_configuration, services));
