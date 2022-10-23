@@ -1043,7 +1043,7 @@ jobs:
     - name: Notify deployment started
       uses: slackapi/slack-github-action@v1.23.0
       with:
-        channel-id: $SLACK_CHANNEL
+        channel-id: '#team-dinosaur-dev'
         slack-message: Deployment of $REPOSITORY_NAME to test has started
       env:
         SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
@@ -1155,7 +1155,7 @@ jobs:
     - name: Notify deployment started
       uses: slackapi/slack-github-action@v1.23.0
       with:
-        channel-id: $SLACK_CHANNEL
+        channel-id: '#team-dinosaur-dev'
         slack-message: Deployment of $REPOSITORY_NAME to staging has started
       env:
         SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
@@ -1233,7 +1233,7 @@ jobs:
   deploy_to_staging_finish_slack:
     if: github.repository_owner == 'Informatievlaanderen'
     needs: [deploy_lambda_to_staging]
-    name: Deploy to test finished
+    name: Deploy to staging finished
     environment: stg
     runs-on: ubuntu-latest
 
@@ -1245,7 +1245,7 @@ jobs:
     - name: Notify deployment finished
       uses: slackapi/slack-github-action@v1.23.0
       with:
-        channel-id: $SLACK_CHANNEL
+        channel-id: '#team-dinosaur-dev'
         slack-message: Deployment of $REPOSITORY_NAME to staging finished
       env:
         SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
@@ -1255,7 +1255,7 @@ jobs:
 #  deploy_to_production_start_slack:
 #    if: github.repository_owner == 'Informatievlaanderen'
 #    needs: [push_images_to_production, build]
-#    name: Deploy to staging started
+#    name: Deploy to production started
 #    environment: prd
 #    runs-on: ubuntu-latest
 #
@@ -1267,7 +1267,7 @@ jobs:
 #    - name: Notify deployment started
 #      uses: slackapi/slack-github-action@v1.23.0
 #      with:
-#        channel-id: $SLACK_CHANNEL
+#        channel-id: '#team-dinosaur-dev'
 #        slack-message: Deployment of $REPOSITORY_NAME to production has started
 #      env:
 #        SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
@@ -1357,7 +1357,7 @@ jobs:
 #    - name: Notify deployment finished
 #      uses: slackapi/slack-github-action@v1.23.0
 #      with:
-#        channel-id: $SLACK_CHANNEL
+#        channel-id: '#team-dinosaur-dev'
 #        slack-message: Deployment of $REPOSITORY_NAME to production finished
 #      env:
 #        SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
