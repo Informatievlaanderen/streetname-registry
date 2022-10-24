@@ -119,9 +119,17 @@ namespace StreetNameRegistry.Municipality
 
         private void GuardUniqueActiveStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
         {
-            foreach (var name in streetNameNames.Where(streetNameName => StreetNames.HasActiveStreetNameName(streetNameName, persistentLocalId)).Select(x => x.Name))
+            var namesWithActiveStreetNameName = streetNameNames
+                .Where(streetNameName => StreetNames.HasActiveStreetNameName(streetNameName, persistentLocalId))
+                .Select(x => x.Name);
+
+            if (namesWithActiveStreetNameName.Any())
             {
-                throw new StreetNameNameAlreadyExistsException(name);
+                var firstName = streetNameNames.FirstOrDefault();
+                if (firstName is not null)
+                {
+                    throw new StreetNameNameAlreadyExistsException(firstName.Name);
+                }
             }
         }
 
