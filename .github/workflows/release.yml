@@ -1231,7 +1231,7 @@ jobs:
   deploy_to_staging_finish_slack:
     if: github.repository_owner == 'Informatievlaanderen'
     needs: [deploy_lambda_to_staging]
-    name: Deploy to test finished
+    name: Deploy to staging finished
     runs-on: ubuntu-latest
 
     steps:
@@ -1252,7 +1252,7 @@ jobs:
 #  deploy_to_production_start_slack:
 #    if: github.repository_owner == 'Informatievlaanderen'
 #    needs: [push_images_to_production, deploy_to_staging_finish_slack, build]
-#    name: Deploy to staging started
+#    name: Deploy to production started
 #    environment: prd
 #    runs-on: ubuntu-latest
 #
