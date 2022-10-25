@@ -1,3 +1,16 @@
+## [3.13.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.7...v3.13.8) (2022-10-25)
+
+
+### Bug Fixes
+
+* add ossf scorecards ([295ce4f](https://github.com/informatievlaanderen/streetname-registry/commit/295ce4fbdc4ff6a72db2cbf6eb8d8a3a82ebe0f4))
+* fix Sonar bug ([d6229de](https://github.com/informatievlaanderen/streetname-registry/commit/d6229de520065ea4e98554e8120537ec888ace90))
+* migrate to node16 (to avoid Github warnings) ([1e4a4fc](https://github.com/informatievlaanderen/streetname-registry/commit/1e4a4fc581a55b6c71747a4f9601e78b5d817e71))
+* really final slack fix ([ee39135](https://github.com/informatievlaanderen/streetname-registry/commit/ee39135331d2f1333fc626a359ba5d2348356c97))
+* remove unneeded registration ([af8641b](https://github.com/informatievlaanderen/streetname-registry/commit/af8641ba263ba55db5e1fed5187cc6b324bd2022))
+* switch to manual scorecards run ([33f3550](https://github.com/informatievlaanderen/streetname-registry/commit/33f35505aa1f64eb7537ac258c4b5e1589afa7b0))
+* update README.md ([fe648a6](https://github.com/informatievlaanderen/streetname-registry/commit/fe648a66d69bcba39e2f899207760440020775eb))
+
 ## [3.13.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.6...v3.13.7) (2022-10-23)
 
 
