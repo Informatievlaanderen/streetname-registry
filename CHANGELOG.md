@@ -1,3 +1,11 @@
+## [3.13.9](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.8...v3.13.9) (2022-10-25)
+
+
+### Bug Fixes
+
+* reduce cognitive complexity ([b63ccb1](https://github.com/informatievlaanderen/streetname-registry/commit/b63ccb118f4f0f0829aa9b868f35431f64233ccc))
+* replace set-output (deprecated) ([d3c737e](https://github.com/informatievlaanderen/streetname-registry/commit/d3c737e76cbca79c994ba830a6cd2a947b9b92b8))
+
 ## [3.13.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.7...v3.13.8) (2022-10-25)
 
 
