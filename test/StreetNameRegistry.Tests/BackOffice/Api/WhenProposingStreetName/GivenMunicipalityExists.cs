@@ -27,7 +27,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         {
             var ticketId = Fixture.Create<Guid>();
             var expectedLocationResult = new LocationResult(CreateTicketUri(ticketId));
-            MockMediatorResponse<SqsStreetNameProposeRequest, LocationResult>(expectedLocationResult);
+            MockMediatorResponse<ProposeStreetNameSqsRequest, LocationResult>(expectedLocationResult);
 
             var request = new StreetNameProposeRequest
             {
@@ -48,7 +48,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             // Assert
             MockMediator.Verify(x =>
                 x.Send(
-                    It.Is<SqsStreetNameProposeRequest>(sqsRequest =>
+                    It.Is<ProposeStreetNameSqsRequest>(sqsRequest =>
                         sqsRequest.Request == request &&
                         sqsRequest.ProvenanceData.Timestamp != Instant.MinValue), // Just to verify that ProvenanceData has been populated.
                     CancellationToken.None));

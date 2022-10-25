@@ -54,7 +54,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers.WhenCorrectingStreetNameA
                 new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId));
             await _backOfficeContext.SaveChangesAsync();
 
-            var handler = new StreetNameCorrectApprovalHandler(
+            var handler = new CorrectStreetNameApprovalHandler(
                 Container.Resolve<ICommandHandlerResolver>(),
                 _backOfficeContext,
                 Container.Resolve<IMunicipalities>(),

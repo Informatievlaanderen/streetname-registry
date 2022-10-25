@@ -23,8 +23,8 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 return type => ctx.Resolve(type);
             });
 
-            builder.RegisterAssemblyTypes(typeof(StreetNameProposeHandler).GetTypeInfo().Assembly).AsImplementedInterfaces();
-            builder.RegisterAssemblyTypes(typeof(SqsStreetNameProposeHandler).GetTypeInfo().Assembly).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof(ProposeStreetNameHandler).GetTypeInfo().Assembly).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof(ProposeStreetNameSqsHandler).GetTypeInfo().Assembly).AsImplementedInterfaces();
         }
     }
 }

@@ -24,6 +24,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
     using Municipality;
     using Municipality.Exceptions;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using TicketingService.Abstractions;
     using Xunit;
     using Xunit.Abstractions;
@@ -67,7 +68,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
             await _backOfficeContext.SaveChangesAsync();
 
             var etag = new ETagResponse(string.Empty, Fixture.Create<string>());
-            var handler = new SqsStreetNameCorrectRetirementLambdaHandler(
+            var handler = new CorrectStreetNameRetirementLambdaHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 MockTicketing(result => { etag = result; }).Object,
@@ -75,14 +76,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
                 new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext));
 
             //Act
-            await handler.Handle(new SqsLambdaStreetNameCorrectRetirementRequest()
+            await handler.Handle(new CorrectStreetNameRetirementLambdaRequest(municipalityId, new CorrectStreetNameRetirementSqsRequest
             {
-                Request = new StreetNameBackOfficeCorrectRetirementRequest() { PersistentLocalId = streetNamePersistentLocalId },
-                MessageGroupId = municipalityId,
+                Request = new CorrectStreetNameRetirementBackOfficeRequest { PersistentLocalId = streetNamePersistentLocalId },
                 TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            }, CancellationToken.None);
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
 
             //Assert
             var stream = await Container.Resolve<IStreamStore>()
@@ -96,7 +96,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameCorrectRetirementLambdaHandler(
+            var sut = new CorrectStreetNameRetirementLambdaHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -104,14 +104,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
                 MockExceptionIdempotentCommandHandler<StreetNameHasInvalidStatusException>().Object);
 
             // Act
-            await sut.Handle(new SqsLambdaStreetNameCorrectRetirementRequest
+            await sut.Handle(new CorrectStreetNameRetirementLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameRetirementSqsRequest
             {
-                Request = new StreetNameBackOfficeCorrectRetirementRequest(),
-                MessageGroupId = Guid.NewGuid().ToString(),
+                Request = new CorrectStreetNameRetirementBackOfficeRequest(),
                 TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            }, CancellationToken.None);
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
@@ -129,7 +128,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameCorrectRetirementLambdaHandler(
+            var sut = new CorrectStreetNameRetirementLambdaHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -137,14 +136,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
                 MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException("SomeStreetName")).Object);
 
             // Act
-            await sut.Handle(new SqsLambdaStreetNameCorrectRetirementRequest
+            await sut.Handle(new CorrectStreetNameRetirementLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameRetirementSqsRequest
             {
-                Request = new StreetNameBackOfficeCorrectRetirementRequest(),
-                MessageGroupId = Guid.NewGuid().ToString(),
+                Request = new CorrectStreetNameRetirementBackOfficeRequest(),
                 TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            }, CancellationToken.None);
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
@@ -162,7 +160,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameCorrectRetirementLambdaHandler(
+            var sut = new CorrectStreetNameRetirementLambdaHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -170,14 +168,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
                 MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object);
 
             // Act
-            await sut.Handle(new SqsLambdaStreetNameCorrectRetirementRequest
+            await sut.Handle(new CorrectStreetNameRetirementLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameRetirementSqsRequest
             {
-                Request = new StreetNameBackOfficeCorrectRetirementRequest(),
-                MessageGroupId = Guid.NewGuid().ToString(),
+                Request = new CorrectStreetNameRetirementBackOfficeRequest(),
                 TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            }, CancellationToken.None);
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
@@ -214,7 +211,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
                 streetNamePersistentLocalId);
 
             var municipalities = Container.Resolve<IMunicipalities>();
-            var sut = new SqsStreetNameCorrectRetirementLambdaHandler(
+            var sut = new CorrectStreetNameRetirementLambdaHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -225,17 +222,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
                 await municipalities.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None);
 
             // Act
-            await sut.Handle(new SqsLambdaStreetNameCorrectRetirementRequest
+            await sut.Handle(new CorrectStreetNameRetirementLambdaRequest(municipalityId, new CorrectStreetNameRetirementSqsRequest
             {
-                Request = new StreetNameBackOfficeCorrectRetirementRequest
-                {
-                    PersistentLocalId = streetNamePersistentLocalId
-                },
-                MessageGroupId = municipalityId.ToString(),
+                Request = new CorrectStreetNameRetirementBackOfficeRequest { PersistentLocalId = streetNamePersistentLocalId },
                 TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            }, CancellationToken.None);
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>

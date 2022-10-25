@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using MediatR;
     using Newtonsoft.Json;
 
-    public class StreetNameRejectRequest : StreetNameBackOfficeRejectRequest, IRequest<ETagResponse>
+    public class StreetNameRejectRequest : RejectStreetNameBackOfficeRequest, IRequest<ETagResponse>
     {
         [JsonIgnore]
         public IDictionary<string, object> Metadata { get; set; }

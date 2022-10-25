@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers.WhenProposingStreetName
             AddOfficialLanguageDutch(municipalityId);
             AddOfficialLanguageFrench(municipalityId);
 
-            var handler = new StreetNameProposeHandler(
+            var handler = new ProposeStreetNameHandler(
                 Container.Resolve<ICommandHandlerResolver>(),
                 _consumerContext,
                 mockPersistentLocalIdGenerator.Object,

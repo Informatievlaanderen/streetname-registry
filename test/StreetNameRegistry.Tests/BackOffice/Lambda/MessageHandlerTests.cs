@@ -79,7 +79,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             containerBuilder.Register(_ => mediator.Object);
             var container = containerBuilder.Build();
 
-            var messageData = Fixture.Create<SqsStreetNameProposeRequest>();
+            var messageData = Fixture.Create<ProposeStreetNameSqsRequest>();
             var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
 
             var sut = new MessageHandler(container);
@@ -92,7 +92,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             // Assert
             mediator
-                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameProposeRequest>(request =>
+                .Verify(x => x.Send(It.Is<ProposeStreetNameLambdaRequest>(request =>
                     request.TicketId == messageData.TicketId &&
                     request.MessageGroupId == messageMetadata.MessageGroupId &&
                     request.Request == messageData.Request &&
@@ -111,7 +111,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             containerBuilder.Register(_ => mediator.Object);
             var container = containerBuilder.Build();
 
-            var messageData = Fixture.Create<SqsStreetNameApproveRequest>();
+            var messageData = Fixture.Create<ApproveStreetNameSqsRequest>();
             var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
 
             var sut = new MessageHandler(container);
@@ -124,7 +124,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             // Assert
             mediator
-                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameApproveRequest>(request =>
+                .Verify(x => x.Send(It.Is<ApproveStreetNameLambdaRequest>(request =>
                     request.TicketId == messageData.TicketId &&
                     request.MessageGroupId == messageMetadata.MessageGroupId &&
                     request.Request == messageData.Request &&
@@ -143,7 +143,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             containerBuilder.Register(_ => mediator.Object);
             var container = containerBuilder.Build();
 
-            var messageData = Fixture.Create<SqsStreetNameCorrectApprovalRequest>();
+            var messageData = Fixture.Create<CorrectStreetNameApprovalSqsRequest>();
             var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
 
             var sut = new MessageHandler(container);
@@ -156,7 +156,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             // Assert
             mediator
-                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameCorrectApprovalRequest>(request =>
+                .Verify(x => x.Send(It.Is<CorrectStreetNameApprovalLambdaRequest>(request =>
                     request.TicketId == messageData.TicketId &&
                     request.MessageGroupId == messageMetadata.MessageGroupId &&
                     request.Request == messageData.Request &&
@@ -175,7 +175,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             containerBuilder.Register(_ => mediator.Object);
             var container = containerBuilder.Build();
 
-            var messageData = Fixture.Create<SqsStreetNameCorrectNamesRequest>();
+            var messageData = Fixture.Create<CorrectStreetNameNamesSqsRequest>();
             var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
 
             var sut = new MessageHandler(container);
@@ -188,7 +188,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             // Assert
             mediator
-                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameCorrectNamesRequest>(request =>
+                .Verify(x => x.Send(It.Is<CorrectStreetNameNamesLambdaRequest>(request =>
                     request.TicketId == messageData.TicketId &&
                     request.MessageGroupId == messageMetadata.MessageGroupId &&
                     request.Request == messageData.Request &&
@@ -208,7 +208,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             containerBuilder.Register(_ => mediator.Object);
             var container = containerBuilder.Build();
 
-            var messageData = Fixture.Create<SqsStreetNameRejectRequest>();
+            var messageData = Fixture.Create<RejectStreetNameSqsRequest>();
             var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
 
             var sut = new MessageHandler(container);
@@ -221,7 +221,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             // Assert
             mediator
-                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameRejectRequest>(request =>
+                .Verify(x => x.Send(It.Is<RejectStreetNameLambdaRequest>(request =>
                     request.TicketId == messageData.TicketId &&
                     request.MessageGroupId == messageMetadata.MessageGroupId &&
                     request.Request == messageData.Request &&
@@ -240,7 +240,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             containerBuilder.Register(_ => mediator.Object);
             var container = containerBuilder.Build();
 
-            var messageData = Fixture.Create<SqsStreetNameCorrectRejectionRequest>();
+            var messageData = Fixture.Create<CorrectStreetNameRejectionSqsRequest>();
             var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
 
             var sut = new MessageHandler(container);
@@ -253,7 +253,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             // Assert
             mediator
-                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameCorrectRejectionRequest>(request =>
+                .Verify(x => x.Send(It.Is<CorrectStreetNameRejectionLambdaRequest>(request =>
                     request.TicketId == messageData.TicketId &&
                     request.MessageGroupId == messageMetadata.MessageGroupId &&
                     request.Request == messageData.Request &&
@@ -272,7 +272,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             containerBuilder.Register(_ => mediator.Object);
             var container = containerBuilder.Build();
 
-            var messageData = Fixture.Create<SqsStreetNameRetireRequest>();
+            var messageData = Fixture.Create<RetireStreetNameSqsRequest>();
             var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
 
             var sut = new MessageHandler(container);
@@ -285,7 +285,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             // Assert
             mediator
-                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameRetireRequest>(request =>
+                .Verify(x => x.Send(It.Is<RetireStreetNameLambdaRequest>(request =>
                     request.TicketId == messageData.TicketId &&
                     request.MessageGroupId == messageMetadata.MessageGroupId &&
                     request.Request == messageData.Request &&
@@ -304,7 +304,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             containerBuilder.Register(_ => mediator.Object);
             var container = containerBuilder.Build();
 
-            var messageData = Fixture.Create<SqsStreetNameCorrectRetirementRequest>();
+            var messageData = Fixture.Create<CorrectStreetNameRetirementSqsRequest>();
             var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
 
             var sut = new MessageHandler(container);
@@ -317,7 +317,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             // Assert
             mediator
-                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameCorrectRetirementRequest>(request =>
+                .Verify(x => x.Send(It.Is<CorrectStreetNameRetirementLambdaRequest>(request =>
                     request.TicketId == messageData.TicketId &&
                     request.MessageGroupId == messageMetadata.MessageGroupId &&
                     request.Request == messageData.Request &&

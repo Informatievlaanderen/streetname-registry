@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using Newtonsoft.Json;
 
     [DataContract(Name = "CorrigerenStraatnaamNamen", Namespace = "")]
-    public class StreetNameCorrectNamesRequest : StreetNameBackOfficeCorrectNamesRequest, IRequest<ETagResponse>
+    public class StreetNameCorrectNamesRequest : CorrectStreetNameNamesBackOfficeRequest, IRequest<ETagResponse>
     {
         [JsonIgnore]
         public int PersistentLocalId { get; set; }

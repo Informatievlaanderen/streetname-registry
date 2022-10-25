@@ -29,7 +29,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     public sealed class Function : FunctionBase
     {
         public Function()
-            : base(new List<Assembly>{ typeof(SqsStreetNameApproveRequest).Assembly })
+            : base(new List<Assembly>{ typeof(ApproveStreetNameSqsRequest).Assembly })
         { }
 
         protected override IServiceProvider ConfigureServices(IServiceCollection services)

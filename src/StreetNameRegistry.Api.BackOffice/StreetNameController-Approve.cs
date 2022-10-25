@@ -63,7 +63,7 @@ namespace StreetNameRegistry.Api.BackOffice
                 if (_useSqsToggle.FeatureEnabled)
                 {
                     var result = await _mediator.Send(
-                        new SqsStreetNameApproveRequest
+                        new ApproveStreetNameSqsRequest
                         {
                             Request = request,
                             Metadata = GetMetadata(),

@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using Response;
 
     [DataContract(Name = "VoorstelStraatnaam", Namespace = "")]
-    public class StreetNameProposeRequest : StreetNameBackOfficeProposeRequest, IRequest<PersistentLocalIdETagResponse>
+    public class StreetNameProposeRequest : ProposeStreetNameBackOfficeRequest, IRequest<PersistentLocalIdETagResponse>
     {
         [JsonIgnore]
         public IDictionary<string, object> Metadata { get; set; }

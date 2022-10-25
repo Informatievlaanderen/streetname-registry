@@ -31,7 +31,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
             var ticketId = Fixture.Create<Guid>();
             var expectedLocationResult = new LocationResult(CreateTicketUri(ticketId));
             var expectedIfMatchHeader = Fixture.Create<string>();
-            MockMediatorResponse<SqsStreetNameRejectRequest, LocationResult>(expectedLocationResult);
+            MockMediatorResponse<RejectStreetNameSqsRequest, LocationResult>(expectedLocationResult);
 
             var request = new StreetNameRejectRequest { PersistentLocalId = 123 };
 
@@ -46,7 +46,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
             // Assert
             MockMediator.Verify(x =>
                 x.Send(
-                    It.Is<SqsStreetNameRejectRequest>(sqsRequest =>
+                    It.Is<RejectStreetNameSqsRequest>(sqsRequest =>
                         sqsRequest.Request == request &&
                         sqsRequest.ProvenanceData.Timestamp != Instant.MinValue && // Just to verify that ProvenanceData has been populated.
                         sqsRequest.IfMatchHeaderValue == expectedIfMatchHeader),
@@ -58,7 +58,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
         public void WithAggregateIdIsNotFound_ThenThrowsApiException()
         {
             MockMediator
-                .Setup(x => x.Send(It.IsAny<SqsStreetNameRejectRequest>(), CancellationToken.None))
+                .Setup(x => x.Send(It.IsAny<RejectStreetNameSqsRequest>(), CancellationToken.None))
                 .Throws(new AggregateIdIsNotFoundException());
 
             var request = new StreetNameRejectRequest { PersistentLocalId = 123 };

@@ -25,6 +25,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers;
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using TicketingService.Abstractions;
     using Xunit;
     using Xunit.Abstractions;
@@ -63,7 +64,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             await _backOfficeContext.SaveChangesAsync();
 
             var etag = new ETagResponse(string.Empty, Fixture.Create<string>());
-            var handler = new SqsStreetNameCorrectNamesLambdaHandler(
+            var handler = new CorrectStreetNameNamesLambdaHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 MockTicketing(result =>
@@ -74,10 +75,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                 new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext));
 
             //Act
-            await handler.Handle(new SqsLambdaStreetNameCorrectNamesRequest
+            await handler.Handle(new CorrectStreetNameNamesLambdaRequest(municipalityId, new CorrectStreetNameNamesSqsRequest
             {
-                StreetNamePersistentLocalId = streetNamePersistentLocalId,
-                Request = new StreetNameBackOfficeCorrectNamesRequest
+                Request = new CorrectStreetNameNamesBackOfficeRequest
                 {
                     Straatnamen = new Dictionary<Taal, string>
                     {
@@ -85,11 +85,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                         { Taal.FR, "Rue de la Croix-Rouge" }
                     }
                 },
-                MessageGroupId = municipalityId,
+                PersistentLocalId = streetNamePersistentLocalId,
                 TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            }, CancellationToken.None);
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
 
             //Assert
             var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 5, 1);
@@ -104,7 +104,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
 
             var streetname = "Bremt";
 
-            var sut = new SqsStreetNameCorrectNamesLambdaHandler(
+            var sut = new CorrectStreetNameNamesLambdaHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -112,14 +112,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                 MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname)).Object);
 
             // Act
-            await sut.Handle(new SqsLambdaStreetNameCorrectNamesRequest
+            await sut.Handle(new CorrectStreetNameNamesLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameNamesSqsRequest
             {
-                Request = new StreetNameBackOfficeCorrectNamesRequest{ Straatnamen = new Dictionary<Taal, string>() },
-                MessageGroupId = Guid.NewGuid().ToString(),
+                Request = new CorrectStreetNameNamesBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
                 TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            }, CancellationToken.None);
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
@@ -135,7 +134,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameCorrectNamesLambdaHandler(
+            var sut = new CorrectStreetNameNamesLambdaHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -143,14 +142,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                 MockExceptionIdempotentCommandHandler<StreetNameHasInvalidStatusException>().Object);
 
             // Act
-            await sut.Handle(new SqsLambdaStreetNameCorrectNamesRequest
+            await sut.Handle(new CorrectStreetNameNamesLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameNamesSqsRequest
             {
-                Request = new StreetNameBackOfficeCorrectNamesRequest { Straatnamen = new Dictionary<Taal, string>() },
-                MessageGroupId = Guid.NewGuid().ToString(),
+                Request = new CorrectStreetNameNamesBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
                 TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            }, CancellationToken.None);
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
@@ -168,7 +166,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameCorrectNamesLambdaHandler(
+            var sut = new CorrectStreetNameNamesLambdaHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -176,14 +174,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                 MockExceptionIdempotentCommandHandler<StreetNameNameLanguageIsNotSupportedException>().Object);
 
             // Act
-            await sut.Handle(new SqsLambdaStreetNameCorrectNamesRequest
+            await sut.Handle(new CorrectStreetNameNamesLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameNamesSqsRequest
             {
-                Request = new StreetNameBackOfficeCorrectNamesRequest { Straatnamen = new Dictionary<Taal, string>() },
-                MessageGroupId = Guid.NewGuid().ToString(),
+                Request = new CorrectStreetNameNamesBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
                 TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            }, CancellationToken.None);
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
@@ -214,7 +211,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                 provenance);
 
             var municipalities = Container.Resolve<IMunicipalities>();
-            var sut = new SqsStreetNameCorrectNamesLambdaHandler(
+            var sut = new CorrectStreetNameNamesLambdaHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -224,18 +221,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             var municipality = await municipalities.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None);
 
             // Act
-            await sut.Handle(new SqsLambdaStreetNameCorrectNamesRequest
+            await sut.Handle(new CorrectStreetNameNamesLambdaRequest(municipalityId, new CorrectStreetNameNamesSqsRequest
             {
-                StreetNamePersistentLocalId = streetNamePersistentLocalId,
-                Request = new StreetNameBackOfficeCorrectNamesRequest
-                {
-                    Straatnamen = new Dictionary<Taal, string>()
-                },
-                MessageGroupId = municipalityId.ToString(),
+                Request = new CorrectStreetNameNamesBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
+                PersistentLocalId = streetNamePersistentLocalId,
                 TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            }, CancellationToken.None);
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>

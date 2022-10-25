@@ -52,7 +52,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers.WhenCorrectingStreetNameN
                 new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId));
             _backOfficeContext.SaveChanges();
 
-            var handler = new StreetNameCorrectNamesHandler(
+            var handler = new CorrectStreetNameNamesHandler(
                 Container.Resolve<ICommandHandlerResolver>(),
                 _backOfficeContext,
                 Container.Resolve<IMunicipalities>(),

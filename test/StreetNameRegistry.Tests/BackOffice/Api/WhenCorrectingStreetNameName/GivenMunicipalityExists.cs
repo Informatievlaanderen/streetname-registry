@@ -32,7 +32,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             var ticketId = Fixture.Create<Guid>();
             var expectedLocationResult = new LocationResult(CreateTicketUri(ticketId));
             var expectedIfMatchHeader = Fixture.Create<string>();
-            MockMediatorResponse<SqsStreetNameCorrectNamesRequest, LocationResult>(expectedLocationResult);
+            MockMediatorResponse<CorrectStreetNameNamesSqsRequest, LocationResult>(expectedLocationResult);
 
             var request = new StreetNameCorrectNamesRequest
             {
@@ -52,7 +52,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             // Assert
             MockMediator.Verify(x =>
                 x.Send(
-                    It.Is<SqsStreetNameCorrectNamesRequest>(sqsRequest =>
+                    It.Is<CorrectStreetNameNamesSqsRequest>(sqsRequest =>
                         sqsRequest.Request == request &&
                         sqsRequest.PersistentLocalId == persistentLocalId &&
                         sqsRequest.ProvenanceData.Timestamp != Instant.MinValue && // Just to verify that ProvenanceData has been populated.
@@ -66,7 +66,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
         public void WithAggregateIdIsNotFound_ThenThrowsApiException()
         {
             MockMediator
-                .Setup(x => x.Send(It.IsAny<SqsStreetNameCorrectNamesRequest>(), CancellationToken.None))
+                .Setup(x => x.Send(It.IsAny<CorrectStreetNameNamesSqsRequest>(), CancellationToken.None))
                 .Throws(new AggregateIdIsNotFoundException());
 
             var persistentLocalId = 123;

@@ -1,7 +1,7 @@
-﻿namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
+namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
 {
     public interface IHasBackOfficeRequest<TBackOfficeRequest>
     {
-        public TBackOfficeRequest Request { get; set; }
+        public TBackOfficeRequest Request { get; init; }
     }
 }

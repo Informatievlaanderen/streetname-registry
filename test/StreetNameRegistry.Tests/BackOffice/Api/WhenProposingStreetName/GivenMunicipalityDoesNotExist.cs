@@ -26,7 +26,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         public void ThenAggregateIdIsNotFound()
         {
             MockMediator
-                .Setup(x => x.Send(It.IsAny<SqsStreetNameProposeRequest>(), CancellationToken.None))
+                .Setup(x => x.Send(It.IsAny<ProposeStreetNameSqsRequest>(), CancellationToken.None))
                 .Throws(new AggregateIdIsNotFoundException());
 
             var request = new StreetNameProposeRequest

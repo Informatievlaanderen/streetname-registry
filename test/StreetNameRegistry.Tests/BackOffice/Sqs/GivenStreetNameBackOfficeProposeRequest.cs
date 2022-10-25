@@ -33,10 +33,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
             // Arrange
             var municipalityLatestItem = _testConsumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
 
-            var request = Fixture.Create<StreetNameBackOfficeProposeRequest>();
+            var request = Fixture.Create<ProposeStreetNameBackOfficeRequest>();
             request.GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}";
 
-            var sqsRequest = new SqsStreetNameProposeRequest { Request = request };
+            var sqsRequest = new ProposeStreetNameSqsRequest { Request = request };
 
             var ticketId = Fixture.Create<Guid>();
             var ticketingMock = new Mock<ITicketing>();
@@ -48,7 +48,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
 
             var sqsQueue = new Mock<ISqsQueue>();
 
-            var sut = new SqsStreetNameProposeHandler(
+            var sut = new ProposeStreetNameSqsHandler(
                 sqsQueue.Object,
                 ticketingMock.Object,
                 ticketingUrl,
@@ -70,7 +70,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
         public void ForNotExistingMunicipality_ThrowsAggregateIdNotFound()
         {
             // Arrange
-            var sut = new SqsStreetNameProposeHandler(
+            var sut = new ProposeStreetNameSqsHandler(
                 Mock.Of<ISqsQueue>(),
                 Mock.Of<ITicketing>(),
                 Mock.Of<ITicketingUrl>(),
@@ -78,7 +78,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
 
             // Act
             var act = async () => await sut.Handle(
-                new SqsStreetNameProposeRequest { Request = Fixture.Create<StreetNameBackOfficeProposeRequest>() },
+                new ProposeStreetNameSqsRequest { Request = Fixture.Create<ProposeStreetNameBackOfficeRequest>() },
                 CancellationToken.None);
 
             // Assert

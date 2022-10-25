@@ -54,7 +54,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers.WhenRetiringStreetName
                 new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId));
             _backOfficeContext.SaveChanges();
 
-            var handler = new StreetNameRetireHandler(
+            var handler = new RetireStreetNameHandler(
                 Container.Resolve<ICommandHandlerResolver>(),
                 _backOfficeContext,
                 Container.Resolve<IMunicipalities>(),

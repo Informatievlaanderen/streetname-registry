@@ -50,16 +50,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
 
             var sqsQueue = new Mock<ISqsQueue>();
 
-            var sut = new SqsStreetNameCorrectNamesHandler(
+            var sut = new CorrectStreetNameNamesSqsHandler(
                 sqsQueue.Object,
                 ticketingMock.Object,
                 ticketingUrl,
                 _backOfficeContext);
 
-            var sqsRequest = new SqsStreetNameCorrectNamesRequest
+            var sqsRequest = new CorrectStreetNameNamesSqsRequest
             {
                 PersistentLocalId = Fixture.Create<PersistentLocalId>(),
-                Request = new StreetNameBackOfficeCorrectNamesRequest
+                Request = new CorrectStreetNameNamesBackOfficeRequest
                 {
                     Straatnamen = new Dictionary<Taal, string>()
                     {
@@ -84,7 +84,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
         public void WithNoMunicipalityFoundByStreetNamePersistentLocalId_ThrowsAggregateIdNotFound()
         {
             // Arrange
-            var sut = new SqsStreetNameCorrectNamesHandler(
+            var sut = new CorrectStreetNameNamesSqsHandler(
                 Mock.Of<ISqsQueue>(),
                 Mock.Of<ITicketing>(),
                 Mock.Of<ITicketingUrl>(),
@@ -92,9 +92,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
 
             // Act
             var act = async () => await sut.Handle(
-                new SqsStreetNameCorrectNamesRequest
+                new CorrectStreetNameNamesSqsRequest
                 {
-                    Request = Fixture.Create<StreetNameBackOfficeCorrectNamesRequest>()
+                    Request = Fixture.Create<CorrectStreetNameNamesBackOfficeRequest>()
                 }, CancellationToken.None);
 
             // Assert
