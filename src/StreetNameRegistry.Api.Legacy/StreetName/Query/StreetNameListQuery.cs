@@ -30,32 +30,21 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         protected override IQueryable<StreetNameListItem> Filter(FilteringHeader<StreetNameFilter> filtering)
         {
             var streetNames = _legacyContext
-                    .StreetNameList
-                    .AsNoTracking()
-                    .OrderBy(x => x.PersistentLocalId)
-                    .Where(s => !s.Removed && s.Complete && s.PersistentLocalId != null);
+                .StreetNameList
+                .AsNoTracking()
+                .OrderBy(x => x.PersistentLocalId)
+                .Where(s => !s.Removed && s.Complete && s.PersistentLocalId != null);
 
             if (!filtering.ShouldFilter)
             {
                 return streetNames;
             }
 
-            if (!string.IsNullOrEmpty(filtering.Filter.NisCode))
-            {
-                streetNames = streetNames.Where(m => m.NisCode == filtering.Filter.NisCode);
-            }
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameDutch))
-                streetNames = streetNames.Where(s => s.NameDutch.Contains(filtering.Filter.NameDutch));
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameEnglish))
-                streetNames = streetNames.Where(s => s.NameEnglish.Contains(filtering.Filter.NameEnglish));
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameFrench))
-                streetNames = streetNames.Where(s => s.NameFrench.Contains(filtering.Filter.NameFrench));
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameGerman))
-                streetNames = streetNames.Where(s => s.NameGerman.Contains(filtering.Filter.NameGerman));
+            streetNames = ApplyNisCodeFilter(streetNames, filtering.Filter.NisCode);
+            streetNames = ApplyNameDutchFilter(streetNames, filtering.Filter.NameDutch);
+            streetNames = ApplyNameEnglishFilter(streetNames, filtering.Filter.NameEnglish);
+            streetNames = ApplyNameFrenchFilter(streetNames, filtering.Filter.NameFrench);
+            streetNames = ApplyNameGermanFilter(streetNames, filtering.Filter.NameGerman);
 
             var filterMunicipalityName = filtering.Filter.MunicipalityName.RemoveDiacritics();
             if (!string.IsNullOrEmpty(filtering.Filter.MunicipalityName))
@@ -63,10 +52,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 var municipalityNisCodes = _syndicationContext
                     .MunicipalityLatestItems
                     .AsNoTracking()
-                    .Where(x => x.NameDutchSearch == filterMunicipalityName ||
-                                x.NameFrenchSearch == filterMunicipalityName ||
-                                x.NameEnglishSearch == filterMunicipalityName ||
-                                x.NameGermanSearch == filterMunicipalityName)
+                    .Where(x => x.NameDutchSearch == filterMunicipalityName
+                        || x.NameFrenchSearch == filterMunicipalityName
+                        || x.NameEnglishSearch == filterMunicipalityName
+                        || x.NameGermanSearch == filterMunicipalityName)
                     .Select(x => x.NisCode)
                     .ToList();
 
@@ -87,16 +76,41 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             {
                 if (Enum.TryParse(typeof(StraatnaamStatus), filtering.Filter.Status, true, out var status))
                 {
-                    var streetNameStatus = ((StraatnaamStatus) status).ConvertToStreetNameStatus();
-                    streetNames = streetNames.Where(m => m.Status.HasValue && m.Status.Value == streetNameStatus);
+                    if (status is StraatnaamStatus straatnaamStatus)
+                    {
+                        var streetNameStatus = straatnaamStatus.ConvertToStreetNameStatus();
+                        streetNames = streetNames.Where(m => m.Status.HasValue && m.Status.Value == streetNameStatus);
+                    }
                 }
                 else
                     //have to filter on EF cannot return new List<>().AsQueryable() cause non-EF provider does not support .CountAsync()
+                {
                     streetNames = streetNames.Where(m => m.Status.HasValue && (int) m.Status.Value == -1);
+                }
             }
 
             return streetNames;
         }
+
+        private IQueryable<StreetNameListItem> ApplyNisCodeFilter(IQueryable<StreetNameListItem> streetNames, string? filterNisCode) => !string.IsNullOrEmpty(filterNisCode)
+            ? streetNames.Where(x => x.NisCode == filterNisCode)
+            : streetNames;
+
+        private IQueryable<StreetNameListItem> ApplyNameDutchFilter(IQueryable<StreetNameListItem> streetNames, string? filterName) => !string.IsNullOrEmpty(filterName)
+            ? streetNames.Where(x => (x.NameDutch ?? "").Contains(filterName))
+            : streetNames;
+
+        private IQueryable<StreetNameListItem> ApplyNameEnglishFilter(IQueryable<StreetNameListItem> streetNames, string? filterName) => !string.IsNullOrEmpty(filterName)
+            ? streetNames.Where(x => (x.NameEnglish ?? "").Contains(filterName))
+            : streetNames;
+
+        private IQueryable<StreetNameListItem> ApplyNameFrenchFilter(IQueryable<StreetNameListItem> streetNames, string? filterName) => !string.IsNullOrEmpty(filterName)
+            ? streetNames.Where(x => (x.NameFrench ?? "").Contains(filterName))
+            : streetNames;
+
+        private IQueryable<StreetNameListItem> ApplyNameGermanFilter(IQueryable<StreetNameListItem> streetNames, string? filterName) => !string.IsNullOrEmpty(filterName)
+            ? streetNames.Where(x => (x.NameEnglish ?? "").Contains(filterName))
+            : streetNames;
     }
 
     public class StreetNameSorting : ISorting
@@ -116,13 +130,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
     public class StreetNameFilter
     {
-        public string StreetNameName { get; set; }
-        public string MunicipalityName { get; set; }
-        public string NameDutch { get; set; }
-        public string NameFrench { get; set; }
-        public string NameGerman { get; set; }
-        public string NameEnglish { get; set; }
-        public string Status { get; set; }
-        public string? NisCode { get; set; }
+        public string StreetNameName { get; set; } = string.Empty;
+        public string MunicipalityName { get; set; } = string.Empty;
+        public string NameDutch { get; set; } = string.Empty;
+        public string NameFrench { get; set; } = string.Empty;
+        public string NameGerman { get; set; } = string.Empty;
+        public string NameEnglish { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public string? NisCode { get; set; } = string.Empty;
     }
 }
