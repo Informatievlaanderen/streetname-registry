@@ -11,15 +11,15 @@ jobs:
     outputs:
       version: ${{ steps.set-version.outputs.version }}
 
-    services:
-      sqlserver:
-        image: mcr.microsoft.com/mssql/server:2019-latest
-        env:
-          ACCEPT_EULA: Y
-          SA_PASSWORD: E@syP@ssw0rd
-          MSSQL_TCP_PORT: 1433
-        ports:
-          - 1433:1433
+#    services:
+#      sqlserver:
+#        image: mcr.microsoft.com/mssql/server:2019-latest
+#        env:
+#          ACCEPT_EULA: Y
+#          SA_PASSWORD: E@syP@ssw0rd
+#          MSSQL_TCP_PORT: 1433
+#        ports:
+#          - 1433:1433
 
     steps:
     - name: Checkout Code
@@ -58,7 +58,7 @@ jobs:
       shell: bash
 
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v3.5.1
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
@@ -141,7 +141,7 @@ jobs:
     # Upload NuGet packages
     #
 
-    - name: Upload NuGet package Api.BackOffice
+    - name: Upload NuGet package api-backoffice
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
@@ -150,7 +150,7 @@ jobs:
       env:
         SEMVER: ${{ env.RELEASE_VERSION }}
 
-    - name: Upload NuGet package Api.BackOffice.Abstractions
+    - name: Upload NuGet package api-backoffice-abstractions
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
@@ -159,7 +159,7 @@ jobs:
       env:
         SEMVER: ${{ env.RELEASE_VERSION }}
 
-    - name: Upload NuGet package Api.Legacy
+    - name: Upload NuGet package api-legacy
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
@@ -168,7 +168,7 @@ jobs:
       env:
         SEMVER: ${{ env.RELEASE_VERSION }}
 
-    - name: Upload NuGet package Api.Oslo
+    - name: Upload NuGet package api-oslo
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
@@ -177,7 +177,7 @@ jobs:
       env:
         SEMVER: ${{ env.RELEASE_VERSION }}
 
-    - name: Upload NuGet package Api.Extract
+    - name: Upload NuGet package api-extract
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
@@ -186,7 +186,7 @@ jobs:
       env:
         SEMVER: ${{ env.RELEASE_VERSION }}
 
-    - name: Upload NuGet package Api.CrabImport
+    - name: Upload NuGet package api-crab-import
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
@@ -195,7 +195,7 @@ jobs:
       env:
         SEMVER: ${{ env.RELEASE_VERSION }}
 
-    - name: Upload NuGet package Projector
+    - name: Upload NuGet package projector
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
@@ -271,7 +271,7 @@ jobs:
         name: producer
         path: ~/sr-producer-image.tar
 
-    - name: Upload snapshot oslo producer artifact
+    - name: Upload producer-snapshot-oslo artifact
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
@@ -297,7 +297,7 @@ jobs:
 
     - name: Configure AWS credentials (Test)
       if: env.RELEASE_VERSION != 'none'
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1-node16
       with:
         aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
         aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
@@ -305,7 +305,7 @@ jobs:
 
     - name: Login to Amazon ECR (Test)
       if: env.RELEASE_VERSION != 'none'
-      uses: aws-actions/amazon-ecr-login@v1.5.1
+      uses: aws-actions/amazon-ecr-login@v1.5.2
 
     - name: Push Lambda functions to S3 Test
       if: env.RELEASE_VERSION != 'none'
@@ -321,7 +321,7 @@ jobs:
 
     - name: Configure AWS credentials (Staging)
       if: env.RELEASE_VERSION != 'none'
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1-node16
       with:
         aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY }}
@@ -329,7 +329,7 @@ jobs:
 
     - name: Login to Amazon ECR (Staging)
       if: env.RELEASE_VERSION != 'none'
-      uses: aws-actions/amazon-ecr-login@v1.5.1
+      uses: aws-actions/amazon-ecr-login@v1.5.2
 
     - name: Push Lambda functions to S3 Staging
       if: env.RELEASE_VERSION != 'none'
@@ -345,7 +345,7 @@ jobs:
 
 #    - name: Configure AWS credentials (Production)
 #      if: env.RELEASE_VERSION != 'none'
-#      uses: aws-actions/configure-aws-credentials@v1
+#      uses: aws-actions/configure-aws-credentials@v1-node16
 #      with:
 #        aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_PRD }}
 #        aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_PRD }}
@@ -353,7 +353,7 @@ jobs:
 #
 #    - name: Login to Amazon ECR (Production)
 #      if: env.RELEASE_VERSION != 'none'
-#      uses: aws-actions/amazon-ecr-login@v1.5.1
+#      uses: aws-actions/amazon-ecr-login@v1.5.2
 #
 #    - name: Push Lambda functions to S3 Production
 #      if: env.RELEASE_VERSION != 'none'
@@ -436,6 +436,7 @@ jobs:
     name: Publish to NuGet
     runs-on: ubuntu-latest
     
+    
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -449,49 +450,49 @@ jobs:
       shell: bash
       run: dotnet --info
 
-    - name: Download NuGet package Api.BackOffice
+    - name: Download NuGet package api-backoffice
       if: env.RELEASE_VERSION != 'none'
       uses: actions/download-artifact@v3
       with:
         name: nuget-api-backoffice
         path: ~/
 
-    - name: Download NuGet package Api.BackOffice.Abstractions
+    - name: Download NuGet package api-backoffice-abstractions
       if: env.RELEASE_VERSION != 'none'
       uses: actions/download-artifact@v3
       with:
         name: nuget-api-backoffice-abstractions
         path: ~/
 
-    - name: Download NuGet package Api.Legacy
+    - name: Download NuGet package api-legacy
       if: env.RELEASE_VERSION != 'none'
       uses: actions/download-artifact@v3
       with:
         name: nuget-api-legacy
         path: ~/
 
-    - name: Download NuGet package Api.Oslo
+    - name: Download NuGet package api-oslo
       if: env.RELEASE_VERSION != 'none'
       uses: actions/download-artifact@v3
       with:
         name: nuget-api-oslo
         path: ~/
 
-    - name: Download NuGet package Api.Extract
+    - name: Download NuGet package api-extract
       if: env.RELEASE_VERSION != 'none'
       uses: actions/download-artifact@v3
       with:
         name: nuget-api-extract
         path: ~/
 
-    - name: Download NuGet package Api.CrabImport
+    - name: Download NuGet package api-crab-import
       if: env.RELEASE_VERSION != 'none'
       uses: actions/download-artifact@v3
       with:
         name: nuget-api-crab-import
         path: ~/
 
-    - name: Download NuGet package Projector
+    - name: Download NuGet package projector
       if: env.RELEASE_VERSION != 'none'
       uses: actions/download-artifact@v3
       with:
@@ -532,49 +533,49 @@ jobs:
 #      shell: bash
 #      run: dotnet --info
 #
-#    - name: Download NuGet package Api.BackOffice
+#    - name: Download NuGet package api-backoffice
 #      if: env.RELEASE_VERSION != 'none'
 #      uses: actions/download-artifact@v3
 #      with:
 #        name: nuget-api-backoffice
 #        path: ~/
 #
-#    - name: Download NuGet package Api.BackOffice.Abstractions
+#    - name: Download NuGet package api-backoffice-abstractions
 #      if: env.RELEASE_VERSION != 'none'
 #      uses: actions/download-artifact@v3
 #      with:
 #        name: nuget-api-backoffice-abstractions
 #        path: ~/
 #
-#    - name: Download NuGet package Api.Legacy
+#    - name: Download NuGet package api-legacy
 #      if: env.RELEASE_VERSION != 'none'
 #      uses: actions/download-artifact@v3
 #      with:
 #        name: nuget-api-legacy
 #        path: ~/
 #
-#    - name: Download NuGet package Api.Oslo
+#    - name: Download NuGet package api-oslo
 #      if: env.RELEASE_VERSION != 'none'
 #      uses: actions/download-artifact@v3
 #      with:
 #        name: nuget-api-oslo
 #        path: ~/
 #
-#    - name: Download NuGet package Api.Extract
+#    - name: Download NuGet package api-extract
 #      if: env.RELEASE_VERSION != 'none'
 #      uses: actions/download-artifact@v3
 #      with:
 #        name: nuget-api-extract
 #        path: ~/
 #
-#    - name: Download NuGet package Api.CrabImport
+#    - name: Download NuGet package api-crab-import
 #      if: env.RELEASE_VERSION != 'none'
 #      uses: actions/download-artifact@v3
 #      with:
 #        name: nuget-api-crab-import
 #        path: ~/
 #
-#    - name: Download NuGet package Projector
+#    - name: Download NuGet package projector
 #      if: env.RELEASE_VERSION != 'none'
 #      uses: actions/download-artifact@v3
 #      with:
@@ -610,7 +611,7 @@ jobs:
     steps:
       - name: Configure AWS credentials (Test)
         if: needs.build.outputs.version != 'none'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
           aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
@@ -618,7 +619,7 @@ jobs:
 
       - name: Login to Amazon ECR (Test)
         if: needs.build.outputs.version != 'none'
-        uses: aws-actions/amazon-ecr-login@v1.5.1
+        uses: aws-actions/amazon-ecr-login@v1.5.2
 
       #
       # Download artifacts
@@ -678,7 +679,7 @@ jobs:
           name: producer
           path: ~/
 
-      - name: Download snapshot oslo producer
+      - name: Download producer-snapshot-oslo
         uses: actions/download-artifact@v3
         with:
           name: producer-snapshot-oslo
@@ -714,17 +715,17 @@ jobs:
         shell: bash
         run: |
           echo $SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER"
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-legacy:$SEMVER"
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-oslo:$SEMVER"
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-crab-import:$SEMVER"
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-extract:$SEMVER"
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/projector:$SEMVER"
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER"
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER"
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER"
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER"
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-legacy:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-oslo:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-crab-import:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-extract:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/projector:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER
         env:
           BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
           SEMVER: ${{ needs.build.outputs.version }}
@@ -738,7 +739,7 @@ jobs:
     steps:
       - name: Configure AWS credentials (Staging)
         if: needs.build.outputs.version != 'none'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY }}
@@ -746,7 +747,7 @@ jobs:
 
       - name: Login to Amazon ECR (Staging)
         if: needs.build.outputs.version != 'none'
-        uses: aws-actions/amazon-ecr-login@v1.5.1
+        uses: aws-actions/amazon-ecr-login@v1.5.2
 
       #
       # Download artifacts
@@ -806,7 +807,7 @@ jobs:
           name: producer
           path: ~/
 
-      - name: Download snapshot oslo producer
+      - name: Download producer-snapshot-oslo
         uses: actions/download-artifact@v3
         with:
           name: producer-snapshot-oslo
@@ -842,37 +843,37 @@ jobs:
         shell: bash
         run: |
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/api-backoffice:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/api-legacy:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/api-legacy:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-legacy:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-legacy:$SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/api-oslo:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/api-oslo:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-oslo:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-oslo:$SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/api-crab-import:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/api-crab-import:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-crab-import:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-crab-import:$SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/api-extract:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/api-extract:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-extract:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-extract:$SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/projector:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/projector:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/projector:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/projector:$SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/projections-syndication:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/consumer:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/producer:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/producer-snapshot-oslo:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/migrator-streetname:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER
-          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER"
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER
         env:
           BUILD_DOCKER_REGISTRY_TST: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
           BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY }}
@@ -887,7 +888,7 @@ jobs:
 #    steps:
 #      - name: Configure AWS credentials (Production)
 #        if: needs.build.outputs.version != 'none'
-#        uses: aws-actions/configure-aws-credentials@v1
+#        uses: aws-actions/configure-aws-credentials@v1-node16
 #        with:
 #          aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_PRD }}
 #          aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_PRD }}
@@ -895,7 +896,7 @@ jobs:
 #
 #      - name: Login to Amazon ECR (Production)
 #        if: needs.build.outputs.version != 'none'
-#        uses: aws-actions/amazon-ecr-login@v1.5.1
+#        uses: aws-actions/amazon-ecr-login@v1.5.2
 #
 #      #
 #      # Download artifacts
@@ -955,7 +956,7 @@ jobs:
 #          name: producer
 #          path: ~/
 #
-#      - name: Download snapshot oslo producer
+#      - name: Download producer-snapshot-oslo
 #        uses: actions/download-artifact@v3
 #        with:
 #          name: producer-snapshot-oslo
@@ -1054,7 +1055,6 @@ jobs:
     if: github.repository_owner == 'Informatievlaanderen'
     needs: [deploy_to_test_start_slack, build]
     name: Deploy to test
-    environment: test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -1091,7 +1091,7 @@ jobs:
     
     steps:
     - name: CD Lambda(s) Configure credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1-node16
       with:
         aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
         aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
@@ -1201,7 +1201,7 @@ jobs:
 
     steps:
     - name: CD Lambda(s) Configure credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1-node16
       with:
         aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY }}
@@ -1311,7 +1311,7 @@ jobs:
 #
 #    steps:
 #    - name: CD Lambda(s) Configure credentials
-#      uses: aws-actions/configure-aws-credentials@v1
+#      uses: aws-actions/configure-aws-credentials@v1-node16
 #      with:
 #        aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_PRD }}
 #        aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_PRD }}
