@@ -210,8 +210,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                 idempotentCommandHandler)
         { }
 
-        protected override Task<ETagResponse> InnerHandle(ApproveStreetNameLambdaRequest request,
-            CancellationToken cancellationToken)
+        protected override Task<ETagResponse> InnerHandle(ApproveStreetNameLambdaRequest request, CancellationToken cancellationToken)
         {
             IdempotentCommandHandler.Dispatch(
                 Guid.NewGuid(),
@@ -222,9 +221,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             return Task.FromResult(new ETagResponse("bla", "etag"));
         }
 
-        protected override TicketError? InnerMapDomainException(DomainException exception)
+        protected override TicketError? InnerMapDomainException(DomainException exception, ApproveStreetNameLambdaRequest request)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

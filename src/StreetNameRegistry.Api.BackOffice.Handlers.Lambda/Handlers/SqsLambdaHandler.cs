@@ -8,22 +8,17 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Requests;
-    using Be.Vlaanderen.Basisregisters.Sqs.Responses;
-    using MediatR;
     using Microsoft.Extensions.Configuration;
     using Municipality;
     using Municipality.Exceptions;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
+    using Requests;
     using TicketingService.Abstractions;
 
-    public abstract class SqsLambdaHandler<TSqsLambdaRequest> : IRequestHandler<TSqsLambdaRequest>
+    public abstract class SqsLambdaHandler<TSqsLambdaRequest> : SqsLambdaHandlerBase<TSqsLambdaRequest>
         where TSqsLambdaRequest : SqsLambdaRequest
     {
-        private readonly ITicketing _ticketing;
-        private readonly ICustomRetryPolicy _retryPolicy;
         private readonly IMunicipalities _municipalities;
 
-        protected IIdempotentCommandHandler IdempotentCommandHandler { get; }
         protected string DetailUrlFormat { get; }
 
         protected SqsLambdaHandler(
@@ -32,11 +27,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             IMunicipalities municipalities,
             ITicketing ticketing,
             IIdempotentCommandHandler idempotentCommandHandler)
+            : base(retryPolicy, ticketing, idempotentCommandHandler)
         {
-            _retryPolicy = retryPolicy;
             _municipalities = municipalities;
-            _ticketing = ticketing;
-            IdempotentCommandHandler = idempotentCommandHandler;
 
             DetailUrlFormat = configuration["DetailUrl"];
             if (string.IsNullOrEmpty(DetailUrlFormat))
@@ -45,65 +38,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             }
         }
 
-        protected abstract Task<ETagResponse> InnerHandle(TSqsLambdaRequest request, CancellationToken cancellationToken);
-
-        protected abstract TicketError? InnerMapDomainException(DomainException exception);
-
-        protected TicketError? MapDomainException(DomainException exception, TSqsLambdaRequest request)
-        {
-            var error = InnerMapDomainException(exception);
-            return error ?? null;
-        }
-
-        public async Task<Unit> Handle(TSqsLambdaRequest request, CancellationToken cancellationToken)
-        {
-            try
-            {
-                await ValidateIfMatchHeaderValue(request, cancellationToken);
-
-                await _ticketing.Pending(request.TicketId, cancellationToken);
-
-                ETagResponse? etag = null;
-
-                await _retryPolicy.Retry(async () => etag = await InnerHandle(request, cancellationToken));
-
-                await _ticketing.Complete(
-                    request.TicketId,
-                    new TicketResult(etag),
-                    cancellationToken);
-            }
-            catch (IfMatchHeaderValueMismatchException)
-            {
-                await _ticketing.Error(
-                    request.TicketId,
-                    new TicketError("Als de If-Match header niet overeenkomt met de laatste ETag.", "PreconditionFailed"),
-                    cancellationToken);
-            }
-            catch (DomainException exception)
-            {
-                var ticketError = exception switch
-                {
-                    StreetNameIsNotFoundException => new TicketError(
-                        ValidationErrorMessages.StreetName.StreetNameNotFound,
-                        ValidationErrorCodes.StreetName.StreetNameNotFound),
-                    StreetNameIsRemovedException => new TicketError(
-                        ValidationErrorMessages.StreetName.StreetNameIsRemoved,
-                        ValidationErrorCodes.StreetName.StreetNameIsRemoved),
-                    _ => InnerMapDomainException(exception)
-                };
-
-                ticketError ??= new TicketError(exception.Message, "");
-
-                await _ticketing.Error(
-                    request.TicketId,
-                    ticketError,
-                    cancellationToken);
-            }
-
-            return Unit.Value;
-        }
-
-        private async Task ValidateIfMatchHeaderValue(TSqsLambdaRequest request, CancellationToken cancellationToken)
+        protected override async Task ValidateIfMatchHeaderValue(TSqsLambdaRequest request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.IfMatchHeaderValue) || request is not IHasStreetNamePersistentLocalId id)
             {
@@ -131,6 +66,37 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             var municipality = await _municipalities.GetAsync(new MunicipalityStreamId(municipalityId), cancellationToken);
             var streetNameHash = municipality.GetStreetNameHash(persistentLocalId);
             return streetNameHash;
+        }
+
+        protected override async Task HandleAggregateIdIsNotFoundException(TSqsLambdaRequest request, CancellationToken cancellationToken)
+        {
+            await Ticketing.Error(request.TicketId,
+                new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameNotFound,
+                    ValidationErrorCodes.StreetName.StreetNameNotFound),
+                cancellationToken);
+        }
+
+        protected abstract TicketError? InnerMapDomainException(DomainException exception, TSqsLambdaRequest request);
+
+        protected override TicketError? MapDomainException(DomainException exception, TSqsLambdaRequest request)
+        {
+            var error = InnerMapDomainException(exception, request);
+            if (error is not null)
+            {
+                return error;
+            }
+
+            return exception switch
+            {
+                StreetNameIsNotFoundException => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameNotFound,
+                    ValidationErrorCodes.StreetName.StreetNameNotFound),
+                StreetNameIsRemovedException => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameIsRemoved,
+                    ValidationErrorCodes.StreetName.StreetNameIsRemoved),
+                _ => null
+            };
         }
     }
 }
