@@ -1,3 +1,15 @@
+# [3.14.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.9...v3.14.0) (2022-10-28)
+
+
+### Bug Fixes
+
+* revert set-output change ([7b2ea9d](https://github.com/informatievlaanderen/streetname-registry/commit/7b2ea9d2c741fbc59dac886d9de04d6ffe8dfe60))
+
+
+### Features
+
+* implement SqsLambdaHandlerBase ([80c44d4](https://github.com/informatievlaanderen/streetname-registry/commit/80c44d480b5c1283fe7fbf61b47d6573020795c2))
+
 ## [3.13.9](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.8...v3.13.9) (2022-10-25)
 
 
