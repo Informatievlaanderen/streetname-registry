@@ -1,3 +1,12 @@
+## [3.14.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.14.0...v3.14.1) (2022-11-02)
+
+
+### Bug Fixes
+
+* add coverage to build.yml ([ecad46d](https://github.com/informatievlaanderen/streetname-registry/commit/ecad46d6683be25cf85db408e64e5f787c9a8838))
+* enable pr's & coverage ([fc2927b](https://github.com/informatievlaanderen/streetname-registry/commit/fc2927bdd577af6bac94b384b11f9300ec52f6a9))
+* push images to production ([5ef767a](https://github.com/informatievlaanderen/streetname-registry/commit/5ef767ae166cd695f464e0830086b3f7fa2aa253))
+
 # [3.14.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.9...v3.14.0) (2022-10-28)
 
 
