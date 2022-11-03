@@ -1,3 +1,11 @@
+## [3.14.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.14.1...v3.14.2) (2022-11-03)
+
+
+### Bug Fixes
+
+* update ci & test branch protection ([73ab3f7](https://github.com/informatievlaanderen/streetname-registry/commit/73ab3f799a8f5673a9e90d32955df5be7347efe9))
+* use VBR_SONAR_TOKEN ([3fd83ab](https://github.com/informatievlaanderen/streetname-registry/commit/3fd83ab983716af6d49ba0ceceba5d8e774c3f85))
+
 ## [3.14.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.14.0...v3.14.1) (2022-11-02)
 
 
