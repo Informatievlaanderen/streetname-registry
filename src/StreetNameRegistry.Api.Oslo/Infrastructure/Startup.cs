@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using System;
     using System.Linq;
     using System.Reflection;
+    using Abstractions.Infrastructure.Options;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api;
@@ -20,12 +21,11 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Microsoft.Extensions.Options;
     using Microsoft.OpenApi.Models;
     using Modules;
-    using Options;
 
     /// <summary>Represents the startup process for the application.</summary>
     public class Startup
     {
-        private const string databaseTag = "db";
+        private const string DatabaseTag = "db";
 
         private IContainer? _applicationContainer;
 
@@ -95,7 +95,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
                                 health.AddSqlServer(
                                     connectionString.Value,
                                     name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
-                                    tags: new[] { databaseTag, "sql", "sqlserver" });
+                                    tags: new[] { DatabaseTag, "sql", "sqlserver" });
                             }
                         }
                     }
@@ -123,7 +123,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
             ApiDebugDataDogToggle debugDataDogToggle,
             HealthCheckService healthCheckService)
         {
-            StartupHelpers.CheckDatabases(healthCheckService, databaseTag, loggerFactory)
+            StartupHelpers.CheckDatabases(healthCheckService, DatabaseTag, loggerFactory)
                 .GetAwaiter()
                 .GetResult();
 

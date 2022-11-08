@@ -23,9 +23,13 @@ namespace StreetNameRegistry.Projections.Legacy
 
             var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
             if (hasConnectionString)
+            {
                 RunOnSqlServer(configuration, services, loggerFactory, connectionString);
+            }
             else
+            {
                 RunInMemoryDb(services, loggerFactory, logger);
+            }
 
             logger.LogInformation(
                 "Added {Context} to services:" +
