@@ -35,6 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\StreetNameRegistry.Api.Oslo.Abstractions\StreetNameRegistry.Api.Oslo.Abstractions.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Api.Oslo.Handlers\StreetNameRegistry.Api.Oslo.Handlers.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />

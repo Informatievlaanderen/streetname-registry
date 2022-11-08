@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
+namespace StreetNameRegistry.Api.Oslo.Abstractions.StreetName.Responses
 {
     using System;
     using System.Collections.Generic;

@@ -6,5 +6,7 @@ Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac
 
 AsyncEnumerator
 
+MediatR
+
 SourceLink.Embed.AllSourceFiles
 SourceLink.Copy.PdbFiles

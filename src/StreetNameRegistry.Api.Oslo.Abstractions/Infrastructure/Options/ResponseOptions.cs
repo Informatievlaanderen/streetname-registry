@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.Infrastructure.Options
+namespace StreetNameRegistry.Api.Oslo.Abstractions.Infrastructure.Options
 {
     public class ResponseOptions
     {
