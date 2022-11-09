@@ -10,9 +10,9 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
 
     public sealed class MediatRModule : Module
     {
-        private readonly UseProjectionsV2Toggle _useProjectionsV2Toggle;
+        private readonly bool _useProjectionsV2Toggle;
 
-        public MediatRModule(UseProjectionsV2Toggle useProjectionsV2Toggle)
+        public MediatRModule(bool useProjectionsV2Toggle)
         {
             _useProjectionsV2Toggle = useProjectionsV2Toggle;
         }
@@ -31,28 +31,28 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                 return type => ctx.Resolve(type);
             });
 
-            if (_useProjectionsV2Toggle.FeatureEnabled)
+            if (_useProjectionsV2Toggle)
             {
-                builder.RegisterGeneric(typeof(OsloGetHandlerV2))
-                    .As(typeof(RequestHandler<>))
+                builder.RegisterType<OsloListHandlerV2>()
+                    .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
-                builder.RegisterGeneric(typeof(OsloListHandlerV2))
-                    .As(typeof(RequestHandler<>))
+                builder.RegisterType<OsloListHandlerV2>()
+                    .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
-                builder.RegisterGeneric(typeof(OsloCountHandlerV2))
-                    .As(typeof(RequestHandler<>))
+                builder.RegisterType<OsloCountHandlerV2>()
+                    .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
             }
             else
             {
-                builder.RegisterGeneric(typeof(OsloGetHandler))
-                    .As(typeof(RequestHandler<>))
+                builder.RegisterType<OsloListHandler>()
+                    .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
-                builder.RegisterGeneric(typeof(OsloListHandler))
-                    .As(typeof(RequestHandler<>))
+                builder.RegisterType<OsloListHandler>()
+                    .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
-                builder.RegisterGeneric(typeof(OsloCountHandler))
-                    .As(typeof(RequestHandler<>))
+                builder.RegisterType<OsloListHandler>()
+                    .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
             }
         }
