@@ -9,7 +9,6 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Configuration;
-    using FeatureToggles;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -18,7 +17,6 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Microsoft.Extensions.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using Microsoft.OpenApi.Models;
     using Modules;
 
@@ -100,13 +98,14 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
                         }
                     }
                 })
-                .Configure<ResponseOptions>(_configuration)
-                .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
-                .AddSingleton(c =>
-                    new UseProjectionsV2Toggle(c.GetService<IOptions<FeatureToggleOptions>>()!.Value.UseProjectionsV2));
+                .Configure<ResponseOptions>(_configuration);
 
+            var useProjectionsV2Toggle = _configuration.GetFeatureToggle(FeatureToggleOptions.ConfigurationKey);
+            
             var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule(new ApiModule(_configuration, services, _loggerFactory));
+            containerBuilder
+                .RegisterModule(new ApiModule(_configuration, services, _loggerFactory))
+                .RegisterModule(new MediatRModule(useProjectionsV2Toggle));
             _applicationContainer = containerBuilder.Build();
 
             return new AutofacServiceProvider(_applicationContainer);
