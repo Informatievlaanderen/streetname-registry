@@ -24,6 +24,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using Serilog;
     using StreetNameRegistry.StreetName;
     using StreetNameRegistry.StreetName.Commands;
+    using ILogger = Microsoft.Extensions.Logging.ILogger;
 
     public class Program
     {
@@ -103,7 +104,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
         private static async Task ProcessStreams(
             IServiceProvider container,
             IConfigurationRoot configuration,
-            CancellationToken ct)
+            CancellationToken cancellationToken)
         {
             var loggerFactory = container.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger("StreetNameMigrator");
@@ -126,60 +127,12 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 
             async Task<bool> ProcessStream(IEnumerable<string> streamsToProcess)
             {
-                if (CancellationTokenSource.IsCancellationRequested)
-                {
-                    return false;
-                }
-
                 foreach (var id in streamsToProcess)
                 {
-                    if (CancellationTokenSource.IsCancellationRequested)
+                    if (!await ProcessStreamId(processedIds, id, logger, streetNameRepo, makeComplete, consumerContext, actualContainer, processedIdsTable, backOfficeContext, cancellationToken))
                     {
                         return false;
                     }
-
-                    if (processedIds.Contains(id, StringComparer.InvariantCultureIgnoreCase))
-                    {
-                        logger.LogDebug($"Already migrated '{id}', skipping...");
-                        continue;
-                    }
-
-                    var streetNameId = new StreetNameId(Guid.Parse(id));
-                    var streetName = await streetNameRepo.GetAsync(streetNameId, ct);
-                    
-                    if (!streetName.IsCompleted)
-                    {
-                        if (streetName.IsRemoved)
-                        {
-                            logger.LogDebug($"Skipping incomplete & removed StreetnameId '{id}'.");
-                            continue;
-                        }
-
-                        if (!makeComplete)
-                        {
-                            throw new InvalidOperationException($"Incomplete but not removed Streetname '{id}'.");
-                        }
-                    }
-
-                    var municipality =
-                        await consumerContext.MunicipalityConsumerItems.SingleOrDefaultAsync(x =>
-                            x.NisCode == streetName.NisCode, ct);
-
-                    if (municipality == null)
-                    {
-                        throw new InvalidOperationException(
-                            $"Municipality for NisCode '{streetName.NisCode}' was not found.");
-                    }
-                    
-                    await CreateAndDispatchCommand(municipality, streetName, makeComplete, actualContainer, ct);
-                    
-                    await processedIdsTable.Add(id);
-                    processedIds.Add(id);
-
-                    await backOfficeContext
-                              .MunicipalityIdByPersistentLocalId
-                              .AddAsync(new MunicipalityIdByPersistentLocalId(streetName.PersistentLocalId, municipality.MunicipalityId), ct);
-                    await backOfficeContext.SaveChangesAsync(ct);
                 }
 
                 return true;
@@ -194,6 +147,56 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 
                 streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
             }
+        }
+
+        private static async Task<bool> ProcessStreamId(List<string> processedIds, string id, ILogger logger, IStreetNames streetNameRepo, bool makeComplete, ConsumerContext consumerContext, ILifetimeScope actualContainer, ProcessedIdsTable processedIdsTable, BackOfficeContext backOfficeContext, CancellationToken cancellationToken)
+        {
+            if (CancellationTokenSource.IsCancellationRequested)
+            {
+                return false;
+            }
+
+            if (processedIds.Contains(id, StringComparer.InvariantCultureIgnoreCase))
+            {
+                logger.LogDebug($"Already migrated '{id}', skipping...");
+                return true;
+            }
+
+            var streetNameId = new StreetNameId(Guid.Parse(id));
+            var streetName = await streetNameRepo.GetAsync(streetNameId, cancellationToken);
+
+            if (!streetName.IsCompleted)
+            {
+                if (streetName.IsRemoved)
+                {
+                    logger.LogDebug($"Skipping incomplete & removed StreetnameId '{id}'.");
+                    return true;
+                }
+
+                if (!makeComplete)
+                {
+                    throw new InvalidOperationException($"Incomplete but not removed Streetname '{id}'.");
+                }
+            }
+
+            var municipality = await consumerContext.MunicipalityConsumerItems.SingleOrDefaultAsync(x =>
+                    x.NisCode == streetName.NisCode, cancellationToken);
+
+            if (municipality == null)
+            {
+                throw new InvalidOperationException("Municipality for NisCode '{streetName.NisCode}' was not found.");
+            }
+
+            await CreateAndDispatchCommand(municipality, streetName, makeComplete, actualContainer, cancellationToken);
+
+            await processedIdsTable.Add(id);
+            processedIds.Add(id);
+
+            await backOfficeContext.MunicipalityIdByPersistentLocalId
+                .AddAsync(new MunicipalityIdByPersistentLocalId(streetName.PersistentLocalId, municipality.MunicipalityId), cancellationToken);
+            await backOfficeContext.SaveChangesAsync(cancellationToken);
+
+            return true;
         }
 
         private static async Task CreateAndDispatchCommand(
