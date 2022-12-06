@@ -52,6 +52,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingRetirementStreet
         {
             var streetNameName = Fixture.Create<StreetNameName>();
             Fixture.Register(() => new Names { streetNameName });
+            Fixture.Register(() => new PersistentLocalId(2));
 
             var command = Fixture.Create<CorrectStreetNameRetirement>()
                 .WithMunicipalityId(_municipalityId);
