@@ -1,23 +1,22 @@
-namespace StreetNameRegistry.Api.Oslo.Handlers.List
+namespace StreetNameRegistry.Api.Oslo.StreetName.List
 {
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions.Converters;
-    using Abstractions.StreetName.Query;
-    using Abstractions.StreetName.Responses;
     using Be.Vlaanderen.Basisregisters.Api.Search;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Converters;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using Municipality;
-    using Projections.Legacy.StreetNameListV2;
+    using Projections.Legacy.StreetNameList;
+    using Query;
+    using StreetNameRegistry.StreetName;
 
-    public class OsloListHandlerV2 : OsloListHandlerBase
+    public class OsloListHandler : OsloListHandlerBase
     {
         public override async Task<IActionResult> Handle(OsloListRequest request, CancellationToken cancellationToken)
         {
@@ -25,15 +24,15 @@ namespace StreetNameRegistry.Api.Oslo.Handlers.List
             var sorting = request.HttpRequest.ExtractSortingRequest();
             var pagination = request.HttpRequest.ExtractPaginationRequest();
 
-            var pagedStreetNamesV2 = new StreetNameListOsloQueryV2(request.LegacyContext, request.SyndicationContext)
-                    .Fetch<StreetNameListItemV2, StreetNameListItemV2>(filtering, sorting, pagination);
+            var pagedStreetNames = new StreetNameListOsloQuery(request.LegacyContext, request.SyndicationContext)
+                .Fetch<StreetNameListItem, StreetNameListItem>(filtering, sorting, pagination);
 
-            request.HttpResponse.AddPagedQueryResultHeaders(pagedStreetNamesV2);
+            request.HttpResponse.AddPagedQueryResultHeaders(pagedStreetNames);
 
             return new OkObjectResult(
                 new StreetNameListOsloResponse
                 {
-                    Straatnamen = await pagedStreetNamesV2
+                    Straatnamen = await pagedStreetNames
                         .Items
                         .Select(m => new StreetNameListOsloItemResponse(
                             m.PersistentLocalId,
@@ -41,15 +40,15 @@ namespace StreetNameRegistry.Api.Oslo.Handlers.List
                             request.ResponseOptions.Value.DetailUrl,
                             GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
                             GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
-                            m.Status.ConvertFromMunicipalityStreetNameStatus(),
+                            m.Status.ConvertFromStreetNameStatus(),
                             m.VersionTimestamp.ToBelgianDateTimeOffset()))
                         .ToListAsync(cancellationToken),
-                    Volgende = BuildNextUri(pagedStreetNamesV2.PaginationInfo, request.ResponseOptions.Value.VolgendeUrl),
+                    Volgende = BuildNextUri(pagedStreetNames.PaginationInfo, request.ResponseOptions.Value.VolgendeUrl),
                     Context = request.ResponseOptions.Value.ContextUrlList
                 });
         }
 
-        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItemV2 item, Language? taal)
+        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItem item, Language? taal)
         {
             switch (taal)
             {
@@ -79,7 +78,7 @@ namespace StreetNameRegistry.Api.Oslo.Handlers.List
             }
         }
 
-        private static GeografischeNaam? GetHomoniemToevoegingByTaal(StreetNameListItemV2 item, Language? taal)
+        private static GeografischeNaam? GetHomoniemToevoegingByTaal(StreetNameListItem item, Language? taal)
         {
             switch (taal)
             {

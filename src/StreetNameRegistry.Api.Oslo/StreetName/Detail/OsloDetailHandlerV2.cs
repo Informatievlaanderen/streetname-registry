@@ -1,19 +1,18 @@
-namespace StreetNameRegistry.Api.Oslo.Handlers.Get
+namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
 {
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
+    using Converters;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using Abstractions.Converters;
-    using Abstractions.StreetName.Responses;
 
-    public class OsloGetHandlerV2 : OsloGetHandlerBase
+    public class OsloDetailHandlerV2 : OsloDetailHandlerBase
     {
-        public override async Task<IActionResult> Handle(OsloGetRequest request, CancellationToken cancellationToken)
+        public override async Task<IActionResult> Handle(OsloDetailRequest request, CancellationToken cancellationToken)
         {
             var streetNameV2 = await request.LegacyContext
                 .StreetNameDetailV2

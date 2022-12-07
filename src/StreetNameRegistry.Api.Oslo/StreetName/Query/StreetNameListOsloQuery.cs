@@ -1,20 +1,19 @@
-namespace StreetNameRegistry.Api.Oslo.Abstractions.StreetName.Query
+namespace StreetNameRegistry.Api.Oslo.StreetName.Query
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Be.Vlaanderen.Basisregisters.Api.Search;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Converters;
     using Microsoft.EntityFrameworkCore;
-    using StreetNameRegistry.Projections.Legacy;
-    using StreetNameRegistry.Projections.Legacy.StreetNameList;
-    using StreetNameRegistry.Projections.Syndication;
+    using Projections.Legacy;
+    using Projections.Legacy.StreetNameList;
+    using Projections.Syndication;
 
-    public class StreetNameListOsloQuery : Query<StreetNameListItem, StreetNameFilter>
+    public class StreetNameListOsloQuery : Be.Vlaanderen.Basisregisters.Api.Search.Query<StreetNameListItem, StreetNameFilter>
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;

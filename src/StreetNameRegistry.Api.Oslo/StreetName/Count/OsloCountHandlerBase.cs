@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.Handlers.Count
+namespace StreetNameRegistry.Api.Oslo.StreetName.Count
 {
     using System.Threading;
     using System.Threading.Tasks;

@@ -1,5 +1,6 @@
-namespace StreetNameRegistry.Api.Oslo.Handlers.Count
+namespace StreetNameRegistry.Api.Oslo.StreetName.Count
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
@@ -8,10 +9,10 @@ namespace StreetNameRegistry.Api.Oslo.Handlers.Count
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using Projections.Legacy.StreetNameListV2;
-    using StreetNameRegistry.Api.Oslo.Abstractions.StreetName.Query;
+    using Projections.Legacy.StreetNameList;
+    using Query;
 
-    public class OsloCountHandlerV2 : OsloCountHandlerBase
+    public class OsloCountHandler : OsloCountHandlerBase
     {
         public override async Task<IActionResult> Handle(OsloCountRequest request, CancellationToken cancellationToken)
         {
@@ -22,11 +23,17 @@ namespace StreetNameRegistry.Api.Oslo.Handlers.Count
             return new OkObjectResult(
                 new TotaalAantalResponse
                 {
-                    Aantal = await new StreetNameListOsloQueryV2(request.LegacyContext, request.SyndicationContext)
-                        .Fetch<StreetNameListItemV2, StreetNameListItemV2>(filtering, sorting, pagination)
-                        .Items
-                        .CountAsync(cancellationToken)
+                    Aantal = filtering.ShouldFilter
+                        ? await new StreetNameListOsloQuery(request.LegacyContext, request.SyndicationContext)
+                            .Fetch<StreetNameListItem, StreetNameListItem>(filtering, sorting, pagination)
+                            .Items
+                            .CountAsync(cancellationToken)
+                        : Convert.ToInt32((await request.LegacyContext
+                                .StreetNameListViewCount
+                                .FirstAsync(cancellationToken: cancellationToken))
+                            .Count)
                 });
+
         }
     }
 }

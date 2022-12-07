@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.Handlers.Get;
+namespace StreetNameRegistry.Api.Oslo.StreetName.Detail;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +16,9 @@ using Projections.Legacy;
 using Projections.Syndication;
 using Projections.Syndication.Municipality;
 
-public record OsloGetRequest(LegacyContext LegacyContext, SyndicationContext SyndicationContext, IOptions<ResponseOptions> ResponseOptions, int PersistentLocalId) : IRequest<IActionResult>;
+public record OsloDetailRequest(LegacyContext LegacyContext, SyndicationContext SyndicationContext, IOptions<ResponseOptions> ResponseOptions, int PersistentLocalId) : IRequest<IActionResult>;
 
-public abstract class OsloGetHandlerBase : IRequestHandler<OsloGetRequest, IActionResult>
+public abstract class OsloDetailHandlerBase : IRequestHandler<OsloDetailRequest, IActionResult>
 {
     public async Task<StraatnaamDetailGemeente> GetStraatnaamDetailGemeente(SyndicationContext syndicationContext, string nisCode, string gemeenteDetailUrl, CancellationToken ct)
     {
@@ -55,5 +55,5 @@ public abstract class OsloGetHandlerBase : IRequestHandler<OsloGetRequest, IActi
         }
     }
 
-    public abstract Task<IActionResult> Handle(OsloGetRequest request, CancellationToken cancellationToken);
+    public abstract Task<IActionResult> Handle(OsloDetailRequest request, CancellationToken cancellationToken);
 }

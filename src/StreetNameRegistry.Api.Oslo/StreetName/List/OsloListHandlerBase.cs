@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.Handlers.List
+namespace StreetNameRegistry.Api.Oslo.StreetName.List
 {
     using System;
     using System.Threading;

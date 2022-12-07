@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.Abstractions.StreetName.Responses
+namespace StreetNameRegistry.Api.Oslo.StreetName.Count
 {
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Swashbuckle.AspNetCore.Filters;
