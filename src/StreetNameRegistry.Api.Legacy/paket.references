@@ -6,6 +6,9 @@ Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac
 
 Microsoft.SyndicationFeed.ReaderWriter
 
+MediatR
+MediatR.Contracts
+
 AsyncEnumerator
 
 SourceLink.Embed.AllSourceFiles

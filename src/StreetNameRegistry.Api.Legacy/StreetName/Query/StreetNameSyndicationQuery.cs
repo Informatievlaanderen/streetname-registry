@@ -14,7 +14,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Projections.Legacy;
     using Projections.Legacy.StreetNameSyndication;
 
-    public class StreetNameSyndicationQueryResult
+    public sealed class StreetNameSyndicationQueryResult
     {
         public bool ContainsEvent { get; }
         public bool ContainsObject { get; }
@@ -196,7 +196,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         }
     }
 
-    public class StreetNameSyndicationQuery : Query<StreetNameSyndicationItem, StreetNameSyndicationFilter, StreetNameSyndicationQueryResult>
+    public sealed class StreetNameSyndicationQuery : Query<StreetNameSyndicationItem, StreetNameSyndicationFilter, StreetNameSyndicationQueryResult>
     {
         private readonly LegacyContext _context;
         private readonly bool _embedEvent;
@@ -204,7 +204,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
         public StreetNameSyndicationQuery(
             LegacyContext context,
-            SyncEmbedValue embed)
+            SyncEmbedValue? embed)
         {
             _context = context;
             _embedEvent = embed?.Event ?? false;
@@ -311,7 +311,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         }
     }
 
-    public class StreetNameSyndicationSorting : ISorting
+    public sealed class StreetNameSyndicationSorting : ISorting
     {
         public IEnumerable<string> SortableFields { get; } = new[]
         {
@@ -321,9 +321,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public SortingHeader DefaultSortingHeader { get; } = new SortingHeader(nameof(StreetNameSyndicationItem.Position), SortOrder.Ascending);
     }
 
-    public class StreetNameSyndicationFilter
+    public sealed class StreetNameSyndicationFilter
     {
         public long? Position { get; set; }
-        public SyncEmbedValue Embed { get; set; }
+        public SyncEmbedValue? Embed { get; set; }
     }
 }

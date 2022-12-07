@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
+namespace StreetNameRegistry.Api.Legacy.StreetName.Sync
 {
     using System;
     using System.Collections.Generic;

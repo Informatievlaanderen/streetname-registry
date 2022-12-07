@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
+namespace StreetNameRegistry.Api.Legacy.StreetName.Detail
 {
     using System;
     using System.Collections.Generic;
@@ -54,6 +54,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         [JsonProperty(Required = Required.DisallowNull)]
         public StraatnaamStatus StraatnaamStatus { get; set; }
 
+        [JsonIgnore]
+        internal string? LastEventHash { get; }
+
         public StreetNameResponse(
             string naamruimte,
             int persistentLocalId,
@@ -67,7 +70,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             string? homonymAdditionDutch = null,
             string? homonymAdditionFrench = null,
             string? homonymAdditionGerman = null,
-            string? homonymAdditionEnglish = null)
+            string? homonymAdditionEnglish = null,
+            string? lastEventHash = null)
         {
             Identificator = new StraatnaamIdentificator(naamruimte, persistentLocalId.ToString(), version);
             StraatnaamStatus = status;
@@ -79,7 +83,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                 new GeografischeNaam(nameFrench ?? string.Empty, Taal.FR),
                 new GeografischeNaam(nameGerman ?? string.Empty, Taal.DE),
                 new GeografischeNaam(nameEnglish ?? string.Empty, Taal.EN)
-
             };
 
             Straatnamen = straatNamen.Where(x => !string.IsNullOrEmpty(x.Spelling)).ToList();
@@ -90,10 +93,11 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                 new GeografischeNaam(homonymAdditionFrench ?? string.Empty, Taal.FR),
                 new GeografischeNaam(homonymAdditionGerman ?? string.Empty, Taal.DE),
                 new GeografischeNaam(homonymAdditionEnglish ?? string.Empty, Taal.EN)
-
             };
 
             HomoniemToevoegingen = homoniemen.Where(x => !string.IsNullOrEmpty(x.Spelling)).ToList();
+
+            LastEventHash = lastEventHash;
         }
     }
 

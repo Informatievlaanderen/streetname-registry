@@ -14,7 +14,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Projections.Legacy.StreetNameList;
     using Projections.Syndication;
 
-    public class StreetNameListQuery : Query<StreetNameListItem, StreetNameFilter>
+    public sealed class StreetNameListQuery : Query<StreetNameListItem, StreetNameFilter>
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
@@ -113,7 +113,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             : streetNames;
     }
 
-    public class StreetNameSorting : ISorting
+    public sealed class StreetNameSorting : ISorting
     {
         public IEnumerable<string> SortableFields { get; } = new[]
         {
@@ -128,7 +128,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             new SortingHeader(nameof(StreetNameListItem.PersistentLocalId), SortOrder.Ascending);
     }
 
-    public class StreetNameFilter
+    public sealed class StreetNameFilter
     {
         public string StreetNameName { get; set; } = string.Empty;
         public string MunicipalityName { get; set; } = string.Empty;

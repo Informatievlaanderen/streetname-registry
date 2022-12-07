@@ -3,13 +3,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using System;
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Bosa;
-    using Requests;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.Utilities;
+    using Bosa;
     using Convertors;
     using Infrastructure.Options;
     using Microsoft.EntityFrameworkCore;
@@ -17,11 +17,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Projections.Legacy;
     using Projections.Syndication;
     using Projections.Syndication.Municipality;
-    using Responses;
     using StreetNameRegistry.StreetName;
     using StreetNameName = Projections.Legacy.StreetNameName.StreetNameName;
 
-    public class StreetNameBosaQuery
+    public sealed class StreetNameBosaQuery
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
@@ -242,7 +241,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         }
     }
 
-    public class StreetNameNameFilter
+    public sealed class StreetNameNameFilter
     {
         public string ObjectId { get; set; }
         public DateTimeOffset? StreetNameVersion { get; set; }
