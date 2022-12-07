@@ -2,18 +2,35 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Abstractions.Infrastructure.Options;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Converters;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Options;
+    using Projections.Legacy;
+    using Projections.Syndication;
 
-    public class OsloDetailHandler : OsloDetailHandlerBase
+    public sealed class OsloDetailHandler : OsloDetailHandlerBase
     {
-        public override async Task<IActionResult> Handle(OsloDetailRequest request, CancellationToken cancellationToken)
+        private readonly LegacyContext _legacyContext;
+        private readonly SyndicationContext _syndicationContext;
+        private readonly IOptions<ResponseOptions> _responseOptions;
+
+        public OsloDetailHandler(
+            LegacyContext legacyContext,
+            SyndicationContext syndicationContext,
+            IOptions<ResponseOptions> responseOptions)
         {
-            var streetName = await request.LegacyContext
+            _legacyContext = legacyContext;
+            _syndicationContext = syndicationContext;
+            _responseOptions = responseOptions;
+        }
+
+        public override async Task<StreetNameOsloResponse> Handle(OsloDetailRequest request, CancellationToken cancellationToken)
+        {
+            var streetName = await _legacyContext
                 .StreetNameDetail
                 .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.PersistentLocalId == request.PersistentLocalId, cancellationToken);
@@ -28,11 +45,11 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
                 throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
             }
 
-            var gemeente = await GetStraatnaamDetailGemeente(request.SyndicationContext, streetName.NisCode, request.ResponseOptions.Value.GemeenteDetailUrl, cancellationToken);
+            var gemeente = await GetStraatnaamDetailGemeente(_syndicationContext, streetName.NisCode, _responseOptions.Value.GemeenteDetailUrl, cancellationToken);
 
-            return new OkObjectResult(new StreetNameOsloResponse(
-                request.ResponseOptions.Value.Naamruimte,
-                request.ResponseOptions.Value.ContextUrlDetail,
+            return new StreetNameOsloResponse(
+                _responseOptions.Value.Naamruimte,
+                _responseOptions.Value.ContextUrlDetail,
                 request.PersistentLocalId,
                 streetName.Status.ConvertFromStreetNameStatus(),
                 gemeente,
@@ -44,7 +61,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
                 streetName.HomonymAdditionDutch,
                 streetName.HomonymAdditionFrench,
                 streetName.HomonymAdditionGerman,
-                streetName.HomonymAdditionEnglish));
+                streetName.HomonymAdditionEnglish);
         }
     }
 }

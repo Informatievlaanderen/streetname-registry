@@ -3,18 +3,15 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions.Infrastructure.Options;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using MediatR;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Options;
-    using Projections.Legacy;
-    using Projections.Syndication;
+    using Query;
 
-    public record OsloListRequest(HttpRequest HttpRequest, HttpResponse HttpResponse, LegacyContext LegacyContext, SyndicationContext SyndicationContext, IOptions<ResponseOptions> ResponseOptions) : IRequest<IActionResult>;
+    public sealed record OsloListRequest(FilteringHeader<StreetNameFilter> Filtering, SortingHeader Sorting, IPaginationRequest PaginationRequest) : IRequest<StreetNameListOsloResponse>;
 
-    public abstract class OsloListHandlerBase : IRequestHandler<OsloListRequest, IActionResult>
+    public abstract class OsloListHandlerBase : IRequestHandler<OsloListRequest, StreetNameListOsloResponse>
     {
         protected static Uri? BuildNextUri(PaginationInfo paginationInfo, string nextUrlBase)
         {
@@ -26,6 +23,6 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
                 : null;
         }
 
-        public abstract Task<IActionResult> Handle(OsloListRequest request, CancellationToken cancellationToken);
+        public abstract Task<StreetNameListOsloResponse> Handle(OsloListRequest request, CancellationToken cancellationToken);
     }
 }

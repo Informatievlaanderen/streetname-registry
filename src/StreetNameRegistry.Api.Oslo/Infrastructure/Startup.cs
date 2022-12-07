@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Configuration;
+    using FeatureToggles;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -17,6 +18,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Microsoft.Extensions.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Microsoft.OpenApi.Models;
     using Modules;
 
@@ -46,6 +48,8 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
             var baseUrlForExceptions = baseUrl.EndsWith("/")
                 ? baseUrl[..^1]
                 : baseUrl;
+
+            var useProjectionsV2Toggle = new UseProjectionsV2Toggle(false);
 
             services
                 .ConfigureDefaultForApi<Startup>(new StartupConfigureOptions
@@ -98,14 +102,18 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
                         }
                     }
                 })
-                .Configure<ResponseOptions>(_configuration);
+                .Configure<ResponseOptions>(_configuration)
+                .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
+                .AddSingleton(c =>
+                {
+                    useProjectionsV2Toggle = new UseProjectionsV2Toggle(c.GetRequiredService<IOptions<FeatureToggleOptions>>().Value.UseProjectionsV2);
+                    return useProjectionsV2Toggle;
+                });
 
-            var useProjectionsV2Toggle = _configuration.GetFeatureToggle(FeatureToggleOptions.ConfigurationKey);
-            
             var containerBuilder = new ContainerBuilder();
             containerBuilder
                 .RegisterModule(new ApiModule(_configuration, services, _loggerFactory))
-                .RegisterModule(new MediatRModule(useProjectionsV2Toggle));
+                .RegisterModule(new MediatRModule(useProjectionsV2Toggle.FeatureEnabled));
             _applicationContainer = containerBuilder.Build();
 
             return new AutofacServiceProvider(_applicationContainer);

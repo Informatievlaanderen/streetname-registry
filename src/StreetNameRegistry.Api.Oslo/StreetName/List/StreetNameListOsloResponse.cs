@@ -4,6 +4,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using Abstractions.Infrastructure.Options;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
@@ -34,6 +36,12 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
         [DataMember(Name = "Volgende", Order = 2, EmitDefaultValue = false)]
         [JsonProperty(Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Uri? Volgende { get; set; }
+
+        [JsonIgnore]
+        internal SortingHeader Sorting { get; set; }
+
+        [JsonIgnore]
+        internal PaginationInfo Pagination { get; set; }
     }
 
     [DataContract(Name = "StraatnaamCollectieItem", Namespace = "")]

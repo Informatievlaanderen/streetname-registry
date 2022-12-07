@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
     using Projections.Legacy.StreetNameList;
     using Projections.Syndication;
 
-    public class StreetNameListOsloQuery : Be.Vlaanderen.Basisregisters.Api.Search.Query<StreetNameListItem, StreetNameFilter>
+    public sealed class StreetNameListOsloQuery : Be.Vlaanderen.Basisregisters.Api.Search.Query<StreetNameListItem, StreetNameFilter>
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
