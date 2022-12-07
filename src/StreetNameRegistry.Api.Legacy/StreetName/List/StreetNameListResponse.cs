@@ -1,15 +1,17 @@
-namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
+namespace StreetNameRegistry.Api.Legacy.StreetName.List
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Infrastructure.Options;
     using Microsoft.Extensions.Options;
-    using Swashbuckle.AspNetCore.Filters;
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Newtonsoft.Json;
+    using Swashbuckle.AspNetCore.Filters;
 
     [DataContract(Name = "StraatnaamCollectie", Namespace = "")]
     public class StreetNameListResponse
@@ -34,6 +36,12 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         [DataMember(Name = "Volgende", Order = 3, EmitDefaultValue = false)]
         [JsonProperty(Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Uri Volgende { get; set; }
+
+        [JsonIgnore]
+        internal SortingHeader Sorting { get; set; }
+
+        [JsonIgnore]
+        internal PaginationInfo Pagination { get; set; }
     }
 
     [DataContract(Name = "StraatnaamCollectieItem", Namespace = "")]

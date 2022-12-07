@@ -1,9 +1,9 @@
-namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
+namespace StreetNameRegistry.Api.Legacy.StreetName.Count
 {
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Swashbuckle.AspNetCore.Filters;
 
-    public class TotalCountResponseExample : IExamplesProvider<TotaalAantalResponse>
+    public sealed class TotalCountResponseExample : IExamplesProvider<TotaalAantalResponse>
     {
         public TotaalAantalResponse GetExamples()
         {

@@ -1,17 +1,17 @@
-namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
+namespace StreetNameRegistry.Api.Legacy.StreetName.Bosa
 {
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
-    using Infrastructure.Options;
-    using Microsoft.Extensions.Options;
-    using Swashbuckle.AspNetCore.Filters;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Be.Vlaanderen.Basisregisters.Utilities;
+    using Infrastructure.Options;
+    using Microsoft.Extensions.Options;
+    using Swashbuckle.AspNetCore.Filters;
 
     [DataContract(Name = "StraatnaamCollectie", Namespace = "")]
     public class StreetNameBosaResponse

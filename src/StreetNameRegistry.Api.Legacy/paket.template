@@ -17,6 +17,7 @@ description StreetName Registry.
 dependencies
   framework: net6.0
     Be.Vlaanderen.Basisregisters.GrAr.Legacy >= LOCKEDVERSION
+    MediatR.Contracts >= LOCKEDVERSION
 
 files
   StreetNameRegistry.Api.Legacy.dll => lib\net6.0

@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Projections.Legacy.StreetNameListV2;
     using Projections.Syndication;
 
-    public class StreetNameListQueryV2 : Query<StreetNameListItemV2, StreetNameFilter>
+    public sealed class StreetNameListQueryV2 : Query<StreetNameListItemV2, StreetNameFilter>
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
