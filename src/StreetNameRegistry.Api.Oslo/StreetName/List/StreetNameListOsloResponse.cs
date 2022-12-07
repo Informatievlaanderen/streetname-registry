@@ -1,12 +1,12 @@
-namespace StreetNameRegistry.Api.Oslo.Abstractions.StreetName.Responses
+namespace StreetNameRegistry.Api.Oslo.StreetName.List
 {
     using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Abstractions.Infrastructure.Options;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
-    using Infrastructure.Options;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using Swashbuckle.AspNetCore.Filters;

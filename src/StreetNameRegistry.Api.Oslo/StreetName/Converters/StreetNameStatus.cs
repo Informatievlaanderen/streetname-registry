@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.Abstractions.Converters
+namespace StreetNameRegistry.Api.Oslo.StreetName.Converters
 {
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
 

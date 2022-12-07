@@ -1,8 +1,7 @@
-namespace StreetNameRegistry.Api.Oslo.Abstractions.StreetName.Query
+namespace StreetNameRegistry.Api.Oslo.StreetName.Query
 {
     using System;
     using System.Linq;
-    using Be.Vlaanderen.Basisregisters.Api.Search;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
@@ -13,7 +12,7 @@ namespace StreetNameRegistry.Api.Oslo.Abstractions.StreetName.Query
     using Projections.Legacy.StreetNameListV2;
     using Projections.Syndication;
 
-    public class StreetNameListOsloQueryV2 : Query<StreetNameListItemV2, StreetNameFilter>
+    public class StreetNameListOsloQueryV2 : Be.Vlaanderen.Basisregisters.Api.Search.Query<StreetNameListItemV2, StreetNameFilter>
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;

@@ -1,12 +1,13 @@
 namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
 {
     using Autofac;
-    using FeatureToggles;
-    using Handlers.Count;
-    using Handlers.Get;
-    using Handlers.List;
     using MediatR;
+    using StreetName.Count;
+    using StreetName.Detail;
     using Module = Autofac.Module;
+    using OsloCountHandlerV2 = StreetName.Count.OsloCountHandlerV2;
+    using OsloListHandler = StreetName.List.OsloListHandler;
+    using OsloListHandlerV2 = StreetName.List.OsloListHandlerV2;
 
     public sealed class MediatRModule : Module
     {
@@ -36,7 +37,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                 builder.RegisterType<OsloListHandlerV2>()
                     .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
-                builder.RegisterType<OsloListHandlerV2>()
+                builder.RegisterType<OsloDetailHandlerV2>()
                     .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
                 builder.RegisterType<OsloCountHandlerV2>()
@@ -48,10 +49,10 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                 builder.RegisterType<OsloListHandler>()
                     .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
-                builder.RegisterType<OsloListHandler>()
+                builder.RegisterType<OsloDetailHandler>()
                     .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
-                builder.RegisterType<OsloListHandler>()
+                builder.RegisterType<OsloCountHandler>()
                     .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
             }

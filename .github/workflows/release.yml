@@ -169,15 +169,6 @@ jobs:
       env:
         SEMVER: ${{ env.RELEASE_VERSION }}
 
-    - name: Upload NuGet package api-oslo-abstractions
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/upload-artifact@v3
-      with:
-        name: nuget-api-oslo-abstractions
-        path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.Abstractions*.nupkg
-      env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
-
     - name: Upload NuGet package api-extract
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
@@ -479,13 +470,6 @@ jobs:
         name: nuget-api-oslo
         path: ~/
 
-    - name: Download NuGet package api-oslo-abstractions
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-api-oslo-abstractions
-        path: ~/
-
     - name: Download NuGet package api-extract
       if: env.RELEASE_VERSION != 'none'
       uses: actions/download-artifact@v3
@@ -514,7 +498,6 @@ jobs:
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.Abstractions.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
@@ -570,13 +553,6 @@ jobs:
 #        name: nuget-api-oslo
 #        path: ~/
 #
-#    - name: Download NuGet package api-oslo-abstractions
-#      if: env.RELEASE_VERSION != 'none'
-#      uses: actions/download-artifact@v3
-#      with:
-#        name: nuget-api-oslo-abstractions
-#        path: ~/
-#
 #    - name: Download NuGet package api-extract
 #      if: env.RELEASE_VERSION != 'none'
 #      uses: actions/download-artifact@v3
@@ -611,7 +587,6 @@ jobs:
 #        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
 #        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
 #        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
-#        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.Abstractions.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
 #        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
 #        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN
 #        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source "github" --api-key $GITHUB_TOKEN

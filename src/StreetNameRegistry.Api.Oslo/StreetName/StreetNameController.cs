@@ -3,13 +3,12 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions.Infrastructure.Options;
-    using Abstractions.StreetName.Responses;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Handlers.Count;
-    using Handlers.Get;
-    using Handlers.List;
+    using Count;
+    using Detail;
+    using List;
     using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -61,7 +60,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
             [FromRoute] int persistentLocalId,
             CancellationToken cancellationToken = default)
         {
-            return await _mediator.Send(new OsloGetRequest(legacyContext, syndicationContext, responseOptions, persistentLocalId), cancellationToken);
+            return await _mediator.Send(new OsloDetailRequest(legacyContext, syndicationContext, responseOptions, persistentLocalId), cancellationToken);
         }
 
         /// <summary>
