@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.FeatureToggles
 {
     using FeatureToggle;
 
-    public class UseProjectionsV2Toggle : IFeatureToggle
+    internal class UseProjectionsV2Toggle : IFeatureToggle
     {
         public bool FeatureEnabled { get; }
 

@@ -3,49 +3,58 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.Api.Search;
-    using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
-    using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
-    using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
+    using Abstractions.Infrastructure.Options;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Converters;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Options;
+    using Projections.Legacy;
     using Projections.Legacy.StreetNameList;
+    using Projections.Syndication;
     using Query;
     using StreetNameRegistry.StreetName;
 
-    public class OsloListHandler : OsloListHandlerBase
+    public sealed class OsloListHandler : OsloListHandlerBase
     {
-        public override async Task<IActionResult> Handle(OsloListRequest request, CancellationToken cancellationToken)
+        private readonly LegacyContext _legacyContext;
+        private readonly SyndicationContext _syndicationContext;
+        private readonly IOptions<ResponseOptions> _responseOptions;
+
+        public OsloListHandler(
+            LegacyContext legacyContext,
+            SyndicationContext syndicationContext,
+            IOptions<ResponseOptions> responseOptions)
         {
-            var filtering = request.HttpRequest.ExtractFilteringRequest<StreetNameFilter>();
-            var sorting = request.HttpRequest.ExtractSortingRequest();
-            var pagination = request.HttpRequest.ExtractPaginationRequest();
+            _legacyContext = legacyContext;
+            _syndicationContext = syndicationContext;
+            _responseOptions = responseOptions;
+        }
 
-            var pagedStreetNames = new StreetNameListOsloQuery(request.LegacyContext, request.SyndicationContext)
-                .Fetch<StreetNameListItem, StreetNameListItem>(filtering, sorting, pagination);
+        public override async Task<StreetNameListOsloResponse> Handle(OsloListRequest request, CancellationToken cancellationToken)
+        {
+            var pagedStreetNames = new StreetNameListOsloQuery(_legacyContext, _syndicationContext)
+                .Fetch<StreetNameListItem, StreetNameListItem>(request.Filtering, request.Sorting, request.PaginationRequest);
 
-            request.HttpResponse.AddPagedQueryResultHeaders(pagedStreetNames);
-
-            return new OkObjectResult(
+            return
                 new StreetNameListOsloResponse
                 {
                     Straatnamen = await pagedStreetNames
                         .Items
                         .Select(m => new StreetNameListOsloItemResponse(
                             m.PersistentLocalId,
-                            request.ResponseOptions.Value.Naamruimte,
-                            request.ResponseOptions.Value.DetailUrl,
+                            _responseOptions.Value.Naamruimte,
+                            _responseOptions.Value.DetailUrl,
                             GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
                             GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
                             m.Status.ConvertFromStreetNameStatus(),
                             m.VersionTimestamp.ToBelgianDateTimeOffset()))
                         .ToListAsync(cancellationToken),
-                    Volgende = BuildNextUri(pagedStreetNames.PaginationInfo, request.ResponseOptions.Value.VolgendeUrl),
-                    Context = request.ResponseOptions.Value.ContextUrlList
-                });
+                    Volgende = BuildNextUri(pagedStreetNames.PaginationInfo, _responseOptions.Value.VolgendeUrl),
+                    Context = _responseOptions.Value.ContextUrlList,
+                    Sorting = pagedStreetNames.Sorting,
+                    Pagination = pagedStreetNames.PaginationInfo
+                };
         }
 
         private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItem item, Language? taal)

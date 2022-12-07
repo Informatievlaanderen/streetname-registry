@@ -2,9 +2,12 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions.Infrastructure.Options;
     using Be.Vlaanderen.Basisregisters.Api;
+    using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Count;
     using Detail;
@@ -12,9 +15,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
     using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Options;
-    using Projections.Legacy;
-    using Projections.Syndication;
+    using Query;
     using Swashbuckle.AspNetCore.Filters;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
 
@@ -34,9 +35,6 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         /// <summary>
         /// Vraag een straatnaam op.
         /// </summary>
-        /// <param name="legacyContext"></param>
-        /// <param name="syndicationContext"></param>
-        /// <param name="responseOptions"></param>
         /// <param name="persistentLocalId">De persistente lokale identificator van de straatnaam.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Als de straatnaam gevonden is.</response>
@@ -54,22 +52,19 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         [SwaggerResponseExample(StatusCodes.Status410Gone, typeof(StreetNameGoneResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         public async Task<IActionResult> Get(
-            [FromServices] LegacyContext legacyContext,
-            [FromServices] SyndicationContext syndicationContext,
-            [FromServices] IOptions<ResponseOptions> responseOptions,
             [FromRoute] int persistentLocalId,
             CancellationToken cancellationToken = default)
         {
-            return await _mediator.Send(new OsloDetailRequest(legacyContext, syndicationContext, responseOptions, persistentLocalId), cancellationToken);
+            var result = await _mediator.Send(new OsloDetailRequest(persistentLocalId), cancellationToken);
+
+            return string.IsNullOrWhiteSpace(result.LastEventHash)
+                ? Ok(result)
+                : new OkWithLastObservedPositionAsETagResult(result, result.LastEventHash);
         }
 
         /// <summary>
         /// Vraag een lijst met straatnamen op.
         /// </summary>
-        /// <param name="legacyContext"></param>
-        /// <param name="syndicationContext"></param>
-        /// <param name="taal">Gewenste taal van de respons.</param>
-        /// <param name="responseOptions"></param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Als de opvraging van een lijst met straatnamen gelukt is.</response>
         /// <response code="500">Als er een interne fout is opgetreden.</response>
@@ -80,20 +75,23 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameListOsloResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         public async Task<IActionResult> List(
-            [FromServices] SyndicationContext syndicationContext,
-            [FromServices] LegacyContext legacyContext,
-            [FromServices] IOptions<ResponseOptions> responseOptions,
-            Taal? taal,
             CancellationToken cancellationToken = default)
         {
-            return await _mediator.Send(new OsloListRequest(Request, Response, legacyContext, syndicationContext, responseOptions), cancellationToken);
+            var filtering = Request.ExtractFilteringRequest<StreetNameFilter>();
+            var sorting = Request.ExtractSortingRequest();
+            var pagination = Request.ExtractPaginationRequest();
+
+            var result = await _mediator.Send(new OsloListRequest(filtering, sorting, pagination), cancellationToken);
+            
+            Response.AddPaginationResponse(result.Pagination);
+            Response.AddSortingResponse(result.Sorting);
+
+            return Ok(result);
         }
 
         /// <summary>
         /// Vraag het totaal aantal van straatnamen op.
         /// </summary>
-        /// <param name="legacyContext"></param>
-        /// <param name="syndicationContext"></param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Als de opvraging van het totaal aantal gelukt is.</response>
         /// <response code="500">Als er een interne fout is opgetreden.</response>
@@ -104,11 +102,14 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(TotalCountResponseExample))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         public async Task<IActionResult> Count(
-            [FromServices] LegacyContext legacyContext,
-            [FromServices] SyndicationContext syndicationContext,
             CancellationToken cancellationToken = default)
         {
-            return await _mediator.Send(new OsloCountRequest(Request, legacyContext, syndicationContext), cancellationToken);
+            var filtering = Request.ExtractFilteringRequest<StreetNameFilter>();
+            var sorting = Request.ExtractSortingRequest();
+
+            var result = await _mediator.Send(new OsloCountRequest(filtering, sorting), cancellationToken);
+
+            return Ok(result);
         }
     }
 }

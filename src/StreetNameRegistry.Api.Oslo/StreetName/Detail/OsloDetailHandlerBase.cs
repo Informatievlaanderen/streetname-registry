@@ -1,59 +1,56 @@
-namespace StreetNameRegistry.Api.Oslo.StreetName.Detail;
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Abstractions.Infrastructure.Options;
-using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
-using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Projections.Legacy;
-using Projections.Syndication;
-using Projections.Syndication.Municipality;
-
-public record OsloDetailRequest(LegacyContext LegacyContext, SyndicationContext SyndicationContext, IOptions<ResponseOptions> ResponseOptions, int PersistentLocalId) : IRequest<IActionResult>;
-
-public abstract class OsloDetailHandlerBase : IRequestHandler<OsloDetailRequest, IActionResult>
+namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
 {
-    public async Task<StraatnaamDetailGemeente> GetStraatnaamDetailGemeente(SyndicationContext syndicationContext, string nisCode, string gemeenteDetailUrl, CancellationToken ct)
-    {
-        var municipality = await syndicationContext
-            .MunicipalityLatestItems
-            .AsNoTracking()
-            .OrderByDescending(m => m.Position)
-            .FirstOrDefaultAsync(m => m.NisCode == nisCode, ct);
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using MediatR;
+    using Microsoft.EntityFrameworkCore;
+    using Projections.Syndication;
+    using Projections.Syndication.Municipality;
 
-        var municipalityDefaultName = GetDefaultMunicipalityName(municipality);
-        var gemeente = new StraatnaamDetailGemeente
-        {
-            ObjectId = nisCode,
-            Detail = string.Format(gemeenteDetailUrl, nisCode),
-            Gemeentenaam = new Gemeentenaam(new GeografischeNaam(municipalityDefaultName.Value, municipalityDefaultName.Key))
-        };
-        return gemeente;
-    }
+    public sealed record OsloDetailRequest(int PersistentLocalId) : IRequest<StreetNameOsloResponse>;
 
-    private static KeyValuePair<Taal, string> GetDefaultMunicipalityName(MunicipalityLatestItem? municipality)
+    public abstract class OsloDetailHandlerBase : IRequestHandler<OsloDetailRequest, StreetNameOsloResponse>
     {
-        switch (municipality?.PrimaryLanguage)
+        public async Task<StraatnaamDetailGemeente> GetStraatnaamDetailGemeente(SyndicationContext syndicationContext, string nisCode, string gemeenteDetailUrl, CancellationToken ct)
         {
-            default:
-            case null:
-            case Taal.NL:
-                return new KeyValuePair<Taal, string>(Taal.NL, municipality?.NameDutch ?? string.Empty);
-            case Taal.FR:
-                return new KeyValuePair<Taal, string>(Taal.FR, municipality.NameFrench ?? string.Empty);
-            case Taal.DE:
-                return new KeyValuePair<Taal, string>(Taal.DE, municipality.NameGerman ?? string.Empty);
-            case Taal.EN:
-                return new KeyValuePair<Taal, string>(Taal.EN, municipality.NameEnglish ?? string.Empty);
+            var municipality = await syndicationContext
+                .MunicipalityLatestItems
+                .AsNoTracking()
+                .OrderByDescending(m => m.Position)
+                .FirstOrDefaultAsync(m => m.NisCode == nisCode, ct);
+
+            var municipalityDefaultName = GetDefaultMunicipalityName(municipality);
+            var gemeente = new StraatnaamDetailGemeente
+            {
+                ObjectId = nisCode,
+                Detail = string.Format(gemeenteDetailUrl, nisCode),
+                Gemeentenaam = new Gemeentenaam(new GeografischeNaam(municipalityDefaultName.Value, municipalityDefaultName.Key))
+            };
+            return gemeente;
         }
-    }
 
-    public abstract Task<IActionResult> Handle(OsloDetailRequest request, CancellationToken cancellationToken);
+        private static KeyValuePair<Taal, string> GetDefaultMunicipalityName(MunicipalityLatestItem? municipality)
+        {
+            switch (municipality?.PrimaryLanguage)
+            {
+                default:
+                case null:
+                case Taal.NL:
+                    return new KeyValuePair<Taal, string>(Taal.NL, municipality?.NameDutch ?? string.Empty);
+                case Taal.FR:
+                    return new KeyValuePair<Taal, string>(Taal.FR, municipality.NameFrench ?? string.Empty);
+                case Taal.DE:
+                    return new KeyValuePair<Taal, string>(Taal.DE, municipality.NameGerman ?? string.Empty);
+                case Taal.EN:
+                    return new KeyValuePair<Taal, string>(Taal.EN, municipality.NameEnglish ?? string.Empty);
+            }
+        }
+
+        public abstract Task<StreetNameOsloResponse> Handle(OsloDetailRequest request, CancellationToken cancellationToken);
+    }
 }
