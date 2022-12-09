@@ -1,9 +1,16 @@
 namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
 {
+    using Abstractions.Infrastructure.Options;
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using FeatureToggles;
     using MediatR;
+    using Microsoft.Extensions.Options;
+    using Projections.Legacy;
+    using Projections.Syndication;
     using StreetName.Count;
     using StreetName.Detail;
+    using StreetName.List;
     using Module = Autofac.Module;
     using OsloCountHandlerV2 = StreetName.Count.OsloCountHandlerV2;
     using OsloListHandler = StreetName.List.OsloListHandler;
@@ -11,13 +18,6 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
 
     public sealed class MediatRModule : Module
     {
-        private readonly bool _useProjectionsV2Toggle;
-
-        public MediatRModule(bool useProjectionsV2Toggle)
-        {
-            _useProjectionsV2Toggle = useProjectionsV2Toggle;
-        }
-
         protected override void Load(ContainerBuilder builder)
         {
             builder
@@ -32,30 +32,58 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                 return type => ctx.Resolve(type);
             });
 
-            if (_useProjectionsV2Toggle)
+            builder.Register(c =>
             {
-                builder.RegisterType<OsloListHandlerV2>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-                builder.RegisterType<OsloDetailHandlerV2>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-                builder.RegisterType<OsloCountHandlerV2>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-            }
-            else
+                if (c.Resolve<UseProjectionsV2Toggle>().FeatureEnabled)
+                {
+                    return (IRequestHandler<OsloListRequest, StreetNameListOsloResponse>)
+                        new OsloListHandlerV2(
+                            c.Resolve<LegacyContext>(),
+                            c.Resolve<SyndicationContext>(),
+                            c.Resolve<IOptions<ResponseOptions>>());
+                }
+
+                return (IRequestHandler<OsloListRequest, StreetNameListOsloResponse>)
+                    new OsloListHandler(
+                        c.Resolve<LegacyContext>(),
+                        c.Resolve<SyndicationContext>(),
+                        c.Resolve<IOptions<ResponseOptions>>());
+            }).InstancePerLifetimeScope();
+
+            builder.Register(c =>
             {
-                builder.RegisterType<OsloListHandler>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-                builder.RegisterType<OsloDetailHandler>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-                builder.RegisterType<OsloCountHandler>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-            }
+                if (c.Resolve<UseProjectionsV2Toggle>().FeatureEnabled)
+                {
+                    return (IRequestHandler<OsloDetailRequest, StreetNameOsloResponse>)
+                        new OsloDetailHandlerV2(
+                            c.Resolve<LegacyContext>(),
+                            c.Resolve<SyndicationContext>(),
+                            c.Resolve<IOptions<ResponseOptions>>());
+                }
+
+                return (IRequestHandler<OsloDetailRequest, StreetNameOsloResponse>)
+                    new OsloDetailHandler(
+                        c.Resolve<LegacyContext>(),
+                        c.Resolve<SyndicationContext>(),
+                        c.Resolve<IOptions<ResponseOptions>>());
+            }).InstancePerLifetimeScope();
+
+
+            builder.Register(c =>
+            {
+                if (c.Resolve<UseProjectionsV2Toggle>().FeatureEnabled)
+                {
+                    return (IRequestHandler<OsloCountRequest, TotaalAantalResponse>)
+                        new OsloCountHandlerV2(
+                            c.Resolve<LegacyContext>(),
+                            c.Resolve<SyndicationContext>());
+                }
+
+                return (IRequestHandler<OsloCountRequest, TotaalAantalResponse>)
+                    new OsloCountHandler(
+                        c.Resolve<LegacyContext>(),
+                        c.Resolve<SyndicationContext>());
+            }).InstancePerLifetimeScope();
         }
     }
 }

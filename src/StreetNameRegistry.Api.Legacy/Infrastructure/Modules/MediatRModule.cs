@@ -1,7 +1,13 @@
 namespace StreetNameRegistry.Api.Legacy.Infrastructure.Modules
 {
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using FeatureToggles;
     using MediatR;
+    using Microsoft.Extensions.Options;
+    using Options;
+    using Projections.Legacy;
+    using Projections.Syndication;
     using StreetName.Bosa;
     using StreetName.Count;
     using StreetName.Detail;
@@ -11,13 +17,6 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure.Modules
 
     public sealed class MediatRModule : Module
     {
-        private readonly bool _useProjectionsV2Toggle;
-
-        public MediatRModule(bool useProjectionsV2Toggle)
-        {
-            _useProjectionsV2Toggle = useProjectionsV2Toggle;
-        }
-
         protected override void Load(ContainerBuilder builder)
         {
             builder
@@ -36,36 +35,76 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure.Modules
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
-            if (_useProjectionsV2Toggle)
+            builder.Register(c =>
             {
-                builder.RegisterType<ListHandlerV2>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-                builder.RegisterType<DetailHandlerV2>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-                builder.RegisterType<CountHandlerV2>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-                builder.RegisterType<BosaHandlerV2>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-            }
-            else
+                if (c.Resolve<UseProjectionsV2Toggle>().FeatureEnabled)
+                {
+                    return (IRequestHandler<ListRequest, StreetNameListResponse>)
+                        new ListHandlerV2(
+                            c.Resolve<LegacyContext>(),
+                            c.Resolve<SyndicationContext>(),
+                            c.Resolve<IOptions<ResponseOptions>>());
+                }
+
+                return (IRequestHandler<ListRequest, StreetNameListResponse>)
+                    new ListHandler(
+                        c.Resolve<LegacyContext>(),
+                        c.Resolve<SyndicationContext>(),
+                        c.Resolve<IOptions<ResponseOptions>>());
+            }).InstancePerLifetimeScope();
+
+            builder.Register(c =>
             {
-                builder.RegisterType<ListHandler>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-                builder.RegisterType<DetailHandler>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-                builder.RegisterType<CountHandler>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-                builder.RegisterType<BosaHandler>()
-                    .AsImplementedInterfaces()
-                    .InstancePerLifetimeScope();
-            }
+                if (c.Resolve<UseProjectionsV2Toggle>().FeatureEnabled)
+                {
+                    return (IRequestHandler<DetailRequest, StreetNameResponse>)
+                        new DetailHandlerV2(
+                            c.Resolve<LegacyContext>(),
+                            c.Resolve<SyndicationContext>(),
+                            c.Resolve<IOptions<ResponseOptions>>());
+                }
+
+                return (IRequestHandler<DetailRequest, StreetNameResponse>)
+                    new DetailHandler(
+                        c.Resolve<LegacyContext>(),
+                        c.Resolve<SyndicationContext>(),
+                        c.Resolve<IOptions<ResponseOptions>>());
+            }).InstancePerLifetimeScope();
+
+
+            builder.Register(c =>
+            {
+                if (c.Resolve<UseProjectionsV2Toggle>().FeatureEnabled)
+                {
+                    return (IRequestHandler<CountRequest, TotaalAantalResponse>)
+                        new CountHandlerV2(
+                            c.Resolve<LegacyContext>(),
+                            c.Resolve<SyndicationContext>());
+                }
+
+                return (IRequestHandler<CountRequest, TotaalAantalResponse>)
+                    new CountHandler(
+                        c.Resolve<LegacyContext>(),
+                        c.Resolve<SyndicationContext>());
+            }).InstancePerLifetimeScope();
+
+            builder.Register(c =>
+            {
+                if (c.Resolve<UseProjectionsV2Toggle>().FeatureEnabled)
+                {
+                    return (IRequestHandler<BosaStreetNameRequest, StreetNameBosaResponse>)
+                        new BosaHandlerV2(
+                            c.Resolve<LegacyContext>(),
+                            c.Resolve<SyndicationContext>(),
+                            c.Resolve<IOptions<ResponseOptions>>());
+                }
+
+                return (IRequestHandler<BosaStreetNameRequest, StreetNameBosaResponse>)
+                    new BosaHandler(
+                        c.Resolve<LegacyContext>(),
+                        c.Resolve<SyndicationContext>(),
+                        c.Resolve<IOptions<ResponseOptions>>());
+            }).InstancePerLifetimeScope();
         }
     }
 }

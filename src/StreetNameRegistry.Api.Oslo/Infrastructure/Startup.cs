@@ -105,15 +105,12 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
                 .Configure<ResponseOptions>(_configuration)
                 .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
                 .AddSingleton(c =>
-                {
-                    useProjectionsV2Toggle = new UseProjectionsV2Toggle(c.GetRequiredService<IOptions<FeatureToggleOptions>>().Value.UseProjectionsV2);
-                    return useProjectionsV2Toggle;
-                });
+                    new UseProjectionsV2Toggle(c.GetRequiredService<IOptions<FeatureToggleOptions>>().Value.UseProjectionsV2));
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder
                 .RegisterModule(new ApiModule(_configuration, services, _loggerFactory))
-                .RegisterModule(new MediatRModule(useProjectionsV2Toggle.FeatureEnabled));
+                .RegisterModule(new MediatRModule());
             _applicationContainer = containerBuilder.Build();
 
             return new AutofacServiceProvider(_applicationContainer);
