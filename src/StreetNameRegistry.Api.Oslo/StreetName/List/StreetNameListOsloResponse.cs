@@ -37,9 +37,11 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
         [JsonProperty(Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Uri? Volgende { get; set; }
 
+        [IgnoreDataMember]
         [JsonIgnore]
         internal SortingHeader Sorting { get; set; }
 
+        [IgnoreDataMember]
         [JsonIgnore]
         internal PaginationInfo Pagination { get; set; }
     }
