@@ -68,6 +68,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
         [JsonProperty(Required = Required.DisallowNull)]
         public StraatnaamStatus StraatnaamStatus { get; set; }
 
+        [IgnoreDataMember]
         [JsonIgnore]
         internal string? LastEventHash { get; set; }
 

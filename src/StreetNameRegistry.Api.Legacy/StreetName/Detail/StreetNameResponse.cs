@@ -54,6 +54,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Detail
         [JsonProperty(Required = Required.DisallowNull)]
         public StraatnaamStatus StraatnaamStatus { get; set; }
 
+        [IgnoreDataMember]
         [JsonIgnore]
         internal string? LastEventHash { get; }
 
