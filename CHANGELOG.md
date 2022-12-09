@@ -1,3 +1,19 @@
+# [3.15.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.14.2...v3.15.0) (2022-12-09)
+
+
+### Bug Fixes
+
+* include production in release.yml ([81ed7ad](https://github.com/informatievlaanderen/streetname-registry/commit/81ed7adb5f760ee21ac9c1c90f32a61fcfb99222))
+* reduce cognitive complexity ([6b7e509](https://github.com/informatievlaanderen/streetname-registry/commit/6b7e509ab6de0747dc196864d74e97c67a95b1e3))
+* remove unused workflows ([1b30296](https://github.com/informatievlaanderen/streetname-registry/commit/1b3029603145cc54fda04f9e5fc8d929f9b7db59))
+* use featuretoggle for oslo handlers ([26fa91c](https://github.com/informatievlaanderen/streetname-registry/commit/26fa91cdc596e2918cce5105e8469fce34519ada))
+* use Oslo handlers ([afd0d31](https://github.com/informatievlaanderen/streetname-registry/commit/afd0d31b84eb618f66c8577b61ebb2502033393a))
+
+
+### Features
+
+* add mediatr in api.legacy ([6e75a60](https://github.com/informatievlaanderen/streetname-registry/commit/6e75a607cb905533491dc2222d9ad9a5654e386c))
+
 ## [3.14.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.14.1...v3.14.2) (2022-11-03)
 
 
