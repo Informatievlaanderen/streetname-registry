@@ -49,8 +49,6 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure
                 ? baseUrl.Substring(0, baseUrl.Length - 1)
                 : baseUrl;
 
-            var useProjectionsV2Toggle = new UseProjectionsV2Toggle(false);
-
             services
                 .ConfigureDefaultForApi<Startup>(new StartupConfigureOptions
                 {
@@ -102,16 +100,12 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure
                 })
                 .Configure<ResponseOptions>(_configuration)
                 .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
-                .AddSingleton(c =>
-                {
-                    useProjectionsV2Toggle = new UseProjectionsV2Toggle(c.GetRequiredService<IOptions<FeatureToggleOptions>>().Value.UseProjectionsV2);
-                    return useProjectionsV2Toggle;
-                });
+                .AddSingleton(c => new UseProjectionsV2Toggle(c.GetRequiredService<IOptions<FeatureToggleOptions>>().Value.UseProjectionsV2));
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder
                 .RegisterModule(new ApiModule(_configuration, services, _loggerFactory))
-                .RegisterModule(new MediatRModule(useProjectionsV2Toggle.FeatureEnabled));
+                .RegisterModule(new MediatRModule());
 
             _applicationContainer = containerBuilder.Build();
 
