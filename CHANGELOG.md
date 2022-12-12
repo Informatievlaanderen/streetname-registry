@@ -1,3 +1,11 @@
+## [3.15.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.15.0...v3.15.1) (2022-12-12)
+
+
+### Bug Fixes
+
+* hide ignore properties for docs ([0026ed0](https://github.com/informatievlaanderen/streetname-registry/commit/0026ed0f46dcecc9035e03fea4ad49d58d4ae9c8))
+* registration mediatr ([ee5ce96](https://github.com/informatievlaanderen/streetname-registry/commit/ee5ce964e73e2eaffadad26fc4c8b5e815df22a4))
+
 # [3.15.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.14.2...v3.15.0) (2022-12-09)
 
 
