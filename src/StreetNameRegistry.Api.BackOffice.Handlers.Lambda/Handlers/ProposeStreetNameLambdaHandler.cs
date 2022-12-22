@@ -51,8 +51,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
 
             // Insert PersistentLocalId with MunicipalityId
             await _backOfficeContext
-                .MunicipalityIdByPersistentLocalId
-                .AddAsync(new MunicipalityIdByPersistentLocalId(persistentLocalId, request.MunicipalityPersistentLocalId()), cancellationToken);
+                .AddIdempotentMunicipalityStreetNameIdRelation(persistentLocalId, request.MunicipalityPersistentLocalId(), cancellationToken);
             await _backOfficeContext.SaveChangesAsync(cancellationToken);
 
             var lastHash = await GetStreetNameHash(request.MunicipalityPersistentLocalId(), persistentLocalId, cancellationToken);

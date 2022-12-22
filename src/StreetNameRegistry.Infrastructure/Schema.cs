@@ -13,6 +13,7 @@ namespace StreetNameRegistry.Infrastructure
         public const string Wms = "wms.streetname";
         public const string MigrateStreetName = "StreetNameRegistryMigration";
         public const string BackOffice = "StreetNameRegistryBackOffice";
+        public const string BackOfficeProjections = "StreetNameRegistryBackOfficeProjections";
         public const string Producer = "StreetNameRegistryProducer";
         public const string ProducerSnapshotOslo = "StreetNameRegistryProducerSnapshotOslo";
     }
@@ -28,6 +29,7 @@ namespace StreetNameRegistry.Infrastructure
         public const string Wfs = "__EFMigrationsHistoryWfsStreetName";
         public const string Wms = "__EFMigrationsHistoryWmsStreetName";
         public const string BackOffice = "__EFMigrationsHistoryBackOffice";
+        public const string BackOfficeProjections = "__EFMigrationsHistoryBackOfficeProjections";
         public const string Producer = "__EFMigrationsHistoryProducer";
         public const string ProducerSnapshotOslo = "__EFMigrationsHistoryProducerSnapshotOslo";
     }

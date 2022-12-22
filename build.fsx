@@ -57,6 +57,7 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Producer.Snapshot.Oslo"
     "StreetNameRegistry.Consumer"
     "StreetNameRegistry.Migrator.StreetName"
+    "StreetNameRegistry.Projections.BackOffice"
     "StreetNameRegistry.Projections.Legacy"
     "StreetNameRegistry.Projections.Extract"
     "StreetNameRegistry.Projections.LastChangedList"
@@ -113,6 +114,9 @@ Target.create "PushContainer_Migrator_StreetName" (fun _ -> push "migrator-stree
 Target.create "Containerize_ProjectionsSyndication" (fun _ -> containerize "StreetNameRegistry.Projections.Syndication" "projections-syndication")
 Target.create "PushContainer_ProjectionsSyndication" (fun _ -> push "projections-syndication")
 
+Target.create "Containerize_ProjectionsBackOffice" (fun _ -> containerize "StreetNameRegistry.Projections.BackOffice" "projections-backoffice")
+Target.create "PushContainer_ProjectionsBackOffice" (fun _ -> push "projections-backoffice")
+
 // --------------------------------------------------------------------------------
 
 Target.create "Build" ignore
@@ -153,6 +157,7 @@ Target.create "Push" ignore
   ==> "Containerize_Producer_Snapshot_Oslo"
   ==> "Containerize_Migrator_StreetName"
   ==> "Containerize_ProjectionsSyndication"
+  ==> "Containerize_ProjectionsBackOffice"
   ==> "Containerize"
 // Possibly add more projects to containerize here
 
@@ -169,6 +174,7 @@ Target.create "Push" ignore
   ==> "PushContainer_Producer_Snapshot_Oslo"
   ==> "PushContainer_Migrator_StreetName"
   ==> "PushContainer_ProjectionsSyndication"
+  ==> "PushContainer_ProjectionsBackOffice"
   ==> "Push"
 // Possibly add more projects to push here
 
