@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Tests.BackOffice
 {
     using System;
+    using System.Threading.Tasks;
     using global::AutoFixture;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
@@ -8,12 +9,17 @@ namespace StreetNameRegistry.Tests.BackOffice
 
     public sealed class TestBackOfficeContext : BackOfficeContext
     {
+        private bool _dontDispose = false;
+
         // This needs to be here to please EF
         public TestBackOfficeContext() { }
 
         // This needs to be DbContextOptions<T> for Autofac!
-        public TestBackOfficeContext(DbContextOptions<BackOfficeContext> options)
-            : base(options) { }
+        public TestBackOfficeContext(DbContextOptions<BackOfficeContext> options, bool dontDispose = false)
+            : base(options)
+        {
+            _dontDispose = dontDispose;
+        }
 
         public MunicipalityIdByPersistentLocalId AddMunicipalityIdByPersistentLocalIdToFixture(int? persistentLocalId = null, Guid? municipalityId = null)
         {
@@ -31,14 +37,31 @@ namespace StreetNameRegistry.Tests.BackOffice
             SaveChanges();
             return item;
         }
+
+        public override ValueTask DisposeAsync()
+        {
+            if (_dontDispose)
+            {
+                return new ValueTask(Task.CompletedTask);
+            }
+
+            return base.DisposeAsync();
+        }
     }
 
     public sealed class FakeBackOfficeContextFactory : IDesignTimeDbContextFactory<TestBackOfficeContext>
     {
+        private bool _dontDispose;
+
+        public FakeBackOfficeContextFactory(bool dontDispose = false)
+        {
+            _dontDispose = dontDispose;
+        }
+
         public TestBackOfficeContext CreateDbContext(params string[] args)
         {
             var builder = new DbContextOptionsBuilder<BackOfficeContext>().UseInMemoryDatabase(Guid.NewGuid().ToString());
-            return new TestBackOfficeContext(builder.Options);
+            return new TestBackOfficeContext(builder.Options, _dontDispose);
         }
     }
 }

@@ -2,6 +2,8 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
 {
     using System;
     using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
@@ -15,6 +17,18 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
             : base(options) { }
 
         public DbSet<MunicipalityIdByPersistentLocalId> MunicipalityIdByPersistentLocalId { get; set; }
+
+        public async Task<MunicipalityIdByPersistentLocalId> AddIdempotentMunicipalityStreetNameIdRelation(int streetNamePersistentLocalId, Guid municipalityId, CancellationToken cancellationToken)
+        {
+            var relation = await MunicipalityIdByPersistentLocalId.FindAsync(new object?[] { streetNamePersistentLocalId }, cancellationToken: cancellationToken);
+            if (relation is null)
+            {
+                relation = new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId);
+                await MunicipalityIdByPersistentLocalId.AddAsync(relation, cancellationToken);
+            }
+
+            return relation;
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
