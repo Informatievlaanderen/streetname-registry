@@ -1,3 +1,10 @@
+# [3.16.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.15.1...v3.16.0) (2022-12-23)
+
+
+### Features
+
+* add backoffice projection ([426f787](https://github.com/informatievlaanderen/streetname-registry/commit/426f787d8320903a4381dc9444a2f2f59af21dd2))
+
 ## [3.15.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.15.0...v3.15.1) (2022-12-12)
 
 
