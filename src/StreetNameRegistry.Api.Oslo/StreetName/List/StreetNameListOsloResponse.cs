@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
-    using Microsoft.Extensions.Options;
+    using global::Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using Swashbuckle.AspNetCore.Filters;
 

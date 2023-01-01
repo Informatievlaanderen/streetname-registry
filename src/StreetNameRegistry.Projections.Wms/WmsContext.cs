@@ -2,8 +2,8 @@ namespace StreetNameRegistry.Projections.Wms
 {
     using System;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
+    using global::Microsoft.EntityFrameworkCore;
     using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
 
     public class WmsContext : RunnerDbContext<WmsContext>
     {

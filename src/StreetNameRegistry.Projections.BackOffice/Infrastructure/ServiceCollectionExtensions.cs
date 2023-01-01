@@ -3,11 +3,11 @@ namespace StreetNameRegistry.Projections.BackOffice.Infrastructure
     using System;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
-    using Microsoft.Data.SqlClient;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
+    using global::Microsoft.Data.SqlClient;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.DependencyInjection;
+    using global::Microsoft.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
 
     public static class ServiceCollectionExtensions

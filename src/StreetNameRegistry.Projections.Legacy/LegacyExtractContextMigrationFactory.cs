@@ -1,8 +1,8 @@
 namespace StreetNameRegistry.Projections.Legacy
 {
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
+    using global::Microsoft.EntityFrameworkCore;
     using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
 
     public sealed class LegacyContextMigrationFactory : RunnerDbContextMigrationFactory<LegacyContext>
     {

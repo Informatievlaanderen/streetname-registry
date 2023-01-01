@@ -6,9 +6,9 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Converters;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Options;
+    using global::Microsoft.AspNetCore.Http;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Options;
     using Projections.Legacy;
     using Projections.Syndication;
 

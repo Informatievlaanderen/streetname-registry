@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Projector.Caches
     using System.Threading.Tasks;
     using System.Threading;
     using Be.Vlaanderen.Basisregisters.Api;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList.Microsoft;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;

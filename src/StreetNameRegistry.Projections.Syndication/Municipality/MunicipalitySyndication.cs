@@ -1,8 +1,8 @@
 namespace StreetNameRegistry.Projections.Syndication.Municipality
 {
     using System;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Infrastructure;
 
     public sealed class MunicipalitySyndicationItem

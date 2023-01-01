@@ -2,8 +2,8 @@ namespace StreetNameRegistry.Projections.Legacy
 {
     using System;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
+    using global::Microsoft.EntityFrameworkCore;
     using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
     using StreetNameList;
     using StreetNameListV2;
     using StreetNameSyndication;

@@ -11,9 +11,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Be.Vlaanderen.Basisregisters.Utilities;
     using Bosa;
     using Convertors;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Options;
     using Infrastructure.Options;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Options;
     using Projections.Legacy;
     using Projections.Syndication;
     using Projections.Syndication.Municipality;

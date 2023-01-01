@@ -7,19 +7,19 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
+    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Configuration;
     using FeatureToggles;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Mvc.ApiExplorer;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Diagnostics.HealthChecks;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
-    using Microsoft.OpenApi.Models;
+    using global::Microsoft.AspNetCore.Builder;
+    using global::Microsoft.AspNetCore.Hosting;
+    using global::Microsoft.AspNetCore.Mvc.ApiExplorer;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.DependencyInjection;
+    using global::Microsoft.Extensions.Diagnostics.HealthChecks;
+    using global::Microsoft.Extensions.Hosting;
+    using global::Microsoft.Extensions.Logging;
+    using global::Microsoft.Extensions.Options;
+    using global::Microsoft.OpenApi.Models;
     using Modules;
 
     /// <summary>Represents the startup process for the application.</summary>

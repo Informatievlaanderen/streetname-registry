@@ -11,7 +11,6 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.GrAr.Oslo.SnapshotProducer;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Be.Vlaanderen.Basisregisters.Projector;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
     using Be.Vlaanderen.Basisregisters.Projector.Modules;
@@ -19,6 +18,8 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure.Modules
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
+    using SqlStreamStoreAutofac = Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
+    using SqlStreamStoreMicrosoft = Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Microsoft;
 
     public class ApiModule : Module
     {
@@ -57,7 +58,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure.Modules
                         typeof(DomainAssemblyMarker).Assembly,
                         EventsJsonSerializerSettingsProvider.CreateSerializerSettings()))
 
-                .RegisterModule<EnvelopeModule>()
+                .RegisterModule<SqlStreamStoreAutofac.EnvelopeModule>()
 
                 .RegisterEventstreamModule(_configuration)
 

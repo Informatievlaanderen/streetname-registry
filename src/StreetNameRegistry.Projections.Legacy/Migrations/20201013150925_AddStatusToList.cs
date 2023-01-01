@@ -1,6 +1,6 @@
 namespace StreetNameRegistry.Projections.Legacy.Migrations
 {
-    using Microsoft.EntityFrameworkCore.Migrations;
+    using global::Microsoft.EntityFrameworkCore.Migrations;
     using Infrastructure;
     using StreetNameDetail;
     using StreetNameList;

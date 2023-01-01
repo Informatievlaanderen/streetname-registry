@@ -2,10 +2,10 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 {
     using System;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.Microsoft.MigrationExtensions;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Municipality;
     using NodaTime;
 

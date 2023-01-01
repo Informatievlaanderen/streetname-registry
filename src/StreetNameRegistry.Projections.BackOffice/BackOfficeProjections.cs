@@ -3,7 +3,7 @@ namespace StreetNameRegistry.Projections.BackOffice
     using Api.BackOffice.Abstractions;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
-    using Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore;
     using Municipality.Events;
 
     public sealed class BackOfficeProjections : ConnectedProjection<BackOfficeProjectionsContext>

@@ -3,8 +3,8 @@ namespace StreetNameRegistry.Projections.BackOffice
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
+    using global::Microsoft.Extensions.Hosting;
+    using global::Microsoft.Extensions.Logging;
 
     public sealed class ProjectorRunner : BackgroundService
     {

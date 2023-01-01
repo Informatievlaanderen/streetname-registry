@@ -13,10 +13,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Sync
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Convertors;
+    using global::Microsoft.Extensions.Options;
+    using global::Microsoft.SyndicationFeed;
+    using global::Microsoft.SyndicationFeed.Atom;
     using Infrastructure.Options;
-    using Microsoft.Extensions.Options;
-    using Microsoft.SyndicationFeed;
-    using Microsoft.SyndicationFeed.Atom;
     using Municipality;
     using Query;
     using Swashbuckle.AspNetCore.Filters;

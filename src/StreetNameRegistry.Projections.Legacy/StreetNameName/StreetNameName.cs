@@ -1,9 +1,9 @@
 namespace StreetNameRegistry.Projections.Legacy.StreetNameName
 {
     using System;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using NodaTime;
     using StreetName;
 

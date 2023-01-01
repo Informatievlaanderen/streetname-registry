@@ -2,9 +2,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Bosa
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using global::Microsoft.Extensions.Options;
     using Infrastructure.Options;
     using MediatR;
-    using Microsoft.Extensions.Options;
     using Projections.Legacy;
     using Projections.Syndication;
     using Query;

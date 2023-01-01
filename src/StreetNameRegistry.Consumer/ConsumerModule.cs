@@ -3,31 +3,59 @@ namespace StreetNameRegistry.Consumer
     using System;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
-    using Microsoft.Data.SqlClient;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
+    using global::Microsoft.Data.SqlClient;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.DependencyInjection;
+    using global::Microsoft.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
 
-    public class ConsumerModule : Module
+    public class ConsumerModule : Module, IServiceCollectionModule
     {
+        private readonly IConfiguration _configuration;
+        private readonly IServiceCollection _services;
+        private readonly ILoggerFactory _loggerFactory;
+
         public ConsumerModule(
             IConfiguration configuration,
             IServiceCollection services,
             ILoggerFactory loggerFactory)
         {
-            var logger = loggerFactory.CreateLogger<ConsumerModule>();
-            var connectionString = configuration.GetConnectionString("Consumer");
+            _configuration = configuration;
+            _services = services;
+            _loggerFactory = loggerFactory;
+        }
+
+        protected override void Load(ContainerBuilder builder)
+        {
+            var logger = _loggerFactory.CreateLogger<ConsumerModule>();
+            var connectionString = _configuration.GetConnectionString("Consumer");
 
             var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
             if (hasConnectionString)
             {
-                RunOnSqlServer(configuration, services, loggerFactory, connectionString);
+                RunOnSqlServer(_configuration, _services, _loggerFactory, connectionString);
             }
             else
             {
-                RunInMemoryDb(services, loggerFactory, logger);
+                RunInMemoryDb(_services, _loggerFactory, logger);
+            }
+        }
+
+        public void Load(IServiceCollection services)
+        {
+            var logger = _loggerFactory.CreateLogger<ConsumerModule>();
+            var connectionString = _configuration.GetConnectionString("Consumer");
+
+            var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
+            if (hasConnectionString)
+            {
+                RunOnSqlServer(_configuration, services, _loggerFactory, connectionString);
+            }
+            else
+            {
+                RunInMemoryDb(services, _loggerFactory, logger);
             }
         }
 
@@ -38,12 +66,12 @@ namespace StreetNameRegistry.Consumer
             string backofficeProjectionsConnectionString)
         {
             services
-                .AddScoped(s => new TraceDbConnection<ConsumerContext>(
+                .AddScoped(s => new TraceDbConnection<Microsoft.ConsumerContext>(
                     new SqlConnection(backofficeProjectionsConnectionString),
                     configuration["DataDog:ServiceName"]))
-                .AddDbContext<ConsumerContext>((provider, options) => options
+                .AddDbContext<Microsoft.ConsumerContext>((provider, options) => options
                     .UseLoggerFactory(loggerFactory)
-                    .UseSqlServer(provider.GetRequiredService<TraceDbConnection<ConsumerContext>>(), sqlServerOptions =>
+                    .UseSqlServer(provider.GetRequiredService<TraceDbConnection<Microsoft.ConsumerContext>>(), sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
                         sqlServerOptions.MigrationsHistoryTable(MigrationTables.Consumer, Schema.Consumer);
@@ -56,11 +84,11 @@ namespace StreetNameRegistry.Consumer
             ILogger logger)
         {
             services
-                .AddDbContext<ConsumerContext>(options => options
+                .AddDbContext<Microsoft.ConsumerContext>(options => options
                     .UseLoggerFactory(loggerFactory)
                     .UseInMemoryDatabase(Guid.NewGuid().ToString(), sqlServerOptions => { }));
 
-            logger.LogWarning("Running InMemory for {Context}!", nameof(ConsumerContext));
+            logger.LogWarning("Running InMemory for {Context}!", nameof(Microsoft.ConsumerContext));
         }
     }
 }

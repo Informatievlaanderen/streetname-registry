@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore;
     using Municipality;
     using NodaTime;
     using Projections.Legacy;

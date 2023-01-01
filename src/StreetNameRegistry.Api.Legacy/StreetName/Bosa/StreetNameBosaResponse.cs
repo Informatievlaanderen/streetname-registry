@@ -9,8 +9,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Bosa
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Be.Vlaanderen.Basisregisters.Utilities;
+    using global::Microsoft.Extensions.Options;
     using Infrastructure.Options;
-    using Microsoft.Extensions.Options;
     using Swashbuckle.AspNetCore.Filters;
 
     [DataContract(Name = "StraatnaamCollectie", Namespace = "")]

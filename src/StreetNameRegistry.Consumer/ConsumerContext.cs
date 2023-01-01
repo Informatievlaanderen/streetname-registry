@@ -1,7 +1,7 @@
 namespace StreetNameRegistry.Consumer
 {
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
-    using Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore;
     using Municipality;
     using StreetNameRegistry.Infrastructure;
 

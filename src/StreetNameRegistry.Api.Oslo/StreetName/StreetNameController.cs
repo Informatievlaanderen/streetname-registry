@@ -11,10 +11,10 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Count;
     using Detail;
+    using global::Microsoft.AspNetCore.Http;
+    using global::Microsoft.AspNetCore.Mvc;
     using List;
     using MediatR;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Query;
     using Swashbuckle.AspNetCore.Filters;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;

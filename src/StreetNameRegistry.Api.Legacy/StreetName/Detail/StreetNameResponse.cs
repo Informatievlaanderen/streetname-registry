@@ -9,9 +9,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Detail
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using global::Microsoft.AspNetCore.Http;
+    using global::Microsoft.Extensions.Options;
     using Infrastructure.Options;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using Swashbuckle.AspNetCore.Filters;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;

@@ -3,12 +3,14 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
     using System;
     using Amazon;
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
     using Be.Vlaanderen.Basisregisters.Sqs;
+    using Microsoft.Extensions.DependencyInjection;
     using SqsQueue = Be.Vlaanderen.Basisregisters.Sqs.SqsQueue;
 
-    public sealed class SqsHandlersModule : Module
+    public sealed class SqsHandlersModule : Module, IServiceCollectionModule
     {
         private readonly string _queueUrl;
 
@@ -27,6 +29,13 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
                 .As<ISqsQueue>()
                 .AsSelf()
                 .SingleInstance();
+        }
+
+        public void Load(IServiceCollection services)
+        {
+            services.AddSingleton(_ => new SqsOptions(RegionEndpoint.EUWest1, EventsJsonSerializerSettingsProvider.CreateSerializerSettings()));
+
+            services.AddSingleton<ISqsQueue>(_ => new SqsQueue(_.GetRequiredService<SqsOptions>(), _queueUrl));
         }
     }
 }

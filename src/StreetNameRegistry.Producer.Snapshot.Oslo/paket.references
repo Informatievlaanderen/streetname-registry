@@ -1,11 +1,15 @@
+Autofac.Extensions.DependencyInjection
+
 Be.Vlaanderen.Basisregisters.Api
-Be.Vlaanderen.Basisregisters.EventHandling.Autofac
+Be.Vlaanderen.Basisregisters.EventHandling.Microsoft
+Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft
 Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql
 Be.Vlaanderen.Basisregisters.GrAr.Legacy
 Be.Vlaanderen.Basisregisters.GrAr.Oslo
 Be.Vlaanderen.BasisRegisters.MessageHandling.Kafka.Producer
-Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner
+Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.Microsoft
 Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac
+Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Microsoft
 Be.Vlaanderen.Basisregisters.Projector
 
 Microsoft.Extensions.DependencyInjection

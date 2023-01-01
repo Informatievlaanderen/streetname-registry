@@ -4,3 +4,4 @@ SourceLink.Embed.AllSourceFiles
 SourceLink.Copy.PdbFiles
 
 Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency
+Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency.Microsoft

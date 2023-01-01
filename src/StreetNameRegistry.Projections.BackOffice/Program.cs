@@ -5,24 +5,24 @@ namespace StreetNameRegistry.Projections.BackOffice
     using System.Threading;
     using System.Threading.Tasks;
     using Api.BackOffice.Abstractions;
-    using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.EventHandling;
-    using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
+    using Be.Vlaanderen.Basisregisters.EventHandling.Microsoft;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Microsoft;
     using Be.Vlaanderen.Basisregisters.Projector;
-    using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
+    using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjectionsMicrosoft;
     using Be.Vlaanderen.Basisregisters.Projector.Modules;
     using Destructurama;
+    using global::Microsoft.Data.SqlClient;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.DependencyInjection;
+    using global::Microsoft.Extensions.Hosting;
+    using global::Microsoft.Extensions.Logging;
     using Infrastructure;
-    using Microsoft.Data.SqlClient;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
     using Serilog;
     using Serilog.Debugging;
     using Serilog.Extensions.Logging;
@@ -76,11 +76,24 @@ namespace StreetNameRegistry.Projections.BackOffice
                 {
                     var loggerFactory = new SerilogLoggerFactory(Log.Logger);
 
+                    services.RegisterProjections<Microsoft.BackOfficeProjections, Microsoft.BackOfficeProjectionsContext>(
+                        _ => new Microsoft.BackOfficeProjections(_.GetRequiredService<IDbContextFactory<BackOfficeContext>>()),
+                        ConnectedProjectionSettings.Default);
+                    
                     services
                         .ConfigureBackOfficeProjectionsContext(hostContext.Configuration, loggerFactory)
                         .AddTransient(_ => new TraceDbConnection<BackOfficeContext>(
                             new SqlConnection(hostContext.Configuration.GetConnectionString("BackOffice")),
                             hostContext.Configuration["DataDog:ServiceName"]))
+                        .RegisterModule(new EventHandlingModule(
+                            typeof(DomainAssemblyMarker).Assembly,
+                            EventsJsonSerializerSettingsProvider.CreateSerializerSettings()
+                        ))
+                        .RegisterModule<EnvelopeModule>()
+                        .RegisterEventstreamModule(hostContext.Configuration)
+                        .RegisterModule(new ProjectorModule(hostContext.Configuration))
+                        .RegisterProjections<Microsoft.BackOfficeProjections, Microsoft.BackOfficeProjectionsContext>(_ => new Microsoft.BackOfficeProjections(_.GetRequiredService<IDbContextFactory<BackOfficeContext>>()),
+                            ConnectedProjectionSettings.Default)
                         .AddDbContextFactory<BackOfficeContext>((provider, options) => options
                             .UseLoggerFactory(loggerFactory)
                             .UseSqlServer(provider.GetRequiredService<TraceDbConnection<BackOfficeContext>>(), sqlServerOptions => sqlServerOptions
@@ -90,22 +103,6 @@ namespace StreetNameRegistry.Projections.BackOffice
                         .AddHostedService<ProjectorRunner>();
                 })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureContainer<ContainerBuilder>((hostContext, builder) =>
-                {
-                    builder.RegisterModule(
-                        new EventHandlingModule(
-                            typeof(DomainAssemblyMarker).Assembly,
-                            EventsJsonSerializerSettingsProvider.CreateSerializerSettings()
-                        ));
-
-                    builder.RegisterModule<EnvelopeModule>();
-                    builder.RegisterEventstreamModule(hostContext.Configuration);
-                    builder.RegisterModule(new ProjectorModule(hostContext.Configuration));
-
-                    builder.RegisterProjections<BackOfficeProjections, BackOfficeProjectionsContext>(
-                        c => new BackOfficeProjections(c.Resolve<IDbContextFactory<BackOfficeContext>>()),
-                        ConnectedProjectionSettings.Default);
-                })
                 .UseConsoleLifetime()
                 .Build();
 

@@ -1,13 +1,14 @@
 namespace StreetNameRegistry.Api.BackOffice.Abstractions
 {
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
-    public sealed class BackOfficeModule : Module
+    public sealed class BackOfficeModule : Module, IServiceCollectionModule
     {
         public BackOfficeModule(
             IConfiguration configuration,
@@ -23,6 +24,11 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
                             .EnableRetryOnFailure()
                             .MigrationsHistoryTable(MigrationTables.BackOffice, Schema.BackOffice)
                     ));
+        }
+
+        public void Load(IServiceCollection services)
+        {
+            // ignore
         }
     }
 }

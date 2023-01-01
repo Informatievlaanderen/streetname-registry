@@ -1,7 +1,7 @@
 namespace StreetNameRegistry.Api.Legacy.Infrastructure.Configuration
 {
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Http;
+    using global::Microsoft.AspNetCore.Http;
 
     /// <summary>
     /// Add headers to the response to prevent any caching.

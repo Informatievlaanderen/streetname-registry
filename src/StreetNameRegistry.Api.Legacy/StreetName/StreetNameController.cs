@@ -13,10 +13,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     using Bosa;
     using Count;
     using Detail;
+    using global::Microsoft.AspNetCore.Http;
+    using global::Microsoft.AspNetCore.Mvc;
     using List;
     using MediatR;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Query;
     using Swashbuckle.AspNetCore.Filters;
     using Sync;

@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
-    using Microsoft.Extensions.Options;
+    using global::Microsoft.Extensions.Options;
     using Municipality;
     using Municipality.Events;
     using NodaTime;
@@ -156,7 +156,6 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     UpdateRecord(streetName, i => i.gemeenteid.Value = message.Message.NisCode);
                 }
             });
-
         }
 
         private void UpdateHomoniemtv(StreetNameExtractItemV2 streetName, List<StreetNameHomonymAddition> homonymAdditions)

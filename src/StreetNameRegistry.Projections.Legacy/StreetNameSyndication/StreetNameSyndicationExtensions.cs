@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
-    using Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore;
 
     public static class StreetNameSyndicationExtensions
     {

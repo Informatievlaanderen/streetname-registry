@@ -7,8 +7,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Converters;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Options;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Options;
     using Projections.Legacy;
     using Projections.Legacy.StreetNameList;
     using Projections.Syndication;

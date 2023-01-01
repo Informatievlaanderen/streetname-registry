@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
-    using Microsoft.Extensions.Logging;
+    using global::Microsoft.Extensions.Logging;
 
     public class ProjectorRunner
     {

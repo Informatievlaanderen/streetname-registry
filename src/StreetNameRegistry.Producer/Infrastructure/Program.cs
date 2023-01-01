@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Producer.Infrastructure
 {
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
-    using Microsoft.AspNetCore.Hosting;
+    using global::Microsoft.AspNetCore.Hosting;
 
     public class Program
     {

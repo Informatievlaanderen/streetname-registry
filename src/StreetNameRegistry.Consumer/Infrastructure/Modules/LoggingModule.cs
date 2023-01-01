@@ -2,14 +2,15 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Modules
 {
     using System;
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
     using Destructurama;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.DependencyInjection;
+    using global::Microsoft.Extensions.Logging;
     using Serilog;
     using Serilog.Debugging;
 
-    public class LoggingModule : Module
+    public class LoggingModule : Module, IServiceCollectionModule
     {
         public LoggingModule(
             IConfiguration configuration,
@@ -31,6 +32,11 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Modules
                 l.ClearProviders();
                 l.AddSerilog(Log.Logger);
             });
+        }
+
+        public void Load(IServiceCollection services)
+        {
+            // ignore
         }
     }
 }

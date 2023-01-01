@@ -18,11 +18,13 @@ Microsoft.Extensions.Http.Polly
 
 Microsoft.SyndicationFeed.ReaderWriter
 
-Be.Vlaanderen.Basisregisters.EventHandling.Autofac
+Be.Vlaanderen.Basisregisters.EventHandling.Microsoft
 Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql
 Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner
-Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac
+Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.Microsoft
+Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Microsoft
 Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication
+Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication.Microsoft
 Be.Vlaanderen.Basisregisters.Shaperon
 
 Be.Vlaanderen.Basisregisters.Aws.DistributedMutex

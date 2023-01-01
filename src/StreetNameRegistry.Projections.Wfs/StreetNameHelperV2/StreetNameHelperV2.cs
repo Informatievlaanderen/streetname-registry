@@ -3,9 +3,9 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
     using System;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.Utilities;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using NodaTime;
     using Municipality;
 

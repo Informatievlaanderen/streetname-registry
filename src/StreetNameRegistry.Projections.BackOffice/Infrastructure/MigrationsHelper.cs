@@ -3,9 +3,9 @@ namespace StreetNameRegistry.Projections.BackOffice.Infrastructure
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Data.SqlClient;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Logging;
+    using global::Microsoft.Data.SqlClient;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Logging;
     using Polly;
     using StreetNameRegistry.Infrastructure;
 

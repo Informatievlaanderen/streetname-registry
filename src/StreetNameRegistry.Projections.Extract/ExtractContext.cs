@@ -1,8 +1,8 @@
 namespace StreetNameRegistry.Projections.Extract
 {
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
+    using global::Microsoft.EntityFrameworkCore;
     using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
     using StreetNameExtract;
 
     public class ExtractContext : RunnerDbContext<ExtractContext>

@@ -2,8 +2,8 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
 {
     using System.Reflection;
     using Be.Vlaanderen.Basisregisters.Api;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Net.Http.Headers;
+    using global::Microsoft.AspNetCore.Mvc;
+    using global::Microsoft.Net.Http.Headers;
 
     [ApiVersionNeutral]
     [Route("")]

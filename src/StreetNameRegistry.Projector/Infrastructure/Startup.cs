@@ -1,10 +1,15 @@
 namespace StreetNameRegistry.Projector.Infrastructure
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
+    using System.Threading;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
+    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList.Microsoft;
+    using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjectionsMicrosoft;
     using Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -14,18 +19,14 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using Microsoft.Extensions.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Hosting;
-    using Modules;
-    using StreetNameRegistry.Projections.Extract;
-    using StreetNameRegistry.Projections.Legacy;
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading;
-    using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
     using Microsoft.Extensions.Options;
-    using StreetNameRegistry.Projections.Wfs;
-    using StreetNameRegistry.Projections.Wms;
     using Microsoft.OpenApi.Models;
+    using Modules;
+    using StreetNameRegistry.Projections.Legacy.Microsoft;
+    using StreetNameRegistry.Projections.Wfs.Microsoft;
+    using StreetNameRegistry.Projections.Wms.Microsoft;
+    using StreetNameRegistry.Projections.Extract.Microsoft;
+    using StreetNameRegistry.Projections.Extract.Microsoft.StreetNameExtract;
 
     /// <summary>Represents the startup process for the application.</summary>
     public class Startup

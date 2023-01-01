@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Api.CrabImport.Infrastructure
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
+    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Be.Vlaanderen.Basisregisters.GrAr.Import.Processing.CrabImport;
     using Configuration;
     using Microsoft.AspNetCore.Builder;

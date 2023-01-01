@@ -1,13 +1,14 @@
 namespace StreetNameRegistry.Infrastructure.Modules
 {
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Municipality;
 
-    public class SequenceModule : Module
+    public class SequenceModule : Module, IServiceCollectionModule
     {
         public SequenceModule(
             IConfiguration configuration,
@@ -30,6 +31,11 @@ namespace StreetNameRegistry.Infrastructure.Modules
             builder
                 .RegisterType<SqlPersistentLocalIdGenerator>()
                 .As<IPersistentLocalIdGenerator>();
+        }
+
+        public void Load(IServiceCollection services)
+        {
+            services.AddTransient<IPersistentLocalIdGenerator, SqlPersistentLocalIdGenerator>();
         }
     }
 }

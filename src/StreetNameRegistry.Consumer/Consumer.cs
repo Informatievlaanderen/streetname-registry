@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Consumer
     using Autofac;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
-    using Microsoft.Extensions.Logging;
+    using global::Microsoft.Extensions.Logging;
     using Projections;
 
     public class Consumer

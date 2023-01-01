@@ -11,8 +11,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Options;
+    using global::Microsoft.AspNetCore.Http;
+    using global::Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using Swashbuckle.AspNetCore.Filters;
 

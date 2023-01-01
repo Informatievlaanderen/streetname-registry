@@ -6,9 +6,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.List
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Convertors;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Options;
     using Infrastructure.Options;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Options;
     using Municipality;
     using Projections.Legacy;
     using Projections.Legacy.StreetNameListV2;

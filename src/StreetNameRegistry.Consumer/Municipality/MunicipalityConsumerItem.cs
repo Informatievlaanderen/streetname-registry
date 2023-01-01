@@ -1,8 +1,8 @@
 namespace StreetNameRegistry.Consumer.Municipality
 {
     using System;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore.Metadata.Builders;
     using StreetNameRegistry.Infrastructure;
 
     public class MunicipalityConsumerItem

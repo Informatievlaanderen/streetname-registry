@@ -1,7 +1,7 @@
 namespace StreetNameRegistry.Api.Oslo.Infrastructure
 {
     using Be.Vlaanderen.Basisregisters.Api;
-    using Microsoft.AspNetCore.Hosting;
+    using global::Microsoft.AspNetCore.Hosting;
 
     public static class Program
     {

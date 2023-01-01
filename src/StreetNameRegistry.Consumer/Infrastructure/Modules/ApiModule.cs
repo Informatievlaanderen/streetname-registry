@@ -1,21 +1,28 @@
 namespace StreetNameRegistry.Consumer.Infrastructure.Modules
 {
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
-    using Be.Vlaanderen.Basisregisters.EventHandling;
-    using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
-    using Be.Vlaanderen.Basisregisters.Projector;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
-    using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
+    using Be.Vlaanderen.Basisregisters.Projector;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.DependencyInjection;
+    using global::Microsoft.Extensions.Logging;
     using Projections;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
+    using ConsumerAutofac = StreetNameRegistry.Consumer;
+    using ConsumerMicrosoft = StreetNameRegistry.Consumer.Microsoft;
+    using ConnProjAutofac = Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
+    using ConnProjMicrosoft = Be.Vlaanderen.Basisregisters.Projector.ConnectedProjectionsMicrosoft;
+    using DataDogAutofac = Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
+    using DataDogMicrosoft = Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
+    using EventHandlingAutofac = Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
+    using EventHandlingMicrosoft = Be.Vlaanderen.Basisregisters.EventHandling.Microsoft;
+    using ProjectionHandlingAutofac = Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
+    using ProjectionHandlingMicrosoft = Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Microsoft;
 
-    public class ApiModule : Module
+    public class ApiModule : Module, IServiceCollectionModule
     {
         private readonly IConfiguration _configuration;
         private readonly IServiceCollection _services;
@@ -36,11 +43,11 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Modules
             var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
 
             builder
-                .RegisterModule(new DataDogModule(_configuration))
+                .RegisterModule(new DataDogAutofac.DataDogModule(_configuration))
 
-                .RegisterModule<EnvelopeModule>()
+                .RegisterModule<ProjectionHandlingAutofac.EnvelopeModule>()
 
-                .RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
+                .RegisterModule(new EventHandlingAutofac.EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
 
                 .RegisterModule(new CommandHandlingModule(_configuration));
 
@@ -52,11 +59,37 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Modules
                     _configuration,
                     _loggerFactory)
 
-                .RegisterProjections<MunicipalityConsumerProjection, ConsumerContext>(
+                .RegisterProjections<MunicipalityConsumerProjection, ConsumerAutofac.ConsumerContext>(
                     context => new MunicipalityConsumerProjection(),
-                    ConnectedProjectionSettings.Default);
+                    ConnProjAutofac.ConnectedProjectionSettings.Default);
 
             builder.Populate(_services);
+        }
+
+        public void Load(IServiceCollection services)
+        {
+            var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
+
+            services
+                .RegisterModule(new DataDogMicrosoft.DataDogModule(_configuration))
+
+                .RegisterModule<ProjectionHandlingMicrosoft.EnvelopeModule>()
+
+                .RegisterModule(new EventHandlingMicrosoft.EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
+
+                .RegisterModule(new CommandHandlingModule(_configuration));
+
+            services.RegisterEventstreamModule(_configuration);
+            services.RegisterSnapshotModule(_configuration);
+
+            services
+                .RegisterProjectionMigrator<ConsumerMicrosoft.ConsumerContextFactory>(
+                    _configuration,
+                    _loggerFactory)
+
+                .RegisterProjections<StreetNameRegistry.Consumer.Microsoft.Projections.MunicipalityConsumerProjection, ConsumerMicrosoft.ConsumerContext>(
+                    context => new StreetNameRegistry.Consumer.Microsoft.Projections.MunicipalityConsumerProjection(),
+                    ConnProjMicrosoft.ConnectedProjectionSettings.Default);
         }
     }
 }

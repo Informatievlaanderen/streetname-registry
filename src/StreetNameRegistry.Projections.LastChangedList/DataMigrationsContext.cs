@@ -3,10 +3,10 @@ namespace StreetNameRegistry.Projections.LastChangedList
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList.Microsoft;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
+    using global::Microsoft.EntityFrameworkCore;
     using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
 
     public class DataMigrationsContext : RunnerDbContext<DataMigrationsContext>
     {

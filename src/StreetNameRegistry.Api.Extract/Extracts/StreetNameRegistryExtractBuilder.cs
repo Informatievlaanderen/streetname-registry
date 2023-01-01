@@ -7,8 +7,8 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     using Microsoft.EntityFrameworkCore;
     using Projections.Extract;
     using Projections.Extract.StreetNameExtract;
-    using Projections.Syndication;
     using System.Linq;
+    using Projections.Syndication.Microsoft;
 
     public static class StreetNameRegistryExtractBuilder
     {

@@ -1,9 +1,9 @@
 namespace StreetNameRegistry.Api.Legacy.Infrastructure
 {
     using System.Reflection;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Net.Http.Headers;
     using Be.Vlaanderen.Basisregisters.Api;
+    using global::Microsoft.AspNetCore.Mvc;
+    using global::Microsoft.Net.Http.Headers;
 
     [ApiVersionNeutral]
     [Route("")]

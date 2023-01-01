@@ -1,10 +1,10 @@
 namespace StreetNameRegistry.Projections.Syndication.Municipality
 {
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Infrastructure;
     using System;
+    using Infrastructure;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore.Metadata.Builders;
 
     public sealed class MunicipalityLatestItem
     {

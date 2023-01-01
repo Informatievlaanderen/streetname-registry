@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Count
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore;
     using Projections.Legacy;
     using Projections.Legacy.StreetNameList;
     using Projections.Syndication;

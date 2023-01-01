@@ -1,13 +1,13 @@
 namespace StreetNameRegistry.Projections.Syndication
 {
     using System;
-    using Microsoft.Data.SqlClient;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Logging;
     using Polly;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.Microsoft.MigrationExtensions;
+    using global::Microsoft.Data.SqlClient;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Logging;
     using Infrastructure;
 
     public sealed class MigrationsLogger { }

@@ -1,7 +1,7 @@
 namespace StreetNameRegistry.Api.Legacy.Infrastructure
 {
     using FeatureToggles;
-    using Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.Configuration;
 
     public static class ConfigurationExtensions
     {

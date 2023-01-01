@@ -7,8 +7,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using global::Microsoft.EntityFrameworkCore;
     using MediatR;
-    using Microsoft.EntityFrameworkCore;
     using Projections.Syndication;
     using Projections.Syndication.Municipality;
 

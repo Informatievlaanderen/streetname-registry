@@ -1,8 +1,8 @@
 namespace StreetNameRegistry.Producer.Infrastructure.Configuration
 {
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Net.Http.Headers;
+    using global::Microsoft.AspNetCore.Http;
+    using global::Microsoft.Net.Http.Headers;
 
     /// <summary>
     /// Add headers to the response to prevent any caching.

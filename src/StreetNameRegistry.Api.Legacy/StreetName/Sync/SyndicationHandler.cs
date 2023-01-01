@@ -12,14 +12,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Sync
     using Be.Vlaanderen.Basisregisters.Api.Syndication;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Syndication;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.Options;
+    using global::Microsoft.SyndicationFeed;
+    using global::Microsoft.SyndicationFeed.Atom;
     using Infrastructure;
     using Infrastructure.Options;
     using MediatR;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Options;
-    using Microsoft.SyndicationFeed;
-    using Microsoft.SyndicationFeed.Atom;
     using Projections.Legacy;
     using Query;
 

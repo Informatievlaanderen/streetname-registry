@@ -4,9 +4,9 @@ namespace StreetNameRegistry.Projections.Syndication
     using System.IO;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Design;
-    using Microsoft.Extensions.Configuration;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore.Design;
+    using global::Microsoft.Extensions.Configuration;
     using Municipality;
     using Infrastructure;
 

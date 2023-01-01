@@ -5,9 +5,9 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure
     using System.Linq;
     using System.Reflection;
     using Be.Vlaanderen.Basisregisters.Api.Syndication;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.SyndicationFeed;
-    using Microsoft.SyndicationFeed.Atom;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.SyndicationFeed;
+    using global::Microsoft.SyndicationFeed.Atom;
 
     public static class AtomFeedConfigurationBuilder
     {

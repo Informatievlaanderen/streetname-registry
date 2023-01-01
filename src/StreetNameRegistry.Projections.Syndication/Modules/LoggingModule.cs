@@ -3,9 +3,9 @@ namespace StreetNameRegistry.Projections.Syndication.Modules
     using System;
     using Autofac;
     using Destructurama;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.DependencyInjection;
+    using global::Microsoft.Extensions.Logging;
     using Serilog;
     using Serilog.Debugging;
 

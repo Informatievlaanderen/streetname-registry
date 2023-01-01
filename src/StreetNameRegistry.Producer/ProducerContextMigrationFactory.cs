@@ -1,7 +1,7 @@
 namespace StreetNameRegistry.Producer
 {
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
-    using Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore;
     using StreetNameRegistry.Infrastructure;
 
     public class ProducerContextMigrationFactory : RunnerDbContextMigrationFactory<ProducerContext>

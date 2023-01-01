@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     using System.Threading;
     using Be.Vlaanderen.Basisregisters.Api.Extract;
     using Infrastructure.FeatureToggles;
-    using Projections.Syndication;
+    using Projections.Syndication.Microsoft;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
 
     [ApiVersion("1.0")]

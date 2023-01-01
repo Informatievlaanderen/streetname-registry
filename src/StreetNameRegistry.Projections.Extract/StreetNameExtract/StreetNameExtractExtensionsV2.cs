@@ -1,10 +1,10 @@
 namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 {
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
+    using global::Microsoft.EntityFrameworkCore;
 
     public static class StreetNameExtractExtensionsV2
     {

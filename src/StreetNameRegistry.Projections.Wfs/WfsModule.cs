@@ -1,31 +1,63 @@
 namespace StreetNameRegistry.Projections.Wfs
 {
+    using System;
     using Autofac;
     using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
-    using System;
-    using Microsoft.Data.SqlClient;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.Microsoft.MigrationExtensions;
+    using global::Microsoft.Data.SqlClient;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.DependencyInjection;
+    using global::Microsoft.Extensions.Logging;
 
-    public sealed class WfsModule : Module
+    public sealed class WfsModule : Module, IServiceCollectionModule
     {
+        private readonly IConfiguration _configuration;
+        private readonly IServiceCollection _services;
+        private readonly ILoggerFactory _loggerFactory;
+
         public WfsModule(
             IConfiguration configuration,
             IServiceCollection services,
             ILoggerFactory loggerFactory)
         {
-            var logger = loggerFactory.CreateLogger<WfsModule>();
-            var connectionString = configuration.GetConnectionString("WfsProjections");
+            _configuration = configuration;
+            _services = services;
+            _loggerFactory = loggerFactory;
+        }
+
+        protected override void Load(ContainerBuilder builder)
+        {
+            var logger = _loggerFactory.CreateLogger<WfsModule>();
+            var connectionString = _configuration.GetConnectionString("WfsProjections");
 
             var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
             if (hasConnectionString)
-                RunOnSqlServer(configuration, services, loggerFactory, connectionString);
+                RunOnSqlServer(_configuration, _services, _loggerFactory, connectionString);
             else
-                RunInMemoryDb(services, loggerFactory, logger);
+                RunInMemoryDb(_services, _loggerFactory, logger);
+
+            logger.LogInformation(
+                "Added {Context} to services:" +
+                Environment.NewLine +
+                "\tSchema: {Schema}" +
+                Environment.NewLine +
+                "\tTableName: {TableName}",
+                nameof(WfsContext), Schema.Wfs, MigrationTables.Wfs);
+        }
+
+        public void Load(IServiceCollection services)
+        {
+            var logger = _loggerFactory.CreateLogger<WfsModule>();
+            var connectionString = _configuration.GetConnectionString("WfsProjections");
+
+            var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
+            if (hasConnectionString)
+                RunOnSqlServer(_configuration, services, _loggerFactory, connectionString);
+            else
+                RunInMemoryDb(services, _loggerFactory, logger);
 
             logger.LogInformation(
                 "Added {Context} to services:" +

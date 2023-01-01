@@ -1,9 +1,9 @@
 namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 {
-    using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using System;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using Infrastructure;
 
     public sealed class StreetNameExtractItem
     {

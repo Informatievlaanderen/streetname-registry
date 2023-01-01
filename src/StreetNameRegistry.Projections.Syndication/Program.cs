@@ -4,15 +4,15 @@ namespace StreetNameRegistry.Projections.Syndication
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication.Microsoft;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.DependencyInjection;
+    using global::Microsoft.Extensions.Logging;
     using Modules;
-    using Municipality;
+    using Microsoft.Municipality;
     using Serilog;
 
     public class Program
@@ -64,7 +64,7 @@ namespace StreetNameRegistry.Projections.Syndication
                                 ct);
 
                             await container
-                                .GetRequiredService<FeedProjector<SyndicationContext>>()
+                                .GetRequiredService<FeedProjector<Microsoft.SyndicationContext>>()
                                 .Register(BuildProjectionRunner(configuration, container))
                                 .Start(ct);
                         }
@@ -91,9 +91,9 @@ namespace StreetNameRegistry.Projections.Syndication
             Closing.Close();
         }
 
-        private static IFeedProjectionRunner<SyndicationContext> BuildProjectionRunner(IConfiguration configuration, IServiceProvider container)
+        private static IFeedProjectionRunner<Microsoft.SyndicationContext> BuildProjectionRunner(IConfiguration configuration, IServiceProvider container)
         {
-            return new FeedProjectionRunner<MunicipalityEvent, SyndicationContent<Gemeente>, SyndicationContext>(
+            return new FeedProjectionRunner<MunicipalityEvent, SyndicationContent<Gemeente>, Microsoft.SyndicationContext>(
                 "municipality",
                 configuration.GetValue<Uri>("SyndicationFeeds:Municipality"),
                 configuration.GetValue<string>("SyndicationFeeds:MunicipalityAuthUserName"),

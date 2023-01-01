@@ -1,8 +1,7 @@
-using Microsoft.EntityFrameworkCore.Migrations;
-
 namespace StreetNameRegistry.Projections.LastChangedList.Migrations
 {
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList.Microsoft;
+    using global::Microsoft.EntityFrameworkCore.Migrations;
 
     public partial class Initial_MigrateOslo : Migration
     {

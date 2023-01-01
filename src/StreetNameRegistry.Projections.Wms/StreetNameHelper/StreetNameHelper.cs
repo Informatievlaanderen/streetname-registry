@@ -1,12 +1,12 @@
 namespace StreetNameRegistry.Projections.Wms.StreetName
 {
-    using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using NodaTime;
     using System;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.Utilities;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using Infrastructure;
+    using NodaTime;
     using StreetNameRegistry.StreetName;
 
     public sealed class StreetNameHelper

@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers.WhenApprovingStreetName
 
             await _backOfficeContext.MunicipalityIdByPersistentLocalId.AddAsync(
                 new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId));
-            _backOfficeContext.SaveChanges();
+            await _backOfficeContext.SaveChangesAsync();
 
             var handler = new ApproveStreetNameHandler(
                 Container.Resolve<ICommandHandlerResolver>(),

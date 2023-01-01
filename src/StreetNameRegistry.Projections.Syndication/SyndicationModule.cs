@@ -1,37 +1,36 @@
 namespace StreetNameRegistry.Projections.Syndication
 {
     using System;
-    using Microsoft.Data.SqlClient;
     using System.Net.Http;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Http;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.Microsoft.MigrationExtensions;
+    using global::Microsoft.Data.SqlClient;
+    using global::Microsoft.EntityFrameworkCore;
+    using global::Microsoft.Extensions.Configuration;
+    using global::Microsoft.Extensions.DependencyInjection;
+    using global::Microsoft.Extensions.Logging;
     using Infrastructure;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Polly;
+    using SyndicationAutofac = Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
+    using SyndicationMicrosoft = Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication.Microsoft;
 
-    public sealed class SyndicationModule : Module
+    public sealed class SyndicationModule : Module, IServiceCollectionModule
     {
+        private readonly IConfiguration _configuration;
+        private readonly IServiceCollection _services;
+        private readonly ILoggerFactory _loggerFactory;
+
         public SyndicationModule(
             IConfiguration configuration,
             IServiceCollection services,
             ILoggerFactory loggerFactory)
         {
-            var logger = loggerFactory.CreateLogger<SyndicationModule>();
-            var connectionString = configuration.GetConnectionString("SyndicationProjections");
-
-            var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
-            if (hasConnectionString)
-                RunOnSqlServer(configuration, services, loggerFactory, connectionString);
-            else
-                RunInMemoryDb(services, loggerFactory, logger);
-
-            RegisterHttpClient(configuration, services);
+            _configuration = configuration;
+            _services = services;
+            _loggerFactory = loggerFactory;
         }
 
         private static void RunOnSqlServer(
@@ -67,13 +66,13 @@ namespace StreetNameRegistry.Projections.Syndication
             logger.LogWarning("Running InMemory for {Context}!", nameof(SyndicationContext));
         }
 
-        private static void RegisterHttpClient(
+        private static void RegisterHttpClientAutofac(
             IConfiguration configuration,
             IServiceCollection services)
         {
             services
                 .AddHttpClient(
-                    RegistryAtomFeedReader.HttpClientName,
+                    SyndicationAutofac.RegistryAtomFeedReader.HttpClientName,
                     client => { client.DefaultRequestHeaders.Add("Accept", "application/atom+xml"); })
                 .ConfigurePrimaryHttpMessageHandler(c => new TraceHttpMessageHandler(
                     new HttpClientHandler(),
@@ -89,15 +88,66 @@ namespace StreetNameRegistry.Projections.Syndication
                         }));
         }
 
+        private static void RegisterHttpClient(
+            IConfiguration configuration,
+            IServiceCollection services)
+        {
+            services
+                .AddHttpClient(
+                    SyndicationMicrosoft.RegistryAtomFeedReader.HttpClientName,
+                    client => { client.DefaultRequestHeaders.Add("Accept", "application/atom+xml"); })
+                .ConfigurePrimaryHttpMessageHandler(c => new TraceHttpMessageHandler(
+                    new HttpClientHandler(),
+                    configuration["DataDog:ServiceName"]))
+                .AddTransientHttpErrorPolicy(policyBuilder => policyBuilder
+                    .WaitAndRetryAsync(
+                        5,
+                        retryAttempt =>
+                        {
+                            var value = Math.Pow(2, retryAttempt) / 4;
+                            var randomValue = new Random().Next((int)value * 3, (int)value * 5);
+                            return TimeSpan.FromSeconds(randomValue);
+                        }));
+        }
+
         protected override void Load(ContainerBuilder builder)
         {
-            builder
-                .RegisterType<RegistryAtomFeedReader>()
-                .As<IRegistryAtomFeedReader>();
+            var logger = _loggerFactory.CreateLogger<SyndicationModule>();
+            var connectionString = _configuration.GetConnectionString("SyndicationProjections");
+
+            var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
+            if (hasConnectionString)
+                RunOnSqlServer(_configuration, _services, _loggerFactory, connectionString);
+            else
+                RunInMemoryDb(_services, _loggerFactory, logger);
+
+            RegisterHttpClientAutofac(_configuration, _services);
 
             builder
-                .RegisterType<FeedProjector<SyndicationContext>>()
+                .RegisterType<SyndicationAutofac.RegistryAtomFeedReader>()
+                .As<SyndicationAutofac.IRegistryAtomFeedReader>();
+
+            builder
+                .RegisterType<SyndicationAutofac.FeedProjector<SyndicationContext>>()
                 .AsSelf();
+        }
+
+        public void Load(IServiceCollection services)
+        {
+            var logger = _loggerFactory.CreateLogger<SyndicationModule>();
+            var connectionString = _configuration.GetConnectionString("SyndicationProjections");
+
+            var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
+            if (hasConnectionString)
+                RunOnSqlServer(_configuration, services, _loggerFactory, connectionString);
+            else
+                RunInMemoryDb(services, _loggerFactory, logger);
+
+            RegisterHttpClient(_configuration, services);
+
+            services
+                .AddTransient<SyndicationMicrosoft.IRegistryAtomFeedReader, SyndicationMicrosoft.RegistryAtomFeedReader>()
+                .AddTransient<SyndicationMicrosoft.FeedProjector<Microsoft.SyndicationContext>>();
         }
     }
 }
