@@ -1,3 +1,10 @@
+## [3.16.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.2...v3.16.3) (2023-01-09)
+
+
+### Bug Fixes
+
+* try ci improvement ([babe123](https://github.com/informatievlaanderen/streetname-registry/commit/babe12366a84b1b36a94e65740e5888be3aebd07))
+
 ## [3.16.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.1...v3.16.2) (2023-01-09)
 
 
