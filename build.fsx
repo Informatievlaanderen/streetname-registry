@@ -57,11 +57,11 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Consumer"
     "StreetNameRegistry.Migrator.StreetName"
     "StreetNameRegistry.Projections.BackOffice"
-    "StreetNameRegistry.Projections.Legacy"
-    "StreetNameRegistry.Projections.Extract"
-    "StreetNameRegistry.Projections.LastChangedList"
-    "StreetNameRegistry.Projections.Wfs"
-    "StreetNameRegistry.Projections.Wms"
+    //"StreetNameRegistry.Projections.Legacy"
+    //"StreetNameRegistry.Projections.Extract"
+    //"StreetNameRegistry.Projections.LastChangedList"
+    //"StreetNameRegistry.Projections.Wfs"
+    //"StreetNameRegistry.Projections.Wms"
     "StreetNameRegistry.Projections.Syndication"
   |] |> Array.Parallel.iter publishSource)
 
