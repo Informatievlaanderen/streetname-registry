@@ -1085,7 +1085,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        services: ['streetname-registry-api', 'streetname-registry-import-api', 'streetname-registry-projections', 'streetname-registry-producer', 'streetname-registry-producer-snapshot-oslo']
+        services: ['streetname-registry-api', 'streetname-registry-import-api', 'streetname-registry-projections', 'streetname-registry-producer', 'streetname-registry-producer-snapshot-oslo', 'streetname-registry-projections-backoffice']
     
     steps:
     - name: Deploy services
@@ -1195,7 +1195,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        services: ['streetname-registry-api', 'streetname-registry-projections', 'streetname-registry-backoffice-api', 'streetname-registry-consumer', 'streetname-registry-producer', 'streetname-registry-migrator-streetname', 'streetname-registry-producer-snapshot-oslo']
+        services: ['streetname-registry-api', 'streetname-registry-projections', 'streetname-registry-backoffice-api', 'streetname-registry-consumer', 'streetname-registry-producer', 'streetname-registry-migrator-streetname', 'streetname-registry-producer-snapshot-oslo', 'streetname-registry-projections-backoffice']
 
     steps:
     - name: CD services
