@@ -44,8 +44,7 @@ Target.create "Build_Solution" (fun _ ->
 Target.create "Test_Solution" (fun _ -> test "StreetNameRegistry")
 
 Target.create "Publish_Solution" (fun _ ->
-  [
-    "StreetNameRegistry.Projector"
+  [|"StreetNameRegistry.Projector"
     "StreetNameRegistry.Api.BackOffice"
     "StreetNameRegistry.Api.BackOffice.Abstractions"
     "StreetNameRegistry.Api.BackOffice.Handlers.Lambda"
@@ -64,11 +63,10 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Projections.Wfs"
     "StreetNameRegistry.Projections.Wms"
     "StreetNameRegistry.Projections.Syndication"
-  ] |> List.iter publishSource)
+  |] |> Array.Parallel.iter publishSource)
 
 Target.create "Pack_Solution" (fun _ ->
-  [
-    "StreetNameRegistry.Projector"
+  [|"StreetNameRegistry.Projector"
     "StreetNameRegistry.Api.BackOffice"
     "StreetNameRegistry.Api.BackOffice.Abstractions"
     "StreetNameRegistry.Api.Legacy"
@@ -79,43 +77,60 @@ Target.create "Pack_Solution" (fun _ ->
     "StreetNameRegistry.Producer.Snapshot.Oslo"
     "StreetNameRegistry.Consumer"
     "StreetNameRegistry.Migrator.StreetName"
-  ] |> List.iter pack)
+  |] |> Array.Parallel.iter pack)
 
-Target.create "Containerize_Projector" (fun _ -> containerize "StreetNameRegistry.Projector" "projector")
-Target.create "PushContainer_Projector" (fun _ -> push "projector")
+type ContainerObject = { Project: string; Container: string }
 
-Target.create "Containerize_ApiBackOffice" (fun _ -> containerize "StreetNameRegistry.Api.BackOffice" "api-backoffice")
-Target.create "PushContainer_ApiBackOffice" (fun _ -> push "api-backoffice")
+Target.create "Containerize" (fun _ ->
+  [|{ Project = "StreetNameRegistry.Projector"; Container = "projector" }
+    { Project = "StreetNameRegistry.Api.BackOffice"; Container = "api-backoffice" }
+    { Project = "StreetNameRegistry.Api.Legacy"; Container = "api-legacy" }
+    { Project = "StreetNameRegistry.Api.Oslo"; Container = "api-oslo" }
+    { Project = "StreetNameRegistry.Api.Extract"; Container = "api-extract" }
+    { Project = "StreetNameRegistry.Api.CrabImport"; Container = "api-crab-import" }
+    { Project = "StreetNameRegistry.Consumer"; Container = "consumer" }
+    { Project = "StreetNameRegistry.Producer"; Container = "producer" }
+    { Project = "StreetNameRegistry.Producer.Snapshot.Oslo"; Container = "producer-snapshot-oslo" }
+    { Project = "StreetNameRegistry.Migrator.StreetName"; Container = "migrator-streetname" }
+    { Project = "StreetNameRegistry.Projections.Syndication"; Container = "projections-syndication" }
+    { Project = "StreetNameRegistry.Projections.BackOffice"; Container = "projections-backoffice" }
+  |] |> Array.Parallel.iter (fun o -> containerize o.Project o.Container))
 
-Target.create "Containerize_ApiLegacy" (fun _ -> containerize "StreetNameRegistry.Api.Legacy" "api-legacy")
-Target.create "PushContainer_ApiLegacy" (fun _ -> push "api-legacy")
+// Target.create "Containerize_Projector" (fun _ -> containerize "StreetNameRegistry.Projector" "projector")
+// Target.create "PushContainer_Projector" (fun _ -> push "projector")
 
-Target.create "Containerize_ApiOslo" (fun _ -> containerize "StreetNameRegistry.Api.Oslo" "api-oslo")
-Target.create "PushContainer_ApiOslo" (fun _ -> push "api-oslo")
+// Target.create "Containerize_ApiBackOffice" (fun _ -> containerize "StreetNameRegistry.Api.BackOffice" "api-backoffice")
+// Target.create "PushContainer_ApiBackOffice" (fun _ -> push "api-backoffice")
 
-Target.create "Containerize_ApiExtract" (fun _ -> containerize "StreetNameRegistry.Api.Extract" "api-extract")
-Target.create "PushContainer_ApiExtract" (fun _ -> push "api-extract")
+// Target.create "Containerize_ApiLegacy" (fun _ -> containerize "StreetNameRegistry.Api.Legacy" "api-legacy")
+// Target.create "PushContainer_ApiLegacy" (fun _ -> push "api-legacy")
 
-Target.create "Containerize_ApiCrabImport" (fun _ -> containerize "StreetNameRegistry.Api.CrabImport" "api-crab-import")
-Target.create "PushContainer_ApiCrabImport" (fun _ -> push "api-crab-import")
+// Target.create "Containerize_ApiOslo" (fun _ -> containerize "StreetNameRegistry.Api.Oslo" "api-oslo")
+// Target.create "PushContainer_ApiOslo" (fun _ -> push "api-oslo")
 
-Target.create "Containerize_Consumer" (fun _ -> containerize "StreetNameRegistry.Consumer" "consumer")
-Target.create "PushContainer_Consumer" (fun _ -> push "consumer")
+// Target.create "Containerize_ApiExtract" (fun _ -> containerize "StreetNameRegistry.Api.Extract" "api-extract")
+// Target.create "PushContainer_ApiExtract" (fun _ -> push "api-extract")
 
-Target.create "Containerize_Producer" (fun _ -> containerize "StreetNameRegistry.Producer" "producer")
-Target.create "PushContainer_Producer" (fun _ -> push "producer")
+// Target.create "Containerize_ApiCrabImport" (fun _ -> containerize "StreetNameRegistry.Api.CrabImport" "api-crab-import")
+// Target.create "PushContainer_ApiCrabImport" (fun _ -> push "api-crab-import")
 
-Target.create "Containerize_Producer_Snapshot_Oslo" (fun _ -> containerize "StreetNameRegistry.Producer.Snapshot.Oslo" "producer-snapshot-oslo")
-Target.create "PushContainer_Producer_Snapshot_Oslo" (fun _ -> push "producer-snapshot-oslo")
+// Target.create "Containerize_Consumer" (fun _ -> containerize "StreetNameRegistry.Consumer" "consumer")
+// Target.create "PushContainer_Consumer" (fun _ -> push "consumer")
 
-Target.create "Containerize_Migrator_StreetName" (fun _ -> containerize "StreetNameRegistry.Migrator.StreetName" "migrator-streetname")
-Target.create "PushContainer_Migrator_StreetName" (fun _ -> push "migrator-streetname")
+// Target.create "Containerize_Producer" (fun _ -> containerize "StreetNameRegistry.Producer" "producer")
+// Target.create "PushContainer_Producer" (fun _ -> push "producer")
 
-Target.create "Containerize_ProjectionsSyndication" (fun _ -> containerize "StreetNameRegistry.Projections.Syndication" "projections-syndication")
-Target.create "PushContainer_ProjectionsSyndication" (fun _ -> push "projections-syndication")
+// Target.create "Containerize_Producer_Snapshot_Oslo" (fun _ -> containerize "StreetNameRegistry.Producer.Snapshot.Oslo" "producer-snapshot-oslo")
+// Target.create "PushContainer_Producer_Snapshot_Oslo" (fun _ -> push "producer-snapshot-oslo")
 
-Target.create "Containerize_ProjectionsBackOffice" (fun _ -> containerize "StreetNameRegistry.Projections.BackOffice" "projections-backoffice")
-Target.create "PushContainer_ProjectionsBackOffice" (fun _ -> push "projections-backoffice")
+// Target.create "Containerize_Migrator_StreetName" (fun _ -> containerize "StreetNameRegistry.Migrator.StreetName" "migrator-streetname")
+// Target.create "PushContainer_Migrator_StreetName" (fun _ -> push "migrator-streetname")
+
+// Target.create "Containerize_ProjectionsSyndication" (fun _ -> containerize "StreetNameRegistry.Projections.Syndication" "projections-syndication")
+// Target.create "PushContainer_ProjectionsSyndication" (fun _ -> push "projections-syndication")
+
+// Target.create "Containerize_ProjectionsBackOffice" (fun _ -> containerize "StreetNameRegistry.Projections.BackOffice" "projections-backoffice")
+// Target.create "PushContainer_ProjectionsBackOffice" (fun _ -> push "projections-backoffice")
 
 // --------------------------------------------------------------------------------
 
@@ -123,7 +138,7 @@ Target.create "Build" ignore
 Target.create "Test" ignore
 Target.create "Publish" ignore
 Target.create "Pack" ignore
-Target.create "Containerize" ignore
+//Target.create "Containerize" ignore
 Target.create "Push" ignore
 
 "NpmInstall"
@@ -146,36 +161,36 @@ Target.create "Push" ignore
   ==> "Pack"
 
 "Pack"
-  ==> "Containerize_Projector"
-  ==> "Containerize_ApiBackOffice"
-  ==> "Containerize_ApiLegacy"
-  ==> "Containerize_ApiOslo"
-  ==> "Containerize_ApiExtract"
-  ==> "Containerize_ApiCrabImport"
-  ==> "Containerize_Consumer"
-  ==> "Containerize_Producer"
-  ==> "Containerize_Producer_Snapshot_Oslo"
-  ==> "Containerize_Migrator_StreetName"
-  ==> "Containerize_ProjectionsSyndication"
-  ==> "Containerize_ProjectionsBackOffice"
+  // ==> "Containerize_Projector"
+  // ==> "Containerize_ApiBackOffice"
+  // ==> "Containerize_ApiLegacy"
+  // ==> "Containerize_ApiOslo"
+  // ==> "Containerize_ApiExtract"
+  // ==> "Containerize_ApiCrabImport"
+  // ==> "Containerize_Consumer"
+  // ==> "Containerize_Producer"
+  // ==> "Containerize_Producer_Snapshot_Oslo"
+  // ==> "Containerize_Migrator_StreetName"
+  // ==> "Containerize_ProjectionsSyndication"
+  // ==> "Containerize_ProjectionsBackOffice"
   ==> "Containerize"
 // Possibly add more projects to containerize here
 
-"Containerize"
-  ==> "DockerLogin"
-  ==> "PushContainer_Projector"
-  ==> "PushContainer_ApiBackOffice"
-  ==> "PushContainer_ApiLegacy"
-  ==> "PushContainer_ApiOslo"
-  ==> "PushContainer_ApiExtract"
-  ==> "PushContainer_ApiCrabImport"
-  ==> "PushContainer_Consumer"
-  ==> "PushContainer_Producer"
-  ==> "PushContainer_Producer_Snapshot_Oslo"
-  ==> "PushContainer_Migrator_StreetName"
-  ==> "PushContainer_ProjectionsSyndication"
-  ==> "PushContainer_ProjectionsBackOffice"
-  ==> "Push"
+// "Containerize"
+//   ==> "DockerLogin"
+//   ==> "PushContainer_Projector"
+//   ==> "PushContainer_ApiBackOffice"
+//   ==> "PushContainer_ApiLegacy"
+//   ==> "PushContainer_ApiOslo"
+//   ==> "PushContainer_ApiExtract"
+//   ==> "PushContainer_ApiCrabImport"
+//   ==> "PushContainer_Consumer"
+//   ==> "PushContainer_Producer"
+//   ==> "PushContainer_Producer_Snapshot_Oslo"
+//   ==> "PushContainer_Migrator_StreetName"
+//   ==> "PushContainer_ProjectionsSyndication"
+//   ==> "PushContainer_ProjectionsBackOffice"
+//   ==> "Push"
 // Possibly add more projects to push here
 
 // By default we build & test
