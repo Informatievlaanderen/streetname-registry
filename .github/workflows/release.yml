@@ -110,7 +110,7 @@ jobs:
      # Save artifacts
      #
       
-    - name: Save artifacts
+    - name: Save artifacts    
       if: env.RELEASE_VERSION != 'none'
       shell: bash
       run: |
@@ -607,6 +607,9 @@ jobs:
     needs: build
     name: Push images to Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: ['api-backoffice', 'api-legacy', 'api-oslo', 'api-crab-import', 'api-extract', 'projector', 'projections-syndication', 'projections-backoffice', 'consumer', 'producer', 'producer-snapshot-oslo', 'migrator-streetname']         
     steps:
       - name: Configure AWS credentials (Test)
         if: needs.build.outputs.version != 'none'
@@ -619,122 +622,32 @@ jobs:
       - name: Login to Amazon ECR (Test)
         if: needs.build.outputs.version != 'none'
         uses: aws-actions/amazon-ecr-login@v1.5.3
-
-      #
-      # Download artifacts
-      #
       
-      - name: Download api-backoffice
+      # Download artifact
+      - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: api-backoffice
-          path: ~/
-      
-      - name: Download api-legacy
-        uses: actions/download-artifact@v3
-        with:
-          name: api-legacy
-          path: ~/
-      
-      - name: Download api-oslo
-        uses: actions/download-artifact@v3
-        with:
-          name: api-oslo
-          path: ~/
-      
-      - name: Download api-crab-import
-        uses: actions/download-artifact@v3
-        with:
-          name: api-crab-import
-          path: ~/
-      
-      - name: Download api-extract
-        uses: actions/download-artifact@v3
-        with:
-          name: api-extract
-          path: ~/
-      
-      - name: Download projector
-        uses: actions/download-artifact@v3
-        with:
-          name: projector
-          path: ~/
-      
-      - name: Download projections-syndication
-        uses: actions/download-artifact@v3
-        with:
-          name: projections-syndication
-          path: ~/
-      
-      - name: Download projections-backoffice
-        uses: actions/download-artifact@v3
-        with:
-          name: projections-backoffice
+          name: ${{ matrix.image }}
           path: ~/
 
-      - name: Download consumer
-        uses: actions/download-artifact@v3
-        with:
-          name: consumer
-          path: ~/
-      
-      - name: Download producer
-        uses: actions/download-artifact@v3
-        with:
-          name: producer
-          path: ~/
-
-      - name: Download producer-snapshot-oslo
-        uses: actions/download-artifact@v3
-        with:
-          name: producer-snapshot-oslo
-          path: ~/
-      
-      - name: Download migrator-streetname
-        uses: actions/download-artifact@v3
-        with:
-          name: migrator-streetname
-          path: ~/
-
-      #
-      # Load artifacts
-      #
-      
-      - name: Load artifacts
+      # Load artifact
+      - name: Load artifact
         shell: bash
         run: |
-          docker image load -i ~/sr-api-backoffice-image.tar
-          docker image load -i ~/sr-api-legacy-image.tar
-          docker image load -i ~/sr-api-oslo-image.tar
-          docker image load -i ~/sr-api-crab-import-image.tar
-          docker image load -i ~/sr-api-extract-image.tar
-          docker image load -i ~/sr-projector-image.tar
-          docker image load -i ~/sr-projections-syndication-image.tar
-          docker image load -i ~/sr-projections-backoffice-image.tar
-          docker image load -i ~/sr-consumer-image.tar
-          docker image load -i ~/sr-producer-image.tar
-          docker image load -i ~/sr-producer-snapshot-oslo-image.tar
-          docker image load -i ~/sr-migrator-streetname-image.tar
+          echo sr-$IMAGE-image.tar
+          docker image load -i ~/sr-$IMAGE-image.tar
+        env:
+          IMAGE: ${{ matrix.image }}
 
       - name: Push artifacts to ECR Test
         if: needs.build.outputs.version != 'none'
         shell: bash
         run: |
-          echo $SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-legacy:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-oslo:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-crab-import:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-extract:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/projector:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/projections-backoffice:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER
+          echo $IMAGE:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/$IMAGE:$SEMVER
         env:
           BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
+          IMAGE: ${{ matrix.image }}
           SEMVER: ${{ needs.build.outputs.version }}
           WORKSPACE: ${{ github.workspace }}
 
