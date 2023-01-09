@@ -114,18 +114,18 @@ jobs:
       if: env.RELEASE_VERSION != 'none'
       shell: bash
       run: |
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER -o ~/sr-api-backoffice-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-legacy:$SEMVER -o ~/sr-api-legacy-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-oslo:$SEMVER -o ~/sr-api-oslo-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-crab-import:$SEMVER -o ~/sr-api-crab-import-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-extract:$SEMVER -o ~/sr-api-extract-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projector:$SEMVER -o ~/sr-projector-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projections-backoffice:$SEMVER -o ~/sr-projections-backoffice-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER -o ~/sr-projections-syndication-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER -o ~/sr-consumer-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER -o ~/sr-producer-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER -o ~/sr-producer-snapshot-oslo-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER -o ~/sr-migrator-streetname-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER -o ${{ github.workspace }}/sr-api-backoffice-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-legacy:$SEMVER -o ${{ github.workspace }}/sr-api-legacy-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-oslo:$SEMVER -o ${{ github.workspace }}/sr-api-oslo-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-crab-import:$SEMVER -o ${{ github.workspace }}/sr-api-crab-import-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-extract:$SEMVER -o ${{ github.workspace }}/sr-api-extract-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projector:$SEMVER -o ${{ github.workspace }}/sr-projector-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projections-backoffice:$SEMVER -o ${{ github.workspace }}/sr-projections-backoffice-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER -o ${{ github.workspace }}/sr-projections-syndication-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER -o ${{ github.workspace }}/sr-consumer-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER -o ${{ github.workspace }}/sr-producer-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER -o ${{ github.workspace }}/sr-producer-snapshot-oslo-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER -o ${{ github.workspace }}/sr-migrator-streetname-image.tar
       env:
         BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
         SEMVER: ${{ env.RELEASE_VERSION }}
@@ -293,7 +293,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.artifact }}
-          path: ~/sr-${{ matrix.artifact }}-image.tar
+          path: ${{ github.workspace }}/sr-${{ matrix.artifact }}-image.tar
 
   publish_to_atlassian:
     if: needs.build.outputs.version != 'none'
