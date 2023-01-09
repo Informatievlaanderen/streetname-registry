@@ -292,8 +292,8 @@ jobs:
         if: env.RELEASE_VERSION != 'none'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.image }}
-          path: ~/sr-${{ matrix.image }}-image.tar
+          name: ${{ matrix.artifact }}
+          path: ~/sr-${{ matrix.artifact }}-image.tar
 
   publish_to_atlassian:
     if: needs.build.outputs.version != 'none'
