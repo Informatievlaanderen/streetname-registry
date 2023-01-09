@@ -1,3 +1,10 @@
+## [3.16.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.4...v3.16.5) (2023-01-09)
+
+
+### Bug Fixes
+
+* parallel publish / pack in build.fsx ([75af203](https://github.com/informatievlaanderen/streetname-registry/commit/75af2030abbeab8944560c059246d9e9d325e755))
+
 ## [3.16.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.3...v3.16.4) (2023-01-09)
 
 
