@@ -1,3 +1,10 @@
+## [3.16.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.3...v3.16.4) (2023-01-09)
+
+
+### Bug Fixes
+
+* ci build dependency step ([6691227](https://github.com/informatievlaanderen/streetname-registry/commit/669122777d09de0085acc4c97abed0d00fd053d2))
+
 ## [3.16.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.2...v3.16.3) (2023-01-09)
 
 
