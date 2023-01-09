@@ -1,3 +1,10 @@
+## [3.16.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.5...v3.16.6) (2023-01-09)
+
+
+### Bug Fixes
+
+* add checkout to ci upload artifact ([9f01a7e](https://github.com/informatievlaanderen/streetname-registry/commit/9f01a7e45eb9697da6fbbd9903ac2abb6f44fc61))
+
 ## [3.16.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.4...v3.16.5) (2023-01-09)
 
 
