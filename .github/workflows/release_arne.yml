@@ -282,7 +282,7 @@ jobs:
   upload_artifacts:
     if: github.repository_owner == 'Informatievlaanderen'
     needs: build
-    name: Release
+    name: Upload artifacts
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -297,7 +297,7 @@ jobs:
 
   publish_to_atlassian:
     if: needs.build.outputs.version != 'none'
-    needs: upload_artifacts
+    needs: [build, upload_artifacts]
     name: Publish to Atlassian
     runs-on: ubuntu-latest
     steps:
@@ -360,7 +360,7 @@ jobs:
 
   publish_to_nuget:
     if: needs.build.outputs.version != 'none'
-    needs: upload_artifacts
+    needs: [build, upload_artifacts]
     name: Publish to NuGet
     runs-on: ubuntu-latest
     
@@ -443,7 +443,7 @@ jobs:
 
 #  publish_to_github:
 #    if: needs.build.outputs.version != 'none'
-#    needs: upload_artifacts
+#    needs: [build, upload_artifacts]
 #    name: Publish to Github
 #    runs-on: ubuntu-latest
 #    
@@ -532,7 +532,7 @@ jobs:
   
   push_images_to_test:
     if: needs.build.outputs.version != 'none'
-    needs: upload_artifacts
+    needs: [build, upload_artifacts]
     name: Push images to Test
     runs-on: ubuntu-latest
     strategy:
@@ -581,7 +581,7 @@ jobs:
 
   push_images_to_staging:
     if: needs.build.outputs.version != 'none'
-    needs: upload_artifacts
+    needs: [build, upload_artifacts]
     name: Push images to Staging
     runs-on: ubuntu-latest
     strategy:
@@ -632,7 +632,7 @@ jobs:
 
   push_images_to_production:
     if: needs.build.outputs.version != 'none'
-    needs: upload_artifacts
+    needs: [build, upload_artifacts]
     name: Push images to Production
     runs-on: ubuntu-latest
     steps:
