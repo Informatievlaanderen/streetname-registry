@@ -1,3 +1,10 @@
+## [3.16.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.1...v3.16.2) (2023-01-09)
+
+
+### Bug Fixes
+
+* ci parallel download / push artifact ([1c48d75](https://github.com/informatievlaanderen/streetname-registry/commit/1c48d7517014749e23b53c11adad98d5da0997c2))
+
 ## [3.16.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.0...v3.16.1) (2023-01-09)
 
 
