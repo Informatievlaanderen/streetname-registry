@@ -288,6 +288,11 @@ jobs:
       matrix:
         artifact: ['api-backoffice', 'api-legacy', 'api-oslo', 'api-crab-import', 'api-extract', 'projector', 'projections-syndication', 'projections-backoffice', 'consumer', 'producer', 'producer-snapshot-oslo', 'migrator-streetname']
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
       - name: Upload artifact
         if: env.RELEASE_VERSION != 'none'
         uses: actions/upload-artifact@v3
