@@ -1,3 +1,10 @@
+## [3.16.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.6...v3.16.7) (2023-01-10)
+
+
+### Bug Fixes
+
+* ci try using cache ([6279956](https://github.com/informatievlaanderen/streetname-registry/commit/62799561ecef7c68194d42497e7f32c656add55d))
+
 ## [3.16.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.5...v3.16.6) (2023-01-09)
 
 
