@@ -114,22 +114,29 @@ jobs:
       if: env.RELEASE_VERSION != 'none'
       shell: bash
       run: |
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER -o ${{ github.workspace }}/sr-api-backoffice-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-legacy:$SEMVER -o ${{ github.workspace }}/sr-api-legacy-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-oslo:$SEMVER -o ${{ github.workspace }}/sr-api-oslo-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-crab-import:$SEMVER -o ${{ github.workspace }}/sr-api-crab-import-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-extract:$SEMVER -o ${{ github.workspace }}/sr-api-extract-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projector:$SEMVER -o ${{ github.workspace }}/sr-projector-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projections-backoffice:$SEMVER -o ${{ github.workspace }}/sr-projections-backoffice-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER -o ${{ github.workspace }}/sr-projections-syndication-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER -o ${{ github.workspace }}/sr-consumer-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER -o ${{ github.workspace }}/sr-producer-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER -o ${{ github.workspace }}/sr-producer-snapshot-oslo-image.tar
-        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER -o ${{ github.workspace }}/sr-migrator-streetname-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER -o ~/sr-api-backoffice-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-legacy:$SEMVER -o ~/sr-api-legacy-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-oslo:$SEMVER -o ~/sr-api-oslo-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-crab-import:$SEMVER -o ~/sr-api-crab-import-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/api-extract:$SEMVER -o ~/sr-api-extract-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projector:$SEMVER -o ~/sr-projector-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projections-backoffice:$SEMVER -o ~/sr-projections-backoffice-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER -o ~/sr-projections-syndication-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER -o ~/sr-consumer-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER -o ~/sr-producer-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER -o ~/sr-producer-snapshot-oslo-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER -o ~/sr-migrator-streetname-image.tar
       env:
         BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
         SEMVER: ${{ env.RELEASE_VERSION }}
 
+    - name: Cache api-backoffice
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: api-backoffice-cache
+        path:
+          ~/sr-api-backoffice-image.tar
     #
     # Upload NuGet packages
     #
@@ -279,30 +286,25 @@ jobs:
       env:
        SEMVER: ${{ env.RELEASE_VERSION }}
 
-  upload_artifacts:
-    if: github.repository_owner == 'Informatievlaanderen'
-    needs: build
-    name: Upload artifacts
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        artifact: ['api-backoffice', 'api-legacy', 'api-oslo', 'api-crab-import', 'api-extract', 'projector', 'projections-syndication', 'projections-backoffice', 'consumer', 'producer', 'producer-snapshot-oslo', 'migrator-streetname']
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-
-      - name: Upload artifact
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.artifact }}
-          path: ${{ github.workspace }}/sr-${{ matrix.artifact }}-image.tar
+  # upload_artifacts:
+  #   if: github.repository_owner == 'Informatievlaanderen'
+  #   needs: build
+  #   name: Upload artifacts
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       artifact: ['api-backoffice', 'api-legacy', 'api-oslo', 'api-crab-import', 'api-extract', 'projector', 'projections-syndication', 'projections-backoffice', 'consumer', 'producer', 'producer-snapshot-oslo', 'migrator-streetname']
+  #   steps:
+  #     - name: Upload artifact
+  #       if: env.RELEASE_VERSION != 'none'
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ matrix.artifact }}
+  #         path: ~/sr-${{ matrix.artifact }}-image.tar
 
   publish_to_atlassian:
     if: needs.build.outputs.version != 'none'
-    needs: [build, upload_artifacts]
+    needs: [build]
     name: Publish to Atlassian
     runs-on: ubuntu-latest
     steps:
@@ -365,7 +367,7 @@ jobs:
 
   publish_to_nuget:
     if: needs.build.outputs.version != 'none'
-    needs: [build, upload_artifacts]
+    needs: [build]
     name: Publish to NuGet
     runs-on: ubuntu-latest
     
@@ -448,7 +450,7 @@ jobs:
 
 #  publish_to_github:
 #    if: needs.build.outputs.version != 'none'
-#    needs: [build, upload_artifacts]
+#    needs: [build]
 #    name: Publish to Github
 #    runs-on: ubuntu-latest
 #    
@@ -537,12 +539,12 @@ jobs:
   
   push_images_to_test:
     if: needs.build.outputs.version != 'none'
-    needs: [build, upload_artifacts]
+    needs: [build]
     name: Push images to Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: ['api-backoffice', 'api-legacy', 'api-oslo', 'api-crab-import', 'api-extract', 'projector', 'projections-syndication', 'projections-backoffice', 'consumer', 'producer', 'producer-snapshot-oslo', 'migrator-streetname']
+        image: ['api-backoffice'] #, 'api-legacy', 'api-oslo', 'api-crab-import', 'api-extract', 'projector', 'projections-syndication', 'projections-backoffice', 'consumer', 'producer', 'producer-snapshot-oslo', 'migrator-streetname']
     steps:
       - name: Configure AWS credentials (Test)
         if: needs.build.outputs.version != 'none'
@@ -556,12 +558,20 @@ jobs:
         if: needs.build.outputs.version != 'none'
         uses: aws-actions/amazon-ecr-login@v1.5.3
       
-      # Download artifact
+      # # Download artifact
+      # - name: Download artifact
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: ${{ matrix.image }}
+      #     path: ~/
+
+      # Download artifact cache
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/cache@v3
         with:
-          name: ${{ matrix.image }}
-          path: ~/
+          key: api-backoffice-cache
+          path:
+            ~/sr-api-backoffice-image.tar
 
       # Load artifact
       - name: Load artifact
@@ -586,7 +596,7 @@ jobs:
 
   push_images_to_staging:
     if: needs.build.outputs.version != 'none'
-    needs: [build, upload_artifacts]
+    needs: [build]
     name: Push images to Staging
     runs-on: ubuntu-latest
     strategy:
@@ -637,7 +647,7 @@ jobs:
 
   push_images_to_production:
     if: needs.build.outputs.version != 'none'
-    needs: [build, upload_artifacts]
+    needs: [build]
     name: Push images to Production
     runs-on: ubuntu-latest
     steps:
