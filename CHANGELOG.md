@@ -1,3 +1,10 @@
+## [3.16.9](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.8...v3.16.9) (2023-01-10)
+
+
+### Bug Fixes
+
+* finishing up arne release test ([1d217e7](https://github.com/informatievlaanderen/streetname-registry/commit/1d217e7b4e3575d2437eed20670aa3746bfbe9c7))
+
 ## [3.16.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.7...v3.16.8) (2023-01-10)
 
 
