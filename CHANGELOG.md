@@ -1,3 +1,10 @@
+## [3.16.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.7...v3.16.8) (2023-01-10)
+
+
+### Bug Fixes
+
+* use caching instead of artifacts ([82a65bf](https://github.com/informatievlaanderen/streetname-registry/commit/82a65bfa3d7a0fd17ad35492ed61fdaf7974e43a))
+
 ## [3.16.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.6...v3.16.7) (2023-01-10)
 
 
