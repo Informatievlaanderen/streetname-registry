@@ -142,7 +142,7 @@ jobs:
         path:
           ~/sr-api-backoffice-image.tar
 
-     - name: Cache api-legacy
+    - name: Cache api-legacy
       if: env.RELEASE_VERSION != 'none'
       uses: actions/cache@v3
       with:
@@ -150,85 +150,85 @@ jobs:
         path:
           ~/sr-api-legacy-image.tar
 
-      - name: Cache api-oslo
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/cache@v3
-        with:
-          key: api-oslo-cache-${{ env.RELEASE_VERSION }}
-          path:
-            ~/sr-api-oslo-image.tar
+    - name: Cache api-oslo
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: api-oslo-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-api-oslo-image.tar
 
-      - name: Cache api-crab-import
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/cache@v3
-        with:
-          key: api-crab-import-cache-${{ env.RELEASE_VERSION }}
-          path:
-            ~/sr-api-crab-import-image.tar
+    - name: Cache api-crab-import
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: api-crab-import-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-api-crab-import-image.tar
 
-      - name: Cache api-extract
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/cache@v3
-        with:
-          key: api-extract-cache-${{ env.RELEASE_VERSION }}
-          path:
-            ~/sr-api-extract-image.tar
+    - name: Cache api-extract
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: api-extract-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-api-extract-image.tar
 
-      - name: Cache projector
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/cache@v3
-        with:
-          key: projector-cache-${{ env.RELEASE_VERSION }}
-          path:
-            ~/sr-projector-image.tar
+    - name: Cache projector
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: projector-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-projector-image.tar
 
-      - name: Cache projections-backoffice
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/cache@v3
-        with:
-          key: projections-backoffice-cache-${{ env.RELEASE_VERSION }}
-          path:
-            ~/sr-projections-backoffice-image.tar
+    - name: Cache projections-backoffice
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: projections-backoffice-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-projections-backoffice-image.tar
 
-      - name: Cache projections-syndication
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/cache@v3
-        with:
-          key: projections-syndication-cache-${{ env.RELEASE_VERSION }}
-          path:
-            ~/sr-projections-syndication-image.tar
+    - name: Cache projections-syndication
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: projections-syndication-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-projections-syndication-image.tar
 
-      - name: Cache consumer
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/cache@v3
-        with:
-          key: consumer-cache-${{ env.RELEASE_VERSION }}
-          path:
-            ~/sr-consumer-image.tar
+    - name: Cache consumer
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: consumer-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-consumer-image.tar
 
-      - name: Cache producer
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/cache@v3
-        with:
-          key: producer-cache-${{ env.RELEASE_VERSION }}
-          path:
-            ~/sr-producer-image.tar
+    - name: Cache producer
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: producer-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-producer-image.tar
 
-      - name: Cache producer-snapshot-oslo
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/cache@v3
-        with:
-          key: producer-snapshot-oslo-cache-${{ env.RELEASE_VERSION }}
-          path:
-            ~/sr-producer-snapshot-oslo-image.tar
+    - name: Cache producer-snapshot-oslo
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: producer-snapshot-oslo-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-producer-snapshot-oslo-image.tar
 
-      - name: Cache migrator-streetname
-        if: env.RELEASE_VERSION != 'none'
-        uses: actions/cache@v3
-        with:
-          key: migrator-streetname-cache-${{ env.RELEASE_VERSION }}
-          path:
-            ~/sr-migrator-streetname-image.tar
+    - name: Cache migrator-streetname
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: migrator-streetname-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-migrator-streetname-image.tar
     #
     # Upload NuGet packages
     #
