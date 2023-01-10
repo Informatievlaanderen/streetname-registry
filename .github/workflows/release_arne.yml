@@ -130,13 +130,105 @@ jobs:
         BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
         SEMVER: ${{ env.RELEASE_VERSION }}
 
+    #
+    # Cache artifacts
+    #
+
     - name: Cache api-backoffice
       if: env.RELEASE_VERSION != 'none'
       uses: actions/cache@v3
       with:
-        key: api-backoffice-cache
+        key: api-backoffice-cache-${{ env.RELEASE_VERSION }}
         path:
           ~/sr-api-backoffice-image.tar
+
+     - name: Cache api-legacy
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/cache@v3
+      with:
+        key: api-legacy-cache-${{ env.RELEASE_VERSION }}
+        path:
+          ~/sr-api-legacy-image.tar
+
+      - name: Cache api-oslo
+        if: env.RELEASE_VERSION != 'none'
+        uses: actions/cache@v3
+        with:
+          key: api-oslo-cache-${{ env.RELEASE_VERSION }}
+          path:
+            ~/sr-api-oslo-image.tar
+
+      - name: Cache api-crab-import
+        if: env.RELEASE_VERSION != 'none'
+        uses: actions/cache@v3
+        with:
+          key: api-crab-import-cache-${{ env.RELEASE_VERSION }}
+          path:
+            ~/sr-api-crab-import-image.tar
+
+      - name: Cache api-extract
+        if: env.RELEASE_VERSION != 'none'
+        uses: actions/cache@v3
+        with:
+          key: api-extract-cache-${{ env.RELEASE_VERSION }}
+          path:
+            ~/sr-api-extract-image.tar
+
+      - name: Cache projector
+        if: env.RELEASE_VERSION != 'none'
+        uses: actions/cache@v3
+        with:
+          key: projector-cache-${{ env.RELEASE_VERSION }}
+          path:
+            ~/sr-projector-image.tar
+
+      - name: Cache projections-backoffice
+        if: env.RELEASE_VERSION != 'none'
+        uses: actions/cache@v3
+        with:
+          key: projections-backoffice-cache-${{ env.RELEASE_VERSION }}
+          path:
+            ~/sr-projections-backoffice-image.tar
+
+      - name: Cache projections-syndication
+        if: env.RELEASE_VERSION != 'none'
+        uses: actions/cache@v3
+        with:
+          key: projections-syndication-cache-${{ env.RELEASE_VERSION }}
+          path:
+            ~/sr-projections-syndication-image.tar
+
+      - name: Cache consumer
+        if: env.RELEASE_VERSION != 'none'
+        uses: actions/cache@v3
+        with:
+          key: consumer-cache-${{ env.RELEASE_VERSION }}
+          path:
+            ~/sr-consumer-image.tar
+
+      - name: Cache producer
+        if: env.RELEASE_VERSION != 'none'
+        uses: actions/cache@v3
+        with:
+          key: producer-cache-${{ env.RELEASE_VERSION }}
+          path:
+            ~/sr-producer-image.tar
+
+      - name: Cache producer-snapshot-oslo
+        if: env.RELEASE_VERSION != 'none'
+        uses: actions/cache@v3
+        with:
+          key: producer-snapshot-oslo-cache-${{ env.RELEASE_VERSION }}
+          path:
+            ~/sr-producer-snapshot-oslo-image.tar
+
+      - name: Cache migrator-streetname
+        if: env.RELEASE_VERSION != 'none'
+        uses: actions/cache@v3
+        with:
+          key: migrator-streetname-cache-${{ env.RELEASE_VERSION }}
+          path:
+            ~/sr-migrator-streetname-image.tar
     #
     # Upload NuGet packages
     #
@@ -147,8 +239,6 @@ jobs:
       with:
         name: nuget-api-backoffice
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.*.nupkg
-      env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package api-backoffice-abstractions
       if: env.RELEASE_VERSION != 'none'
@@ -156,8 +246,6 @@ jobs:
       with:
         name: nuget-api-backoffice-abstractions
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.*.nupkg
-      env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package api-legacy
       if: env.RELEASE_VERSION != 'none'
@@ -165,8 +253,6 @@ jobs:
       with:
         name: nuget-api-legacy
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.*.nupkg
-      env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package api-oslo
       if: env.RELEASE_VERSION != 'none'
@@ -174,8 +260,6 @@ jobs:
       with:
         name: nuget-api-oslo
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.*.nupkg
-      env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package api-extract
       if: env.RELEASE_VERSION != 'none'
@@ -183,8 +267,6 @@ jobs:
       with:
         name: nuget-api-extract
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.*.nupkg
-      env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package api-crab-import
       if: env.RELEASE_VERSION != 'none'
@@ -192,8 +274,6 @@ jobs:
       with:
         name: nuget-api-crab-import
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.*.nupkg
-      env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package projector
       if: env.RELEASE_VERSION != 'none'
@@ -201,8 +281,6 @@ jobs:
       with:
         name: nuget-projector
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.*.nupkg
-      env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Package Lambda functions
       if: env.RELEASE_VERSION != 'none'
@@ -544,7 +622,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: ['api-backoffice'] #, 'api-legacy', 'api-oslo', 'api-crab-import', 'api-extract', 'projector', 'projections-syndication', 'projections-backoffice', 'consumer', 'producer', 'producer-snapshot-oslo', 'migrator-streetname']
+        image: ['api-backoffice', 'api-legacy', 'api-oslo', 'api-crab-import', 'api-extract', 'projector', 'projections-syndication', 'projections-backoffice', 'consumer', 'producer', 'producer-snapshot-oslo', 'migrator-streetname']
     steps:
       - name: Configure AWS credentials (Test)
         if: needs.build.outputs.version != 'none'
@@ -569,9 +647,9 @@ jobs:
       - name: Download artifact
         uses: actions/cache@v3
         with:
-          key: api-backoffice-cache
+          key: ${{ matrix.image }}-cache-${{ needs.build.outputs.version }}
           path:
-            ~/sr-api-backoffice-image.tar
+            ~/sr-${{ matrix.image }}-image.tar
 
       # Load artifact
       - name: Load artifact
