@@ -67,3 +67,14 @@ jobs:
       semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
 
+  pack-api-backoffice:
+    name: Pack Api BackOffice
+    uses: ./.github/workflows/pack.yml
+    needs: [ set-release-version ]
+    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
+    with:
+      pack-file: Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice
+      test-project: StreetNameRegistry.Tests
+      build-project: StreetNameRegistry.Api.BackOffice
+      semver: ${{ needs.set-release-version.outputs.version }}
+    secrets: inherit

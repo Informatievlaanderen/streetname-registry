@@ -93,7 +93,7 @@ jobs:
 
       - name: Dotnet publish
         shell: bash
-        run: dotnet publish -o dist/${{ inputs.build-project }}/linux --no-build --no-restore --runtime 'linux-x64' --self-contained -f net6.0 src/${{ inputs.build-project }}
+        run: dotnet publish -o dist/${{ inputs.build-project }}/linux --no-build --no-restore --runtime 'linux-x64' -p:PublishReadyToRun=true --self-contained -f net6.0 src/${{ inputs.build-project }}
 
       - name: Containerize
         shell: bash
@@ -118,9 +118,9 @@ jobs:
         if: inputs.semver != 'none'
         uses: actions/cache@v3
         with:
-          key: ${{ inputs.image-name }}-cache-${{ env.RELEASE_VERSION }}
+          key: ${{ inputs.image-name }}-cache-${{ inputs.semver }}
           path:
-            ~/{{ inputs.image-file }}
+            ~/${{ inputs.image-file }}
 
       # - name: Shows logs ACM container
       #   if: ${{ failure() }}
