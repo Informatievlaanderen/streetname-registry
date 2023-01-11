@@ -54,7 +54,7 @@ jobs:
     name: Build Api BackOffice
     uses: ./.github/workflows/build-image.yml
     needs: [ set-release-version ]
-    if: (github.repository_owner == 'Informatievlaanderen') && (env.RELEASE_VERSION != 'none')
+    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (env.RELEASE_VERSION != 'none') }}
     with:
       build-target: Containerize_ApiBackOffice
       image-file: sr-api-backoffice-image.tar
