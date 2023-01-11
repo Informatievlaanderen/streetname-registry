@@ -382,12 +382,12 @@ jobs:
         pip install requests markdown argparse
 
     - name: Download NuGet Api BackOffice
-        uses: actions/cache@v3
-        continue-on-error: false
-        with:
-          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice-cache-${{ needs.set-release-version.outputs.version }}
-          path:
-            dist/nuget/
+      uses: actions/cache@v3
+      continue-on-error: false
+      with:
+        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice-cache-${{ needs.set-release-version.outputs.version }}
+        path:
+          dist/nuget/
 
     - name: Download NuGet Api BackOffice Abstractions
       uses: actions/cache@v3
