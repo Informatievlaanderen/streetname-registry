@@ -96,40 +96,40 @@ Target.create "Containerize" (fun _ ->
     { Project = "StreetNameRegistry.Projections.BackOffice"; Container = "projections-backoffice" }
   |] |> Array.Parallel.iter (fun o -> containerize o.Project o.Container))
 
-// Target.create "Containerize_Projector" (fun _ -> containerize "StreetNameRegistry.Projector" "projector")
+Target.create "Containerize_Projector" (fun _ -> containerize "StreetNameRegistry.Projector" "projector")
 // Target.create "PushContainer_Projector" (fun _ -> push "projector")
 
-// Target.create "Containerize_ApiBackOffice" (fun _ -> containerize "StreetNameRegistry.Api.BackOffice" "api-backoffice")
+Target.create "Containerize_ApiBackOffice" (fun _ -> containerize "StreetNameRegistry.Api.BackOffice" "api-backoffice")
 // Target.create "PushContainer_ApiBackOffice" (fun _ -> push "api-backoffice")
 
-// Target.create "Containerize_ApiLegacy" (fun _ -> containerize "StreetNameRegistry.Api.Legacy" "api-legacy")
+Target.create "Containerize_ApiLegacy" (fun _ -> containerize "StreetNameRegistry.Api.Legacy" "api-legacy")
 // Target.create "PushContainer_ApiLegacy" (fun _ -> push "api-legacy")
 
-// Target.create "Containerize_ApiOslo" (fun _ -> containerize "StreetNameRegistry.Api.Oslo" "api-oslo")
+Target.create "Containerize_ApiOslo" (fun _ -> containerize "StreetNameRegistry.Api.Oslo" "api-oslo")
 // Target.create "PushContainer_ApiOslo" (fun _ -> push "api-oslo")
 
-// Target.create "Containerize_ApiExtract" (fun _ -> containerize "StreetNameRegistry.Api.Extract" "api-extract")
+Target.create "Containerize_ApiExtract" (fun _ -> containerize "StreetNameRegistry.Api.Extract" "api-extract")
 // Target.create "PushContainer_ApiExtract" (fun _ -> push "api-extract")
 
-// Target.create "Containerize_ApiCrabImport" (fun _ -> containerize "StreetNameRegistry.Api.CrabImport" "api-crab-import")
+Target.create "Containerize_ApiCrabImport" (fun _ -> containerize "StreetNameRegistry.Api.CrabImport" "api-crab-import")
 // Target.create "PushContainer_ApiCrabImport" (fun _ -> push "api-crab-import")
 
-// Target.create "Containerize_Consumer" (fun _ -> containerize "StreetNameRegistry.Consumer" "consumer")
+Target.create "Containerize_Consumer" (fun _ -> containerize "StreetNameRegistry.Consumer" "consumer")
 // Target.create "PushContainer_Consumer" (fun _ -> push "consumer")
 
-// Target.create "Containerize_Producer" (fun _ -> containerize "StreetNameRegistry.Producer" "producer")
+Target.create "Containerize_Producer" (fun _ -> containerize "StreetNameRegistry.Producer" "producer")
 // Target.create "PushContainer_Producer" (fun _ -> push "producer")
 
-// Target.create "Containerize_Producer_Snapshot_Oslo" (fun _ -> containerize "StreetNameRegistry.Producer.Snapshot.Oslo" "producer-snapshot-oslo")
+Target.create "Containerize_ProducerSnapshotOslo" (fun _ -> containerize "StreetNameRegistry.Producer.Snapshot.Oslo" "producer-snapshot-oslo")
 // Target.create "PushContainer_Producer_Snapshot_Oslo" (fun _ -> push "producer-snapshot-oslo")
 
-// Target.create "Containerize_Migrator_StreetName" (fun _ -> containerize "StreetNameRegistry.Migrator.StreetName" "migrator-streetname")
+Target.create "Containerize_MigratorStreetName" (fun _ -> containerize "StreetNameRegistry.Migrator.StreetName" "migrator-streetname")
 // Target.create "PushContainer_Migrator_StreetName" (fun _ -> push "migrator-streetname")
 
-// Target.create "Containerize_ProjectionsSyndication" (fun _ -> containerize "StreetNameRegistry.Projections.Syndication" "projections-syndication")
+Target.create "Containerize_ProjectionsSyndication" (fun _ -> containerize "StreetNameRegistry.Projections.Syndication" "projections-syndication")
 // Target.create "PushContainer_ProjectionsSyndication" (fun _ -> push "projections-syndication")
 
-// Target.create "Containerize_ProjectionsBackOffice" (fun _ -> containerize "StreetNameRegistry.Projections.BackOffice" "projections-backoffice")
+Target.create "Containerize_ProjectionsBackOffice" (fun _ -> containerize "StreetNameRegistry.Projections.BackOffice" "projections-backoffice")
 // Target.create "PushContainer_ProjectionsBackOffice" (fun _ -> push "projections-backoffice")
 
 // --------------------------------------------------------------------------------
