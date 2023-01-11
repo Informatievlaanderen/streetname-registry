@@ -305,6 +305,18 @@ jobs:
       semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
 
+  build-lambda-backoffice:
+    name: Build Lambda
+    uses: ./.github/workflows/build-lambda.yml
+    needs: [ set-release-version ]
+    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
+    with:
+      lambda-name: lambda-backoffice
+      test-project: StreetNameRegistry.Tests
+      build-project: StreetNameRegistry.Api.BackOffice.Handlers.Lambda
+      semver: ${{ needs.set-release-version.outputs.version }}
+    secrets: inherit
+
   release:
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     name: Semantic Release
@@ -328,7 +340,8 @@ jobs:
       build-consumer,
       build-producer,
       build-producer-snapshot-oslo,
-      build-migrator-streetname ]
+      build-migrator-streetname,
+      build-lambda-backoffice ]
     outputs:
       version: ${{ steps.set-version.outputs.version }}
     steps:
@@ -423,11 +436,11 @@ jobs:
         name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport-${{ needs.set-release-version.outputs.version }}
         path: dist/nuget/
 
-    - name: Download NuGet Api Projector
+    - name: Download NuGet Projector
       uses: actions/download-artifact@v3
       continue-on-error: false
       with:
-        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Projector-${{ needs.set-release-version.outputs.version }}
+        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector-${{ needs.set-release-version.outputs.version }}
         path: dist/nuget/
 
     - name: Run Semantic Release
