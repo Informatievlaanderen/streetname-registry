@@ -10,6 +10,8 @@ jobs:
     if: github.repository_owner == 'Informatievlaanderen'
     name: Decide next version
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set-version.outputs.version }}
 
     steps:
     - name: Checkout Code
@@ -46,6 +48,7 @@ jobs:
       id: set-version
       run: |
         [ ! -f semver ] && echo none > semver
+        echo $(cat semver)
         echo ::set-output name=version::$(cat semver)
         echo RELEASE_VERSION=$(cat semver) >> $GITHUB_ENV
       shell: bash
@@ -54,13 +57,13 @@ jobs:
     name: Build Api BackOffice
     uses: ./.github/workflows/build-image.yml
     needs: [ set-release-version ]
-    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (env.RELEASE_VERSION != 'none') }}
+    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
       build-target: Containerize_ApiBackOffice
       image-file: sr-api-backoffice-image.tar
       image-name: api-backoffice
       test-project: StreetNameRegistry.Tests
       build-project: StreetNameRegistry.Api.BackOffice
-      semver: ${{ env.RELEASE_VERSION }}
+      semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
 
