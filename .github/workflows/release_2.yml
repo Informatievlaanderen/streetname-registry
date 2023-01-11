@@ -305,35 +305,19 @@ jobs:
       semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
 
-  # Download artifacts (so semantic pushes them to github release page)
-  download-nuget-artifacts:
-    name: Download artifacts
-    needs: [ pack-api-backoffice, pack-api-backoffice-abstractions, pack-api-legacy, pack-api-oslo, pack-api-extract, pack-api-crab-import, pack-projector, set-release-version ]
-    runs-on: ubuntu-latest
-    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
-    strategy:
-      matrix:
-        file: ['Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice',
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions',
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy',
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo',
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract',
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport',
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector' ]
-    steps:
-      - name: download artifact
-        uses: actions/cache@v3
-        continue-on-error: false
-        with:
-          key: nuget-${{ matrix.file }}-cache-${{ needs.set-release-version.outputs.version }}
-          path:
-            dist/nuget/
-
   release:
-    if: github.repository_owner == 'Informatievlaanderen'
+    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     name: Semantic Release
     runs-on: ubuntu-latest
     needs: [
+      set-release-version,
+      pack-api-backoffice,
+      pack-api-backoffice-abstractions,
+      pack-api-legacy,
+      pack-api-oslo,
+      pack-api-extract,
+      pack-api-crab-import,
+      pack-projector,
       build-api-backoffice,
       build-api-legacy,
       build-api-oslo,
@@ -345,13 +329,14 @@ jobs:
       build-consumer,
       build-producer,
       build-producer-snapshot-oslo,
-      build-migrator-streetname,
-      download-nuget-artifacts ]
+      build-migrator-streetname]
     outputs:
       version: ${{ steps.set-version.outputs.version }}
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
+      with:
+          persist-credentials: false
 
     - name: Cache NPM
       uses: actions/cache@v3
@@ -396,6 +381,62 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install requests markdown argparse
+
+    - name: Download NuGet Api BackOffice
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice-cache-${{ needs.set-release-version.outputs.version }}
+          path:
+            dist/nuget/
+
+    - name: Download NuGet Api BackOffice Abstractions
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions-cache-${{ needs.set-release-version.outputs.version }}
+          path:
+            dist/nuget/
+
+    - name: Download NuGet Api Legacy
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy-cache-${{ needs.set-release-version.outputs.version }}
+          path:
+            dist/nuget/
+
+    - name: Download NuGet Api Oslo
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo-cache-${{ needs.set-release-version.outputs.version }}
+          path:
+            dist/nuget/
+
+    - name: Download NuGet Api Extract
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract-cache-${{ needs.set-release-version.outputs.version }}
+          path:
+            dist/nuget/
+
+    - name: Download NuGet Api CrabImport
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport-cache-${{ needs.set-release-version.outputs.version }}
+          path:
+            dist/nuget/
+
+    - name: Download NuGet Api Projector
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Projector-cache-${{ needs.set-release-version.outputs.version }}
+          path:
+            dist/nuget/
 
     - name: Run Semantic Release
       shell: bash
