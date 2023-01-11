@@ -1,3 +1,10 @@
+## [3.16.10](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.9...v3.16.10) (2023-01-11)
+
+
+### Bug Fixes
+
+* improve ci/cd performance ([f428207](https://github.com/informatievlaanderen/streetname-registry/commit/f42820763d95a350740832438f9c64936f795e8a))
+
 ## [3.16.9](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.8...v3.16.9) (2023-01-10)
 
 
