@@ -495,9 +495,8 @@ jobs:
         echo Push Lambda functions to S3 Test
         echo aws s3 cp ~/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
         aws s3 cp ~/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-        popd
       env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
+        SEMVER: ${{ needs.release.outputs.version }}
 
     - name: Configure AWS credentials (Staging)
       uses: aws-actions/configure-aws-credentials@v1-node16
@@ -515,9 +514,8 @@ jobs:
         echo Push Lambda functions to S3 Staging
         echo aws s3 cp ~/lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
         aws s3 cp ~/lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-        popd
       env:
-        SEMVER: ${{ env.RELEASE_VERSION }}
+        SEMVER: ${{ needs.release.outputs.version }}
 
     - name: Configure AWS credentials (Production)
       uses: aws-actions/configure-aws-credentials@v1-node16
@@ -535,9 +533,8 @@ jobs:
         echo Push Lambda functions to S3 Production
         echo aws s3 cp ~/lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
         aws s3 cp ~/lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-        popd
       env:
-       SEMVER: ${{ env.RELEASE_VERSION }}
+       SEMVER: ${{ needs.release.outputs.version }}
 
   publish_to_nuget:
     needs: [ release ]
@@ -701,7 +698,7 @@ jobs:
         continue-on-error: false
         with:
           name: ${{ matrix.image }}-${{ needs.release.outputs.version }}
-          path: ~/sr-${{ matrix.image }}-image.tar
+          path: ~/
 
       # Load artifact
       - name: Load artifact
@@ -748,8 +745,7 @@ jobs:
         continue-on-error: false
         with:
           name: ${{ matrix.image }}-${{ needs.release.outputs.version }}
-          path:
-            ~/sr-${{ matrix.image }}-image.tar
+          path: ~/
 
       # Load artifact
       - name: Load artifact
@@ -798,8 +794,7 @@ jobs:
         continue-on-error: false
         with:
           name: ${{ matrix.image }}-${{ needs.release.outputs.version }}
-          path:
-            ~/sr-${{ matrix.image }}-image.tar
+          path: ~/
 
       # Load artifact
       - name: Load artifact
