@@ -309,8 +309,7 @@ jobs:
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     name: Semantic Release
     runs-on: ubuntu-latest
-    needs: [
-      set-release-version,
+    needs: [ set-release-version,
       pack-api-backoffice,
       pack-api-backoffice-abstractions,
       pack-api-legacy,
@@ -329,7 +328,7 @@ jobs:
       build-consumer,
       build-producer,
       build-producer-snapshot-oslo,
-      build-migrator-streetname]
+      build-migrator-streetname ]
     outputs:
       version: ${{ steps.set-version.outputs.version }}
     steps:
@@ -391,52 +390,52 @@ jobs:
             dist/nuget/
 
     - name: Download NuGet Api BackOffice Abstractions
-        uses: actions/cache@v3
-        continue-on-error: false
-        with:
-          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions-cache-${{ needs.set-release-version.outputs.version }}
-          path:
-            dist/nuget/
+      uses: actions/cache@v3
+      continue-on-error: false
+      with:
+        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions-cache-${{ needs.set-release-version.outputs.version }}
+        path:
+          dist/nuget/
 
     - name: Download NuGet Api Legacy
-        uses: actions/cache@v3
-        continue-on-error: false
-        with:
-          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy-cache-${{ needs.set-release-version.outputs.version }}
-          path:
-            dist/nuget/
+      uses: actions/cache@v3
+      continue-on-error: false
+      with:
+        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy-cache-${{ needs.set-release-version.outputs.version }}
+        path:
+          dist/nuget/
 
     - name: Download NuGet Api Oslo
-        uses: actions/cache@v3
-        continue-on-error: false
-        with:
-          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo-cache-${{ needs.set-release-version.outputs.version }}
-          path:
-            dist/nuget/
+      uses: actions/cache@v3
+      continue-on-error: false
+      with:
+        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo-cache-${{ needs.set-release-version.outputs.version }}
+        path:
+          dist/nuget/
 
     - name: Download NuGet Api Extract
-        uses: actions/cache@v3
-        continue-on-error: false
-        with:
-          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract-cache-${{ needs.set-release-version.outputs.version }}
-          path:
-            dist/nuget/
+      uses: actions/cache@v3
+      continue-on-error: false
+      with:
+        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract-cache-${{ needs.set-release-version.outputs.version }}
+        path:
+          dist/nuget/
 
     - name: Download NuGet Api CrabImport
-        uses: actions/cache@v3
-        continue-on-error: false
-        with:
-          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport-cache-${{ needs.set-release-version.outputs.version }}
-          path:
-            dist/nuget/
+      uses: actions/cache@v3
+      continue-on-error: false
+      with:
+        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport-cache-${{ needs.set-release-version.outputs.version }}
+        path:
+          dist/nuget/
 
     - name: Download NuGet Api Projector
-        uses: actions/cache@v3
-        continue-on-error: false
-        with:
-          key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Projector-cache-${{ needs.set-release-version.outputs.version }}
-          path:
-            dist/nuget/
+      uses: actions/cache@v3
+      continue-on-error: false
+      with:
+        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Projector-cache-${{ needs.set-release-version.outputs.version }}
+        path:
+          dist/nuget/
 
     - name: Run Semantic Release
       shell: bash
