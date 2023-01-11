@@ -1,3 +1,11 @@
+## [3.16.11](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.10...v3.16.11) (2023-01-11)
+
+
+### Bug Fixes
+
+* first try new release ([70100b4](https://github.com/informatievlaanderen/streetname-registry/commit/70100b41a6b9f4b50613985bf553d27848750931))
+* same as previous ([3b8fd7a](https://github.com/informatievlaanderen/streetname-registry/commit/3b8fd7af2272c92e8668e87cf31bdbef9b43af80))
+
 ## [3.16.10](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.9...v3.16.10) (2023-01-11)
 
 

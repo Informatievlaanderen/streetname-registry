@@ -1,6 +1,6 @@
 {
   "name": "streetname-registry",
-  "version": "3.16.10",
+  "version": "3.16.11",
   "description": "Authentic base registry containing all streetnames of Flanders.",
   "author": "Basisregisters Vlaanderen",
   "license": "EUPL-1.2",
@@ -119,7 +119,7 @@
       {
         "path": "@semantic-release/npm",
         "npmPublish": false
-      },      
+      },
       {
         "path": "@semantic-release/git",
         "assets": [
