@@ -309,9 +309,8 @@ jobs:
   download-nuget-artifacts:
     name: Download artifacts
     needs: [ pack-api-backoffice, pack-api-backoffice-abstractions, pack-api-legacy, pack-api-oslo, pack-api-extract, pack-api-crab-import, pack-projector, set-release-version ]
+    runs-on: ubuntu-latest
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
-    uses: actions/cache@v3
-    continue-on-error: false
     strategy:
       matrix:
         file: [
@@ -322,10 +321,14 @@ jobs:
           'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract'
           'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport',
           'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector' ]
-    with:
-      key: nuget-${{ matrix.file }}-cache-${{ needs.set-release-version.outputs.version }}
-      path:
-        dist/nuget/
+    steps:
+      - name: download artifact
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          key: nuget-${{ matrix.file }}-cache-${{ needs.set-release-version.outputs.version }}
+          path:
+            dist/nuget/
 
   release:
     if: github.repository_owner == 'Informatievlaanderen'
