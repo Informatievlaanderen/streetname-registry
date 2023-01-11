@@ -313,12 +313,11 @@ jobs:
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     strategy:
       matrix:
-        file: [
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice'
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions'
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy'
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo'
-          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract'
+        file: ['Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice',
+          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions',
+          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy',
+          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo',
+          'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract',
           'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport',
           'Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector' ]
     steps:
