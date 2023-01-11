@@ -116,11 +116,10 @@ jobs:
 
       - name: Cache api-backoffice
         if: inputs.semver != 'none'
-        uses: actions/cache@v3
+        uses: actions/upload-artifact@v3
         with:
-          key: ${{ inputs.image-name }}-cache-${{ inputs.semver }}
-          path:
-            ~/${{ inputs.image-file }}
+          name: ${{ inputs.image-name }}-${{ inputs.semver }}
+          path: ~/${{ inputs.image-file }}
 
       # - name: Shows logs ACM container
       #   if: ${{ failure() }}

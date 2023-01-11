@@ -382,67 +382,60 @@ jobs:
         pip install requests markdown argparse
 
     - name: Download NuGet Api BackOffice
-      uses: actions/cache@v3
+      uses: actions/download-artifact@v3
       continue-on-error: false
       with:
-        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice-cache-${{ needs.set-release-version.outputs.version }}
-        path:
-          dist/nuget/
+        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice-${{ needs.set-release-version.outputs.version }}
+        path: dist/nuget/
 
     - name: Download NuGet Api BackOffice Abstractions
-      uses: actions/cache@v3
+      uses: actions/download-artifact@v3
       continue-on-error: false
       with:
-        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions-cache-${{ needs.set-release-version.outputs.version }}
-        path:
-          dist/nuget/
+        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions-${{ needs.set-release-version.outputs.version }}
+        path: dist/nuget/
 
     - name: Download NuGet Api Legacy
-      uses: actions/cache@v3
+      uses: actions/download-artifact@v3
       continue-on-error: false
       with:
-        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy-cache-${{ needs.set-release-version.outputs.version }}
-        path:
-          dist/nuget/
+        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy-${{ needs.set-release-version.outputs.version }}
+        path: dist/nuget/
 
     - name: Download NuGet Api Oslo
-      uses: actions/cache@v3
+      uses: actions/download-artifact@v3
       continue-on-error: false
       with:
-        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo-cache-${{ needs.set-release-version.outputs.version }}
-        path:
-          dist/nuget/
+        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo-${{ needs.set-release-version.outputs.version }}
+        path: dist/nuget/
 
     - name: Download NuGet Api Extract
-      uses: actions/cache@v3
+      uses: actions/download-artifact@v3
       continue-on-error: false
       with:
-        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract-cache-${{ needs.set-release-version.outputs.version }}
-        path:
-          dist/nuget/
+        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract-${{ needs.set-release-version.outputs.version }}
+        path: dist/nuget/
 
     - name: Download NuGet Api CrabImport
-      uses: actions/cache@v3
+      uses: actions/download-artifact@v3
       continue-on-error: false
       with:
-        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport-cache-${{ needs.set-release-version.outputs.version }}
-        path:
-          dist/nuget/
+        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport-${{ needs.set-release-version.outputs.version }}
+        path: dist/nuget/
 
     - name: Download NuGet Api Projector
-      uses: actions/cache@v3
+      uses: actions/download-artifact@v3
       continue-on-error: false
       with:
-        key: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Projector-cache-${{ needs.set-release-version.outputs.version }}
-        path:
-          dist/nuget/
+        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Projector-${{ needs.set-release-version.outputs.version }}
+        path: dist/nuget/
 
     - name: Run Semantic Release
       shell: bash
       run: npx semantic-release
       env:
         BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.VBR_GIT_RELEASE_TOKEN }}
         GIT_COMMIT: ${{ github.sha }}
         GIT_USERNAME: ${{ secrets.VBR_GIT_USER }}
         GIT_AUTHOR_NAME: ${{ secrets.VBR_GIT_USER }}

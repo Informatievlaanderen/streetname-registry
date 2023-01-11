@@ -95,10 +95,9 @@ jobs:
         env:
           SEMVER: ${{ inputs.semver }}
 
-      - name: Cache package
+      - name: Upload package
         if: inputs.semver != 'none'
-        uses: actions/cache@v3
+        uses: actions/upload-artifact@v3
         with:
-          key: nuget-${{ inputs.pack-file }}-cache-${{ inputs.semver }}
-          path:
-            dist/nuget/${{ inputs.pack-file }}.${{ inputs.semver }}.nupkg
+          name: nuget-${{ inputs.pack-file }}-${{ inputs.semver }}
+          path: dist/nuget/${{ inputs.pack-file }}.${{ inputs.semver }}.nupkg
