@@ -1,21 +1,15 @@
-name: Build image
+name: Build lambda
 
 on:
   workflow_call:
     inputs:
-      build-target:
-        required: true
-        type: string
-      image-file: #sr-api-backoffice.tar
-        required: true
-        type: string
-      image-name: #api-backoffice
+      lambda-name: #lambda-backoffice
         required: true
         type: string
       test-project: #StreetNameRegistry.Tests
         required: true
         type: string
-      build-project: #StreetNameRegistry.Api.BackOffice
+      build-project: #StreetNameRegistry.Api.BackOffice.Handlers.Lambda
         required: true
         type: string
       semver:
@@ -23,7 +17,7 @@ on:
         type: string
 
 jobs:
-  build-image:
+  build-lambda:
     runs-on: ubuntu-latest
 
     steps:
@@ -95,31 +89,22 @@ jobs:
         shell: bash
         run: dotnet publish -o dist/${{ inputs.build-project }}/linux --no-build --no-restore --runtime 'linux-x64' -p:PublishReadyToRun=true --self-contained -f net6.0 src/${{ inputs.build-project }}
 
-      - name: Containerize
+      - name: Package Lambda functions
+        if: env.RELEASE_VERSION != 'none'
         shell: bash
-        run: CI_BUILD_NUMBER=$SEMVER ./build.sh ${{ inputs.build-target }}
-        env:
-          BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
-          SEMVER: ${{ inputs.semver }}
+        run: |
+          echo Zip lambda functions
+          pushd dist/${{ inputs.build-project }}/linux
+          echo zip -r lambda.zip .
+          zip -r lambda.zip .
+          popd
 
-      - name: Show images
-        shell: bash
-        run: docker images
-
-      - name: Save Image
-        if: inputs.semver != 'none'
-        shell: bash
-        run: docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/${{ inputs.image-name }}:$SEMVER -o ~/${{ inputs.image-file}}
-        env:
-          BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
-          SEMVER: ${{ inputs.semver }}
-
-      - name: Upload image
+      - name: Upload Lambda
         if: inputs.semver != 'none'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.image-name }}-${{ inputs.semver }}
-          path: ~/${{ inputs.image-file }}
+          name: ${{ inputs.lambda-name }}-${{ inputs.semver }}
+          path: dist/${{ inputs.build-project }}/linux/lambda.zip
 
       # - name: Shows logs ACM container
       #   if: ${{ failure() }}
