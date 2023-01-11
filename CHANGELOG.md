@@ -1,3 +1,10 @@
+## [3.16.13](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.12...v3.16.13) (2023-01-11)
+
+
+### Bug Fixes
+
+* upload lambda/push images ([448f912](https://github.com/informatievlaanderen/streetname-registry/commit/448f9124bec762eaa913ed85346c3adc89573bba))
+
 ## [3.16.12](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.11...v3.16.12) (2023-01-11)
 
 
