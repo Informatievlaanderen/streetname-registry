@@ -1,3 +1,10 @@
+## [3.16.12](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.11...v3.16.12) (2023-01-11)
+
+
+### Bug Fixes
+
+* ci push images/lambda/nuget/atlassian ([94bb69f](https://github.com/informatievlaanderen/streetname-registry/commit/94bb69fa633a8668c57329dfebf90bb0d6261c20))
+
 ## [3.16.11](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.10...v3.16.11) (2023-01-11)
 
 
