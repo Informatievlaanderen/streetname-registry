@@ -1,3 +1,10 @@
+## [3.16.14](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.13...v3.16.14) (2023-01-11)
+
+
+### Bug Fixes
+
+* add deploy to release 2 ([37913ec](https://github.com/informatievlaanderen/streetname-registry/commit/37913ecd0d05968a055041d6442c2265ec21bd4c))
+
 ## [3.16.13](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.12...v3.16.13) (2023-01-11)
 
 
