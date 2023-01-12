@@ -1,3 +1,10 @@
+## [3.16.16](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.15...v3.16.16) (2023-01-12)
+
+
+### Bug Fixes
+
+* use build-pipeline workflows ([dc01b07](https://github.com/informatievlaanderen/streetname-registry/commit/dc01b07c6986f3b7dd35cc268c1e1cbf724cc5a7))
+
 ## [3.16.15](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.14...v3.16.15) (2023-01-12)
 
 
