@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
+    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Configuration;
     using FeatureToggles;
     using Microsoft.AspNetCore.Builder;

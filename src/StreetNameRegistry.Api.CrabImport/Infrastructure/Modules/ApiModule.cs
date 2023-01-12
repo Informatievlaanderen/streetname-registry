@@ -1,7 +1,7 @@
 namespace StreetNameRegistry.Api.CrabImport.Infrastructure.Modules
 {
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
+    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.GrAr.Import.Api;
@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Api.CrabImport.Infrastructure.Modules
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.GrAr.Import.Processing.CrabImport;
     using CrabImport;
     using StreetNameRegistry.Infrastructure;
@@ -37,9 +38,9 @@ namespace StreetNameRegistry.Api.CrabImport.Infrastructure.Modules
         {
             var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
 
-            builder
-                .RegisterModule(new DataDogModule(_configuration))
+            _services.RegisterModule(new DataDogModule(_configuration));
 
+            builder
                 .RegisterModule(new IdempotencyModule(
                     _services,
                     _configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>().ConnectionString,
