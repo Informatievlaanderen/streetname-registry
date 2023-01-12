@@ -55,7 +55,7 @@ jobs:
 
   build-api-backoffice:
     name: Build Api BackOffice
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -70,7 +70,7 @@ jobs:
 
   build-api-legacy:
     name: Build Api Legacy
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -85,7 +85,7 @@ jobs:
 
   build-api-oslo:
     name: Build Api Oslo
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -100,7 +100,7 @@ jobs:
 
   build-api-crab-import:
     name: Build Api CrabImport
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -115,7 +115,7 @@ jobs:
 
   build-api-extract:
     name: Build Api Extract
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -130,7 +130,7 @@ jobs:
 
   build-projector:
     name: Build Projector
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -145,7 +145,7 @@ jobs:
 
   build-projections-backoffice:
     name: Build Projections BackOffice
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -160,7 +160,7 @@ jobs:
 
   build-projections-syndication:
     name: Build Projections Syndication
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -175,7 +175,7 @@ jobs:
 
   build-consumer:
     name: Build Consumer
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -190,7 +190,7 @@ jobs:
 
   build-producer:
     name: Build Producer
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -205,7 +205,7 @@ jobs:
 
   build-producer-snapshot-oslo:
     name: Build Producer Snapshot Oslo
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -220,7 +220,7 @@ jobs:
 
   build-migrator-streetname:
     name: Build Migrator StreetName
-    uses: ./.github/workflows/build-image.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -235,7 +235,7 @@ jobs:
 
   pack-api-backoffice:
     name: Pack Api BackOffice
-    uses: ./.github/workflows/pack.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/pack.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -247,7 +247,7 @@ jobs:
 
   pack-api-backoffice-abstractions:
     name: Pack Api BackOffice Abstractions
-    uses: ./.github/workflows/pack.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/pack.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -259,7 +259,7 @@ jobs:
 
   pack-api-legacy:
     name: Pack Api Legacy
-    uses: ./.github/workflows/pack.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/pack.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -271,7 +271,7 @@ jobs:
 
   pack-api-oslo:
     name: Pack Api Oslo
-    uses: ./.github/workflows/pack.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/pack.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -283,7 +283,7 @@ jobs:
 
   pack-api-extract:
     name: Pack Api Extract
-    uses: ./.github/workflows/pack.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/pack.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -295,7 +295,7 @@ jobs:
 
   pack-api-crab-import:
     name: Pack Api CrabImport
-    uses: ./.github/workflows/pack.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/pack.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -307,7 +307,7 @@ jobs:
 
   pack-projector:
     name: Pack Projector
-    uses: ./.github/workflows/pack.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/pack.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
@@ -854,7 +854,7 @@ jobs:
 
   deploy_to_test:
     if: github.repository_owner == 'Informatievlaanderen'
-    needs: [ deploy_to_test_start_slack, release ]
+    needs: [ push_images_to_test, release ]
     name: Deploy to test
     runs-on: ubuntu-latest
     strategy:
@@ -964,7 +964,7 @@ jobs:
 
   deploy_to_staging:
     if: github.repository_owner == 'Informatievlaanderen'
-    needs: [ deploy_to_staging_start_slack, release ]
+    needs: [ push_images_to_staging, deploy_to_test_finish_slack, release ]
     name: Deploy to staging
     runs-on: ubuntu-latest
     strategy:
@@ -1050,112 +1050,112 @@ jobs:
         SLACK_CHANNEL: ${{ secrets.VBR_NOTIFIER_CHANNEL_NAME }}
         REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
 
-  deploy_to_production_start_slack:
-    if: github.repository_owner == 'Informatievlaanderen'
-    needs: [ push_images_to_production, deploy_to_staging_finish_slack ]
-    name: Deploy to production started
-    environment: prd
-    runs-on: ubuntu-latest
+  # deploy_to_production_start_slack:
+  #   if: github.repository_owner == 'Informatievlaanderen'
+  #   needs: [ push_images_to_production, deploy_to_staging_finish_slack ]
+  #   name: Deploy to production started
+  #   environment: prd
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Parse repository name
-      run: echo REPOSITORY_NAME=$(echo ""$GITHUB_REPOSITORY"" | awk -F / '{print $2}' | sed -e ""s/:refs//"") >> $GITHUB_ENV
-      shell: bash
+  #   steps:
+  #   - name: Parse repository name
+  #     run: echo REPOSITORY_NAME=$(echo ""$GITHUB_REPOSITORY"" | awk -F / '{print $2}' | sed -e ""s/:refs//"") >> $GITHUB_ENV
+  #     shell: bash
 
-    - name: Notify deployment started
-      uses: slackapi/slack-github-action@v1.23.0
-      with:
-        channel-id: '#team-dinosaur-dev'
-        slack-message: Deployment of streetname-registry to production has started
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
-        SLACK_CHANNEL: ${{ secrets.VBR_NOTIFIER_CHANNEL_NAME }}
-        REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
+  #   - name: Notify deployment started
+  #     uses: slackapi/slack-github-action@v1.23.0
+  #     with:
+  #       channel-id: '#team-dinosaur-dev'
+  #       slack-message: Deployment of streetname-registry to production has started
+  #     env:
+  #       SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
+  #       SLACK_CHANNEL: ${{ secrets.VBR_NOTIFIER_CHANNEL_NAME }}
+  #       REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
 
-  deploy_to_production:
-    if: github.repository_owner == 'Informatievlaanderen'
-    needs: [ deploy_to_production_start_slack, release ]
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        services: ['streetname-registry-api', 'streetname-registry-import-api', 'streetname-registry-projections']
+  # deploy_to_production:
+  #   if: github.repository_owner == 'Informatievlaanderen'
+  #   needs: [ deploy_to_production_start_slack, release ]
+  #   name: Deploy to Production
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       services: ['streetname-registry-api', 'streetname-registry-import-api', 'streetname-registry-projections']
 
-    steps:
-    - name: CD services
-      env:
-        BUILD_URL: ${{ secrets.VBR_AWS_BUILD_API }}/${{matrix.services}}
-        STATUS_URL: ${{ secrets.VBR_AWS_BUILD_STATUS_API }}/${{matrix.services}}
-      uses: informatievlaanderen/awscurl-polling-action/polling-action@main
-      with:
-          environment: prd
-          version: ${{ needs.release.outputs.version }}
-          status-url: $STATUS_URL
-          deploy-url: $BUILD_URL
-          access-key: ${{ secrets.VBR_AWS_BUILD_USER_ACCESS_KEY_ID }}
-          secret-key: ${{ secrets.VBR_AWS_BUILD_USER_SECRET_ACCESS_KEY }}
-          region: eu-west-1
-          interval: 2
+  #   steps:
+  #   - name: CD services
+  #     env:
+  #       BUILD_URL: ${{ secrets.VBR_AWS_BUILD_API }}/${{matrix.services}}
+  #       STATUS_URL: ${{ secrets.VBR_AWS_BUILD_STATUS_API }}/${{matrix.services}}
+  #     uses: informatievlaanderen/awscurl-polling-action/polling-action@main
+  #     with:
+  #         environment: prd
+  #         version: ${{ needs.release.outputs.version }}
+  #         status-url: $STATUS_URL
+  #         deploy-url: $BUILD_URL
+  #         access-key: ${{ secrets.VBR_AWS_BUILD_USER_ACCESS_KEY_ID }}
+  #         secret-key: ${{ secrets.VBR_AWS_BUILD_USER_SECRET_ACCESS_KEY }}
+  #         region: eu-west-1
+  #         interval: 2
 
-    - name: output CD services
-      shell: bash
-      run: |
-        echo build-uuid: ${{ steps.awscurl-polling-action.outputs.build-uuid }}
-        echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
-        echo ${{ steps.awscurl-polling-action.outputs.final-message }}
+  #   - name: output CD services
+  #     shell: bash
+  #     run: |
+  #       echo build-uuid: ${{ steps.awscurl-polling-action.outputs.build-uuid }}
+  #       echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
+  #       echo ${{ steps.awscurl-polling-action.outputs.final-message }}
 
-  deploy_lambda_to_production:
-    if: github.repository_owner == 'Informatievlaanderen'
-    needs: [deploy_to_production, release]
-    name: Deploy lambda to production
-    runs-on: ubuntu-latest
+  # deploy_lambda_to_production:
+  #   if: github.repository_owner == 'Informatievlaanderen'
+  #   needs: [deploy_to_production, release]
+  #   name: Deploy lambda to production
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: CD Lambda(s) Configure credentials
-      uses: aws-actions/configure-aws-credentials@v1-node16
-      with:
-        aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_PRD }}
-        aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_PRD }}
-        aws-region: ${{ secrets.VBR_AWS_REGION_PRD }}
+  #   steps:
+  #   - name: CD Lambda(s) Configure credentials
+  #     uses: aws-actions/configure-aws-credentials@v1-node16
+  #     with:
+  #       aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_PRD }}
+  #       aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_PRD }}
+  #       aws-region: ${{ secrets.VBR_AWS_REGION_PRD }}
 
-    - name: Prepare Lambda(s)
-      shell: bash
-      run: |
-        echo aws s3 cp s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
-        aws s3 cp s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
-      env:
-        VERSION: ${{ needs.release.outputs.version }}
+  #   - name: Prepare Lambda(s)
+  #     shell: bash
+  #     run: |
+  #       echo aws s3 cp s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
+  #       aws s3 cp s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
+  #     env:
+  #       VERSION: ${{ needs.release.outputs.version }}
 
-    - name: Promote Lambda(s)
-      shell: bash
-      run: |
-        echo pulling awscurl docker image
-        docker pull ghcr.io/okigan/awscurl:latest
-        echo docker run --rm okigan/awscurl --access_key $ACCESS_KEY_ID --secret_key $SECRET_ACCESS_KEY_ID --region $REGION -X POST -d '{ "functionName": "sr-sqsbackofficehandlerfunction", "project": "basisregisters", "domain": "basisregisters" }' $PROMOTEURL/prd
-        docker run --rm okigan/awscurl --access_key $ACCESS_KEY_ID --secret_key $SECRET_ACCESS_KEY_ID --region $REGION -X POST -d '{ "functionName": "sr-sqsbackofficehandlerfunction", "project": "basisregisters", "domain": "basisregisters" }' $PROMOTEURL/prd
-      env:
-        ACCESS_KEY_ID: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
-        SECRET_ACCESS_KEY_ID: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
-        REGION: ${{ secrets.VBR_AWS_REGION_PRD }}
-        PROMOTEURL: ${{ secrets.VBR_AWS_PROMOTE_LAMBDA_BASEURL }}
+  #   - name: Promote Lambda(s)
+  #     shell: bash
+  #     run: |
+  #       echo pulling awscurl docker image
+  #       docker pull ghcr.io/okigan/awscurl:latest
+  #       echo docker run --rm okigan/awscurl --access_key $ACCESS_KEY_ID --secret_key $SECRET_ACCESS_KEY_ID --region $REGION -X POST -d '{ "functionName": "sr-sqsbackofficehandlerfunction", "project": "basisregisters", "domain": "basisregisters" }' $PROMOTEURL/prd
+  #       docker run --rm okigan/awscurl --access_key $ACCESS_KEY_ID --secret_key $SECRET_ACCESS_KEY_ID --region $REGION -X POST -d '{ "functionName": "sr-sqsbackofficehandlerfunction", "project": "basisregisters", "domain": "basisregisters" }' $PROMOTEURL/prd
+  #     env:
+  #       ACCESS_KEY_ID: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
+  #       SECRET_ACCESS_KEY_ID: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
+  #       REGION: ${{ secrets.VBR_AWS_REGION_PRD }}
+  #       PROMOTEURL: ${{ secrets.VBR_AWS_PROMOTE_LAMBDA_BASEURL }}
 
-  deploy_to_production_finish_slack:
-    if: github.repository_owner == 'Informatievlaanderen'
-    needs: [ deploy_lambda_to_production ]
-    name: Deploy to production finished
-    runs-on: ubuntu-latest
+  # deploy_to_production_finish_slack:
+  #   if: github.repository_owner == 'Informatievlaanderen'
+  #   needs: [ deploy_lambda_to_production ]
+  #   name: Deploy to production finished
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Parse repository name
-      run: echo REPOSITORY_NAME=$(echo ""$GITHUB_REPOSITORY"" | awk -F / '{print $2}' | sed -e ""s/:refs//"") >> $GITHUB_ENV
-      shell: bash
+  #   steps:
+  #   - name: Parse repository name
+  #     run: echo REPOSITORY_NAME=$(echo ""$GITHUB_REPOSITORY"" | awk -F / '{print $2}' | sed -e ""s/:refs//"") >> $GITHUB_ENV
+  #     shell: bash
 
-    - name: Notify deployment finished
-      uses: slackapi/slack-github-action@v1.23.0
-      with:
-        channel-id: '#team-dinosaur-dev'
-        slack-message: Deployment of streetname-registry to production has finished
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
-        SLACK_CHANNEL: ${{ secrets.VBR_NOTIFIER_CHANNEL_NAME }}
-        REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
+  #   - name: Notify deployment finished
+  #     uses: slackapi/slack-github-action@v1.23.0
+  #     with:
+  #       channel-id: '#team-dinosaur-dev'
+  #       slack-message: Deployment of streetname-registry to production has finished
+  #     env:
+  #       SLACK_BOT_TOKEN: ${{ secrets.VBR_SLACK_BOT_TOKEN }}
+  #       SLACK_CHANNEL: ${{ secrets.VBR_NOTIFIER_CHANNEL_NAME }}
+  #       REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
