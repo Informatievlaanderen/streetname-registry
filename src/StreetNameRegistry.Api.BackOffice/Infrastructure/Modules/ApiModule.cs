@@ -1,11 +1,12 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 {
     using Abstractions;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
+    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Be.Vlaanderen.Basisregisters.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
@@ -39,8 +40,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
         {
             var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
 
-            builder
-                .RegisterModule(new DataDogModule(_configuration));
+            _services.RegisterModule(new DataDogModule(_configuration));
 
             builder
                 .RegisterType<ProblemDetailsHelper>()
