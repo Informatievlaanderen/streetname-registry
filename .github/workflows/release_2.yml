@@ -59,6 +59,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_ApiBackOffice
       image-file: sr-api-backoffice-image.tar
       image-name: api-backoffice
@@ -73,6 +74,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_ApiLegacy
       image-file: sr-api-legacy-image.tar
       image-name: api-legacy
@@ -87,6 +89,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_ApiOslo
       image-file: sr-api-oslo-image.tar
       image-name: api-oslo
@@ -101,6 +104,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_ApiCrabImport
       image-file: sr-api-crab-import-image.tar
       image-name: api-crab-import
@@ -115,6 +119,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_ApiExtract
       image-file: sr-api-extract-image.tar
       image-name: api-extract
@@ -129,6 +134,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_Projector
       image-file: sr-projector-image.tar
       image-name: projector
@@ -143,6 +149,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_ProjectionsBackOffice
       image-file: sr-projections-backoffice-image.tar
       image-name: projections-backoffice
@@ -157,6 +164,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_ProjectionsSyndication
       image-file: sr-projections-syndication-image.tar
       image-name: projections-syndication
@@ -171,6 +179,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_Consumer
       image-file: sr-consumer-image.tar
       image-name: consumer
@@ -185,6 +194,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_Producer
       image-file: sr-producer-image.tar
       image-name: producer
@@ -199,6 +209,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_ProducerSnapshotOslo
       image-file: sr-producer-snapshot-oslo-image.tar
       image-name: producer-snapshot-oslo
@@ -213,6 +224,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
+      registry: streetname-registry
       build-target: Containerize_MigratorStreetName
       image-file: sr-migrator-streetname-image.tar
       image-name: migrator-streetname
@@ -307,7 +319,7 @@ jobs:
 
   build-lambda-backoffice:
     name: Build Lambda
-    uses: ./.github/workflows/build-lambda.yml
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-lambda.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:

@@ -3,6 +3,9 @@ name: Build image
 on:
   workflow_call:
     inputs:
+      registry:
+        required: true
+        type: string
       build-target:
         required: true
         type: string
@@ -109,7 +112,7 @@ jobs:
       - name: Save Image
         if: inputs.semver != 'none'
         shell: bash
-        run: docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/${{ inputs.image-name }}:$SEMVER -o ~/${{ inputs.image-file}}
+        run: docker image save $BUILD_DOCKER_REGISTRY/${{ inputs.registry }}/${{ inputs.image-name }}:$SEMVER -o ~/${{ inputs.image-file}}
         env:
           BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
           SEMVER: ${{ inputs.semver }}
