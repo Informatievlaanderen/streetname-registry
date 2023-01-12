@@ -1,3 +1,10 @@
+## [3.16.15](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.14...v3.16.15) (2023-01-12)
+
+
+### Bug Fixes
+
+* test workflow in other repo ([eb2045f](https://github.com/informatievlaanderen/streetname-registry/commit/eb2045f78c153da23248e3a76e4dd6a655441519))
+
 ## [3.16.14](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.13...v3.16.14) (2023-01-11)
 
 
