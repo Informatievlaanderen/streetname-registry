@@ -1,3 +1,10 @@
+## [3.17.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.17.0...v3.17.1) (2023-01-13)
+
+
+### Bug Fixes
+
+* test setassemblyversions ([3a4d3cb](https://github.com/informatievlaanderen/streetname-registry/commit/3a4d3cbbc7903fb8997e45e52cf12ad80256dac2))
+
 # [3.17.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.16.16...v3.17.0) (2023-01-12)
 
 
