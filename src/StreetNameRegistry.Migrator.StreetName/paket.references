@@ -1,4 +1,4 @@
-
+Be.Vlaanderen.Basisregisters.AcmIdm
 Be.Vlaanderen.Basisregisters.Aws.DistributedMutex
 Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac
 Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql
@@ -21,6 +21,7 @@ Serilog.Enrichers.Thread
 Serilog.Enrichers.Environment
 Serilog.Formatting.Compact
 
+Microsoft.AspNetCore.Authentication.JwtBearer
 Microsoft.EntityFrameworkCore.SqlServer
 Microsoft.EntityFrameworkCore.InMemory
 Microsoft.Extensions.Configuration

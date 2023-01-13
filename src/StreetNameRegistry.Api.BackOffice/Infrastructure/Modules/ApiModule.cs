@@ -17,6 +17,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Microsoft.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
+    using Be.Vlaanderen.Basisregisters.AcmIdm;
 
     public sealed class ApiModule : Module
     {
@@ -72,6 +73,8 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             builder.RegisterModule(new CommandHandlingModule(_configuration));
             builder.RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
             builder.RegisterSnapshotModule(_configuration);
+
+            _services.AddAcmIdmAuthorizationHandlers();
 
             builder.Populate(_services);
         }

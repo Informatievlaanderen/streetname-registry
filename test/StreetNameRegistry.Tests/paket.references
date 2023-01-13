@@ -6,6 +6,8 @@ xunit.categories
 AutoFixture
 FluentAssertions
 
+Microsoft.AspNetCore.Authentication.JwtBearer
+
 Be.Vlaanderen.Basisregisters.AggregateSource.Testing.CommandHandling
 Be.Vlaanderen.Basisregisters.AggregateSource.Testing
 Be.Vlaanderen.Basisregisters.AggregateSource.Testing.SqlStreamStore.Autofac

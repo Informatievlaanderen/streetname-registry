@@ -5,12 +5,14 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using System.Reflection;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
+    using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Configuration;
     using FeatureToggles;
+    using IdentityModel.AspNetCore.OAuth2Introspection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -47,15 +49,19 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
         /// <param name="services">The collection of services to configure the application with.</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            var oAuth2IntrospectionOptions = _configuration
+                .GetSection(nameof(OAuth2IntrospectionOptions))
+                .Get<OAuth2IntrospectionOptions>();
+
             var baseUrl = _configuration.GetValue<string>("BaseUrl");
             var baseUrlForExceptions = baseUrl.EndsWith("/")
                 ? baseUrl.Substring(0, baseUrl.Length - 1)
                 : baseUrl;
 
-            services
-                .ConfigureDefaultForApi<Startup>(new StartupConfigureOptions
-                {
-                    Cors =
+            services.AddAcmIdmAuthentication(oAuth2IntrospectionOptions!);
+            services.ConfigureDefaultForApi<Startup>(new StartupConfigureOptions
+            {
+                Cors =
                     {
                         Origins = _configuration
                             .GetSection("Cors")
@@ -63,13 +69,13 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                             .Select(c => c.Value)
                             .ToArray()
                     },
-                    Server =
+                Server =
                     {
                         BaseUrl = baseUrlForExceptions
                     },
-                    Swagger =
+                Swagger =
                     {
-                        ApiInfo = (provider, description) => new OpenApiInfo
+                        ApiInfo = (_, description) => new OpenApiInfo
                         {
                             Version = description.ApiVersion.ToString(),
                             Title = "Basisregisters Vlaanderen StreetName Registry API",
@@ -83,7 +89,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                         },
                         XmlCommentPaths = new[] {typeof(Startup).GetTypeInfo().Assembly.GetName().Name}
                     },
-                    MiddlewareHooks =
+                MiddlewareHooks =
                     {
                         FluentValidation = fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>(),
 
@@ -98,15 +104,20 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                                     connectionString.Value,
                                     name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
                                     tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                        },
+
+                        Authorization = options =>
+                        {
+                            options.AddAcmIdmAuthorization();
                         }
                     }
-                }
-                .EnableJsonErrorActionFilterOption())
-                .Configure<ResponseOptions>(_configuration)
-                .Configure<TicketingOptions>(_configuration.GetSection(TicketingModule.TicketingServiceConfigKey))
-                .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
-                .AddSingleton(c =>
-                    new UseSqsToggle(c.GetRequiredService<IOptions<FeatureToggleOptions>>().Value.UseSqs));
+            }
+            .EnableJsonErrorActionFilterOption())
+            .Configure<ResponseOptions>(_configuration)
+            .Configure<TicketingOptions>(_configuration.GetSection(TicketingModule.TicketingServiceConfigKey))
+            .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
+            .AddSingleton(c =>
+                new UseSqsToggle(c.GetRequiredService<IOptions<FeatureToggleOptions>>().Value.UseSqs));
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new ApiModule(_configuration, services, _loggerFactory));
