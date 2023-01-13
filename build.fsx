@@ -118,7 +118,6 @@ Target.create "Test" ignore
 Target.create "Publish" ignore
 Target.create "Pack" ignore
 //Target.create "Containerize" ignore
-Target.create "Push" ignore
 
 "NpmInstall"
   ==> "DotNetCli"
