@@ -79,6 +79,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Producer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Projections.BackOffice", "src\StreetNameRegistry.Projections.BackOffice\StreetNameRegistry.Projections.BackOffice.csproj", "{C1C797C7-4A24-4E9C-B7D0-7E097562342E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreetNameRegistry.Api.BackOffice.IntegrationTests", "test\StreetNameRegistry.Api.BackOffice.IntegrationTests\StreetNameRegistry.Api.BackOffice.IntegrationTests.csproj", "{EFDF165C-DCFE-4577-A00F-04691197FB1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -185,6 +187,10 @@ Global
 		{C1C797C7-4A24-4E9C-B7D0-7E097562342E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1C797C7-4A24-4E9C-B7D0-7E097562342E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1C797C7-4A24-4E9C-B7D0-7E097562342E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFDF165C-DCFE-4577-A00F-04691197FB1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFDF165C-DCFE-4577-A00F-04691197FB1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFDF165C-DCFE-4577-A00F-04691197FB1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFDF165C-DCFE-4577-A00F-04691197FB1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -215,6 +221,7 @@ Global
 		{04DFEEA8-A1B2-4CA2-83E9-E06F40C3452C} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{C1ED8210-F8FC-4269-B089-1B0CE7A62566} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{C1C797C7-4A24-4E9C-B7D0-7E097562342E} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
+		{EFDF165C-DCFE-4577-A00F-04691197FB1B} = {81641B0B-BEFB-476D-8519-3774313E944B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3B44FE80-30FE-47B7-A0DE-8610218FFF63}
