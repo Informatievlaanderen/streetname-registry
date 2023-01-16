@@ -21,7 +21,6 @@ Serilog.Enrichers.Thread
 Serilog.Enrichers.Environment
 Serilog.Formatting.Compact
 
-Microsoft.AspNetCore.Authentication.JwtBearer
 Microsoft.EntityFrameworkCore.SqlServer
 Microsoft.EntityFrameworkCore.InMemory
 Microsoft.Extensions.Configuration
