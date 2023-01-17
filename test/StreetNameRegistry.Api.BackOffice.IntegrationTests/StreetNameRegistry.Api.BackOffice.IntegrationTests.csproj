@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice\StreetNameRegistry.Api.BackOffice.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Tests.ContainerHelper\StreetNameRegistry.Tests.ContainerHelper.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\.paket\Paket.Restore.targets" />
