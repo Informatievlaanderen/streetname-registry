@@ -10,6 +10,8 @@ nuget Microsoft.Extensions.Configuration.EnvironmentVariables 6.0.1
 nuget Microsoft.Extensions.Configuration.Json 6.0.0
 nuget Microsoft.Extensions.DependencyInjection 6.0.0
 
+nuget Microsoft.Data.SqlClient 5.0.1
+
 nuget Microsoft.Extensions.Http.Polly 6.0.3
 
 // For more healtchecks, look at https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
@@ -117,3 +119,4 @@ nuget Serilog.Sinks.XUnit 3.0.3
 // BUILD STUFF
 nuget SourceLink.Embed.AllSourceFiles 2.8.3 copy_local: true
 nuget SourceLink.Copy.PdbFiles 2.8.3 copy_local: true
+nuget Ductus.FluentDocker 2.10.57
