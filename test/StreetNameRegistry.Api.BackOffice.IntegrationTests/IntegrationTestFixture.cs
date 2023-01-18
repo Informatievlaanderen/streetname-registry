@@ -1,28 +1,70 @@
 namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
 {
     using System;
-    using System.Data;
+    using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Net.Http;
     using System.Threading.Tasks;
-    using Ductus.FluentDocker.Services;
+    using IdentityModel;
+    using IdentityModel.AspNetCore.OAuth2Introspection;
+    using IdentityModel.Client;
+    using Infrastructure;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.TestHost;
     using Microsoft.Data.SqlClient;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using Xunit;
 
     public class IntegrationTestFixture : IAsyncLifetime
     {
-        private static readonly Lazy<ICompositeService> BackOfficeApiContainers =
-            new Lazy<ICompositeService>(Tests.ContainerHelper.BackOfficeApiContainers.Compose);
-
+        public OAuth2IntrospectionOptions OAuth2IntrospectionOptions { get; private set; }
+        public TestServer TestServer { get; private set; }
         public SqlConnection SqlConnection { get; private set; }
+
+        public async Task<string> GetAccessToken(string? requiredScopes = null)
+        {
+            var tokenClient = new TokenClient(
+                () => new HttpClient(),
+                new TokenClientOptions
+                {
+                    Address = "https://authenticatie-ti.vlaanderen.be/op/v1/token",
+                    ClientId = OAuth2IntrospectionOptions.ClientId,
+                    ClientSecret = OAuth2IntrospectionOptions.ClientSecret,
+                    Parameters = new Parameters(new[] { new KeyValuePair<string, string>("scope", requiredScopes ?? string.Empty) })
+                });
+
+            var response = await tokenClient.RequestTokenAsync(OidcConstants.GrantTypes.ClientCredentials);
+
+            return response.AccessToken;
+        }
 
         public async Task InitializeAsync()
         {
-            // Invoke the lazy member for it be initialized and run the docker container.
-            _ = BackOfficeApiContainers.Value;
-
+            _ = Tests.ContainerHelper.DockerComposer.Compose("sqlserver.yml");
             await WaitForSqlServerToBecomeAvailable();
 
             await CreateDatabase();
+
+            var hostBuilder = new WebHostBuilder()
+                .ConfigureAppConfiguration(configurationBuilder =>
+                {
+                    var configuration = configurationBuilder.SetBasePath(Directory.GetCurrentDirectory())
+                        .AddJsonFile("appsettings.json")
+                        .AddJsonFile($"appsettings.{Environment.MachineName.ToLowerInvariant()}.json", optional: true)
+                        .AddEnvironmentVariables()
+                        .Build();
+
+                    OAuth2IntrospectionOptions = configuration
+                        .GetSection(nameof(OAuth2IntrospectionOptions))
+                        .Get<OAuth2IntrospectionOptions>()!;
+                })
+                .UseStartup<Startup>()
+                .ConfigureLogging(loggingBuilder => loggingBuilder.AddConsole())
+                .UseTestServer();
+
+            TestServer = new TestServer(hostBuilder);
         }
 
         private async Task WaitForSqlServerToBecomeAvailable()
@@ -60,11 +102,6 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
 
         public async Task DisposeAsync()
         {
-            if (SqlConnection.State == ConnectionState.Open)
-            {
-                await SqlConnection.CloseAsync();
-            }
-
             await SqlConnection.DisposeAsync();
         }
     }
