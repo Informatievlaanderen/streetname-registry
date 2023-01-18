@@ -31,6 +31,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
                 var configuration = configurationBuilder.SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json")
                     .AddJsonFile($"appsettings.{Environment.MachineName.ToLowerInvariant()}.json", optional: true)
+                    .AddEnvironmentVariables()
                     .Build();
 
                 _oAuth2IntrospectionOptions = configuration
