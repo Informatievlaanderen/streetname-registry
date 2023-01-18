@@ -1,3 +1,11 @@
+## [3.18.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.18.0...v3.18.1) (2023-01-18)
+
+
+### Bug Fixes
+
+* don't test IntegrationTests ([f626ad9](https://github.com/informatievlaanderen/streetname-registry/commit/f626ad99bc0799006ac0f880ded5ac3d1ff40787))
+* refine integration tests to be run once every day at 1:00 AM (which is 0:00 UTC) ([70c87d6](https://github.com/informatievlaanderen/streetname-registry/commit/70c87d638014033cd83dfea8e6dff15960f15b76))
+
 # [3.18.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.17.1...v3.18.0) (2023-01-18)
 
 
