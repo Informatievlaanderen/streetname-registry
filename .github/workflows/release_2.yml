@@ -43,8 +43,6 @@ jobs:
         GIT_EMAIL: ${{ secrets.VBR_GIT_EMAIL }}
         GIT_AUTHOR_EMAIL: ${{ secrets.VBR_GIT_EMAIL }}
         GIT_COMMITTER_EMAIL: ${{ secrets.VBR_GIT_EMAIL }}
-        OAuth2IntrospectionOptions__ClientId: ${{ secrets.VBR_ACMIDM_CLIENT_ID_TST }}
-        OAuth2IntrospectionOptions__ClientSecret: ${{ secrets.VBR_ACMIDM_CLIENT_SECRET_TST }}
 
     - name: Set Release Version
       id: set-version
@@ -65,7 +63,7 @@ jobs:
       build-target: Containerize_ApiBackOffice
       image-file: sr-api-backoffice-image.tar
       image-name: api-backoffice
-      test-project: StreetNameRegistry.Api.BackOffice.IntegrationTests
+      test-project: StreetNameRegistry.Tests
       build-project: StreetNameRegistry.Api.BackOffice
       semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
@@ -470,8 +468,6 @@ jobs:
         GIT_EMAIL: ${{ secrets.VBR_GIT_EMAIL }}
         GIT_AUTHOR_EMAIL: ${{ secrets.VBR_GIT_EMAIL }}
         GIT_COMMITTER_EMAIL: ${{ secrets.VBR_GIT_EMAIL }}
-        OAuth2IntrospectionOptions__ClientId: ${{ secrets.VBR_ACMIDM_CLIENT_ID_TST }}
-        OAuth2IntrospectionOptions__ClientSecret: ${{ secrets.VBR_ACMIDM_CLIENT_SECRET_TST }}
 
     - name: Set Release Version
       id: set-version

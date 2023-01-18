@@ -88,10 +88,7 @@ jobs:
 
     - name: Test
       shell: bash
-      run: dotnet dotcover test --dcReportType=HTML --nologo --no-build StreetNameRegistry.sln
-      env:
-        OAuth2IntrospectionOptions__ClientId: ${{ secrets.VBR_ACMIDM_CLIENT_ID_TST }}
-        OAuth2IntrospectionOptions__ClientSecret: ${{ secrets.VBR_ACMIDM_CLIENT_SECRET_TST }}
+      run: dotnet dotcover test --dcReportType=HTML --nologo --no-build --filter 'FullyQualifiedName!~IntegrationTests' StreetNameRegistry.sln
 
     - name: Sonar end build & analyze
       env:
