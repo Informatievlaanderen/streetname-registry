@@ -97,8 +97,6 @@ jobs:
         GIT_EMAIL: ${{ secrets.VBR_GIT_EMAIL }}
         GIT_AUTHOR_EMAIL: ${{ secrets.VBR_GIT_EMAIL }}
         GIT_COMMITTER_EMAIL: ${{ secrets.VBR_GIT_EMAIL }}
-        OAuth2IntrospectionOptions__ClientId: ${{ secrets.VBR_ACMIDM_CLIENT_ID_TST }}
-        OAuth2IntrospectionOptions__ClientSecret: ${{ secrets.VBR_ACMIDM_CLIENT_SECRET_TST }}
 
     - name: Set Release Version
       id: set-version
