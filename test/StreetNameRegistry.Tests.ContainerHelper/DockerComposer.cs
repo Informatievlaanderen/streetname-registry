@@ -4,11 +4,11 @@ namespace StreetNameRegistry.Tests.ContainerHelper
     using Ductus.FluentDocker.Builders;
     using Ductus.FluentDocker.Services;
 
-    public static class BackOfficeApiContainers
+    public static class DockerComposer
     {
-        public static ICompositeService Compose()
+        public static ICompositeService Compose(string fileName)
         {
-            var fileName = Path.Combine(Directory.GetCurrentDirectory(), "backofficeapidependencies.yml");
+            fileName = Path.Combine(Directory.GetCurrentDirectory(), fileName);
 
             return new Builder()
                 .UseContainer()
