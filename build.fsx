@@ -46,7 +46,11 @@ Target.create "Build_Solution" (fun _ ->
   buildSolution "StreetNameRegistry"
 )
 
-Target.create "Test_Solution" (fun _ -> test "StreetNameRegistry")
+Target.create "Test_Solution" (fun _ ->
+    [
+        "test" @@ "StreetNameRegistry.Tests"
+    ] |> List.iter testWithDotNet
+)
 
 Target.create "Publish_Solution" (fun _ ->
   [|"StreetNameRegistry.Projector"
