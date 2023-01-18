@@ -1,3 +1,21 @@
+# [3.18.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.17.1...v3.18.0) (2023-01-18)
+
+
+### Bug Fixes
+
+* 2 Authorize attributes ([208eea8](https://github.com/informatievlaanderen/streetname-registry/commit/208eea86cf7dcbb173e2e76a939b4bb778ed0aca))
+* add environment variables to integration tests configuration & change build.yml ([4c4af4f](https://github.com/informatievlaanderen/streetname-registry/commit/4c4af4f265817afd0030c96a43c857107405530a))
+* bump basisregisters-acmidm & remove unneeded dependencies ([66c5c10](https://github.com/informatievlaanderen/streetname-registry/commit/66c5c10cf15cd77ef547ad9aa225335fa658401b))
+* remove acm-idm from Migrator.StreetName ([e028af2](https://github.com/informatievlaanderen/streetname-registry/commit/e028af2a325b1cc4c1d52623d128ee8a6482f7c7))
+* remove JwtBearer from test references ([c826b3b](https://github.com/informatievlaanderen/streetname-registry/commit/c826b3baabe1c4efab7af9ae4aa91c7fdd6bf3a8))
+* run integration tests during build & release; clean up integration tests -> test fixture ([f2bfdb2](https://github.com/informatievlaanderen/streetname-registry/commit/f2bfdb2bbafb1dbbf7a8f8906510ed6fbb1986f8))
+
+
+### Features
+
+* add acm idm integration test project ([73880d6](https://github.com/informatievlaanderen/streetname-registry/commit/73880d6eb459f366169925a51991c7741f5fb3c5))
+* add acm/idm ([d0e3c5c](https://github.com/informatievlaanderen/streetname-registry/commit/d0e3c5caef3ee224fade75f038e8d2ee3aa86ebb))
+
 ## [3.17.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.17.0...v3.17.1) (2023-01-13)
 
 
