@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.DockerUtilities;
     using IdentityModel;
     using IdentityModel.AspNetCore.OAuth2Introspection;
     using IdentityModel.Client;
@@ -42,7 +43,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
 
         public async Task InitializeAsync()
         {
-            _ = Tests.ContainerHelper.DockerComposer.Compose("sqlserver.yml");
+            _ = DockerComposer.Compose("sqlserver.yml", "streetname-integration-tests");
             await WaitForSqlServerToBecomeAvailable();
 
             await CreateDatabase();
