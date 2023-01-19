@@ -116,7 +116,8 @@ nuget Moq 4.17.2
 nuget AutoFixture.Xunit2 4.17.0
 nuget Serilog.Sinks.XUnit 3.0.3
 
+nuget Be.Vlaanderen.Basisregisters.DockerUtilities 1.0.1
+
 // BUILD STUFF
 nuget SourceLink.Embed.AllSourceFiles 2.8.3 copy_local: true
 nuget SourceLink.Copy.PdbFiles 2.8.3 copy_local: true
-nuget Ductus.FluentDocker 2.10.57

@@ -6,6 +6,8 @@ Microsoft.AspNetCore.Mvc.Testing
 Microsoft.AspNetCore.TestHost
 Microsoft.Data.SqlClient
 
+Be.Vlaanderen.Basisregisters.DockerUtilities
+
 AspNetCore.HealthChecks.SqlServer
 
 Be.Vlaanderen.Basisregisters.AcmIdm
