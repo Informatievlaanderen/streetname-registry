@@ -305,18 +305,6 @@ jobs:
       semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
 
-  pack-projector:
-    name: Pack Projector
-    uses: Informatievlaanderen/build-pipeline/.github/workflows/pack.yml@main
-    needs: [ set-release-version ]
-    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
-    with:
-      pack-file: Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector
-      test-project: StreetNameRegistry.Tests
-      build-project: StreetNameRegistry.Projector
-      semver: ${{ needs.set-release-version.outputs.version }}
-    secrets: inherit
-
   build-lambda-backoffice:
     name: Build Lambda
     uses: Informatievlaanderen/build-pipeline/.github/workflows/build-lambda.yml@main
