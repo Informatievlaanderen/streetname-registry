@@ -69,17 +69,12 @@ Target.create "Publish_Solution" (fun _ ->
   |] |> Array.Parallel.iter publishSource)
 
 Target.create "Pack_Solution" (fun _ ->
-  [|"StreetNameRegistry.Projector"
-    "StreetNameRegistry.Api.BackOffice"
+  [|"StreetNameRegistry.Api.BackOffice"
     "StreetNameRegistry.Api.BackOffice.Abstractions"
     "StreetNameRegistry.Api.Legacy"
     "StreetNameRegistry.Api.Oslo"
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
-    "StreetNameRegistry.Producer"
-    "StreetNameRegistry.Producer.Snapshot.Oslo"
-    "StreetNameRegistry.Consumer"
-    "StreetNameRegistry.Migrator.StreetName"
   |] |> Array.Parallel.iter pack)
 
 type ContainerObject = { Project: string; Container: string }
