@@ -16,7 +16,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     using Municipality;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Infrastructure;
-    using StreetNameRegistry.Api.BackOffice.Infrastructure.FeatureToggles;
     using StreetNameRegistry.Api.BackOffice.Infrastructure.Options;
     using Testing;
     using Xunit.Abstractions;
@@ -42,7 +41,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
             TicketingOptions.Value.InternalBaseUrl = InternalTicketUrl;
 
             MockMediator = new Mock<IMediator>();
-            Controller = CreateApiBusControllerWithUser(useSqs);
+            Controller = CreateApiBusControllerWithUser();
         }
 
         protected void MockMediatorResponse<TRequest, TResponse>(TResponse response)
@@ -78,9 +77,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
             return new Uri($"{InternalTicketUrl}/tickets/{ticketId:D}");
         }
 
-        public TController CreateApiBusControllerWithUser(bool useSqs, string username = "John Doe")
+        public TController CreateApiBusControllerWithUser(string username = "John Doe")
         {
-            var controller = Activator.CreateInstance(typeof(TController), MockMediator.Object, new UseSqsToggle(useSqs), TicketingOptions) as TController;
+            var controller = Activator.CreateInstance(typeof(TController), MockMediator.Object, TicketingOptions) as TController;
 
             var claims = new List<Claim>()
             {

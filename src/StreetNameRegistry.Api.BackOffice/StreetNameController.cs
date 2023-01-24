@@ -5,7 +5,6 @@ namespace StreetNameRegistry.Api.BackOffice
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;
     using FluentValidation;
     using FluentValidation.Results;
-    using Infrastructure.FeatureToggles;
     using Infrastructure.Options;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
@@ -18,16 +17,13 @@ namespace StreetNameRegistry.Api.BackOffice
     public partial class StreetNameController : BackOfficeApiController
     {
         private readonly IMediator _mediator;
-        private readonly UseSqsToggle _useSqsToggle;
         private readonly TicketingOptions _ticketingOptions;
 
         public StreetNameController(
             IMediator mediator,
-            UseSqsToggle useSqsToggle,
             IOptions<TicketingOptions> ticketingOptions)
         {
             _mediator = mediator;
-            _useSqsToggle = useSqsToggle;
             _ticketingOptions = ticketingOptions.Value;
         }
 
