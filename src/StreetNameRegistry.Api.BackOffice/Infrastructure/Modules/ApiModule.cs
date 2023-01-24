@@ -52,26 +52,16 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 .As<IIfMatchHeaderValidator>()
                 .AsSelf();
 
-            builder.RegisterModule(new IdempotencyModule(
-                _services,
-                _configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()
-                    .ConnectionString,
-                new IdempotencyMigrationsTableInfo(Schema.Import),
-                new IdempotencyTableInfo(Schema.Import),
-                _loggerFactory));
+            builder
+                .RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
+                .RegisterModule(new EnvelopeModule())
+                .RegisterModule(new BackOfficeModule(_configuration, _services, _loggerFactory))
+                .RegisterModule(new MediatRModule())
+                .RegisterModule(new SqsHandlersModule(_configuration[SqsQueueUrlConfigKey]))
+                .RegisterModule(new TicketingModule(_configuration, _services))
+                .RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
 
-            builder.RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly,
-                eventSerializerSettings));
-
-            builder.RegisterModule(new EnvelopeModule());
-            builder.RegisterModule(new SequenceModule(_configuration, _services, _loggerFactory));
-            builder.RegisterModule(new BackOfficeModule(_configuration, _services, _loggerFactory));
-            builder.RegisterModule(new MediatRModule());
-            builder.RegisterModule(new SqsHandlersModule(_configuration[SqsQueueUrlConfigKey]));
-            builder.RegisterModule(new TicketingModule(_configuration, _services));
-
-            builder.RegisterModule(new CommandHandlingModule(_configuration));
-            builder.RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
+            builder.RegisterEventstreamModule(_configuration);
             builder.RegisterSnapshotModule(_configuration);
 
             _services.AddAcmIdmAuthorizationHandlers();

@@ -5,7 +5,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore;
     using Be.Vlaanderen.Basisregisters.Api;
-    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Configuration;
     using IdentityModel.AspNetCore.OAuth2Introspection;
@@ -17,7 +16,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using Microsoft.Extensions.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using Microsoft.OpenApi.Models;
     using Modules;
     using Options;
@@ -112,9 +110,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                         }
                     }
                     .EnableJsonErrorActionFilterOption())
-                .Configure<ResponseOptions>(_configuration)
-                .Configure<TicketingOptions>(_configuration.GetSection(TicketingModule.TicketingServiceConfigKey))
-                .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey));
+                .Configure<TicketingOptions>(_configuration.GetSection(TicketingModule.TicketingServiceConfigKey));
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new ApiModule(_configuration, services, _loggerFactory));
@@ -193,10 +189,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                     }
                 });
 
-            app.UseIdempotencyDatabaseMigrations();
-
             MigrationsHelper.Run(
-                _configuration.GetConnectionString("Sequences"),
                 _configuration.GetConnectionString("BackOffice"),
                 serviceProvider.GetService<ILoggerFactory>());
 

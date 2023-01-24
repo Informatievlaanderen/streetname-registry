@@ -1,20 +1,18 @@
-namespace StreetNameRegistry.Api.BackOffice.Infrastructure
+﻿namespace StreetNameRegistry.Infrastructure
 {
     using System;
-    using Abstractions;
     using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using Polly;
-    using StreetNameRegistry.Infrastructure;
 
     public class MigrationsLogger { }
 
     public static class MigrationsHelper
     {
         public static void Run(
-            string backOfficeConnectionString,
-            ILoggerFactory loggerFactory = null)
+            string sequencesConnectionString,
+            ILoggerFactory? loggerFactory = null)
         {
             var logger = loggerFactory?.CreateLogger<MigrationsLogger>();
 
@@ -30,29 +28,29 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                         return TimeSpan.FromSeconds(randomValue);
                     })
                 .Execute(() =>
-                {
-                    logger?.LogInformation("Running EF Migrations.");
-                    RunInternalBackOffice(backOfficeConnectionString, loggerFactory);
-                });
+                    {
+                        logger?.LogInformation("Running EF Migrations.");
+                        RunInternal(sequencesConnectionString, loggerFactory);
+                    });
         }
 
-        private static void RunInternalBackOffice(string connectionString, ILoggerFactory? loggerFactory)
+        private static void RunInternal(string sequencesConnectionString, ILoggerFactory? loggerFactory)
         {
-            var migratorOptions = new DbContextOptionsBuilder<BackOfficeContext>()
+            var migratorOptions = new DbContextOptionsBuilder<SequenceContext>()
                 .UseSqlServer(
-                    connectionString,
+                    sequencesConnectionString,
                     sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
-                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.BackOffice, Schema.BackOffice);
+                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.Sequence, Schema.Sequence);
                     });
 
-            if (loggerFactory != null)
+            if (loggerFactory is not null)
             {
                 migratorOptions = migratorOptions.UseLoggerFactory(loggerFactory);
             }
 
-            using var migrator = new BackOfficeContext(migratorOptions.Options);
+            using var migrator = new SequenceContext(migratorOptions.Options);
             migrator.Database.Migrate();
         }
     }

@@ -24,18 +24,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
         where TController: BackOfficeApiController
     {
         protected readonly TController Controller;
-        protected const string DetailUrl = "https://www.registry.com/streetname/voorgesteld/{0}";
         protected const string PublicTicketUrl = "https://www.ticketing.com";
         protected const string InternalTicketUrl = "https://www.internalticketing.com";
-        protected IOptions<ResponseOptions> ResponseOptions { get; }
         protected IOptions<TicketingOptions> TicketingOptions { get; }
         protected Mock<IMediator> MockMediator { get; }
 
-        protected BackOfficeApiTest(ITestOutputHelper testOutputHelper, bool useSqs = false) : base(testOutputHelper)
+        protected BackOfficeApiTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
-            ResponseOptions = Options.Create(Fixture.Create<ResponseOptions>());
-            ResponseOptions.Value.DetailUrl = DetailUrl;
-
             TicketingOptions = Options.Create(Fixture.Create<TicketingOptions>());
             TicketingOptions.Value.PublicBaseUrl = PublicTicketUrl;
             TicketingOptions.Value.InternalBaseUrl = InternalTicketUrl;
