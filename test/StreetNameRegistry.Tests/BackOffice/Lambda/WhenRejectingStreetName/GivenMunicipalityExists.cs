@@ -75,7 +75,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             //Act
             await handler.Handle(new RejectStreetNameLambdaRequest(municipalityId, new RejectStreetNameSqsRequest
                 {
-                    Request = new RejectStreetNameBackOfficeRequest { PersistentLocalId = streetNamePersistentLocalId },
+                    Request = new RejectStreetNameRequest { PersistentLocalId = streetNamePersistentLocalId },
                     TicketId = Guid.NewGuid(),
                     Metadata = new Dictionary<string, object?>(),
                     ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -102,7 +102,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             // Act
             await sut.Handle(new RejectStreetNameLambdaRequest(Guid.NewGuid().ToString(), new RejectStreetNameSqsRequest
             {
-                Request = new RejectStreetNameBackOfficeRequest(),
+                Request = new RejectStreetNameRequest(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -132,7 +132,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             // Act
             await sut.Handle(new RejectStreetNameLambdaRequest(Guid.NewGuid().ToString(), new RejectStreetNameSqsRequest
             {
-                Request = new RejectStreetNameBackOfficeRequest(),
+                Request = new RejectStreetNameRequest(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -177,7 +177,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             // Act
             await sut.Handle(new RejectStreetNameLambdaRequest(municipalityId, new RejectStreetNameSqsRequest
             {
-                Request = new RejectStreetNameBackOfficeRequest { PersistentLocalId = streetNamePersistentLocalId },
+                Request = new RejectStreetNameRequest { PersistentLocalId = streetNamePersistentLocalId },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()

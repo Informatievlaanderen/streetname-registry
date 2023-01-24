@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         [Fact]
         public void GivenEmptyStreetName_ThenReturnsExpectedMessage()
         {
-            var result = _validator.TestValidate(new StreetNameProposeRequest
+            var result = _validator.TestValidate(new ProposeStreetNameRequest
             {
                 GemeenteId = "bla",
                 Straatnamen = new Dictionary<Taal, string>
@@ -30,15 +30,15 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 }
             });
 
-            result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.Straatnamen)}[0]")
-                .WithErrorMessage($"Straatnaam in 'nl' kan niet leeg zijn.")
+            result.ShouldHaveValidationErrorFor($"{nameof(ProposeStreetNameRequest.Straatnamen)}[0]")
+                .WithErrorMessage($"Straatnaam in 'nl' kan niet leeg zijn.")
                 .WithErrorCode(StreetNameNotEmptyValidator.Code);
         }
 
         [Fact]
         public void GivenOneEmptyStreetName_ThenReturnsExpectedMessage()
         {
-            var result = _validator.TestValidate(new StreetNameProposeRequest
+            var result = _validator.TestValidate(new ProposeStreetNameRequest
             {
                 GemeenteId = "bla",
                 Straatnamen = new Dictionary<Taal, string>
@@ -48,8 +48,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 }
             });
 
-            result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.Straatnamen)}[1]")
-                .WithErrorMessage("Straatnaam in 'fr' kan niet leeg zijn.")
+            result.ShouldHaveValidationErrorFor($"{nameof(ProposeStreetNameRequest.Straatnamen)}[1]")
+                .WithErrorMessage("Straatnaam in 'fr' kan niet leeg zijn.")
                 .WithErrorCode(StreetNameNotEmptyValidator.Code);
         }
 
@@ -58,7 +58,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         {
             const string streetName = "Boulevard Louis Edelhart Lodewijk van Groothertogdom Luxemburg";
 
-            var result = _validator.TestValidate(new StreetNameProposeRequest
+            var result = _validator.TestValidate(new ProposeStreetNameRequest
             {
                 GemeenteId = "bla",
                 Straatnamen = new Dictionary<Taal, string>
@@ -67,7 +67,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 }
             });
 
-            result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.Straatnamen)}[0]")
+            result.ShouldHaveValidationErrorFor($"{nameof(ProposeStreetNameRequest.Straatnamen)}[0]")
                 .WithErrorMessage($"Maximum lengte van een straatnaam in 'nl' is 60 tekens. U heeft momenteel {streetName.Length} tekens.")
                 .WithErrorCode(StreetNameMaxLengthValidator.Code);
         }
@@ -77,7 +77,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         {
             const string gemeenteId = "bla";
 
-            var result = _validator.TestValidate(new StreetNameProposeRequest
+            var result = _validator.TestValidate(new ProposeStreetNameRequest
             {
                 GemeenteId = gemeenteId,
                 Straatnamen = new Dictionary<Taal, string>
@@ -86,8 +86,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 }
             });
 
-            result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
-                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.")
+            result.ShouldHaveValidationErrorFor($"{nameof(ProposeStreetNameRequest.GemeenteId)}")
+                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.")
                 .WithErrorCode(StreetNameExistingNisCodeValidator.Code);
         }
 
@@ -96,7 +96,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         {
             const string gemeenteId = "https://data.vlaanderen.be/id/gemeente/bla";
 
-            var result = _validator.TestValidate(new StreetNameProposeRequest
+            var result = _validator.TestValidate(new ProposeStreetNameRequest
             {
                 GemeenteId = gemeenteId,
                 Straatnamen = new Dictionary<Taal, string>
@@ -105,8 +105,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 }
             });
 
-            result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
-                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.")
+            result.ShouldHaveValidationErrorFor($"{nameof(ProposeStreetNameRequest.GemeenteId)}")
+                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.")
                 .WithErrorCode(StreetNameExistingNisCodeValidator.Code);
         }
 
@@ -117,7 +117,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             const string gemeenteId = $"https://data.vlaanderen.be/id/gemeente/{nisCode}";
 
             _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode(nisCode);
-            var result = _validator.TestValidate(new StreetNameProposeRequest
+            var result = _validator.TestValidate(new ProposeStreetNameRequest
             {
                 GemeenteId = gemeenteId,
                 Straatnamen = new Dictionary<Taal, string>
@@ -126,8 +126,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 }
             });
 
-            result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
-                .WithErrorMessage($"De gemeente '{gemeenteId}' is geen Vlaamse gemeente.")
+            result.ShouldHaveValidationErrorFor($"{nameof(ProposeStreetNameRequest.GemeenteId)}")
+                .WithErrorMessage($"De gemeente '{gemeenteId}' is geen Vlaamse gemeente.")
                 .WithErrorCode(StreetNameFlemishRegionValidator.Code);
         }
     }

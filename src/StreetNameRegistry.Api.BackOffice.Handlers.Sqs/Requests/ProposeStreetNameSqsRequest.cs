@@ -3,8 +3,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests
     using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;
 
-    public sealed class ProposeStreetNameSqsRequest : SqsRequest, IHasBackOfficeRequest<ProposeStreetNameBackOfficeRequest>
+    public sealed class ProposeStreetNameSqsRequest : SqsRequest, IHasBackOfficeRequest<ProposeStreetNameRequest>
     {
-        public ProposeStreetNameBackOfficeRequest Request { get; init; }
+        public ProposeStreetNameRequest Request { get; init; }
     }
 }

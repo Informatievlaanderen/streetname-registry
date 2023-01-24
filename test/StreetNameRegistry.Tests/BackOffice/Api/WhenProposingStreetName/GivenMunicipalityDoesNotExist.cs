@@ -29,7 +29,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Setup(x => x.Send(It.IsAny<ProposeStreetNameSqsRequest>(), CancellationToken.None))
                 .Throws(new AggregateIdIsNotFoundException());
 
-            var request = new StreetNameProposeRequest
+            var request = new ProposeStreetNameRequest
             {
                 GemeenteId = GetStreetNamePuri(123),
                 Straatnamen = new Dictionary<Taal, string>
@@ -42,8 +42,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             Func<Task> act = async () =>
             {
                 await Controller.Propose(
-                    ResponseOptions,
-                    MockPassingRequestValidator<StreetNameProposeRequest>(),
+                    MockPassingRequestValidator<ProposeStreetNameRequest>(),
                     request, CancellationToken.None);
             };
 

@@ -33,12 +33,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             var expectedIfMatchHeader = Fixture.Create<string>();
 
             MockMediatorResponse<ApproveStreetNameSqsRequest, LocationResult>(expectedLocationResult);
-            var request = new StreetNameApproveRequest { PersistentLocalId = 123 };
+            var request = new ApproveStreetNameRequest { PersistentLocalId = 123 };
 
 
             var result = (AcceptedResult)await Controller.Approve(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameApproveRequest>(),
                 request,
                 ifMatchHeaderValue: expectedIfMatchHeader,
                 CancellationToken.None);
@@ -62,12 +61,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 .Setup(x => x.Send(It.IsAny<ApproveStreetNameSqsRequest>(), CancellationToken.None))
                 .Throws(new AggregateIdIsNotFoundException());
 
-            var request = new StreetNameApproveRequest { PersistentLocalId = 123 };
+            var request = new ApproveStreetNameRequest { PersistentLocalId = 123 };
             Func<Task> act = async () =>
             {
                 await Controller.Approve(
                     MockValidIfMatchValidator(),
-                    MockPassingRequestValidator<StreetNameApproveRequest>(),
                     request,
                     string.Empty,
                     CancellationToken.None);
@@ -88,8 +86,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         {
             var result = await Controller.Approve(
                 MockValidIfMatchValidator(false),
-                MockPassingRequestValidator<StreetNameApproveRequest>(),
-                new StreetNameApproveRequest { PersistentLocalId = 123 },
+                new ApproveStreetNameRequest { PersistentLocalId = 123 },
                 string.Empty,
                 CancellationToken.None);
 

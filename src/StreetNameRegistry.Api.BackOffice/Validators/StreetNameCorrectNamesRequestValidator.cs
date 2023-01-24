@@ -4,13 +4,13 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     using Consumer;
     using FluentValidation;
 
-    public sealed class StreetNameCorrectNamesRequestValidator : AbstractValidator<StreetNameCorrectNamesRequest>
+    public sealed class StreetNameCorrectNamesRequestValidator : AbstractValidator<CorrectStreetNameNamesRequest>
     {
         public StreetNameCorrectNamesRequestValidator(ConsumerContext consumerContext)
         {
             RuleForEach(x => x.Straatnamen)
                 .Must(StreetNameNotEmptyValidator.IsValid)
-                .WithMessage((_, streetName) => $"Straatnaam in '{streetName.Key.ToString().ToLowerInvariant()}' kan niet leeg zijn.")
+                .WithMessage((_, streetName) => $"Straatnaam in '{streetName.Key.ToString().ToLowerInvariant()}' kan niet leeg zijn.")
                 .WithErrorCode(StreetNameNotEmptyValidator.Code);
 
             RuleForEach(x => x.Straatnamen)

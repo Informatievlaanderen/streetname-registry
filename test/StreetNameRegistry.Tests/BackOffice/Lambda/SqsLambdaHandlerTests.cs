@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             var sqsLambdaRequest = new ApproveStreetNameLambdaRequest(Guid.NewGuid().ToString(), new ApproveStreetNameSqsRequest
             {
-                Request = new ApproveStreetNameBackOfficeRequest {PersistentLocalId = 1},
+                Request = new ApproveStreetNameRequest {PersistentLocalId = 1},
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -66,7 +66,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             var sqsLambdaRequest = new ApproveStreetNameLambdaRequest(Guid.NewGuid().ToString(), new ApproveStreetNameSqsRequest
             {
-                Request = new ApproveStreetNameBackOfficeRequest(),
+                Request = new ApproveStreetNameRequest(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -96,7 +96,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             var sqsLambdaRequest = new ApproveStreetNameLambdaRequest(Guid.NewGuid().ToString(), new ApproveStreetNameSqsRequest
             {
-                Request = new ApproveStreetNameBackOfficeRequest(),
+                Request = new ApproveStreetNameRequest(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -147,7 +147,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.Handle(new ApproveStreetNameLambdaRequest(municipalityId, new ApproveStreetNameSqsRequest
             {
                 IfMatchHeaderValue = "Outdated",
-                Request = new ApproveStreetNameBackOfficeRequest
+                Request = new ApproveStreetNameRequest
                 {
                     PersistentLocalId = streetNamePersistentLocalId
                 },
@@ -171,7 +171,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             var sqsLambdaRequest = new ApproveStreetNameLambdaRequest(Guid.NewGuid().ToString(), new ApproveStreetNameSqsRequest
             {
-                Request = new ApproveStreetNameBackOfficeRequest(),
+                Request = new ApproveStreetNameRequest(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()

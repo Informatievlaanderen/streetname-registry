@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
 using Swashbuckle.AspNetCore.Filters;
 
-public class StreetNameProposeRequestExamples : IExamplesProvider<StreetNameProposeRequest>
+public class StreetNameProposeRequestExamples : IExamplesProvider<ProposeStreetNameRequest>
 {
-    public StreetNameProposeRequest GetExamples()
+    public ProposeStreetNameRequest GetExamples()
     {
-        return new StreetNameProposeRequest
+        return new ProposeStreetNameRequest
         {
             GemeenteId = "https://data.vlaanderen.be/id/gemeente/45041",
             Straatnamen = new Dictionary<Taal, string>

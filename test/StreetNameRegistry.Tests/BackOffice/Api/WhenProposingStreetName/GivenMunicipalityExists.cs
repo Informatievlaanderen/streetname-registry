@@ -29,7 +29,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             var expectedLocationResult = new LocationResult(CreateTicketUri(ticketId));
             MockMediatorResponse<ProposeStreetNameSqsRequest, LocationResult>(expectedLocationResult);
 
-            var request = new StreetNameProposeRequest
+            var request = new ProposeStreetNameRequest
             {
                 GemeenteId = GetStreetNamePuri(123),
                 Straatnamen = new Dictionary<Taal, string>
@@ -40,8 +40,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             var result = (AcceptedResult) await Controller.Propose(
-                ResponseOptions,
-                MockPassingRequestValidator<StreetNameProposeRequest>(),
+                MockPassingRequestValidator<ProposeStreetNameRequest>(),
                 request,
                 CancellationToken.None);
 

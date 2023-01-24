@@ -75,7 +75,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
             //Act
             await handler.Handle(new CorrectStreetNameRejectionLambdaRequest(municipalityId, new CorrectStreetNameRejectionSqsRequest
             {
-                Request = new CorrectStreetNameRejectionBackOfficeRequest { PersistentLocalId = streetNamePersistentLocalId },
+                Request = new CorrectStreetNameRejectionRequest { PersistentLocalId = streetNamePersistentLocalId },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -103,7 +103,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
             // Act
             await sut.Handle(new CorrectStreetNameRejectionLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameRejectionSqsRequest
             {
-                Request = new CorrectStreetNameRejectionBackOfficeRequest(),
+                Request = new CorrectStreetNameRejectionRequest(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -135,7 +135,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
             // Act
             await sut.Handle(new CorrectStreetNameRejectionLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameRejectionSqsRequest
             {
-                Request = new CorrectStreetNameRejectionBackOfficeRequest(),
+                Request = new CorrectStreetNameRejectionRequest(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -167,7 +167,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
             // Act
             await sut.Handle(new CorrectStreetNameRejectionLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameRejectionSqsRequest
             {
-                Request = new CorrectStreetNameRejectionBackOfficeRequest(),
+                Request = new CorrectStreetNameRejectionRequest(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -218,7 +218,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
             // Act
             await sut.Handle(new CorrectStreetNameRejectionLambdaRequest(municipalityId, new CorrectStreetNameRejectionSqsRequest
             {
-                Request = new CorrectStreetNameRejectionBackOfficeRequest { PersistentLocalId = streetNamePersistentLocalId },
+                Request = new CorrectStreetNameRejectionRequest { PersistentLocalId = streetNamePersistentLocalId },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()

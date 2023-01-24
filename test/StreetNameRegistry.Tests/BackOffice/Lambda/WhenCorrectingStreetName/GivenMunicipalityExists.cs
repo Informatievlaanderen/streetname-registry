@@ -77,7 +77,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             //Act
             await handler.Handle(new CorrectStreetNameNamesLambdaRequest(municipalityId, new CorrectStreetNameNamesSqsRequest
             {
-                Request = new CorrectStreetNameNamesBackOfficeRequest
+                Request = new CorrectStreetNameNamesRequest
                 {
                     Straatnamen = new Dictionary<Taal, string>
                     {
@@ -114,7 +114,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             // Act
             await sut.Handle(new CorrectStreetNameNamesLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameNamesSqsRequest
             {
-                Request = new CorrectStreetNameNamesBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
+                Request = new CorrectStreetNameNamesRequest { Straatnamen = new Dictionary<Taal, string>() },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -144,7 +144,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             // Act
             await sut.Handle(new CorrectStreetNameNamesLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameNamesSqsRequest
             {
-                Request = new CorrectStreetNameNamesBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
+                Request = new CorrectStreetNameNamesRequest { Straatnamen = new Dictionary<Taal, string>() },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -176,7 +176,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             // Act
             await sut.Handle(new CorrectStreetNameNamesLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameNamesSqsRequest
             {
-                Request = new CorrectStreetNameNamesBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
+                Request = new CorrectStreetNameNamesRequest { Straatnamen = new Dictionary<Taal, string>() },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -223,7 +223,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             // Act
             await sut.Handle(new CorrectStreetNameNamesLambdaRequest(municipalityId, new CorrectStreetNameNamesSqsRequest
             {
-                Request = new CorrectStreetNameNamesBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
+                Request = new CorrectStreetNameNamesRequest { Straatnamen = new Dictionary<Taal, string>() },
                 PersistentLocalId = streetNamePersistentLocalId,
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
