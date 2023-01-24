@@ -57,7 +57,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
 
             var sqsRequest = new CorrectStreetNameRejectionSqsRequest
             {
-                Request = new CorrectStreetNameRejectionBackOfficeRequest
+                Request = new CorrectStreetNameRejectionRequest
                 {
                     PersistentLocalId = Fixture.Create<PersistentLocalId>()
                 }
@@ -89,7 +89,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
             var act = async () => await sut.Handle(
                 new CorrectStreetNameRejectionSqsRequest
                 {
-                    Request = Fixture.Create<CorrectStreetNameRejectionBackOfficeRequest>()
+                    Request = Fixture.Create<CorrectStreetNameRejectionRequest>()
                 }, CancellationToken.None);
 
             // Assert

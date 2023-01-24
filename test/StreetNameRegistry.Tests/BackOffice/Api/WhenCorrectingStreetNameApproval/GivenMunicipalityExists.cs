@@ -32,11 +32,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameApprov
             var expectedIfMatchHeader = Fixture.Create<string>();
 
             MockMediatorResponse<CorrectStreetNameApprovalSqsRequest, LocationResult>(expectedLocationResult);
-            var request = new StreetNameCorrectApprovalRequest { PersistentLocalId = 123 };
+            var request = new CorrectStreetNameApprovalRequest { PersistentLocalId = 123 };
 
             var result = (AcceptedResult)await Controller.CorrectApproval(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameCorrectApprovalRequest>(),
                 request,
                 expectedIfMatchHeader,
                 CancellationToken.None);
@@ -64,8 +63,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameApprov
             {
                 await Controller.CorrectApproval(
                     MockValidIfMatchValidator(),
-                    MockPassingRequestValidator<StreetNameCorrectApprovalRequest>(),
-                    new StreetNameCorrectApprovalRequest { PersistentLocalId = 123 },
+                    new CorrectStreetNameApprovalRequest { PersistentLocalId = 123 },
                     string.Empty,
                     CancellationToken.None);
             };
@@ -85,8 +83,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameApprov
         {
             var result = await Controller.CorrectApproval(
                 MockValidIfMatchValidator(false),
-                MockPassingRequestValidator<StreetNameCorrectApprovalRequest>(),
-                new StreetNameCorrectApprovalRequest { PersistentLocalId = 123 },
+                new CorrectStreetNameApprovalRequest { PersistentLocalId = 123 },
                 string.Empty,
                 CancellationToken.None);
 

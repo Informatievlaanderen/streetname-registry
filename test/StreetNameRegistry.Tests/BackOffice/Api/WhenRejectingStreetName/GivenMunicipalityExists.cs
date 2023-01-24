@@ -33,12 +33,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
             var expectedIfMatchHeader = Fixture.Create<string>();
             MockMediatorResponse<RejectStreetNameSqsRequest, LocationResult>(expectedLocationResult);
 
-            var request = new StreetNameRejectRequest { PersistentLocalId = 123 };
+            var request = new RejectStreetNameRequest { PersistentLocalId = 123 };
 
             var result = (AcceptedResult)await Controller.Reject(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameRejectRequest>(),
-                ResponseOptions,
                 request,
                 ifMatchHeaderValue: expectedIfMatchHeader,
                 CancellationToken.None);
@@ -61,13 +59,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
                 .Setup(x => x.Send(It.IsAny<RejectStreetNameSqsRequest>(), CancellationToken.None))
                 .Throws(new AggregateIdIsNotFoundException());
 
-            var request = new StreetNameRejectRequest { PersistentLocalId = 123 };
+            var request = new RejectStreetNameRequest { PersistentLocalId = 123 };
             Func<Task> act = async () =>
             {
                 await Controller.Reject(
                     MockValidIfMatchValidator(),
-                    MockPassingRequestValidator<StreetNameRejectRequest>(),
-                    ResponseOptions,
                     request,
                     string.Empty,
                     CancellationToken.None);
@@ -88,9 +84,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
         {
             var result = await Controller.Reject(
                 MockValidIfMatchValidator(false),
-                MockPassingRequestValidator<StreetNameRejectRequest>(),
-                ResponseOptions,
-                new StreetNameRejectRequest { PersistentLocalId = 123 },
+                new RejectStreetNameRequest { PersistentLocalId = 123 },
                 string.Empty,
                 CancellationToken.None);
 

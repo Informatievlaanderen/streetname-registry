@@ -33,15 +33,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             var expectedIfMatchHeader = Fixture.Create<string>();
             MockMediatorResponse<RetireStreetNameSqsRequest, LocationResult>(expectedLocationResult);
 
-            var request = new StreetNameRetireRequest
+            var request = new RetireStreetNameRequest
             {
                 PersistentLocalId = 123
             };
 
             var result = (AcceptedResult) await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameRetireRequest>(),
-                ResponseOptions,
                 request,
                 ifMatchHeaderValue: expectedIfMatchHeader,
                 CancellationToken.None);
@@ -64,13 +62,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
                 .Setup(x => x.Send(It.IsAny<RetireStreetNameSqsRequest>(), CancellationToken.None))
                 .Throws(new AggregateIdIsNotFoundException());
 
-            var request = new StreetNameRetireRequest { PersistentLocalId = 123 };
+            var request = new RetireStreetNameRequest { PersistentLocalId = 123 };
             Func<Task> act = async () =>
             {
                 await Controller.Retire(
                     MockValidIfMatchValidator(),
-                    MockPassingRequestValidator<StreetNameRetireRequest>(),
-                    ResponseOptions,
                     request,
                     string.Empty,
                     CancellationToken.None);
@@ -91,13 +87,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
         {
             var result = await Controller.Retire(
                 MockValidIfMatchValidator(false),
-                MockPassingRequestValidator<StreetNameRetireRequest>(),
-                ResponseOptions,
-                new StreetNameRetireRequest { PersistentLocalId = 123 },
+                new RetireStreetNameRequest { PersistentLocalId = 123 },
                 string.Empty,
                 CancellationToken.None);
 
-            //Assert
             result.Should().BeOfType<PreconditionFailedResult>();
         }
     }

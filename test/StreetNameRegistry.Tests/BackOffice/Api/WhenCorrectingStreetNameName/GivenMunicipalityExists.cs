@@ -34,7 +34,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             var expectedIfMatchHeader = Fixture.Create<string>();
             MockMediatorResponse<CorrectStreetNameNamesSqsRequest, LocationResult>(expectedLocationResult);
 
-            var request = new StreetNameCorrectNamesRequest
+            var request = new CorrectStreetNameNamesRequest
             {
                 Straatnamen = new Dictionary<Taal, string> { { Taal.NL, "Bosstraat" } }
             };
@@ -42,8 +42,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             var persistentLocalId = 123;
             var result = (AcceptedResult) await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
-                ResponseOptions,
+                MockPassingRequestValidator<CorrectStreetNameNamesRequest>(),
                 persistentLocalId,
                 request,
                 ifMatchHeaderValue: expectedIfMatchHeader,
@@ -74,10 +73,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             {
                 await Controller.CorrectStreetNameNames(
                     MockValidIfMatchValidator(),
-                    MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
-                    ResponseOptions,
+                    MockPassingRequestValidator<CorrectStreetNameNamesRequest>(),
                     persistentLocalId,
-                    new StreetNameCorrectNamesRequest(),
+                    new CorrectStreetNameNamesRequest(),
                     string.Empty,
                     CancellationToken.None);
             };
@@ -97,10 +95,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
         {
             var result = await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(false),
-                MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
-                ResponseOptions,
+                MockPassingRequestValidator<CorrectStreetNameNamesRequest>(),
                 123,
-                new StreetNameCorrectNamesRequest(),
+                new CorrectStreetNameNamesRequest(),
                 string.Empty,
                 CancellationToken.None);
 

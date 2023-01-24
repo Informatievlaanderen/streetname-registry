@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
 
     public sealed record RetireStreetNameLambdaRequest :
         SqsLambdaRequest,
-        IHasBackOfficeRequest<RetireStreetNameBackOfficeRequest>,
+        IHasBackOfficeRequest<RetireStreetNameRequest>,
         IHasStreetNamePersistentLocalId
     {
         public RetireStreetNameLambdaRequest(string groupId, RetireStreetNameSqsRequest sqsRequest)
@@ -23,7 +23,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
             Request = sqsRequest.Request;
         }
 
-        public RetireStreetNameBackOfficeRequest Request { get; init; }
+        public RetireStreetNameRequest Request { get; init; }
 
         public int StreetNamePersistentLocalId => Request.PersistentLocalId;
 

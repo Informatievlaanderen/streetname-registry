@@ -32,11 +32,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameRetire
             var expectedIfMatchHeader = Fixture.Create<string>();
 
             MockMediatorResponse<CorrectStreetNameRetirementSqsRequest, LocationResult>(expectedLocationResult);
-            var request = new StreetNameCorrectRetirementRequest { PersistentLocalId = 123 };
+            var request = new CorrectStreetNameRetirementRequest { PersistentLocalId = 123 };
 
             var result = (AcceptedResult)await Controller.CorrectRetirement(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameCorrectRetirementRequest>(),
                 request,
                 expectedIfMatchHeader,
                 CancellationToken.None);
@@ -64,8 +63,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameRetire
             {
                 await Controller.CorrectRetirement(
                     MockValidIfMatchValidator(),
-                    MockPassingRequestValidator<StreetNameCorrectRetirementRequest>(),
-                    new StreetNameCorrectRetirementRequest { PersistentLocalId = 123 },
+                    new CorrectStreetNameRetirementRequest { PersistentLocalId = 123 },
                     string.Empty,
                     CancellationToken.None);
             };
@@ -85,8 +83,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameRetire
         {
             var result = await Controller.CorrectRetirement(
                 MockValidIfMatchValidator(false),
-                MockPassingRequestValidator<StreetNameCorrectRetirementRequest>(),
-                new StreetNameCorrectRetirementRequest { PersistentLocalId = 123 },
+                new CorrectStreetNameRetirementRequest { PersistentLocalId = 123 },
                 string.Empty,
                 CancellationToken.None);
 

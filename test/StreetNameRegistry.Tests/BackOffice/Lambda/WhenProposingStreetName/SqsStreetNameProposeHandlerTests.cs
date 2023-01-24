@@ -71,7 +71,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             //Act
             await handler.Handle(new ProposeStreetNameLambdaRequest(municipalityId, new ProposeStreetNameSqsRequest
                 {
-                    Request = new ProposeStreetNameBackOfficeRequest
+                    Request = new ProposeStreetNameRequest
                     {
                         GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
                         Straatnamen = new Dictionary<Taal, string>
@@ -118,7 +118,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             // Act
             await sut.Handle(new ProposeStreetNameLambdaRequest(Guid.NewGuid().ToString(), new ProposeStreetNameSqsRequest
             {
-                Request = new ProposeStreetNameBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
+                Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string>() },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -151,7 +151,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             // Act
             await sut.Handle(new ProposeStreetNameLambdaRequest(Guid.NewGuid().ToString(), new ProposeStreetNameSqsRequest
             {
-                Request = new ProposeStreetNameBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
+                Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string>() },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -183,7 +183,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             // Act
             await sut.Handle(new ProposeStreetNameLambdaRequest(Guid.NewGuid().ToString(), new ProposeStreetNameSqsRequest
             {
-                Request = new ProposeStreetNameBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
+                Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string>() },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -216,7 +216,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             // Act
             await sut.Handle(new ProposeStreetNameLambdaRequest(Guid.NewGuid().ToString(), new ProposeStreetNameSqsRequest
             {
-                Request = new ProposeStreetNameBackOfficeRequest { Straatnamen = new Dictionary<Taal, string>() },
+                Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string>() },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()

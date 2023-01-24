@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
 using Swashbuckle.AspNetCore.Filters;
 
-public class StreetNameCorrectNamesRequestExamples : IExamplesProvider<StreetNameCorrectNamesRequest>
+public class StreetNameCorrectNamesRequestExamples : IExamplesProvider<CorrectStreetNameNamesRequest>
 {
-    public StreetNameCorrectNamesRequest GetExamples()
+    public CorrectStreetNameNamesRequest GetExamples()
     {
-        return new StreetNameCorrectNamesRequest
+        return new CorrectStreetNameNamesRequest
         {
             Straatnamen = new Dictionary<Taal, string>
             {

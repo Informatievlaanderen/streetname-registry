@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
 
     public sealed record ProposeStreetNameLambdaRequest :
         SqsLambdaRequest,
-        IHasBackOfficeRequest<ProposeStreetNameBackOfficeRequest>
+        IHasBackOfficeRequest<ProposeStreetNameRequest>
     {
         public ProposeStreetNameLambdaRequest(string groupId, ProposeStreetNameSqsRequest sqsRequest)
             : base(
@@ -22,7 +22,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
             Request = sqsRequest.Request;
         }
 
-        public ProposeStreetNameBackOfficeRequest Request { get; init; }
+        public ProposeStreetNameRequest Request { get; init; }
 
         /// <summary>
         /// Map to ProposeStreetName command

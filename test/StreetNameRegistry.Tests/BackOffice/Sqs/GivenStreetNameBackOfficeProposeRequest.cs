@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
             // Arrange
             var municipalityLatestItem = _testConsumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
 
-            var request = Fixture.Create<ProposeStreetNameBackOfficeRequest>();
+            var request = Fixture.Create<ProposeStreetNameRequest>();
             request.GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}";
 
             var sqsRequest = new ProposeStreetNameSqsRequest { Request = request };
@@ -78,7 +78,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
 
             // Act
             var act = async () => await sut.Handle(
-                new ProposeStreetNameSqsRequest { Request = Fixture.Create<ProposeStreetNameBackOfficeRequest>() },
+                new ProposeStreetNameSqsRequest { Request = Fixture.Create<ProposeStreetNameRequest>() },
                 CancellationToken.None);
 
             // Assert

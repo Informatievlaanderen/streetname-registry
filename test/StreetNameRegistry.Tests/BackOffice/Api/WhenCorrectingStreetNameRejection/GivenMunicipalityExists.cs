@@ -33,11 +33,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameReject
             var expectedIfMatchHeader = Fixture.Create<string>();
 
             MockMediatorResponse<CorrectStreetNameRejectionSqsRequest, LocationResult>(expectedLocationResult);
-            var request = new StreetNameCorrectRejectionRequest { PersistentLocalId = Fixture.Create<PersistentLocalId>() };
+            var request = new CorrectStreetNameRejectionRequest { PersistentLocalId = Fixture.Create<PersistentLocalId>() };
 
             var result = (AcceptedResult)await Controller.CorrectRejection(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameCorrectRejectionRequest>(),
                 request,
                 expectedIfMatchHeader,
                 CancellationToken.None);
@@ -65,8 +64,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameReject
             {
                 await Controller.CorrectRejection(
                     MockValidIfMatchValidator(),
-                    MockPassingRequestValidator<StreetNameCorrectRejectionRequest>(),
-                    new StreetNameCorrectRejectionRequest { PersistentLocalId = Fixture.Create<PersistentLocalId>() },
+                    new CorrectStreetNameRejectionRequest { PersistentLocalId = Fixture.Create<PersistentLocalId>() },
                     string.Empty,
                     CancellationToken.None);
             };
@@ -86,8 +84,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameReject
         {
             var result = await Controller.CorrectRejection(
                 MockValidIfMatchValidator(false),
-                MockPassingRequestValidator<StreetNameCorrectRejectionRequest>(),
-                new StreetNameCorrectRejectionRequest { PersistentLocalId = Fixture.Create<PersistentLocalId>() },
+                new CorrectStreetNameRejectionRequest { PersistentLocalId = Fixture.Create<PersistentLocalId>() },
                 string.Empty,
                 CancellationToken.None);
 

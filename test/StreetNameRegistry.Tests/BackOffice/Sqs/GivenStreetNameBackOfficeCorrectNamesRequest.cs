@@ -59,7 +59,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
             var sqsRequest = new CorrectStreetNameNamesSqsRequest
             {
                 PersistentLocalId = Fixture.Create<PersistentLocalId>(),
-                Request = new CorrectStreetNameNamesBackOfficeRequest
+                Request = new CorrectStreetNameNamesRequest
                 {
                     Straatnamen = new Dictionary<Taal, string>()
                     {
@@ -94,7 +94,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
             var act = async () => await sut.Handle(
                 new CorrectStreetNameNamesSqsRequest
                 {
-                    Request = Fixture.Create<CorrectStreetNameNamesBackOfficeRequest>()
+                    Request = Fixture.Create<CorrectStreetNameNamesRequest>()
                 }, CancellationToken.None);
 
             // Assert

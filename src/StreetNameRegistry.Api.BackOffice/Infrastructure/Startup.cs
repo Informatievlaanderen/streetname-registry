@@ -1,8 +1,5 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 {
-    using System;
-    using System.Linq;
-    using System.Reflection;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
@@ -11,7 +8,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Configuration;
-    using FeatureToggles;
     using IdentityModel.AspNetCore.OAuth2Introspection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -26,6 +22,10 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using Modules;
     using Options;
     using SqlStreamStore;
+    using System;
+    using System.Linq;
+    using System.Reflection;
+    using FeatureToggles;
 
     /// <summary>Represents the startup process for the application.</summary>
     public class Startup

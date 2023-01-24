@@ -75,7 +75,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             //Act
             await handler.Handle(new RetireStreetNameLambdaRequest(municipalityId, new RetireStreetNameSqsRequest
             {
-                Request = new RetireStreetNameBackOfficeRequest { PersistentLocalId = streetNamePersistentLocalId },
+                Request = new RetireStreetNameRequest { PersistentLocalId = streetNamePersistentLocalId },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -103,7 +103,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             // Act
             await sut.Handle(new RetireStreetNameLambdaRequest(Guid.NewGuid().ToString(), new RetireStreetNameSqsRequest
             {
-                Request = new RetireStreetNameBackOfficeRequest(),
+                Request = new RetireStreetNameRequest(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -133,7 +133,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             // Act
             await sut.Handle(new RetireStreetNameLambdaRequest(Guid.NewGuid().ToString(), new RetireStreetNameSqsRequest
             {
-                Request = new RetireStreetNameBackOfficeRequest(),
+                Request = new RetireStreetNameRequest(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -181,7 +181,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             // Act
             await sut.Handle(new RetireStreetNameLambdaRequest(municipalityId, new RetireStreetNameSqsRequest
             {
-                Request = new RetireStreetNameBackOfficeRequest { PersistentLocalId = streetNamePersistentLocalId },
+                Request = new RetireStreetNameRequest { PersistentLocalId = streetNamePersistentLocalId },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
