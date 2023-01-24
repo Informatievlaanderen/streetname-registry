@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
     public sealed class GivenMunicipalityDoesNotExist : BackOfficeApiTest<StreetNameController>
     {
-        public GivenMunicipalityDoesNotExist(ITestOutputHelper testOutputHelper) : base(testOutputHelper, useSqs: true)
+        public GivenMunicipalityDoesNotExist(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

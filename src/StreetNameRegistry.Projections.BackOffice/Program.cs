@@ -27,6 +27,7 @@ namespace StreetNameRegistry.Projections.BackOffice
     using Serilog.Debugging;
     using Serilog.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
+    using MigrationsHelper = Infrastructure.MigrationsHelper;
 
     public sealed class ProgramLogger { }
 

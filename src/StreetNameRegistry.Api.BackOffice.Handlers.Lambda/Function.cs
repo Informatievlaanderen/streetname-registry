@@ -23,14 +23,18 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Sqs.Requests;
-    using StreetNameRegistry.Infrastructure.Modules;
+    using Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
 
     public sealed class Function : FunctionBase
     {
         public Function()
-            : base(new List<Assembly>{ typeof(ApproveStreetNameSqsRequest).Assembly })
-        { }
+            : base(new List<Assembly> { typeof(ApproveStreetNameSqsRequest).Assembly })
+        {
+            Infrastructure.MigrationsHelper.Run(
+                ConfigureService.Configuration.GetConnectionString("Sequences"),
+                ServiceProvider.GetService<ILoggerFactory>());
+        }
 
         protected override IServiceProvider ConfigureServices(IServiceCollection services)
         {

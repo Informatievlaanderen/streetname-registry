@@ -23,7 +23,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
 
     public sealed class GivenMunicipalityExists : BackOfficeApiTest<StreetNameController>
     {
-        public GivenMunicipalityExists(ITestOutputHelper testOutputHelper) : base(testOutputHelper, useSqs: true)
+        public GivenMunicipalityExists(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         { }
 
         [Fact]
