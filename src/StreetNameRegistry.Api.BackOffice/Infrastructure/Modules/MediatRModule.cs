@@ -1,10 +1,9 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 {
-    using System.Reflection;
     using Autofac;
-    using Handlers;
     using Handlers.Sqs.Handlers;
     using MediatR;
+    using System.Reflection;
     using Module = Autofac.Module;
 
     public sealed class MediatRModule : Module
@@ -23,7 +22,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 return type => ctx.Resolve(type);
             });
 
-            builder.RegisterAssemblyTypes(typeof(ProposeStreetNameHandler).GetTypeInfo().Assembly).AsImplementedInterfaces();
             builder.RegisterAssemblyTypes(typeof(ProposeStreetNameSqsHandler).GetTypeInfo().Assembly).AsImplementedInterfaces();
         }
     }
