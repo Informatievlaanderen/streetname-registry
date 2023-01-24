@@ -176,13 +176,6 @@ jobs:
         name: nuget-api-crab-import
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.*.nupkg
 
-    - name: Upload NuGet package projector
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/upload-artifact@v3
-      with:
-        name: nuget-projector
-        path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.*.nupkg
-    
     #
     # Cache build artifacts
     #
