@@ -2,10 +2,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
 {
     using Abstractions.Convertors;
     using Abstractions.Requests;
+    using Abstractions.SqsRequests;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Requests;
     using Municipality;
     using Municipality.Commands;
-    using Sqs.Requests;
 
     public sealed record ProposeStreetNameLambdaRequest :
         SqsLambdaRequest,

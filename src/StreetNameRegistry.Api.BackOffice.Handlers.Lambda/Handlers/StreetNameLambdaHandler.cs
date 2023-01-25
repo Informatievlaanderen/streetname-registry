@@ -14,14 +14,14 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public abstract class SqsLambdaHandler<TSqsLambdaRequest> : SqsLambdaHandlerBase<TSqsLambdaRequest>
+    public abstract class StreetNameLambdaHandler<TSqsLambdaRequest> : SqsLambdaHandlerBase<TSqsLambdaRequest>
         where TSqsLambdaRequest : SqsLambdaRequest
     {
         private readonly IMunicipalities _municipalities;
 
         protected string DetailUrlFormat { get; }
 
-        protected SqsLambdaHandler(
+        protected StreetNameLambdaHandler(
             IConfiguration configuration,
             ICustomRetryPolicy retryPolicy,
             IMunicipalities municipalities,

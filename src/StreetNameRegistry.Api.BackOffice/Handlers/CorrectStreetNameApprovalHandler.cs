@@ -1,19 +1,19 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
+namespace StreetNameRegistry.Api.BackOffice.Handlers
 {
     using System.Collections.Generic;
-    using Abstractions;
     using Be.Vlaanderen.Basisregisters.Sqs;
     using Be.Vlaanderen.Basisregisters.Sqs.Handlers;
-    using Requests;
+    using Abstractions;
+    using Abstractions.SqsRequests;
     using TicketingService.Abstractions;
 
-    public sealed class CorrectStreetNameNamesSqsHandler : SqsHandler<CorrectStreetNameNamesSqsRequest>
+    public sealed class CorrectStreetNameApprovalHandler : SqsHandler<CorrectStreetNameApprovalSqsRequest>
     {
-        public const string Action = "CorrectStreetNameNames";
+        public const string Action = "CorrectStreetNameApproval";
 
         private readonly BackOfficeContext _backOfficeContext;
 
-        public CorrectStreetNameNamesSqsHandler(
+        public CorrectStreetNameApprovalHandler(
             ISqsQueue sqsQueue,
             ITicketing ticketing,
             ITicketingUrl ticketingUrl,
@@ -23,23 +23,23 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
             _backOfficeContext = backOfficeContext;
         }
 
-        protected override string? WithAggregateId(CorrectStreetNameNamesSqsRequest request)
+        protected override string? WithAggregateId(CorrectStreetNameApprovalSqsRequest request)
         {
             var municipalityIdByPersistentLocalId = _backOfficeContext
                 .MunicipalityIdByPersistentLocalId
-                .Find(request.PersistentLocalId);
+                .Find(request.Request.PersistentLocalId);
 
             return municipalityIdByPersistentLocalId?.MunicipalityId.ToString();
         }
 
-        protected override IDictionary<string, string> WithTicketMetadata(string aggregateId, CorrectStreetNameNamesSqsRequest sqsRequest)
+        protected override IDictionary<string, string> WithTicketMetadata(string aggregateId, CorrectStreetNameApprovalSqsRequest sqsRequest)
         {
             return new Dictionary<string, string>
             {
                 { RegistryKey, nameof(StreetNameRegistry) },
                 { ActionKey, Action },
                 { AggregateIdKey, aggregateId },
-                { ObjectIdKey, sqsRequest.PersistentLocalId.ToString() }
+                { ObjectIdKey, sqsRequest.Request.PersistentLocalId.ToString() }
             };
         }
     }

@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice.Handlers.Sqs\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice.Abstractions\StreetNameRegistry.Api.BackOffice.Abstractions.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
     <ProjectReference Include="..\StreetNameRegistry\StreetNameRegistry.csproj" />

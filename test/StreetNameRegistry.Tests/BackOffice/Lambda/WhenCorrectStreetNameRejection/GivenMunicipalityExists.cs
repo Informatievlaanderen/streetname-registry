@@ -24,7 +24,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
     using Municipality;
     using Municipality.Exceptions;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
     using TicketingService.Abstractions;
     using Xunit;
     using Xunit.Abstractions;
@@ -65,7 +65,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
             await _backOfficeContext.SaveChangesAsync();
 
             var etag = new ETagResponse(string.Empty, Fixture.Create<string>());
-            var handler = new CorrectStreetNameRejectionLambdaHandler(
+            var handler = new CorrectStreetNameRejectionHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 MockTicketing(result => { etag = result; }).Object,
@@ -93,7 +93,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new CorrectStreetNameRejectionLambdaHandler(
+            var sut = new CorrectStreetNameRejectionHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -125,7 +125,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new CorrectStreetNameRejectionLambdaHandler(
+            var sut = new CorrectStreetNameRejectionHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -157,7 +157,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new CorrectStreetNameRejectionLambdaHandler(
+            var sut = new CorrectStreetNameRejectionHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
@@ -205,7 +205,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
                 streetNamePersistentLocalId);
 
             var municipalities = Container.Resolve<IMunicipalities>();
-            var sut = new CorrectStreetNameRejectionLambdaHandler(
+            var sut = new CorrectStreetNameRejectionHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,

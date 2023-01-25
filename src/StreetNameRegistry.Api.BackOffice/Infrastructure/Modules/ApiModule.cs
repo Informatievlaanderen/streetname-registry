@@ -5,18 +5,15 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
-    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Consumer;
-    using Handlers.Sqs;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
-    using StreetNameRegistry.Infrastructure.Modules;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
 
     public sealed class ApiModule : Module

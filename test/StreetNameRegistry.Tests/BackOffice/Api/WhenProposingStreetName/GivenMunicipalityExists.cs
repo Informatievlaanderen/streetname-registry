@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using NodaTime;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
     using Xunit;
     using Xunit.Abstractions;
 
