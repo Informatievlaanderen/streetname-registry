@@ -14,9 +14,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public sealed class ApproveStreetNameLambdaHandler : SqsLambdaHandler<ApproveStreetNameLambdaRequest>
+    public sealed class CorrectStreetNameRejectionHandler : StreetNameLambdaHandler<CorrectStreetNameRejectionLambdaRequest>
     {
-        public ApproveStreetNameLambdaHandler(
+        public CorrectStreetNameRejectionHandler(
             IConfiguration configuration,
             ICustomRetryPolicy retryPolicy,
             ITicketing ticketing,
@@ -30,7 +30,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 idempotentCommandHandler)
         { }
 
-        protected override async Task<ETagResponse> InnerHandle(ApproveStreetNameLambdaRequest request, CancellationToken cancellationToken)
+        protected override async Task<ETagResponse> InnerHandle(CorrectStreetNameRejectionLambdaRequest request, CancellationToken cancellationToken)
         {
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
             var cmd = request.ToCommand();
@@ -52,16 +52,19 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             return new ETagResponse(string.Format(DetailUrlFormat, streetNamePersistentLocalId), lastHash);
         }
 
-        protected override TicketError? InnerMapDomainException(DomainException exception, ApproveStreetNameLambdaRequest request)
+        protected override TicketError? InnerMapDomainException(DomainException exception, CorrectStreetNameRejectionLambdaRequest request)
         {
             return exception switch
             {
-                StreetNameHasInvalidStatusException => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameCannotBeApproved,
-                    ValidationErrorCodes.StreetName.StreetNameCannotBeApproved),
                 MunicipalityHasInvalidStatusException => new TicketError(
                     ValidationErrorMessages.Municipality.MunicipalityStatusNotCurrent,
                     ValidationErrorCodes.Municipality.MunicipalityStatusNotCurrent),
+                StreetNameHasInvalidStatusException => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameRejectionCannotBeCorrect,
+                    ValidationErrorCodes.StreetName.StreetNameRejectionCannotBeCorrect),
+                StreetNameNameAlreadyExistsException streetNameNameAlreadyExistsException  => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameAlreadyExists(streetNameNameAlreadyExistsException.Name),
+                    ValidationErrorCodes.StreetName.StreetNameAlreadyExists),
                 _ => null
             };
         }

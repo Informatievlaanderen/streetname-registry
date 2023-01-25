@@ -1,19 +1,19 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
+namespace StreetNameRegistry.Api.BackOffice.Handlers
 {
     using System.Collections.Generic;
-    using Abstractions;
     using Be.Vlaanderen.Basisregisters.Sqs;
     using Be.Vlaanderen.Basisregisters.Sqs.Handlers;
-    using Requests;
+    using Abstractions;
+    using Abstractions.SqsRequests;
     using TicketingService.Abstractions;
 
-    public sealed class ApproveStreetNameSqsHandler : SqsHandler<ApproveStreetNameSqsRequest>
+    public sealed class RetireStreetNameHandler : SqsHandler<RetireStreetNameSqsRequest>
     {
-        public const string Action = "ApproveStreetName";
+        public const string Action = "RetireStreetName";
 
         private readonly BackOfficeContext _backOfficeContext;
 
-        public ApproveStreetNameSqsHandler(
+        public RetireStreetNameHandler(
             ISqsQueue sqsQueue,
             ITicketing ticketing,
             ITicketingUrl ticketingUrl,
@@ -23,7 +23,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
             _backOfficeContext = backOfficeContext;
         }
 
-        protected override string? WithAggregateId(ApproveStreetNameSqsRequest request)
+        protected override string? WithAggregateId(RetireStreetNameSqsRequest request)
         {
             var municipalityIdByPersistentLocalId = _backOfficeContext
                 .MunicipalityIdByPersistentLocalId
@@ -32,7 +32,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
             return municipalityIdByPersistentLocalId?.MunicipalityId.ToString();
         }
 
-        protected override IDictionary<string, string> WithTicketMetadata(string aggregateId, ApproveStreetNameSqsRequest sqsRequest)
+        protected override IDictionary<string, string> WithTicketMetadata(string aggregateId, RetireStreetNameSqsRequest sqsRequest)
         {
             return new Dictionary<string, string>
             {

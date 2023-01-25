@@ -17,9 +17,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using Municipality;
     using Municipality.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers;
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using TicketingService.Abstractions;
     using Xunit;
     using Xunit.Abstractions;
@@ -194,7 +194,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
         }
     }
 
-    public sealed class FakeLambdaHandler : SqsLambdaHandler<ApproveStreetNameLambdaRequest>
+    public sealed class FakeLambdaHandler : StreetNameLambdaHandler<ApproveStreetNameLambdaRequest>
     {
         public FakeLambdaHandler(
             IConfiguration configuration,

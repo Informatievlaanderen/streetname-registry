@@ -1,7 +1,7 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests
+namespace StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests
 {
-    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;
+    using Requests;
 
     public sealed class RejectStreetNameSqsRequest : SqsRequest, IHasBackOfficeRequest<RejectStreetNameRequest>
     {

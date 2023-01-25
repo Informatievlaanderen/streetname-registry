@@ -13,8 +13,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
     using Moq;
     using Municipality;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
+    using StreetNameRegistry.Api.BackOffice.Handlers;
     using Testing;
     using TicketingService.Abstractions;
     using Xunit;
@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
 
             var sqsQueue = new Mock<ISqsQueue>();
 
-            var sut = new CorrectStreetNameApprovalSqsHandler(
+            var sut = new CorrectStreetNameApprovalHandler(
                 sqsQueue.Object,
                 ticketingMock.Object,
                 ticketingUrl,
@@ -79,7 +79,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
         public void WithNoMunicipalityFoundByStreetNamePersistentLocalId_ThrowsAggregateIdNotFound()
         {
             // Arrange
-            var sut = new CorrectStreetNameApprovalSqsHandler(
+            var sut = new CorrectStreetNameApprovalHandler(
                 Mock.Of<ISqsQueue>(),
                 Mock.Of<ITicketing>(),
                 Mock.Of<ITicketingUrl>(),

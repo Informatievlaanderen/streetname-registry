@@ -10,9 +10,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using global::AutoFixture;
     using MediatR;
     using Moq;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda;
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;

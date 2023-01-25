@@ -14,9 +14,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public sealed class RejectStreetNameLambdaHandler : SqsLambdaHandler<RejectStreetNameLambdaRequest>
+    public sealed class RetireStreetNameHandler : StreetNameLambdaHandler<RetireStreetNameLambdaRequest>
     {
-        public RejectStreetNameLambdaHandler(
+        public RetireStreetNameHandler(
             IConfiguration configuration,
             ICustomRetryPolicy retryPolicy,
             ITicketing ticketing,
@@ -30,7 +30,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 idempotentCommandHandler)
         { }
 
-        protected override async Task<ETagResponse> InnerHandle(RejectStreetNameLambdaRequest request, CancellationToken cancellationToken)
+        protected override async Task<ETagResponse> InnerHandle(RetireStreetNameLambdaRequest request, CancellationToken cancellationToken)
         {
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
             var cmd = request.ToCommand(streetNamePersistentLocalId);
@@ -52,13 +52,13 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             return new ETagResponse(string.Format(DetailUrlFormat, streetNamePersistentLocalId), lastHash);
         }
 
-        protected override TicketError? InnerMapDomainException(DomainException exception, RejectStreetNameLambdaRequest request)
+        protected override TicketError? InnerMapDomainException(DomainException exception, RetireStreetNameLambdaRequest request)
         {
             return exception switch
             {
                 StreetNameHasInvalidStatusException => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameCannotBeRejected,
-                    ValidationErrorCodes.StreetName.StreetNameCannotBeRejected),
+                    ValidationErrorMessages.StreetName.StreetNameCannotBeRetired,
+                    ValidationErrorCodes.StreetName.StreetNameCannotBeRetired),
                 MunicipalityHasInvalidStatusException => new TicketError(
                     ValidationErrorMessages.Municipality.MunicipalityStatusNotCurrent,
                     ValidationErrorCodes.Municipality.MunicipalityStatusNotCurrent),

@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
 {
     using System.Reflection;
     using Abstractions;
+    using Abstractions.SqsRequests;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.Lambda;
@@ -22,7 +23,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-    using Sqs.Requests;
     using Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
 

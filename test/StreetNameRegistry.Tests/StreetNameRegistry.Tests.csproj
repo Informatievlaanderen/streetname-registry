@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice.Handlers.Lambda\StreetNameRegistry.Api.BackOffice.Handlers.Lambda.csproj" />
-    <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice.Handlers.Sqs\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice\StreetNameRegistry.Api.BackOffice.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.BackOffice\StreetNameRegistry.Projections.BackOffice.csproj" />

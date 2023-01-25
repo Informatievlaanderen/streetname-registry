@@ -1,19 +1,19 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
+namespace StreetNameRegistry.Api.BackOffice.Handlers
 {
     using System.Collections.Generic;
-    using Abstractions;
     using Be.Vlaanderen.Basisregisters.Sqs;
     using Be.Vlaanderen.Basisregisters.Sqs.Handlers;
-    using Requests;
+    using Abstractions;
+    using Abstractions.SqsRequests;
     using TicketingService.Abstractions;
 
-    public sealed class CorrectStreetNameRejectionSqsHandler : SqsHandler<CorrectStreetNameRejectionSqsRequest>
+    public sealed class CorrectStreetNameRejectionHandler : SqsHandler<CorrectStreetNameRejectionSqsRequest>
     {
         public const string Action = "CorrectStreetNameRejection";
 
         private readonly BackOfficeContext _backOfficeContext;
 
-        public CorrectStreetNameRejectionSqsHandler(
+        public CorrectStreetNameRejectionHandler(
             ISqsQueue sqsQueue,
             ITicketing ticketing,
             ITicketingUrl ticketingUrl,

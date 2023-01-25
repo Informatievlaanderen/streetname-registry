@@ -1,19 +1,19 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
+namespace StreetNameRegistry.Api.BackOffice.Handlers
 {
     using System.Collections.Generic;
-    using Abstractions;
     using Be.Vlaanderen.Basisregisters.Sqs;
     using Be.Vlaanderen.Basisregisters.Sqs.Handlers;
-    using Requests;
+    using Abstractions;
+    using Abstractions.SqsRequests;
     using TicketingService.Abstractions;
 
-    public sealed class RejectStreetNameSqsHandler : SqsHandler<RejectStreetNameSqsRequest>
+    public sealed class CorrectStreetNameRetirementHandler : SqsHandler<CorrectStreetNameRetirementSqsRequest>
     {
-        public const string Action = "RejectStreetName";
+        public const string Action = "CorrectStreetNameRetirement";
 
         private readonly BackOfficeContext _backOfficeContext;
 
-        public RejectStreetNameSqsHandler(
+        public CorrectStreetNameRetirementHandler(
             ISqsQueue sqsQueue,
             ITicketing ticketing,
             ITicketingUrl ticketingUrl,
@@ -23,7 +23,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
             _backOfficeContext = backOfficeContext;
         }
 
-        protected override string? WithAggregateId(RejectStreetNameSqsRequest request)
+        protected override string? WithAggregateId(CorrectStreetNameRetirementSqsRequest request)
         {
             var municipalityIdByPersistentLocalId = _backOfficeContext
                 .MunicipalityIdByPersistentLocalId
@@ -32,7 +32,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
             return municipalityIdByPersistentLocalId?.MunicipalityId.ToString();
         }
 
-        protected override IDictionary<string, string> WithTicketMetadata(string aggregateId, RejectStreetNameSqsRequest sqsRequest)
+        protected override IDictionary<string, string> WithTicketMetadata(string aggregateId, CorrectStreetNameRetirementSqsRequest sqsRequest)
         {
             return new Dictionary<string, string>
             {

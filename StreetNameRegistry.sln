@@ -69,8 +69,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Producer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Api.BackOffice.Abstractions", "src\StreetNameRegistry.Api.BackOffice.Abstractions\StreetNameRegistry.Api.BackOffice.Abstractions.csproj", "{259D0C1F-6363-4E53-B106-B2ADC13B6D5D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Api.BackOffice.Handlers.Sqs", "src\StreetNameRegistry.Api.BackOffice.Handlers.Sqs\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.csproj", "{DCAE2F6B-4DB2-4354-8D42-7BCF75D9B05B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Api.BackOffice.Handlers.Lambda", "src\StreetNameRegistry.Api.BackOffice.Handlers.Lambda\StreetNameRegistry.Api.BackOffice.Handlers.Lambda.csproj", "{04DFEEA8-A1B2-4CA2-83E9-E06F40C3452C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Producer.Snapshot.Oslo", "src\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj", "{C1ED8210-F8FC-4269-B089-1B0CE7A62566}"
@@ -165,10 +163,6 @@ Global
 		{259D0C1F-6363-4E53-B106-B2ADC13B6D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{259D0C1F-6363-4E53-B106-B2ADC13B6D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{259D0C1F-6363-4E53-B106-B2ADC13B6D5D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DCAE2F6B-4DB2-4354-8D42-7BCF75D9B05B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCAE2F6B-4DB2-4354-8D42-7BCF75D9B05B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCAE2F6B-4DB2-4354-8D42-7BCF75D9B05B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCAE2F6B-4DB2-4354-8D42-7BCF75D9B05B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04DFEEA8-A1B2-4CA2-83E9-E06F40C3452C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04DFEEA8-A1B2-4CA2-83E9-E06F40C3452C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04DFEEA8-A1B2-4CA2-83E9-E06F40C3452C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -210,7 +204,6 @@ Global
 		{D2883268-1DD0-4659-8054-1FEE0A0054F0} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{D19924B4-850B-4294-9171-AEB6829DB4C7} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{259D0C1F-6363-4E53-B106-B2ADC13B6D5D} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
-		{DCAE2F6B-4DB2-4354-8D42-7BCF75D9B05B} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{04DFEEA8-A1B2-4CA2-83E9-E06F40C3452C} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{C1ED8210-F8FC-4269-B089-1B0CE7A62566} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{C1C797C7-4A24-4E9C-B7D0-7E097562342E} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}

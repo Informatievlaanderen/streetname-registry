@@ -1,22 +1,22 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
+namespace StreetNameRegistry.Api.BackOffice.Handlers
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Abstractions.Convertors;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
     using Be.Vlaanderen.Basisregisters.Sqs;
     using Be.Vlaanderen.Basisregisters.Sqs.Handlers;
-    using Consumer;
     using Microsoft.EntityFrameworkCore;
-    using Requests;
+    using Abstractions.Convertors;
+    using Abstractions.SqsRequests;
+    using Consumer;
     using TicketingService.Abstractions;
 
-    public sealed class ProposeStreetNameSqsHandler : SqsHandler<ProposeStreetNameSqsRequest>
+    public sealed class ProposeStreetNameHandler : SqsHandler<ProposeStreetNameSqsRequest>
     {
         private const string Action = "ProposeStreetName";
         private readonly ConsumerContext _consumerContext;
 
-        public ProposeStreetNameSqsHandler(
+        public ProposeStreetNameHandler(
             ISqsQueue sqsQueue,
             ITicketing ticketing,
             ITicketingUrl ticketingUrl,
