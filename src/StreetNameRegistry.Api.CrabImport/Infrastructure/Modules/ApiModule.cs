@@ -47,18 +47,14 @@ namespace StreetNameRegistry.Api.CrabImport.Infrastructure.Modules
                     new IdempotencyMigrationsTableInfo(Schema.Import),
                     new IdempotencyTableInfo(Schema.Import),
                     _loggerFactory))
-
                 .RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
-
                 .RegisterModule(new EnvelopeModule())
+                .RegisterModule(new CommandHandlingModule(_configuration));
 
-                .RegisterModule(new CommandHandlingModule(_configuration))
-
-                .RegisterModule(new CrabImportModule(
-                    _services,
+            _services.ConfigureCrabImport(
                     _configuration.GetConnectionString("CrabImport"),
                     Schema.Import,
-                    _loggerFactory));
+                    _loggerFactory);
 
             builder
                 .RegisterType<IdempotentCommandHandlerModule>()
