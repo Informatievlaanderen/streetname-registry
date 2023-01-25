@@ -12,8 +12,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Be.Vlaanderen.Basisregisters.EventHandling;
-    using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Consumer;
@@ -30,11 +28,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     {
         public Function()
             : base(new List<Assembly> { typeof(ApproveStreetNameSqsRequest).Assembly })
-        {
-            Infrastructure.MigrationsHelper.Run(
-                ConfigureService.Configuration.GetConnectionString("Sequences"),
-                ServiceProvider.GetService<ILoggerFactory>());
-        }
+        { }
 
         protected override IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -86,8 +80,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
 
             builder
                 .RegisterModule(new DataDogModule(configuration))
-                .RegisterModule<EnvelopeModule>()
-                .RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
                 .RegisterModule(new CommandHandlingModule(configuration))
                 .RegisterModule(new SequenceModule(configuration, services, loggerFactory))
                 .RegisterModule(new BackOfficeModule(configuration, services, loggerFactory))
@@ -106,7 +98,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
                 new IdempotencyTableInfo(Schema.Import),
                 loggerFactory));
 
-            builder.RegisterEventstreamModule(configuration);
             builder.RegisterSnapshotModule(configuration);
 
             builder.Populate(services);
