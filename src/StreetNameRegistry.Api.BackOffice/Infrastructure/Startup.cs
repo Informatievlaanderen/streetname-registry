@@ -23,6 +23,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using System;
     using System.Linq;
     using System.Reflection;
+    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
 
     /// <summary>Represents the startup process for the application.</summary>
     public class Startup
@@ -189,6 +190,11 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                     }
                 });
 
+            serviceProvider.MigrateIdempotencyDatabase();
+
+            StreetNameRegistry.Infrastructure.MigrationsHelper.Run(
+                _configuration.GetConnectionString("Sequences"),
+                serviceProvider.GetService<ILoggerFactory>());
             MigrationsHelper.Run(
                 _configuration.GetConnectionString("BackOffice"),
                 serviceProvider.GetService<ILoggerFactory>());

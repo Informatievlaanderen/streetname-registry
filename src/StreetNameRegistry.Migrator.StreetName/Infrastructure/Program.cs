@@ -22,6 +22,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using Modules;
     using Polly;
     using Serilog;
+    using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.StreetName;
     using StreetNameRegistry.StreetName.Commands;
     using ILogger = Microsoft.Extensions.Logging.ILogger;

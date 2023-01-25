@@ -5,6 +5,7 @@ Microsoft.Extensions.Configuration
 
 Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore
 Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore.Autofac
+Be.Vlaanderen.Basisregisters.EventHandling.Autofac
 
 Be.Vlaanderen.Basisregisters.DataDog.Tracing.SqlStreamStore
 
