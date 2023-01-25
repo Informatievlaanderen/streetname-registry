@@ -124,11 +124,10 @@ namespace StreetNameRegistry.Consumer.Infrastructure
             var tempProvider = services.BuildServiceProvider();
             var loggerFactory = tempProvider.GetRequiredService<ILoggerFactory>();
 
-            builder.RegisterModule(new ApiModule(configuration, services, loggerFactory));
-
-            builder.RegisterModule(new ConsumerModule(configuration, services, loggerFactory));
-
-            builder.RegisterModule(new ProjectorModule(configuration));
+            builder
+                .RegisterModule(new ApiModule(configuration, services, loggerFactory))
+                .RegisterModule(new ConsumerModule(configuration, services, loggerFactory))
+                .RegisterModule(new ProjectorModule(configuration));
 
             builder.Populate(services);
 
