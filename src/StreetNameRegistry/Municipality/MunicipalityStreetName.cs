@@ -36,12 +36,12 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasMigratedToMunicipality>(When);
             Register<StreetNameWasProposedV2>(When);
             Register<StreetNameWasApproved>(When);
-            Register<StreetNameWasCorrectedFromApprovedToProposed>(When);
             Register<StreetNameWasRejected>(When);
-            Register<StreetNameWasCorrectedFromRejectedToProposed>(When);
             Register<StreetNameWasRetiredV2>(When);
-            Register<StreetNameWasCorrectedFromRetiredToCurrent>(When);
             Register<StreetNameNamesWereCorrected>(When);
+            Register<StreetNameWasCorrectedFromApprovedToProposed>(When);
+            Register<StreetNameWasCorrectedFromRejectedToProposed>(When);
+            Register<StreetNameWasCorrectedFromRetiredToCurrent>(When);
         }
 
         private void When(StreetNameWasMigratedToMunicipality @event)
@@ -72,21 +72,9 @@ namespace StreetNameRegistry.Municipality
             _lastEvent = @event;
         }
 
-        private void When(StreetNameWasCorrectedFromApprovedToProposed @event)
-        {
-            Status = StreetNameStatus.Proposed;
-            _lastEvent = @event;
-        }
-
         private void When(StreetNameWasRejected @event)
         {
             Status = StreetNameStatus.Rejected;
-            _lastEvent = @event;
-        }
-
-        private void When(StreetNameWasCorrectedFromRejectedToProposed @event)
-        {
-            Status = StreetNameStatus.Proposed;
             _lastEvent = @event;
         }
 
@@ -96,18 +84,30 @@ namespace StreetNameRegistry.Municipality
             _lastEvent = @event;
         }
 
-        private void When(StreetNameWasCorrectedFromRetiredToCurrent @event)
-        {
-            Status = StreetNameStatus.Current;
-            _lastEvent = @event;
-        }
-
         private void When(StreetNameNamesWereCorrected @event)
         {
             foreach (var streetNameName in @event.StreetNameNames)
             {
                 Names.AddOrUpdate(streetNameName.Language, streetNameName.Name);
             }
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameWasCorrectedFromApprovedToProposed @event)
+        {
+            Status = StreetNameStatus.Proposed;
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameWasCorrectedFromRejectedToProposed @event)
+        {
+            Status = StreetNameStatus.Proposed;
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameWasCorrectedFromRetiredToCurrent @event)
+        {
+            Status = StreetNameStatus.Current;
             _lastEvent = @event;
         }
 
@@ -126,22 +126,6 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
         }
 
-
-        public void CorrectApproval()
-        {
-            if (Status == StreetNameStatus.Proposed)
-            {
-                return;
-            }
-
-            if (Status != StreetNameStatus.Current)
-            {
-                throw new StreetNameHasInvalidStatusException(PersistentLocalId);
-            }
-
-            Apply(new StreetNameWasCorrectedFromApprovedToProposed(_municipalityId, PersistentLocalId));
-        }
-
         public void Reject()
         {
             if (Status == StreetNameStatus.Rejected)
@@ -157,23 +141,6 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasRejected(_municipalityId, PersistentLocalId));
         }
 
-        public void CorrectRejection(Action guardUniqueActiveStreetNameNames)
-        {
-            if (Status == StreetNameStatus.Proposed)
-            {
-                return;
-            }
-
-            if (Status != StreetNameStatus.Rejected)
-            {
-                throw new StreetNameHasInvalidStatusException(PersistentLocalId);
-            }
-
-            guardUniqueActiveStreetNameNames();
-
-            Apply(new StreetNameWasCorrectedFromRejectedToProposed(_municipalityId, PersistentLocalId));
-        }
-
         public void Retire()
         {
             if (Status == StreetNameStatus.Retired)
@@ -187,21 +154,6 @@ namespace StreetNameRegistry.Municipality
             }
 
             Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
-        }
-
-        public void CorrectRetirement(Action guardUniqueActiveStreetNameNames)
-        {
-            switch (Status)
-            {
-                case StreetNameStatus.Current:
-                    return;
-                case StreetNameStatus.Proposed or StreetNameStatus.Rejected:
-                    throw new StreetNameHasInvalidStatusException(PersistentLocalId);
-                case StreetNameStatus.Retired:
-                    guardUniqueActiveStreetNameNames();
-                    Apply(new StreetNameWasCorrectedFromRetiredToCurrent(_municipalityId, PersistentLocalId));
-                    break;
-            }
         }
 
         public void CorrectNames(Names names, Action<Names, PersistentLocalId> guardStreetNameNames)
@@ -224,6 +176,53 @@ namespace StreetNameRegistry.Municipality
             }
 
             Apply(new StreetNameNamesWereCorrected(_municipalityId, PersistentLocalId, correctedNames));
+        }
+
+        public void CorrectApproval()
+        {
+            if (Status == StreetNameStatus.Proposed)
+            {
+                return;
+            }
+
+            if (Status != StreetNameStatus.Current)
+            {
+                throw new StreetNameHasInvalidStatusException(PersistentLocalId);
+            }
+
+            Apply(new StreetNameWasCorrectedFromApprovedToProposed(_municipalityId, PersistentLocalId));
+        }
+
+        public void CorrectRejection(Action guardUniqueActiveStreetNameNames)
+        {
+            if (Status == StreetNameStatus.Proposed)
+            {
+                return;
+            }
+
+            if (Status != StreetNameStatus.Rejected)
+            {
+                throw new StreetNameHasInvalidStatusException(PersistentLocalId);
+            }
+
+            guardUniqueActiveStreetNameNames();
+
+            Apply(new StreetNameWasCorrectedFromRejectedToProposed(_municipalityId, PersistentLocalId));
+        }
+
+        public void CorrectRetirement(Action guardUniqueActiveStreetNameNames)
+        {
+            switch (Status)
+            {
+                case StreetNameStatus.Current:
+                    return;
+                case StreetNameStatus.Proposed or StreetNameStatus.Rejected:
+                    throw new StreetNameHasInvalidStatusException(PersistentLocalId);
+                case StreetNameStatus.Retired:
+                    guardUniqueActiveStreetNameNames();
+                    Apply(new StreetNameWasCorrectedFromRetiredToCurrent(_municipalityId, PersistentLocalId));
+                    break;
+            }
         }
 
         public void RestoreSnapshot(MunicipalityId municipalityId, StreetNameData streetNameData)

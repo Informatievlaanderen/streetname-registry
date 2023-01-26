@@ -57,18 +57,6 @@ namespace StreetNameRegistry.Municipality
             streetName.Approve();
         }
 
-        public void CorrectStreetNameApproval(PersistentLocalId persistentLocalId)
-        {
-            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
-
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
-
-            streetName.CorrectApproval();
-        }
-
         public void RejectStreetName(PersistentLocalId persistentLocalId)
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
@@ -81,18 +69,6 @@ namespace StreetNameRegistry.Municipality
             streetName.Reject();
         }
 
-        public void CorrectStreetNameRejection(PersistentLocalId persistentLocalId)
-        {
-            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
-
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
-
-            streetName.CorrectRejection(() => GuardUniqueActiveStreetNameNames(streetName.Names, persistentLocalId));
-        }
-
         public void RetireStreetName(PersistentLocalId persistentLocalId)
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
@@ -103,6 +79,37 @@ namespace StreetNameRegistry.Municipality
             }
 
             streetName.Retire();
+        }
+
+        public void CorrectStreetNameName(Names streetNameNames, PersistentLocalId persistentLocalId)
+        {
+            StreetNames
+                .GetNotRemovedByPersistentLocalId(persistentLocalId)
+                .CorrectNames(streetNameNames, GuardStreetNameNames);
+        }
+        
+        public void CorrectStreetNameApproval(PersistentLocalId persistentLocalId)
+        {
+            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
+
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                throw new MunicipalityHasInvalidStatusException();
+            }
+
+            streetName.CorrectApproval();
+        }
+
+        public void CorrectStreetNameRejection(PersistentLocalId persistentLocalId)
+        {
+            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
+
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                throw new MunicipalityHasInvalidStatusException();
+            }
+
+            streetName.CorrectRejection(() => GuardUniqueActiveStreetNameNames(streetName.Names, persistentLocalId));
         }
 
         public void CorrectStreetNameRetirement(PersistentLocalId persistentLocalId)
@@ -131,13 +138,6 @@ namespace StreetNameRegistry.Municipality
                     throw new StreetNameNameAlreadyExistsException(firstName.Name);
                 }
             }
-        }
-
-        public void CorrectStreetNameName(Names streetNameNames, PersistentLocalId persistentLocalId)
-        {
-            StreetNames
-                .GetNotRemovedByPersistentLocalId(persistentLocalId)
-                .CorrectNames(streetNameNames, GuardStreetNameNames);
         }
 
         private void GuardStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
