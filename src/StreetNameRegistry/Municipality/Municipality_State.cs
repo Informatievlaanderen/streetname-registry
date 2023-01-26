@@ -27,26 +27,25 @@ namespace StreetNameRegistry.Municipality
         private Municipality()
         {
             Register<MunicipalityWasImported>(When);
-            Register<MunicipalityWasRetired>(When);
             Register<MunicipalityNisCodeWasChanged>(When);
-            Register<MunicipalityBecameCurrent>(When);
-
-            Register<MunicipalityFacilityLanguageWasRemoved>(When);
-            Register<MunicipalityFacilityLanguageWasAdded>(When);
             Register<MunicipalityOfficialLanguageWasAdded>(When);
             Register<MunicipalityOfficialLanguageWasRemoved>(When);
+            Register<MunicipalityFacilityLanguageWasAdded>(When);
+            Register<MunicipalityFacilityLanguageWasRemoved>(When);
+            Register<MunicipalityBecameCurrent>(When);
+            Register<MunicipalityWasRetired>(When);
             Register<MunicipalityWasCorrectedToCurrent>(When);
             Register<MunicipalityWasCorrectedToRetired>(When);
 
+            Register<StreetNameWasMigratedToMunicipality>(When);
             Register<StreetNameWasProposedV2>(When);
             Register<StreetNameWasApproved>(When);
-            Register<StreetNameWasCorrectedFromApprovedToProposed>(When);
             Register<StreetNameWasRejected>(When);
-            Register<StreetNameWasCorrectedFromRejectedToProposed>(When);
             Register<StreetNameWasRetiredV2>(When);
-            Register<StreetNameWasCorrectedFromRetiredToCurrent>(When);
             Register<StreetNameNamesWereCorrected>(When);
-            Register<StreetNameWasMigratedToMunicipality>(When);
+            Register<StreetNameWasCorrectedFromApprovedToProposed>(When);
+            Register<StreetNameWasCorrectedFromRejectedToProposed>(When);
+            Register<StreetNameWasCorrectedFromRetiredToCurrent>(When);
 
             Register<MunicipalitySnapshot>(When);
         }
@@ -58,31 +57,19 @@ namespace StreetNameRegistry.Municipality
             _nisCode = new NisCode(@event.NisCode);
         }
 
-        private void When(MunicipalityWasCorrectedToCurrent @event)
-        {
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-                MunicipalityStatus = MunicipalityStatus.Current;
-        }
-
-        private void When(MunicipalityWasCorrectedToRetired @event)
-        {
-            if (MunicipalityStatus != MunicipalityStatus.Retired)
-                MunicipalityStatus = MunicipalityStatus.Retired;
-        }
-
-        private void When(MunicipalityWasRetired @event)
-        {
-            MunicipalityStatus = MunicipalityStatus.Retired;
-        }
-
-        private void When(MunicipalityBecameCurrent @event)
-        {
-            MunicipalityStatus = MunicipalityStatus.Current;
-        }
-
         private void When(MunicipalityNisCodeWasChanged @event)
         {
             _nisCode = new NisCode(@event.NisCode);
+        }
+
+        private void When(MunicipalityOfficialLanguageWasAdded @event)
+        {
+            _officialLanguages.Add(@event.Language);
+        }
+
+        private void When(MunicipalityOfficialLanguageWasRemoved @event)
+        {
+            _officialLanguages.Remove(@event.Language);
         }
 
         private void When(MunicipalityFacilityLanguageWasAdded @event)
@@ -95,14 +82,26 @@ namespace StreetNameRegistry.Municipality
             _facilityLanguages.Remove(@event.Language);
         }
 
-        private void When(MunicipalityOfficialLanguageWasAdded @event)
+        private void When(MunicipalityBecameCurrent @event)
         {
-            _officialLanguages.Add(@event.Language);
+            MunicipalityStatus = MunicipalityStatus.Current;
         }
 
-        private void When(MunicipalityOfficialLanguageWasRemoved @event)
+        private void When(MunicipalityWasRetired @event)
         {
-            _officialLanguages.Remove(@event.Language);
+            MunicipalityStatus = MunicipalityStatus.Retired;
+        }
+
+        private void When(MunicipalityWasCorrectedToCurrent @event)
+        {
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+                MunicipalityStatus = MunicipalityStatus.Current;
+        }
+
+        private void When(MunicipalityWasCorrectedToRetired @event)
+        {
+            if (MunicipalityStatus != MunicipalityStatus.Retired)
+                MunicipalityStatus = MunicipalityStatus.Retired;
         }
         #endregion Municipality
 
@@ -126,19 +125,7 @@ namespace StreetNameRegistry.Municipality
             streetName.Route(@event);
         }
 
-        private void When(StreetNameWasCorrectedFromApprovedToProposed @event)
-        {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
-        }
-
         private void When(StreetNameWasRejected @event)
-        {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
-        }
-
-        private void When(StreetNameWasCorrectedFromRejectedToProposed @event)
         {
             var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
             streetName.Route(@event);
@@ -150,13 +137,25 @@ namespace StreetNameRegistry.Municipality
             streetName.Route(@event);
         }
 
-        private void When(StreetNameWasCorrectedFromRetiredToCurrent @event)
+        private void When(StreetNameNamesWereCorrected @event)
         {
             var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
             streetName.Route(@event);
         }
 
-        private void When(StreetNameNamesWereCorrected @event)
+        private void When(StreetNameWasCorrectedFromApprovedToProposed @event)
+        {
+            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
+            streetName.Route(@event);
+        }
+
+        private void When(StreetNameWasCorrectedFromRejectedToProposed @event)
+        {
+            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
+            streetName.Route(@event);
+        }
+
+        private void When(StreetNameWasCorrectedFromRetiredToCurrent @event)
         {
             var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
             streetName.Route(@event);
