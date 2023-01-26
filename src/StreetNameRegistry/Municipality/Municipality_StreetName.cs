@@ -1,9 +1,9 @@
 namespace StreetNameRegistry.Municipality
 {
-    using Events;
-    using Exceptions;
     using System;
     using System.Linq;
+    using Events;
+    using Exceptions;
 
     public partial class Municipality
     {

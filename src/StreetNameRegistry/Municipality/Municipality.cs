@@ -1,10 +1,10 @@
 namespace StreetNameRegistry.Municipality
 {
+    using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Events;
     using Exceptions;
-    using System.Collections.Generic;
 
     public sealed partial class Municipality : AggregateRootEntity, ISnapshotable
     {
