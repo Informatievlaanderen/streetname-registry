@@ -1,11 +1,43 @@
 namespace StreetNameRegistry.Municipality
 {
-    using StreetNameRegistry.Municipality.Events;
-    using StreetNameRegistry.Municipality.Exceptions;
+    using Events;
+    using Exceptions;
+    using System;
     using System.Linq;
 
     public partial class Municipality
     {
+        public void MigrateStreetName(
+            StreetNameId streetNameId,
+            PersistentLocalId persistentLocalId,
+            StreetNameStatus status,
+            Language? primaryLanguage,
+            Language? secondaryLanguage,
+            Names names,
+            HomonymAdditions homonymAdditions,
+            bool isCompleted,
+            bool isRemoved)
+        {
+            if (StreetNames.HasPersistentLocalId(persistentLocalId))
+            {
+                throw new InvalidOperationException(
+                    $"Cannot migrate StreetName with id '{persistentLocalId}' in municipality '{_municipalityId}'.");
+            }
+
+            ApplyChange(new StreetNameWasMigratedToMunicipality(
+                _municipalityId,
+                _nisCode,
+                streetNameId,
+                persistentLocalId,
+                status,
+                primaryLanguage,
+                secondaryLanguage,
+                names,
+                homonymAdditions,
+                isCompleted,
+                isRemoved));
+        }
+
         public void ProposeStreetName(Names streetNameNames, PersistentLocalId persistentLocalId)
         {
             if (MunicipalityStatus == MunicipalityStatus.Retired)

@@ -4,7 +4,6 @@ namespace StreetNameRegistry.Municipality
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Events;
     using Exceptions;
-    using System;
     using System.Collections.Generic;
 
     public sealed partial class Municipality : AggregateRootEntity, ISnapshotable
@@ -29,38 +28,6 @@ namespace StreetNameRegistry.Municipality
             if (nisCode != _nisCode)
             {
                 ApplyChange(new MunicipalityNisCodeWasChanged(_municipalityId, nisCode));
-            }
-        }
-
-        public void BecomeCurrent()
-        {
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                ApplyChange(new MunicipalityBecameCurrent(_municipalityId));
-            }
-        }
-
-        public void CorrectToCurrent()
-        {
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                ApplyChange(new MunicipalityWasCorrectedToCurrent(_municipalityId));
-            }
-        }
-
-        public void CorrectToRetired()
-        {
-            if (MunicipalityStatus != MunicipalityStatus.Retired)
-            {
-                ApplyChange(new MunicipalityWasCorrectedToRetired(_municipalityId));
-            }
-        }
-
-        public void Retire()
-        {
-            if (MunicipalityStatus != MunicipalityStatus.Retired)
-            {
-                ApplyChange(new MunicipalityWasRetired(_municipalityId));
             }
         }
 
@@ -101,35 +68,36 @@ namespace StreetNameRegistry.Municipality
             }
         }
 
-        public void MigrateStreetName(
-            StreetNameId streetNameId,
-            PersistentLocalId persistentLocalId,
-            StreetNameStatus status,
-            Language? primaryLanguage,
-            Language? secondaryLanguage,
-            Names names,
-            HomonymAdditions homonymAdditions,
-            bool isCompleted,
-            bool isRemoved)
+        public void BecomeCurrent()
         {
-            if (StreetNames.HasPersistentLocalId(persistentLocalId))
+            if (MunicipalityStatus != MunicipalityStatus.Current)
             {
-                throw new InvalidOperationException(
-                    $"Cannot migrate StreetName with id '{persistentLocalId}' in municipality '{_municipalityId}'.");
+                ApplyChange(new MunicipalityBecameCurrent(_municipalityId));
             }
+        }
 
-            ApplyChange(new StreetNameWasMigratedToMunicipality(
-                _municipalityId,
-                _nisCode,
-                streetNameId,
-                persistentLocalId,
-                status,
-                primaryLanguage,
-                secondaryLanguage,
-                names,
-                homonymAdditions,
-                isCompleted,
-                isRemoved));
+        public void Retire()
+        {
+            if (MunicipalityStatus != MunicipalityStatus.Retired)
+            {
+                ApplyChange(new MunicipalityWasRetired(_municipalityId));
+            }
+        }
+
+        public void CorrectToCurrent()
+        {
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                ApplyChange(new MunicipalityWasCorrectedToCurrent(_municipalityId));
+            }
+        }
+
+        public void CorrectToRetired()
+        {
+            if (MunicipalityStatus != MunicipalityStatus.Retired)
+            {
+                ApplyChange(new MunicipalityWasCorrectedToRetired(_municipalityId));
+            }
         }
 
         #region Metadata
