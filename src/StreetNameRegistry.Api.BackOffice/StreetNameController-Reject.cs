@@ -18,6 +18,7 @@ namespace StreetNameRegistry.Api.BackOffice
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions.SqsRequests;
+    using Abstractions.Validation;
 
     public partial class StreetNameController
     {
@@ -64,11 +65,11 @@ namespace StreetNameRegistry.Api.BackOffice
             }
             catch (AggregateIdIsNotFoundException)
             {
-                throw new ApiException(ValidationErrorMessages.StreetName.StreetNameNotFound, StatusCodes.Status404NotFound);
+                throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
             }
             catch (StreetNameIsNotFoundException)
             {
-                throw new ApiException(ValidationErrorMessages.StreetName.StreetNameNotFound, StatusCodes.Status404NotFound);
+                throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
             }
         }
     }

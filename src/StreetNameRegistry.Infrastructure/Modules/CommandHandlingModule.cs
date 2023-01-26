@@ -17,10 +17,6 @@ namespace StreetNameRegistry.Infrastructure.Modules
         {
             builder.RegisterModule(new AggregateSourceModule(_configuration));
 
-            builder
-                .RegisterType<ConcurrentUnitOfWork>()
-                .InstancePerLifetimeScope();
-
             CommandHandlerModules.Register(builder);
 
             builder

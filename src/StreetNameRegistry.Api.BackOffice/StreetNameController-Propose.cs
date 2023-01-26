@@ -15,6 +15,7 @@ namespace StreetNameRegistry.Api.BackOffice
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions.SqsRequests;
+    using Abstractions.Validation;
 
     public partial class StreetNameController
     {
@@ -56,9 +57,9 @@ namespace StreetNameRegistry.Api.BackOffice
             catch (AggregateIdIsNotFoundException)
             {
                 throw CreateValidationException(
-                    ValidationErrorCodes.StreetName.StreetNameMunicipalityUnknown,
+                    ValidationErrors.ProposeStreetName.MunicipalityUnknown.Code,
                     string.Empty,
-                    ValidationErrorMessages.StreetName.StreetNameMunicipalityUnknown(request.GemeenteId));
+                    ValidationErrors.ProposeStreetName.MunicipalityUnknown.Message(request.GemeenteId));
             }
         }
     }

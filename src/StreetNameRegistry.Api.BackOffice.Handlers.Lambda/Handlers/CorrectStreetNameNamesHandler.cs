@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions;
+    using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
@@ -56,15 +56,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
         {
             return exception switch
             {
-                StreetNameNameAlreadyExistsException nameExists => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameAlreadyExists(nameExists.Name),
-                    ValidationErrorCodes.StreetName.StreetNameAlreadyExists),
-                StreetNameHasInvalidStatusException => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameCannotBeCorrected,
-                    ValidationErrorCodes.StreetName.StreetNameCannotBeCorrected),
-                StreetNameNameLanguageIsNotSupportedException _ => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameNameLanguageIsNotSupported,
-                    ValidationErrorCodes.StreetName.StreetNameNameLanguageIsNotSupported),
+                StreetNameNameAlreadyExistsException nameExists =>
+                    ValidationErrors.Common.StreetNameAlreadyExists.ToTicketError(nameExists.Name),
+                StreetNameHasInvalidStatusException =>
+                    ValidationErrors.CorrectStreetNameNames.InvalidStatus.ToTicketError(),
+                StreetNameNameLanguageIsNotSupportedException _ =>
+                    ValidationErrors.Common.StreetNameNameLanguageIsNotSupported.ToTicketError(),
                 _ => null
             };
         }

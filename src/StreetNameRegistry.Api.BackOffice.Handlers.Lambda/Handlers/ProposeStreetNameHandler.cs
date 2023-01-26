@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions;
+    using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
@@ -62,18 +63,14 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
         {
             return exception switch
             {
-                StreetNameNameAlreadyExistsException nameExists => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameAlreadyExists(nameExists.Name),
-                    ValidationErrorCodes.StreetName.StreetNameAlreadyExists),
-                MunicipalityHasInvalidStatusException => new TicketError(
-                    ValidationErrorMessages.Municipality.MunicipalityHasInvalidStatus,
-                    ValidationErrorCodes.Municipality.MunicipalityHasInvalidStatus),
-                StreetNameNameLanguageIsNotSupportedException _ => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameNameLanguageIsNotSupported,
-                    ValidationErrorCodes.StreetName.StreetNameNameLanguageIsNotSupported),
-                StreetNameIsMissingALanguageException _ => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameIsMissingALanguage,
-                    ValidationErrorCodes.StreetName.StreetNameIsMissingALanguage),
+                StreetNameNameAlreadyExistsException nameExists =>
+                    ValidationErrors.Common.StreetNameAlreadyExists.ToTicketError(nameExists.Name),
+                MunicipalityHasInvalidStatusException =>
+                    ValidationErrors.Common.MunicipalityHasInvalidStatus.ToTicketError(),
+                StreetNameNameLanguageIsNotSupportedException _ =>
+                    ValidationErrors.Common.StreetNameNameLanguageIsNotSupported.ToTicketError(),
+                StreetNameIsMissingALanguageException _ =>
+                    ValidationErrors.ProposeStreetName.StreetNameIsMissingALanguage.ToTicketError(),
                 _ => null
             };
         }

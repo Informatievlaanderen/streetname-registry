@@ -2,6 +2,7 @@
 {
     using System;
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
@@ -40,6 +41,10 @@
                 .RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings));
 
             builder.RegisterEventstreamModule(_configuration);
+
+            builder
+                .RegisterType<ConcurrentUnitOfWork>()
+                .InstancePerLifetimeScope();
         }
     }
 }

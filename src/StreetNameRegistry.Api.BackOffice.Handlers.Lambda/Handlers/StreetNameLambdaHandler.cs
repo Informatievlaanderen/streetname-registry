@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
 {
     using System.Configuration;
     using Abstractions;
+    using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
@@ -72,8 +73,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
         {
             await Ticketing.Error(request.TicketId,
                 new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameNotFound,
-                    ValidationErrorCodes.StreetName.StreetNameNotFound),
+                    ValidationErrors.Common.StreetNameNotFound.Message,
+                    ValidationErrors.Common.StreetNameNotFound.Code),
                 cancellationToken);
         }
 
@@ -90,11 +91,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             return exception switch
             {
                 StreetNameIsNotFoundException => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameNotFound,
-                    ValidationErrorCodes.StreetName.StreetNameNotFound),
-                StreetNameIsRemovedException => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameIsRemoved,
-                    ValidationErrorCodes.StreetName.StreetNameIsRemoved),
+                    ValidationErrors.Common.StreetNameNotFound.Message,
+                    ValidationErrors.Common.StreetNameNotFound.Code),
+                StreetNameIsRemovedException =>
+                    ValidationErrors.Common.StreetNameIsRemoved.ToTicketError(),
                 _ => null
             };
         }
