@@ -2,7 +2,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions;
     using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
@@ -57,12 +56,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
         {
             return exception switch
             {
-                MunicipalityHasInvalidStatusException => new TicketError(
-                    ValidationErrors.Common.MunicipalityStatusNotCurrent.Message,
-                    ValidationErrors.Common.MunicipalityStatusNotCurrent.Code),
-                StreetNameHasInvalidStatusException => new TicketError(
-                    ValidationErrors.CorrectStreetNameApproval.InvalidStatus.Message,
-                    ValidationErrors.CorrectStreetNameApproval.InvalidStatus.Code),
+                MunicipalityHasInvalidStatusException =>
+                    ValidationErrors.Common.MunicipalityStatusNotCurrent.ToTicketError(),
+                StreetNameHasInvalidStatusException =>
+                    ValidationErrors.CorrectStreetNameApproval.InvalidStatus.ToTicketError(),
                 _ => null
             };
         }

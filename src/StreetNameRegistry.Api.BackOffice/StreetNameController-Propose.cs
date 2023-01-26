@@ -57,7 +57,7 @@ namespace StreetNameRegistry.Api.BackOffice
             catch (AggregateIdIsNotFoundException)
             {
                 throw CreateValidationException(
-                    ValidationErrors.ProposeStreetName.MunicipalityUnknown.StreetNameMunicipalityUnknown,
+                    ValidationErrors.ProposeStreetName.MunicipalityUnknown.Code,
                     string.Empty,
                     ValidationErrors.ProposeStreetName.MunicipalityUnknown.Message(request.GemeenteId));
             }

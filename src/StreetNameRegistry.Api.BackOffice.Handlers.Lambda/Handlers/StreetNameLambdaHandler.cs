@@ -93,9 +93,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 StreetNameIsNotFoundException => new TicketError(
                     ValidationErrors.Common.StreetNameNotFound.Message,
                     ValidationErrors.Common.StreetNameNotFound.Code),
-                StreetNameIsRemovedException => new TicketError(
-                    ValidationErrors.Common.StreetNameIsRemoved.Message,
-                    "VerwijderdeStraatnaam"),
+                StreetNameIsRemovedException =>
+                    ValidationErrors.Common.StreetNameIsRemoved.ToTicketError(),
                 _ => null
             };
         }

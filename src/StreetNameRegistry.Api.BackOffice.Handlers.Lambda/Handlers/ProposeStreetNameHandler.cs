@@ -63,18 +63,14 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
         {
             return exception switch
             {
-                StreetNameNameAlreadyExistsException nameExists => new TicketError(
-                    ValidationErrors.Common.StreetNameAlreadyExists.Message(nameExists.Name),
-                    ValidationErrors.Common.StreetNameAlreadyExists.Code),
-                MunicipalityHasInvalidStatusException => new TicketError(
-                    ValidationErrors.Common.MunicipalityHasInvalidStatus.Message,
-                    ValidationErrors.Common.MunicipalityHasInvalidStatus.Code),
-                StreetNameNameLanguageIsNotSupportedException _ => new TicketError(
-                    ValidationErrors.Common.StreetNameNameLanguageIsNotSupported.Message,
-                    ValidationErrors.Common.StreetNameNameLanguageIsNotSupported.Code),
-                StreetNameIsMissingALanguageException _ => new TicketError(
-                    ValidationErrors.ProposeStreetName.StreetNameIsMissingALanguage.Message,
-                    ValidationErrors.ProposeStreetName.StreetNameIsMissingALanguage.Code),
+                StreetNameNameAlreadyExistsException nameExists =>
+                    ValidationErrors.Common.StreetNameAlreadyExists.ToTicketError(nameExists.Name),
+                MunicipalityHasInvalidStatusException =>
+                    ValidationErrors.Common.MunicipalityHasInvalidStatus.ToTicketError(),
+                StreetNameNameLanguageIsNotSupportedException _ =>
+                    ValidationErrors.Common.StreetNameNameLanguageIsNotSupported.ToTicketError(),
+                StreetNameIsMissingALanguageException _ =>
+                    ValidationErrors.ProposeStreetName.StreetNameIsMissingALanguage.ToTicketError(),
                 _ => null
             };
         }
