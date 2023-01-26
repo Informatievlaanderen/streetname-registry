@@ -1,9 +1,9 @@
-using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-using StreetNameRegistry.Municipality.Events;
-using System;
-
 namespace StreetNameRegistry.Municipality
 {
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using StreetNameRegistry.Municipality.Events;
+    using System;
+
     public partial class MunicipalityStreetName
     {
         private MunicipalityId _municipalityId;
