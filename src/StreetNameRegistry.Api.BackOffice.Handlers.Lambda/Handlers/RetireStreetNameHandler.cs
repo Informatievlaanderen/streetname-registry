@@ -58,11 +58,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             return exception switch
             {
                 StreetNameHasInvalidStatusException => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameCannotBeRetired,
-                    ValidationErrorCodes.StreetName.StreetNameCannotBeRetired),
+                    ValidationErrors.RetireStreetName.InvalidStatus.Message,
+                    ValidationErrors.RetireStreetName.InvalidStatus.Code),
                 MunicipalityHasInvalidStatusException => new TicketError(
-                    ValidationErrorMessages.Municipality.MunicipalityStatusNotCurrent,
-                    ValidationErrorCodes.Municipality.MunicipalityStatusNotCurrent),
+                    ValidationErrors.Common.MunicipalityStatusNotCurrent.Message,
+                    ValidationErrors.Common.MunicipalityStatusNotCurrent.Code),
                 _ => null
             };
         }
