@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.Abstractions
+namespace StreetNameRegistry.Api.BackOffice.Abstractions.Validation
 {
     public static class ValidationErrorCodes
     {

@@ -19,6 +19,7 @@ namespace StreetNameRegistry.Api.BackOffice
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions.SqsRequests;
+    using Abstractions.Validation;
 
     public partial class StreetNameController
     {
