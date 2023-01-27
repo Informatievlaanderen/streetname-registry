@@ -1,3 +1,15 @@
+# [3.19.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.18.3...v3.19.0) (2023-01-27)
+
+
+### Bug Fixes
+
+* review ioc registrations ([9854a48](https://github.com/informatievlaanderen/streetname-registry/commit/9854a4836ac9e2c6d8fa7a570becbc189d60f783))
+
+
+### Features
+
+* refactor error codes ([#185](https://github.com/informatievlaanderen/streetname-registry/issues/185)) ([71fcfbe](https://github.com/informatievlaanderen/streetname-registry/commit/71fcfbecd5fa2cabd83c568ff9be2366f58e31c7))
+
 ## [3.18.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.18.2...v3.18.3) (2023-01-20)
 
 
