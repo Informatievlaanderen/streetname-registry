@@ -8,7 +8,8 @@ namespace StreetNameRegistry.Infrastructure
         public const string Legacy = "StreetNameRegistryLegacy";
         public const string Syndication = "StreetNameRegistrySyndication";
         public const string Sequence = "StreetNameRegistrySequence";
-        public const string Consumer = "StreetNameRegistryConsumer";
+        public const string Consumer = "StreetNameRegistryConsumerMunicipality";
+        public const string ConsumerProjections = "StreetNameRegistryConsumer";
         public const string Wfs = "wfs.streetname";
         public const string Wms = "wms.streetname";
         public const string MigrateStreetName = "StreetNameRegistryMigration";
@@ -25,7 +26,8 @@ namespace StreetNameRegistry.Infrastructure
         public const string Syndication = "__EFMigrationsHistorySyndication";
         public const string RedisDataMigration = "__EFMigrationsHistoryDataMigration";
         public const string Sequence = "__EFMigrationsHistorySequence";
-        public const string Consumer = "__EFMigrationsHistoryConsumer";
+        public const string Consumer = "__EFMigrationsHistoryConsumerMunicipality";
+        public const string ConsumerProjections = "__EFMigrationsHistoryConsumer";
         public const string Wfs = "__EFMigrationsHistoryWfsStreetName";
         public const string Wms = "__EFMigrationsHistoryWmsStreetName";
         public const string BackOffice = "__EFMigrationsHistoryBackOffice";

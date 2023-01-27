@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
-    using Consumer;
+    using Consumer.Infrastructure.Modules;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;

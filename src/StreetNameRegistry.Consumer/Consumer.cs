@@ -1,53 +1,61 @@
 namespace StreetNameRegistry.Consumer
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Autofac;
-    using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple;
+    using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Projections;
 
-    public class Consumer
+    public sealed class Consumer : BackgroundService
     {
-        private readonly ILifetimeScope _container;
+        private readonly ILifetimeScope _lifetimeScope;
+        private readonly IHostApplicationLifetime _hostApplicationLifetime;
         private readonly ILoggerFactory _loggerFactory;
-        private readonly KafkaOptions _options;
-        private readonly ConsumerOptions _consumerOptions;
+        private readonly ILogger<Consumer> _logger;
+        private readonly IIdempotentConsumer<IdempotentConsumerContext> _kafkaIdemIdompotencyConsumer;
 
         public Consumer(
-            ILifetimeScope container,
+            ILifetimeScope lifetimeScope,
+            IHostApplicationLifetime hostApplicationLifetime,
             ILoggerFactory loggerFactory,
-            KafkaOptions options,
-            ConsumerOptions consumerOptions)
+            IIdempotentConsumer<IdempotentConsumerContext> kafkaIdemIdompotencyConsumer)
         {
-            _container = container;
+            _lifetimeScope = lifetimeScope;
+            _hostApplicationLifetime = hostApplicationLifetime;
             _loggerFactory = loggerFactory;
-            _options = options;
-            _consumerOptions = consumerOptions;
+            _kafkaIdemIdompotencyConsumer = kafkaIdemIdompotencyConsumer;
+
+            _logger = loggerFactory.CreateLogger<Consumer>();
         }
 
-        public Task<Result<KafkaJsonMessage>> Start(CancellationToken cancellationToken = default)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var commandHandler = new CommandHandler(_container, _loggerFactory.CreateLogger<CommandHandler>());
-            var projector = new ConnectedProjector<CommandHandler>(Resolve.WhenEqualToHandlerMessageType(new MunicipalityKafkaProjection().Handlers));
+            var commandHandler = new CommandHandler(_lifetimeScope, _loggerFactory);
+            var commandHandlingProjector = new ConnectedProjector<CommandHandler>(
+                Resolve.WhenEqualToHandlerMessageType(new MunicipalityKafkaProjection().Handlers));
 
-            var consumerGroupId = $"{nameof(StreetNameRegistry)}.{nameof(Consumer)}.{_consumerOptions.Topic}{_consumerOptions.ConsumerGroupSuffix}";
-            return KafkaConsumer.Consume(
-                new KafkaConsumerOptions(
-                    _options.BootstrapServers,
-                    _options.SaslUserName,
-                    _options.SaslPassword,
-                    consumerGroupId,
-                    _consumerOptions.Topic,
-                    async message =>
-                    {
-                        await projector.ProjectAsync(commandHandler, message, cancellationToken);
-                    },
-                    noMessageFoundDelay: 300,
-                    offset: null,
-                    _options.JsonSerializerSettings),
-                cancellationToken);
+            try
+            {
+                await _kafkaIdemIdompotencyConsumer.ConsumeContinuously(async (message, consumerContext) =>
+                {
+                    _logger.LogInformation("Handling next message");
+
+                    await commandHandlingProjector.ProjectAsync(commandHandler, message, stoppingToken).ConfigureAwait(false);
+
+                    // CancellationToken.None to prevent halfway consumption
+                    await consumerContext.SaveChangesAsync(CancellationToken.None);
+
+                }, stoppingToken);
+            }
+            catch (Exception)
+            {
+                _hostApplicationLifetime.StopApplication();
+                throw;
+            }
         }
     }
 }

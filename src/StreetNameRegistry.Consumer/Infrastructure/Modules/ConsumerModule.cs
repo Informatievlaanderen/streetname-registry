@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Consumer
+namespace StreetNameRegistry.Consumer.Infrastructure.Modules
 {
     using System;
     using Autofac;
@@ -46,7 +46,7 @@ namespace StreetNameRegistry.Consumer
                     .UseSqlServer(provider.GetRequiredService<TraceDbConnection<ConsumerContext>>(), sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
-                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.Consumer, Schema.Consumer);
+                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.ConsumerProjections, Schema.ConsumerProjections);
                     }));
         }
 

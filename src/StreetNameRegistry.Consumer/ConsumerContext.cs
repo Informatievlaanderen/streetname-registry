@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Consumer
             : base(options)
         { }
 
-        public override string ProjectionStateSchema => Schema.Consumer;
+        public override string ProjectionStateSchema => Schema.ConsumerProjections;
     }
 
     public class ConsumerContextFactory : RunnerDbContextMigrationFactory<ConsumerContext>
@@ -30,12 +30,13 @@ namespace StreetNameRegistry.Consumer
         public ConsumerContextFactory(string connectionStringName)
             : base(connectionStringName, new MigrationHistoryConfiguration
             {
-                Schema = Schema.Consumer,
-                Table = MigrationTables.Consumer
+                Schema = Schema.ConsumerProjections,
+                Table = MigrationTables.ConsumerProjections
             })
         { }
 
-        protected override ConsumerContext CreateContext(DbContextOptions<ConsumerContext> migrationContextOptions) => new ConsumerContext(migrationContextOptions);
+        protected override ConsumerContext CreateContext(DbContextOptions<ConsumerContext> migrationContextOptions)
+            => new ConsumerContext(migrationContextOptions);
 
         public ConsumerContext Create(DbContextOptions<ConsumerContext> options) => CreateContext(options);
     }

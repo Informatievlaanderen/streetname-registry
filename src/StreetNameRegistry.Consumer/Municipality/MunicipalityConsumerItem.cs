@@ -17,7 +17,7 @@ namespace StreetNameRegistry.Consumer.Municipality
 
         public void Configure(EntityTypeBuilder<MunicipalityConsumerItem> builder)
         {
-            builder.ToTable(TableName, Schema.Consumer)
+            builder.ToTable(TableName, Schema.ConsumerProjections)
                 .HasKey(x => x.MunicipalityId)
                 .IsClustered(false);
 

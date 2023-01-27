@@ -6,13 +6,13 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.DependencyInjection;
-    using Consumer;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Consumer.Infrastructure.Modules;
     using StreetNameRegistry.Infrastructure.Modules;
 
     public sealed class ApiModule : Module

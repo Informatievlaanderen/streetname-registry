@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreetNameRegistry.Consumer;
 
+#nullable disable
+
 namespace StreetNameRegistry.Consumer.Migrations
 {
     [DbContext(typeof(ConsumerContext))]
@@ -15,9 +17,10 @@ namespace StreetNameRegistry.Consumer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.6")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.ProjectionStates.ProjectionStateItem", b =>
                 {
@@ -36,8 +39,9 @@ namespace StreetNameRegistry.Consumer.Migrations
                     b.Property<long>("Position")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Name")
-                        .IsClustered();
+                    b.HasKey("Name");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Name"));
 
                     b.ToTable("ProjectionStates", "StreetNameRegistryConsumer");
                 });
@@ -51,11 +55,13 @@ namespace StreetNameRegistry.Consumer.Migrations
                     b.Property<string>("NisCode")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("MunicipalityId")
-                        .IsClustered(false);
+                    b.HasKey("MunicipalityId");
 
-                    b.HasIndex("NisCode")
-                        .IsClustered();
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("MunicipalityId"), false);
+
+                    b.HasIndex("NisCode");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("NisCode"));
 
                     b.ToTable("MunicipalityConsumer", "StreetNameRegistryConsumer");
                 });

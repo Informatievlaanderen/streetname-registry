@@ -23,9 +23,7 @@ namespace StreetNameRegistry.Infrastructure
                 .RegisterModule(new TraceSqlStreamStoreModule(configuration["DataDog:ServiceName"]));
         }
 
-        public static IModuleRegistrar RegisterEventstreamModule(
-            this IModuleRegistrar builder,
-            IConfiguration configuration)
+        public static IModuleRegistrar RegisterEventstreamModule(this IModuleRegistrar builder, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("Events");
 
@@ -48,8 +46,19 @@ namespace StreetNameRegistry.Infrastructure
                 throw new InvalidOperationException("Missing 'Snapshots' connectionstring.");
             }
 
-            builder
-                .RegisterModule(new SqlSnapshotStoreModule(connectionString, Schema.Default));
+            builder.RegisterModule(new SqlSnapshotStoreModule(connectionString, Schema.Default));
+        }
+
+        public static void RegisterSnapshotModule(this IModuleRegistrar builder, IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("Snapshots");
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException("Missing 'Snapshots' connectionstring.");
+            }
+
+            builder.RegisterModule(new SqlSnapshotStoreModule(connectionString, Schema.Default));
         }
     }
 }
