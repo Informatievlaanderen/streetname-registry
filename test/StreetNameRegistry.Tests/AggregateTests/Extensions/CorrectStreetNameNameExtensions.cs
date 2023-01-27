@@ -24,5 +24,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.Extensions
                 command.MunicipalityId,
                 command.PersistentLocalId, new Names(command.StreetNameNames.Concat(names)), command.Provenance);
         }
+
+        public static CorrectStreetNameNames WithPersistentLocalId(this CorrectStreetNameNames command, PersistentLocalId persistentLocalId)
+        {
+            return new CorrectStreetNameNames(command.MunicipalityId, persistentLocalId, command.StreetNameNames, command.Provenance);
+        }
     }
 }

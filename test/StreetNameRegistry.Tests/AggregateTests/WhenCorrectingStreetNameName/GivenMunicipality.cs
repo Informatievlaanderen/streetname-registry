@@ -194,6 +194,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
         {
             var streetNameNames = new Names(new[] { new StreetNameName("Kapelstraat", Language.Dutch) });
             var command = Fixture.Create<CorrectStreetNameNames>()
+                .WithPersistentLocalId(new PersistentLocalId(123))
                 .WithMunicipalityId(_municipalityId)
                 .WithStreetNameName(streetNameNames.First());
 
@@ -204,7 +205,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                 _municipalityId,
                 new NisCode("abc"),
                 streetNameNames,
-                new PersistentLocalId(123));
+                new PersistentLocalId(456));
             ((ISetProvenance)streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
 
             // Act, assert
@@ -213,7 +214,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                     Fixture.Create<MunicipalityWasImported>(),
                     Fixture.Create<MunicipalityBecameCurrent>(),
                     languageWasAdded,
-                    Fixture.Create<StreetNameWasProposedV2>(),
+                    Fixture.Create<StreetNameWasProposedV2>()
+                        .WithPersistentLocalId(command.PersistentLocalId),
                     streetNameWasProposedV2)
                 .When(command)
                 .Throws(new StreetNameNameAlreadyExistsException(streetNameNames.First().Name)));
