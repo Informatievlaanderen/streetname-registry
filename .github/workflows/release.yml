@@ -433,14 +433,7 @@ jobs:
       continue-on-error: false
       with:
         name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport-${{ needs.set-release-version.outputs.version }}
-        path: dist/nuget/
-
-    - name: Download NuGet Projector
-      uses: actions/download-artifact@v3
-      continue-on-error: false
-      with:
-        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector-${{ needs.set-release-version.outputs.version }}
-        path: dist/nuget/
+        path: dist/nuget/   
 
     - name: Run Semantic Release
       shell: bash
@@ -588,13 +581,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport-${{ needs.release.outputs.version }}
-        path: ~/
-
-    - name: Download NuGet package projector
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector-${{ needs.release.outputs.version }}
-        path: ~/
+        path: ~/   
 
     - name: Publish packages to NuGet
       shell: bash
@@ -604,8 +591,7 @@ jobs:
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
+        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY        
       env:
         SEMVER: ${{  needs.release.outputs.version }}
         WORKSPACE: ${{ github.workspace }}
