@@ -13,14 +13,92 @@ namespace StreetNameRegistry.Consumer.Projections
 
     public class MunicipalityKafkaProjection : ConnectedProjection<CommandHandler>
     {
-        private static Provenance FromProvenance(Contracts.Provenance provenance) =>
-            new Provenance(
-                InstantPattern.General.Parse(provenance.Timestamp).GetValueOrThrow(),
-                Enum.Parse<Application>(provenance.Application),
-                new Reason(provenance.Reason),
-                new Operator(string.Empty), // TODO: municipality registry?
-                Enum.Parse<Modification>(provenance.Modification),
-                Enum.Parse<Organisation>(provenance.Organisation));
+        public MunicipalityKafkaProjection()
+        {
+            When<MunicipalityWasRegistered>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityNisCodeWasDefined>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityNisCodeWasCorrected>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityWasNamed>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityNameWasCorrected>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityNameWasCorrectedToCleared>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityOfficialLanguageWasAdded>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityOfficialLanguageWasRemoved>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityFacilityLanguageWasAdded>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityFacilityLanguageWasRemoved>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityBecameCurrent>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityWasCorrectedToCurrent>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityWasRetired>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
+            When<MunicipalityWasCorrectedToRetired>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+        }
 
         public static IHasCommandProvenance GetCommand(IQueueMessage message)
         {
@@ -156,91 +234,13 @@ namespace StreetNameRegistry.Consumer.Projections
             throw new InvalidOperationException($"No command found for {type.FullName}");
         }
 
-        public MunicipalityKafkaProjection()
-        {
-            When<MunicipalityWasRegistered>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityNisCodeWasDefined>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityNisCodeWasCorrected>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityWasNamed>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityNameWasCorrected>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityNameWasCorrectedToCleared>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityOfficialLanguageWasAdded>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityOfficialLanguageWasRemoved>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityFacilityLanguageWasAdded>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityFacilityLanguageWasRemoved>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityBecameCurrent>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityWasCorrectedToCurrent>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityWasRetired>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-
-            When<MunicipalityWasCorrectedToRetired>(async (commandHandler, message, ct) =>
-            {
-                var command = GetCommand(message);
-                await commandHandler.Handle(command, ct);
-            });
-        }
+        private static Provenance FromProvenance(Contracts.Provenance provenance) =>
+            new Provenance(
+                InstantPattern.General.Parse(provenance.Timestamp).GetValueOrThrow(),
+                Enum.Parse<Application>(provenance.Application),
+                new Reason(provenance.Reason),
+                new Operator(string.Empty), // TODO: municipality registry?
+                Enum.Parse<Modification>(provenance.Modification),
+                Enum.Parse<Organisation>(provenance.Organisation));
     }
 }

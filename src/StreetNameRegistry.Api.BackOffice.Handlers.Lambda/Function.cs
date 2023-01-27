@@ -14,7 +14,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
-    using Consumer;
+    using Consumer.Infrastructure.Modules;
     using Infrastructure;
     using MediatR;
     using Microsoft.Extensions.Configuration;
@@ -92,8 +92,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
 
             builder.RegisterModule(new IdempotencyModule(
                 services,
-                configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()
-                    .ConnectionString,
+                configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>().ConnectionString,
                 new IdempotencyMigrationsTableInfo(Schema.Import),
                 new IdempotencyTableInfo(Schema.Import),
                 loggerFactory));

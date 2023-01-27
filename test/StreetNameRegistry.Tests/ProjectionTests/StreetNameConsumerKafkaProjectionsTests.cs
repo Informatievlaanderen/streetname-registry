@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts;
@@ -10,9 +11,10 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Consumer.Projections;
     using global::AutoFixture;
-    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Moq;
     using Municipality;
+    using Municipality.Commands;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
@@ -20,12 +22,12 @@ namespace StreetNameRegistry.Tests.ProjectionTests
 
     public sealed class StreetNameConsumerKafkaProjectionsTests : StreetNameConsumerKafkaProjectionTest<CommandHandler, MunicipalityKafkaProjection>
     {
-        private readonly Mock<CommandHandler> _mock;
+        private readonly Mock<FakeCommandHandler> _mockCommandHandler;
 
         public StreetNameConsumerKafkaProjectionsTests(ITestOutputHelper output)
             : base(output)
         {
-            _mock = new Mock<CommandHandler>();
+            _mockCommandHandler = new Mock<FakeCommandHandler>();
         }
 
         private class MunicipalityEventsGenerator : IEnumerable<object[]>
@@ -86,25 +88,352 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             }
 
             var command = MunicipalityKafkaProjection.GetCommand(queueMessage);
-            _mock.Setup(commandHandler => commandHandler.Handle(command, default))
-                .Returns(Task.CompletedTask);
+            _mockCommandHandler.Setup(commandHandler => commandHandler.Handle(command, default)).Returns(Task.CompletedTask);
 
             Given(command);
             await Then(ct =>
                 {
-                    _mock.Verify(commandHandler => commandHandler.Handle(It.IsAny<IHasCommandProvenance>(), default), Times.AtMostOnce());
+                    _mockCommandHandler.Verify(commandHandler => commandHandler.Handle(It.IsAny<IHasCommandProvenance>(), default), Times.AtMostOnce());
                     return Task.CompletedTask;
                 });
         }
 
+        [Fact]
+        public async Task GivenMunicipalityWasRegistered_ThenImportMunicipality()
+        {
+            var @event = new MunicipalityWasRegistered(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<string>(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is ImportMunicipality), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityNisCodeWasDefined_ThenDefineMunicipalityNisCode()
+        {
+            var @event = new MunicipalityNisCodeWasDefined(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<string>(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is DefineMunicipalityNisCode), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityNisCodeWasCorrected_ThenCorrectMunicipalityNisCode()
+        {
+            var @event = new MunicipalityNisCodeWasCorrected(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<string>(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is CorrectMunicipalityNisCode), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityWasNamed_ThenNameMunicipality()
+        {
+            var @event = new MunicipalityWasNamed(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<string>(),
+                Fixture.Create<Language>().ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is NameMunicipality), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityNameWasCorrected_ThenCorrectMunicipalityName()
+        {
+            var @event = new MunicipalityNameWasCorrected(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<string>(),
+                Fixture.Create<Language>().ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is CorrectMunicipalityName), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityNameWasCorrectedToCleared_ThenCorrectToClearedMunicipalityName()
+        {
+            var @event = new MunicipalityNameWasCorrectedToCleared(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<Language>().ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is CorrectToClearedMunicipalityName), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityOfficialLanguageWasAdded_ThenAddOfficialLanguageToMunicipality()
+        {
+            var @event = new MunicipalityOfficialLanguageWasAdded(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<Language>().ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is AddOfficialLanguageToMunicipality), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityOfficialLanguageWasRemoved_ThenRemoveOfficialLanguageFromMunicipality()
+        {
+            var @event = new MunicipalityOfficialLanguageWasRemoved(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<Language>().ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is RemoveOfficialLanguageFromMunicipality), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityFacilityLanguageWasAdded_ThenAddFacilityLanguageToMunicipality()
+        {
+            var @event = new MunicipalityFacilityLanguageWasAdded(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<Language>().ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is AddFacilityLanguageToMunicipality), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityFacilityLanguageWasRemoved_ThenRemoveFacilityLanguageFromMunicipality()
+        {
+            var @event = new MunicipalityFacilityLanguageWasRemoved(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<Language>().ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is RemoveFacilityLanguageFromMunicipality), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityBecameCurrent_ThenSetMunicipalityToCurrent()
+        {
+            var @event = new MunicipalityBecameCurrent(
+                Fixture.Create<Guid>().ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is SetMunicipalityToCurrent), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityWasCorrectedToCurrent_ThenCorrectToCurrentMunicipality()
+        {
+            var @event = new MunicipalityWasCorrectedToCurrent(
+                Fixture.Create<Guid>().ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is CorrectToCurrentMunicipality), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityWasRetired_ThenCorrectToCurrentMunicipality()
+        {
+            var @event = new MunicipalityWasRetired(
+                Fixture.Create<Guid>().ToString(),
+                Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is RetireMunicipality), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityWasCorrectedToRetired_ThenCorrectToRetiredMunicipality()
+        {
+            var @event = new MunicipalityWasCorrectedToRetired(
+                Fixture.Create<Guid>().ToString(),
+                Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is CorrectToRetiredMunicipality), CancellationToken.None),
+                    Times.Once);
+                await Task.CompletedTask;
+            });
+        }
+
         protected override CommandHandler CreateContext()
         {
-            return new CommandHandler(Container.BeginLifetimeScope(), new Mock<ILogger<CommandHandler>>().Object);
+            return _mockCommandHandler.Object;
         }
 
         protected override MunicipalityKafkaProjection CreateProjection()
         {
             return new MunicipalityKafkaProjection();
         }
+    }
+
+    public class FakeCommandHandler : CommandHandler
+    {
+        public FakeCommandHandler() : base(null, new NullLoggerFactory())
+        { }
     }
 }

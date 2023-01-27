@@ -1,6 +1,7 @@
 
 Be.Vlaanderen.Basisregisters.Aws.DistributedMutex
 Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac
+
 Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql
 Be.Vlaanderen.Basisregisters.DependencyInjection
 Be.Vlaanderen.Basisregisters.EntityFrameworkCore.EntityTypeConfiguration
@@ -11,6 +12,8 @@ Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector
 Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.Microsoft
 Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac
 Be.Vlaanderen.Basisregisters.Projector
+
+Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer
 
 Serilog
 Serilog.Settings.Configuration
@@ -29,6 +32,7 @@ Microsoft.Extensions.Configuration.CommandLine
 Microsoft.Extensions.Configuration.FileExtensions
 Microsoft.Extensions.Configuration.EnvironmentVariables
 Microsoft.Extensions.Configuration.Json
+Microsoft.Extensions.Hosting
 
 SourceLink.Embed.AllSourceFiles
 SourceLink.Copy.PdbFiles
