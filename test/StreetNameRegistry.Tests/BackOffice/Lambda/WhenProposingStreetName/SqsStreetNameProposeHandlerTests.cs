@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using FluentAssertions;
@@ -229,6 +230,60 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                     new TicketError(
                         "In 'Straatnamen' ontbreekt een officiële of faciliteitentaal.",
                         "StraatnaamOntbreektOfficieleOfFaciliteitenTaal"),
+                    CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task WhenIdempotencyException_ThenTicketingCompleteIsExpected()
+        {
+            // Arrange
+            var municipalityId = Fixture.Create<MunicipalityId>();
+            var nisCode = Fixture.Create<NisCode>();
+            var streetNamePersistentLocalId = Fixture.Create<PersistentLocalId>();
+
+            ImportMunicipality(municipalityId, nisCode);
+            SetMunicipalityToCurrent(municipalityId);
+            AddOfficialLanguageDutch(municipalityId);
+            ProposeStreetName(
+                municipalityId,
+                new Names(new Dictionary<Language, string> { { Language.Dutch, "Bosstraat" } }),
+                streetNamePersistentLocalId,
+                Fixture.Create<Provenance>());
+
+            var ticketing = new Mock<ITicketing>();
+            var persistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
+            persistentLocalIdGenerator
+                .Setup(x => x.GenerateNextPersistentLocalId())
+                .Returns(new PersistentLocalId(streetNamePersistentLocalId));
+            var municipalities = Container.Resolve<IMunicipalities>();
+
+            var proposeStreetNameHandler = new ProposeStreetNameHandler(
+                Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
+                ticketing.Object,
+                persistentLocalIdGenerator.Object,
+                MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object,
+                _backOfficeContext,
+                municipalities);
+
+            // Act
+            await proposeStreetNameHandler.Handle(new ProposeStreetNameLambdaRequest(municipalityId.ToString(), new ProposeStreetNameSqsRequest
+            {
+                Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string>() },
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
+
+            //Assert
+            var municipality = await municipalities.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None);
+
+            ticketing.Verify(x =>
+                x.Complete(
+                    It.IsAny<Guid>(),
+                    new TicketResult(new ETagResponse(
+                        string.Format(ConfigDetailUrl, streetNamePersistentLocalId),
+                        municipality.GetStreetNameHash(streetNamePersistentLocalId))),
                     CancellationToken.None));
         }
     }

@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Abstractions;
     using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
@@ -44,13 +45,19 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
 
             var cmd = request.ToCommand(persistentLocalId);
 
-            await IdempotentCommandHandler.Dispatch(
-                cmd.CreateCommandId(),
-                cmd,
-                request.Metadata,
-                cancellationToken);
+            try
+            {
+                await IdempotentCommandHandler.Dispatch(
+                    cmd.CreateCommandId(),
+                    cmd,
+                    request.Metadata,
+                    cancellationToken);
+            }
+            catch (IdempotencyException)
+            {
+                // Idempotent: Do Nothing return last etag
+            }
 
-            // Insert PersistentLocalId with MunicipalityId
             await _backOfficeContext
                 .AddIdempotentMunicipalityStreetNameIdRelation(persistentLocalId, request.MunicipalityPersistentLocalId(), cancellationToken);
             await _backOfficeContext.SaveChangesAsync(cancellationToken);
