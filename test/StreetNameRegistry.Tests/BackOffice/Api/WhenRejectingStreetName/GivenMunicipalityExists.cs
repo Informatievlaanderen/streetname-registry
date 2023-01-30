@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
@@ -12,6 +13,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
+    using Municipality;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using NodaTime;
@@ -78,6 +80,34 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
                     x.Message.Contains("Onbestaande straatnaam.")
                     && x.StatusCode == StatusCodes.Status404NotFound);
         }
+
+        [Fact]
+        public void WithAggregateNotFound_ThenThrowsApiException()
+        {
+            MockMediator
+                .Setup(x => x.Send(It.IsAny<RejectStreetNameSqsRequest>(), CancellationToken.None))
+                .Throws(new AggregateNotFoundException("test", typeof(Municipality)));
+
+            var request = new RejectStreetNameRequest { PersistentLocalId = 123 };
+            Func<Task> act = async () =>
+            {
+                await Controller.Reject(
+                    MockValidIfMatchValidator(),
+                    request,
+                    string.Empty,
+                    CancellationToken.None);
+            };
+
+            //Assert
+            act
+                .Should()
+                .ThrowAsync<ApiException>()
+                .Result
+                .Where(x =>
+                    x.Message.Contains("Onbestaande straatnaam.")
+                    && x.StatusCode == StatusCodes.Status404NotFound);
+        }
+
 
         [Fact]
         public async Task WithIfMatchHeaderValueMismatch_ThenReturnsPreconditionFailedResult()

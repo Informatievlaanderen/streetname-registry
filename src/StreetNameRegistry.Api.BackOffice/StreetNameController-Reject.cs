@@ -1,6 +1,5 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
-    using Abstractions;
     using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
@@ -19,6 +18,7 @@ namespace StreetNameRegistry.Api.BackOffice
     using System.Threading.Tasks;
     using Abstractions.SqsRequests;
     using Abstractions.Validation;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
 
     public partial class StreetNameController
     {
@@ -64,6 +64,10 @@ namespace StreetNameRegistry.Api.BackOffice
                     return Accepted(result);
             }
             catch (AggregateIdIsNotFoundException)
+            {
+                throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
+            }
+            catch (AggregateNotFoundException)
             {
                 throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
             }
