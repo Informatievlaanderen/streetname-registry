@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
@@ -14,6 +15,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
+    using Municipality;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using NodaTime;
@@ -67,6 +69,35 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             MockMediator
                 .Setup(x => x.Send(It.IsAny<CorrectStreetNameNamesSqsRequest>(), CancellationToken.None))
                 .Throws(new AggregateIdIsNotFoundException());
+
+            var persistentLocalId = 123;
+            Func<Task> act = async () =>
+            {
+                await Controller.CorrectStreetNameNames(
+                    MockValidIfMatchValidator(),
+                    MockPassingRequestValidator<CorrectStreetNameNamesRequest>(),
+                    persistentLocalId,
+                    new CorrectStreetNameNamesRequest(),
+                    string.Empty,
+                    CancellationToken.None);
+            };
+
+            //Assert
+            act
+                .Should()
+                .ThrowAsync<ApiException>()
+                .Result
+                .Where(x =>
+                    x.Message.Contains("Onbestaande straatnaam.")
+                    && x.StatusCode == StatusCodes.Status404NotFound);
+        }
+
+        [Fact]
+        public void WithAggregateNotFound_ThenThrowsApiException()
+        {
+            MockMediator
+                .Setup(x => x.Send(It.IsAny<CorrectStreetNameNamesSqsRequest>(), CancellationToken.None))
+                .Throws(new AggregateNotFoundException("test", typeof(Municipality)));
 
             var persistentLocalId = 123;
             Func<Task> act = async () =>
