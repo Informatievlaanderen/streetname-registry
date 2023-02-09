@@ -24,6 +24,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using System.Linq;
     using System.Reflection;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
 
     /// <summary>Represents the startup process for the application.</summary>
     public class Startup
@@ -111,7 +112,8 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                         }
                     }
                     .EnableJsonErrorActionFilterOption())
-                .Configure<TicketingOptions>(_configuration.GetSection(TicketingModule.TicketingServiceConfigKey));
+                .Configure<TicketingOptions>(_configuration.GetSection(TicketingModule.TicketingServiceConfigKey))
+                .AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new ApiModule(_configuration, services, _loggerFactory));

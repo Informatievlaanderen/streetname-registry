@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameRetire
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;
     using FluentAssertions;
@@ -47,7 +48,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameRetire
                 x.Send(
                     It.Is<CorrectStreetNameRetirementSqsRequest>(sqsRequest =>
                         sqsRequest.Request == request &&
-                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue && // Just to verify that ProvenanceData has been populated.
+                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue &&
+                        sqsRequest.ProvenanceData.Application == Application.StreetNameRegistry &&
+                        sqsRequest.ProvenanceData.Modification == Modification.Update &&
                         sqsRequest.IfMatchHeaderValue == expectedIfMatchHeader),
                     CancellationToken.None));
 

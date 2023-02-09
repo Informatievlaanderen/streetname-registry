@@ -1,34 +1,40 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.Api;
-    using Be.Vlaanderen.Basisregisters.AspNetCore.Mvc.Middleware;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
 
     public abstract class BackOfficeApiController : ApiController
     {
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IProvenanceFactory _provenanceFactory;
+
+        protected BackOfficeApiController(
+            IActionContextAccessor actionContextAccessor,
+            IProvenanceFactory provenanceFactory)
+        {
+            _actionContextAccessor = actionContextAccessor;
+            _provenanceFactory = provenanceFactory;
+        }
+
         protected IDictionary<string, object> GetMetadata()
         {
-            var userId = User.FindFirst("urn:be:vlaanderen:streetnameregistry:acmid")?.Value;
-            var correlationId = User.FindFirst(AddCorrelationIdMiddleware.UrnBasisregistersVlaanderenCorrelationId)?.Value;
+            var correlationId = _actionContextAccessor
+                .ActionContext?
+                .HttpContext
+                .Request
+                .Headers["x-correlation-id"].FirstOrDefault() ?? Guid.NewGuid().ToString("D");
 
             return new Dictionary<string, object>
             {
-                { "UserId", userId },
                 { "CorrelationId", correlationId }
             };
         }
 
-        protected Provenance CreateFakeProvenance()
-        {
-            return new Provenance(
-                NodaTime.SystemClock.Instance.GetCurrentInstant(),
-                Application.StreetNameRegistry,
-                new Reason(""), // TODO: TBD
-                new Operator(""), // TODO: from claims
-                Modification.Insert,
-                Organisation.DigitaalVlaanderen // TODO: from claims
-            );
-        }
+        protected Provenance CreateProvenance(Modification modification)
+            => _provenanceFactory.Create(new Reason(""), modification);
     }
 }

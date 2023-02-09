@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;
     using FluentAssertions;
@@ -56,7 +57,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
                     It.Is<CorrectStreetNameNamesSqsRequest>(sqsRequest =>
                         sqsRequest.Request == request &&
                         sqsRequest.PersistentLocalId == persistentLocalId &&
-                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue && // Just to verify that ProvenanceData has been populated.
+                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue &&
+                        sqsRequest.ProvenanceData.Application == Application.StreetNameRegistry &&
+                        sqsRequest.ProvenanceData.Modification == Modification.Update &&
                         sqsRequest.IfMatchHeaderValue == expectedIfMatchHeader),
                     CancellationToken.None));
 

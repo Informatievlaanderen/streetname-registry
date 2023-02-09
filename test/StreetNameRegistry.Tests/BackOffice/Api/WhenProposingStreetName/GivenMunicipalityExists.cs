@@ -5,8 +5,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;
     using global::AutoFixture;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
     using NodaTime;
@@ -49,7 +51,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 x.Send(
                     It.Is<ProposeStreetNameSqsRequest>(sqsRequest =>
                         sqsRequest.Request == request &&
-                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue), // Just to verify that ProvenanceData has been populated.
+                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue &&
+                        sqsRequest.ProvenanceData.Application == Application.StreetNameRegistry &&
+                        sqsRequest.ProvenanceData.Modification == Modification.Insert),
                     CancellationToken.None));
             AssertLocation(result.Location, ticketId);
         }
