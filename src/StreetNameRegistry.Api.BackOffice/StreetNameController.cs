@@ -2,12 +2,14 @@ namespace StreetNameRegistry.Api.BackOffice
 {
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.Api;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;
     using FluentValidation;
     using FluentValidation.Results;
     using Infrastructure.Options;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.Extensions.Options;
 
     [ApiVersion("2.0")]
@@ -21,7 +23,10 @@ namespace StreetNameRegistry.Api.BackOffice
 
         public StreetNameController(
             IMediator mediator,
-            IOptions<TicketingOptions> ticketingOptions)
+            IOptions<TicketingOptions> ticketingOptions,
+            IActionContextAccessor actionContextAccessor,
+            IProvenanceFactory provenanceFactory)
+            : base(actionContextAccessor, provenanceFactory)
         {
             _mediator = mediator;
             _ticketingOptions = ticketingOptions.Value;

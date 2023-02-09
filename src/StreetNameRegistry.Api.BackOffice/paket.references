@@ -4,6 +4,7 @@ Be.Vlaanderen.Basisregisters.AcmIdm
 Be.Vlaanderen.Basisregisters.Api
 Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency
 Be.Vlaanderen.Basisregisters.GrAr.Legacy
+Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm
 
 Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple
 Be.Vlaanderen.Basisregisters.Sqs

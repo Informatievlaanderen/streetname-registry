@@ -12,6 +12,8 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using StreetNameRegistry.Infrastructure;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
     using Consumer.Infrastructure.Modules;
     using StreetNameRegistry.Infrastructure.Modules;
 
@@ -44,6 +46,11 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             builder
                 .RegisterType<IfMatchHeaderValidator>()
                 .As<IIfMatchHeaderValidator>()
+                .AsSelf();
+
+            builder.RegisterType<AcmIdmProvenanceFactory>()
+                .As<IProvenanceFactory>()
+                .InstancePerLifetimeScope()
                 .AsSelf();
 
             builder

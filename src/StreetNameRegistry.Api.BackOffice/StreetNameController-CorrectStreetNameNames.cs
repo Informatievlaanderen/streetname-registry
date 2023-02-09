@@ -65,7 +65,7 @@ namespace StreetNameRegistry.Api.BackOffice
                         Request = request,
                         PersistentLocalId = persistentLocalId,
                         Metadata = GetMetadata(),
-                        ProvenanceData = new ProvenanceData(CreateFakeProvenance()),
+                        ProvenanceData = new ProvenanceData(CreateProvenance(Modification.Update)),
                         IfMatchHeaderValue = ifMatchHeaderValue
                     }, cancellationToken);
 

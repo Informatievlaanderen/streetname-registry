@@ -5,12 +5,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     using System.Security.Claims;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
     using FluentAssertions;
     using FluentValidation;
     using FluentValidation.Results;
     using global::AutoFixture;
     using MediatR;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.Extensions.Options;
     using Moq;
     using Municipality;
@@ -28,12 +32,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
         protected const string InternalTicketUrl = "https://www.internalticketing.com";
         protected IOptions<TicketingOptions> TicketingOptions { get; }
         protected Mock<IMediator> MockMediator { get; }
+        protected Mock<IActionContextAccessor> MockActionContext { get; set; }
 
         protected BackOfficeApiTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             TicketingOptions = Options.Create(Fixture.Create<TicketingOptions>());
             TicketingOptions.Value.PublicBaseUrl = PublicTicketUrl;
             TicketingOptions.Value.InternalBaseUrl = InternalTicketUrl;
+
+            MockActionContext = new Mock<IActionContextAccessor>();
+            MockActionContext.SetupProperty(x => x.ActionContext, new ActionContext{ HttpContext = new DefaultHttpContext()});
 
             MockMediator = new Mock<IMediator>();
             Controller = CreateApiBusControllerWithUser();
@@ -74,7 +82,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
 
         public TController CreateApiBusControllerWithUser(string username = "John Doe")
         {
-            var controller = Activator.CreateInstance(typeof(TController), MockMediator.Object, TicketingOptions) as TController;
+            var controller = Activator.CreateInstance(typeof(TController),
+                MockMediator.Object,
+                TicketingOptions,
+                MockActionContext.Object,
+                new AcmIdmProvenanceFactory(Application.StreetNameRegistry, MockActionContext.Object)) as TController;
 
             var claims = new List<Claim>()
             {
