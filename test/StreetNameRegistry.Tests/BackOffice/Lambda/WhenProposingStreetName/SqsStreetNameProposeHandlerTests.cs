@@ -87,13 +87,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 }), CancellationToken.None);
 
             //Assert
-            var stream = await Container.Resolve<IStreamStore>()
-                .ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 3,
-                    1); //3 = version of stream (zero based)
+            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 3, 1);
             stream.Messages.First().JsonMetadata.Should().Contain(etag.ETag);
+            stream.Messages.First().JsonMetadata.Should().Contain(Provenance.ProvenanceMetadataKey.ToLower());
 
-            var municipalityIdByPersistentLocalId =
-                await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(expectedLocation);
+            var municipalityIdByPersistentLocalId = await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(expectedLocation);
             municipalityIdByPersistentLocalId.Should().NotBeNull();
             municipalityIdByPersistentLocalId.MunicipalityId.Should().Be(municipalityLatestItem.MunicipalityId);
         }

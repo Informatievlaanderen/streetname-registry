@@ -52,13 +52,14 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 .RegisterModule(new MediatRModule())
                 .RegisterModule(new SqsHandlersModule(_configuration[SqsQueueUrlConfigKey]))
                 .RegisterModule(new TicketingModule(_configuration, _services))
-                .RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory))
-                .RegisterModule(new IdempotencyModule(
-                    _services,
-                    _configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>().ConnectionString,
-                    new IdempotencyMigrationsTableInfo(Schema.Import),
-                    new IdempotencyTableInfo(Schema.Import),
-                    _loggerFactory));
+                .RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
+
+            _services.ConfigureIdempotency(
+                _configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()
+                    .ConnectionString,
+                new IdempotencyMigrationsTableInfo(Schema.Import),
+                new IdempotencyTableInfo(Schema.Import),
+                _loggerFactory);
 
             builder.RegisterSnapshotModule(_configuration);
 

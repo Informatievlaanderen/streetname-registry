@@ -90,12 +90,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
                 .AsSelf()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterModule(new IdempotencyModule(
-                services,
-                configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>().ConnectionString,
+            services.ConfigureIdempotency(
+                configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()
+                    .ConnectionString,
                 new IdempotencyMigrationsTableInfo(Schema.Import),
                 new IdempotencyTableInfo(Schema.Import),
-                loggerFactory));
+                loggerFactory);
 
             builder.RegisterSnapshotModule(configuration);
 
