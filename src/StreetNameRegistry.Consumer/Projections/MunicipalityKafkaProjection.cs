@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Consumer.Projections
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
+    using NodaTime;
     using NodaTime.Text;
     using StreetNameRegistry.Municipality;
     using StreetNameRegistry.Municipality.Commands;
@@ -110,7 +111,7 @@ namespace StreetNameRegistry.Consumer.Projections
                 return new ImportMunicipality(
                     new MunicipalityId(MunicipalityId.CreateFor(msg.MunicipalityId)),
                     new NisCode(msg.NisCode),
-                    FromProvenance(msg.Provenance)
+                    FromProvenance(msg.Provenance, Modification.Insert)
                 );
             }
 
@@ -234,13 +235,13 @@ namespace StreetNameRegistry.Consumer.Projections
             throw new InvalidOperationException($"No command found for {type.FullName}");
         }
 
-        private static Provenance FromProvenance(Contracts.Provenance provenance) =>
+        private static Provenance FromProvenance(Contracts.Provenance provenance, Modification modification = Modification.Update) =>
             new Provenance(
-                InstantPattern.General.Parse(provenance.Timestamp).GetValueOrThrow(),
+                SystemClock.Instance.GetCurrentInstant(),
                 Enum.Parse<Application>(provenance.Application),
                 new Reason(provenance.Reason),
-                new Operator(string.Empty), // TODO: municipality registry?
-                Enum.Parse<Modification>(provenance.Modification),
+                new Operator(string.Empty),
+                modification,
                 Enum.Parse<Organisation>(provenance.Organisation));
     }
 }
