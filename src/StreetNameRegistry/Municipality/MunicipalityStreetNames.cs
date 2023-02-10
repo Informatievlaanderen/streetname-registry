@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Municipality
 
         public bool HasActiveStreetNameName(StreetNameName streetNameName, HomonymAdditions homonymAdditions, PersistentLocalId existingStreetNamePersistentLocalId)
         {
-            var homonymAddition = homonymAdditions.FirstOrDefault(x => x.Language == streetNameName.Language);
+            var homonymAddition = homonymAdditions.SingleOrDefault(x => x.Language == streetNameName.Language);
 
             return this.Any(x =>
                     x.PersistentLocalId != existingStreetNamePersistentLocalId
@@ -19,10 +19,8 @@ namespace StreetNameRegistry.Municipality
                     && !x.IsRetired
                     && !x.IsRejected
                     && x.Names.HasMatch(streetNameName.Language, streetNameName.Name)
-                    && (!x.HomonymAdditions.HasLanguage(streetNameName.Language) && homonymAddition is null
-                        || homonymAddition is not null && x.HomonymAdditions.HasMatch(homonymAddition.Language, homonymAddition.HomonymAddition)));
+                    && HasHomonymAdditionMatch(x, streetNameName, homonymAddition));
         }
-            
 
         public MunicipalityStreetName FindByPersistentLocalId(PersistentLocalId persistentLocalId)
         {
@@ -50,5 +48,11 @@ namespace StreetNameRegistry.Municipality
 
         public MunicipalityStreetName GetByPersistentLocalId(PersistentLocalId persistentLocalId)
             => this.Single(x => x.PersistentLocalId == persistentLocalId);
+
+        private static bool HasHomonymAdditionMatch(MunicipalityStreetName possibleDuplicateStreetName, StreetNameName streetNameName, StreetNameHomonymAddition? homonymAddition)
+        {
+            return !possibleDuplicateStreetName.HomonymAdditions.HasLanguage(streetNameName.Language) && homonymAddition is null
+                   || homonymAddition is not null && possibleDuplicateStreetName.HomonymAdditions.HasMatch(homonymAddition.Language, homonymAddition.HomonymAddition);
+        }
     }
 }
