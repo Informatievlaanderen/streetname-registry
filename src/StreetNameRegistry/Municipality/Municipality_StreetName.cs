@@ -127,7 +127,7 @@ namespace StreetNameRegistry.Municipality
                 throw new MunicipalityHasInvalidStatusException();
             }
 
-            streetName.CorrectRejection(() => GuardUniqueActiveStreetNameNames(streetName.Names, streetName.HomonymAdditions, persistentLocalId));
+            streetName.CorrectRejection(GuardUniqueActiveStreetNameNames);
         }
 
         public void CorrectStreetNameRetirement(PersistentLocalId persistentLocalId)
@@ -139,7 +139,7 @@ namespace StreetNameRegistry.Municipality
                 throw new MunicipalityHasInvalidStatusException();
             }
 
-            streetName.CorrectRetirement(() => GuardUniqueActiveStreetNameNames(streetName.Names, streetName.HomonymAdditions, persistentLocalId));
+            streetName.CorrectRetirement(GuardUniqueActiveStreetNameNames);
         }
 
         private void GuardUniqueActiveStreetNameNames(Names streetNameNames, HomonymAdditions homonymAdditions, PersistentLocalId persistentLocalId)
