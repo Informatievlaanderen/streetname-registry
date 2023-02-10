@@ -327,5 +327,91 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .When(command)
                 .Throws(new StreetNameIsMissingALanguageException($"The language '{Language.Dutch}' is missing.")));
         }
+
+        [Fact]
+        public void WithExistingStreetNameAndNoHomonymAdditions_ThenStreetNameNameAlreadyExistsExceptionWasThrown()
+        {
+            var streetNameName = Fixture.Create<StreetNameName>();
+            Fixture.Register(() => new Names { streetNameName });
+            Fixture.Register(() => Language.Dutch);
+            Fixture.Register(() => Taal.NL);
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
+            var streetNameWasMigrated = Fixture.Build<StreetNameWasMigratedToMunicipality>()
+                .FromFactory(() =>
+                {
+                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                        _municipalityId,
+                        Fixture.Create<NisCode>(),
+                        Fixture.Create<StreetNameId>(),
+                        Fixture.Create<PersistentLocalId>(),
+                        StreetNameStatus.Current,
+                        Language.Dutch,
+                        null,
+                        Fixture.Create<Names>(),
+                        new HomonymAdditions(),
+                        true,
+                        false);
+
+                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    return streetNameWasMigratedToMunicipality;
+                })
+                .Create();
+
+            var command = Fixture.Create<ProposeStreetName>()
+                .WithMunicipalityId(_municipalityId);
+
+            Assert(new Scenario()
+                .Given(_streamId,
+                    municipalityWasImported,
+                    municipalityOfficialLanguageWasAdded,
+                    streetNameWasMigrated)
+                .When(command)
+                .Throws(new StreetNameNameAlreadyExistsException(streetNameName.Name)));
+        }
+
+        [Fact]
+        public void WithExistingStreetNameAndHomonymAdditions_ThenStreetNameWasProposed()
+        {
+            var streetNameName = Fixture.Create<StreetNameName>();
+            Fixture.Register(() => new Names { streetNameName });
+            Fixture.Register(() => Language.Dutch);
+            Fixture.Register(() => Taal.NL);
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
+            var streetNameWasMigrated = Fixture.Build<StreetNameWasMigratedToMunicipality>()
+                .FromFactory(() =>
+                {
+                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                        _municipalityId,
+                        Fixture.Create<NisCode>(),
+                        Fixture.Create<StreetNameId>(),
+                        Fixture.Create<PersistentLocalId>(),
+                        StreetNameStatus.Current,
+                        Language.Dutch,
+                        null,
+                        Fixture.Create<Names>(),
+                        new HomonymAdditions(){new StreetNameHomonymAddition("test", Language.Dutch)},
+                        true,
+                        false);
+
+                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    return streetNameWasMigratedToMunicipality;
+                })
+                .Create();
+
+            var command = Fixture.Create<ProposeStreetName>()
+                .WithMunicipalityId(_municipalityId);
+
+            Assert(new Scenario()
+                .Given(_streamId,
+                    municipalityWasImported,
+                    municipalityOfficialLanguageWasAdded,
+                    streetNameWasMigrated)
+                .When(command)
+                .Then(new Fact(_streamId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))));
+        }
     }
 }

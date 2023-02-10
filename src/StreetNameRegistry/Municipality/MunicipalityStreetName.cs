@@ -45,10 +45,10 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
         }
 
-        public void CorrectNames(Names names, Action<Names, PersistentLocalId> guardStreetNameNames)
+        public void CorrectNames(Names names, Action<Names, HomonymAdditions, PersistentLocalId> guardStreetNameNames)
         {
             GuardStreetNameStatus(StreetNameStatus.Proposed, StreetNameStatus.Current);
-            guardStreetNameNames(names, PersistentLocalId);
+            guardStreetNameNames(names, HomonymAdditions, PersistentLocalId);
 
             var correctedNames = new Names(names.Where(name => !Names.HasMatch(name.Language, name.Name)));
             if (!correctedNames.Any())

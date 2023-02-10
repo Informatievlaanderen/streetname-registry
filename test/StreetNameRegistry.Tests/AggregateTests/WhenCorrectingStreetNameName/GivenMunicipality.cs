@@ -17,6 +17,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
 
     public sealed class GivenMunicipality : StreetNameRegistryTest
     {
@@ -319,6 +320,153 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                 .When(command)
                 .Then(new Fact(_streamId, new StreetNameNamesWereCorrected(
                     _municipalityId, command.PersistentLocalId, new Names(new[] { new StreetNameName("rue de la loi", Language.French) })))));
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("BO")]
+        public void WithConflictingHomonymAdditions_ThenStreetNameNameAlreadyExistsExceptionWasThrown(string homonymAddition)
+        {
+            var streetNameName = Fixture.Create<StreetNameName>();
+            Fixture.Register(() => new Names { streetNameName });
+            Fixture.Register(() => Language.Dutch);
+            Fixture.Register(() => Taal.NL);
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
+            var streetNameAWasMigrated = Fixture.Build<StreetNameWasMigratedToMunicipality>()
+                .FromFactory(() =>
+                {
+                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                        _municipalityId,
+                        Fixture.Create<NisCode>(),
+                        Fixture.Create<StreetNameId>(),
+                        new PersistentLocalId(123),
+                        StreetNameStatus.Current,
+                        Language.Dutch,
+                        null,
+                        Fixture.Create<Names>(),
+                        !string.IsNullOrEmpty(homonymAddition)
+                            ? new HomonymAdditions(new[] { new StreetNameHomonymAddition(homonymAddition, Language.Dutch) })
+                            : new HomonymAdditions(),
+                        true,
+                        false);
+
+                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    return streetNameWasMigratedToMunicipality;
+                })
+                .Create();
+
+            var streetNameBWasMigrated = Fixture.Build<StreetNameWasMigratedToMunicipality>()
+                .FromFactory(() =>
+                {
+                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                        _municipalityId,
+                        Fixture.Create<NisCode>(),
+                        Fixture.Create<StreetNameId>(),
+                        new PersistentLocalId(456),
+                        StreetNameStatus.Current,
+                        Language.Dutch,
+                        null,
+                        new Names(new[] { new StreetNameName("Kapelstraat", Language.Dutch) }),
+                        !string.IsNullOrEmpty(homonymAddition)
+                            ? new HomonymAdditions(new[] { new StreetNameHomonymAddition(homonymAddition, Language.Dutch) })
+                            : new HomonymAdditions(),
+                        true,
+                        false);
+
+                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    return streetNameWasMigratedToMunicipality;
+                })
+                .Create();
+
+            var command = Fixture.Create<CorrectStreetNameNames>()
+                .WithMunicipalityId(_municipalityId)
+                .WithStreetNameName(Fixture.Create<Names>().First())
+                .WithPersistentLocalId(new PersistentLocalId(streetNameBWasMigrated.PersistentLocalId));
+
+            Assert(new Scenario()
+                .Given(_streamId,
+                    municipalityWasImported,
+                    municipalityOfficialLanguageWasAdded,
+                    streetNameAWasMigrated,
+                    streetNameBWasMigrated)
+                .When(command)
+                .Throws(new StreetNameNameAlreadyExistsException(streetNameName.Name)));
+        }
+
+        [Theory]
+        [InlineData("", "BO")]
+        [InlineData("BO", "")]
+        [InlineData("BO", "DE")]
+        public void WithDifferentHomonymAdditions_ThenStreetNameNamesWereCorrected(string homonymAdditionA, string homonymAdditionB)
+        {
+            var streetNameName = Fixture.Create<StreetNameName>();
+            Fixture.Register(() => new Names { streetNameName });
+            Fixture.Register(() => Language.Dutch);
+            Fixture.Register(() => Taal.NL);
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
+            var streetNameAWasMigrated = Fixture.Build<StreetNameWasMigratedToMunicipality>()
+                .FromFactory(() =>
+                {
+                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                        _municipalityId,
+                        Fixture.Create<NisCode>(),
+                        Fixture.Create<StreetNameId>(),
+                        new PersistentLocalId(123),
+                        StreetNameStatus.Current,
+                        Language.Dutch,
+                        null,
+                        Fixture.Create<Names>(),
+                        !string.IsNullOrEmpty(homonymAdditionA)
+                            ? new HomonymAdditions(new[] { new StreetNameHomonymAddition(homonymAdditionA, Language.Dutch) })
+                            : new HomonymAdditions(),
+                        true,
+                        false);
+
+                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    return streetNameWasMigratedToMunicipality;
+                })
+                .Create();
+
+            var streetNameBWasMigrated = Fixture.Build<StreetNameWasMigratedToMunicipality>()
+                .FromFactory(() =>
+                {
+                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                        _municipalityId,
+                        Fixture.Create<NisCode>(),
+                        Fixture.Create<StreetNameId>(),
+                        new PersistentLocalId(456),
+                        StreetNameStatus.Current,
+                        Language.Dutch,
+                        null,
+                        new Names(new[] { new StreetNameName("Kapelstraat", Language.Dutch) }),
+                        !string.IsNullOrEmpty(homonymAdditionB)
+                            ? new HomonymAdditions(new[] { new StreetNameHomonymAddition(homonymAdditionB, Language.Dutch) })
+                            : new HomonymAdditions(),
+                        true,
+                        false);
+
+                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    return streetNameWasMigratedToMunicipality;
+                })
+                .Create();
+
+            var command = Fixture.Create<CorrectStreetNameNames>()
+                .WithMunicipalityId(_municipalityId)
+                .WithStreetNameName(Fixture.Create<Names>().First())
+                .WithPersistentLocalId(new PersistentLocalId(streetNameBWasMigrated.PersistentLocalId));
+
+            Assert(new Scenario()
+                .Given(_streamId,
+                    municipalityWasImported,
+                    municipalityOfficialLanguageWasAdded,
+                    streetNameAWasMigrated,
+                    streetNameBWasMigrated)
+                .When(command)
+                .Then(new Fact(_streamId, new StreetNameNamesWereCorrected(_municipalityId, command.PersistentLocalId, command.StreetNameNames))));
         }
 
         [Fact]
