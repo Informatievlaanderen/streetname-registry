@@ -45,10 +45,10 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
         }
 
-        public void CorrectNames(Names names, Action<Names, PersistentLocalId> guardStreetNameNames)
+        public void CorrectNames(Names names, Action<Names, HomonymAdditions, PersistentLocalId> guardStreetNameNames)
         {
             GuardStreetNameStatus(StreetNameStatus.Proposed, StreetNameStatus.Current);
-            guardStreetNameNames(names, PersistentLocalId);
+            guardStreetNameNames(names, HomonymAdditions, PersistentLocalId);
 
             var correctedNames = new Names(names.Where(name => !Names.HasMatch(name.Language, name.Name)));
             if (!correctedNames.Any())
@@ -71,7 +71,7 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasCorrectedFromApprovedToProposed(_municipalityId, PersistentLocalId));
         }
 
-        public void CorrectRejection(Action guardUniqueActiveStreetNameNames)
+        public void CorrectRejection(Action<Names, HomonymAdditions, PersistentLocalId> guardUniqueActiveStreetNameNames)
         {
             if (Status == StreetNameStatus.Proposed)
             {
@@ -79,12 +79,12 @@ namespace StreetNameRegistry.Municipality
             }
 
             GuardStreetNameStatus(StreetNameStatus.Rejected);
-            guardUniqueActiveStreetNameNames();
+            guardUniqueActiveStreetNameNames(Names, HomonymAdditions, PersistentLocalId);
 
             Apply(new StreetNameWasCorrectedFromRejectedToProposed(_municipalityId, PersistentLocalId));
         }
 
-        public void CorrectRetirement(Action guardUniqueActiveStreetNameNames)
+        public void CorrectRetirement(Action<Names, HomonymAdditions, PersistentLocalId> guardUniqueActiveStreetNameNames)
         {
             if (Status == StreetNameStatus.Current)
             {
@@ -92,7 +92,7 @@ namespace StreetNameRegistry.Municipality
             }
 
             GuardStreetNameStatus(StreetNameStatus.Retired);
-            guardUniqueActiveStreetNameNames();
+            guardUniqueActiveStreetNameNames(Names, HomonymAdditions, PersistentLocalId);
 
             Apply(new StreetNameWasCorrectedFromRetiredToCurrent(_municipalityId, PersistentLocalId));
         }

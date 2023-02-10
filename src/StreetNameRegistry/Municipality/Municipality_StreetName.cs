@@ -50,7 +50,7 @@ namespace StreetNameRegistry.Municipality
                 throw new StreetNamePersistentLocalIdAlreadyExistsException();
             }
 
-            GuardStreetNameNames(streetNameNames, persistentLocalId);
+            GuardStreetNameNames(streetNameNames, new HomonymAdditions(), persistentLocalId);
 
             foreach (var language in _officialLanguages.Concat(_facilityLanguages))
             {
@@ -127,7 +127,7 @@ namespace StreetNameRegistry.Municipality
                 throw new MunicipalityHasInvalidStatusException();
             }
 
-            streetName.CorrectRejection(() => GuardUniqueActiveStreetNameNames(streetName.Names, persistentLocalId));
+            streetName.CorrectRejection(GuardUniqueActiveStreetNameNames);
         }
 
         public void CorrectStreetNameRetirement(PersistentLocalId persistentLocalId)
@@ -139,13 +139,16 @@ namespace StreetNameRegistry.Municipality
                 throw new MunicipalityHasInvalidStatusException();
             }
 
-            streetName.CorrectRetirement(() => GuardUniqueActiveStreetNameNames(streetName.Names, persistentLocalId));
+            streetName.CorrectRetirement(GuardUniqueActiveStreetNameNames);
         }
 
-        private void GuardUniqueActiveStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
+        private void GuardUniqueActiveStreetNameNames(Names streetNameNames, HomonymAdditions homonymAdditions, PersistentLocalId persistentLocalId)
         {
             var namesWithActiveStreetNameName = streetNameNames
-                .Where(streetNameName => StreetNames.HasActiveStreetNameName(streetNameName, persistentLocalId))
+                .Where(streetNameName => StreetNames.HasActiveStreetNameName(
+                    streetNameName,
+                    homonymAdditions,
+                    persistentLocalId))
                 .Select(x => x.Name);
 
             if (namesWithActiveStreetNameName.Any())
@@ -158,9 +161,9 @@ namespace StreetNameRegistry.Municipality
             }
         }
 
-        private void GuardStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
+        private void GuardStreetNameNames(Names streetNameNames, HomonymAdditions homonymAdditions, PersistentLocalId persistentLocalId)
         {
-            GuardUniqueActiveStreetNameNames(streetNameNames, persistentLocalId);
+            GuardUniqueActiveStreetNameNames(streetNameNames, homonymAdditions, persistentLocalId);
 
             foreach (var language in streetNameNames.Select(x => x.Language))
             {

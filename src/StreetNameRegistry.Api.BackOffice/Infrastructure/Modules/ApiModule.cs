@@ -15,6 +15,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
     using Consumer.Infrastructure.Modules;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
 
     public sealed class ApiModule : Module
@@ -48,7 +49,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 .As<IIfMatchHeaderValidator>()
                 .AsSelf();
 
-            builder.RegisterType<AcmIdmProvenanceFactory>()
+            builder.Register(c => new AcmIdmProvenanceFactory(Application.StreetNameRegistry, c.Resolve<IActionContextAccessor>()))
                 .As<IProvenanceFactory>()
                 .InstancePerLifetimeScope()
                 .AsSelf();
@@ -62,8 +63,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 .RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
 
             _services.ConfigureIdempotency(
-                _configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()
-                    .ConnectionString,
+                _configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>().ConnectionString,
                 new IdempotencyMigrationsTableInfo(Schema.Import),
                 new IdempotencyTableInfo(Schema.Import),
                 _loggerFactory);
