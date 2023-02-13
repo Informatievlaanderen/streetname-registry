@@ -1,3 +1,16 @@
+## [3.19.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.19.0...v3.19.1) (2023-02-13)
+
+
+### Bug Fixes
+
+* catch aggregatenotfoundexception in backoffice controllers ([1293b83](https://github.com/informatievlaanderen/streetname-registry/commit/1293b83a5f6cf2437cd6c9bf86791675eac640ee))
+* catch idempotencyexception on propose streetname ([7d0e9d8](https://github.com/informatievlaanderen/streetname-registry/commit/7d0e9d8a3b38bd295e4ffd4f2496159690fd0aeb))
+* event jsondata should contain provenance ([70a84ba](https://github.com/informatievlaanderen/streetname-registry/commit/70a84ba103e04f54f775fd49b3f683c8fbf8283f))
+* fix sonar security warning ([62489ed](https://github.com/informatievlaanderen/streetname-registry/commit/62489ed143eefedbadd680eb64fb553d1a078498))
+* homonym addition duplicate streetname name validation ([#200](https://github.com/informatievlaanderen/streetname-registry/issues/200)) ([ccf03dc](https://github.com/informatievlaanderen/streetname-registry/commit/ccf03dc446739c03b02a31da72d6075bed3af0e4))
+* remove persistentlocalid from proposestreetname identityfields ([ae16e49](https://github.com/informatievlaanderen/streetname-registry/commit/ae16e490744a5567e597de2511894657e6b821c4))
+* use correct date in provenance for consumer command handling ([22d973c](https://github.com/informatievlaanderen/streetname-registry/commit/22d973c11722bae839688e1de6041b7fadc65e23))
+
 # [3.19.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.18.3...v3.19.0) (2023-01-27)
 
 
