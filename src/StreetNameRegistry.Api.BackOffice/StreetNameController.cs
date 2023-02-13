@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Api.BackOffice
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
+    using StreetNameRegistry.Infrastructure.Repositories;
 
     [ApiVersion("2.0")]
     [AdvertiseApiVersions("2.0")]
@@ -17,13 +18,16 @@ namespace StreetNameRegistry.Api.BackOffice
     public partial class StreetNameController : BackOfficeApiController
     {
         private readonly IMediator _mediator;
+        private readonly StreetNames _streetNames;
         private readonly TicketingOptions _ticketingOptions;
 
         public StreetNameController(
             IMediator mediator,
+            StreetNames streetNames,
             IOptions<TicketingOptions> ticketingOptions)
         {
             _mediator = mediator;
+            _streetNames = streetNames;
             _ticketingOptions = ticketingOptions.Value;
         }
 
