@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     public abstract class StreetNameLambdaHandler<TSqsLambdaRequest> : SqsLambdaHandlerBase<TSqsLambdaRequest>
         where TSqsLambdaRequest : SqsLambdaRequest
     {
-        private readonly IMunicipalities _municipalities;
+        protected readonly IMunicipalities Municipalities;
 
         protected string DetailUrlFormat { get; }
 
@@ -30,7 +30,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             IIdempotentCommandHandler idempotentCommandHandler)
             : base(retryPolicy, ticketing, idempotentCommandHandler)
         {
-            _municipalities = municipalities;
+            Municipalities = municipalities;
 
             DetailUrlFormat = configuration["DetailUrl"];
             if (string.IsNullOrEmpty(DetailUrlFormat))
@@ -64,7 +64,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             PersistentLocalId persistentLocalId,
             CancellationToken cancellationToken)
         {
-            var municipality = await _municipalities.GetAsync(new MunicipalityStreamId(municipalityId), cancellationToken);
+            var municipality = await Municipalities.GetAsync(new MunicipalityStreamId(municipalityId), cancellationToken);
             var streetNameHash = municipality.GetStreetNameHash(persistentLocalId);
             return streetNameHash;
         }

@@ -237,7 +237,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             // Arrange
             var municipalityId = Fixture.Create<MunicipalityId>();
             var nisCode = Fixture.Create<NisCode>();
-            var streetNamePersistentLocalId = Fixture.Create<PersistentLocalId>();
 
             ImportMunicipality(municipalityId, nisCode);
             SetMunicipalityToCurrent(municipalityId);
@@ -245,14 +244,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             ProposeStreetName(
                 municipalityId,
                 new Names(new Dictionary<Language, string> { { Language.Dutch, "Bosstraat" } }),
-                streetNamePersistentLocalId,
+                new PersistentLocalId(123),
                 Fixture.Create<Provenance>());
 
             var ticketing = new Mock<ITicketing>();
             var persistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             persistentLocalIdGenerator
                 .Setup(x => x.GenerateNextPersistentLocalId())
-                .Returns(new PersistentLocalId(streetNamePersistentLocalId));
+                .Returns(new PersistentLocalId(456));
             var municipalities = Container.Resolve<IMunicipalities>();
 
             var proposeStreetNameHandler = new ProposeStreetNameHandler(
@@ -267,7 +266,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             // Act
             await proposeStreetNameHandler.Handle(new ProposeStreetNameLambdaRequest(municipalityId.ToString(), new ProposeStreetNameSqsRequest
             {
-                Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string>() },
+                Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string> { { Taal.NL, "Bosstraat" } }},
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -280,8 +279,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 x.Complete(
                     It.IsAny<Guid>(),
                     new TicketResult(new ETagResponse(
-                        string.Format(ConfigDetailUrl, streetNamePersistentLocalId),
-                        municipality.GetStreetNameHash(streetNamePersistentLocalId))),
+                        string.Format(ConfigDetailUrl, new PersistentLocalId(123)),
+                        municipality.GetStreetNameHash(new PersistentLocalId(123)))),
                     CancellationToken.None));
         }
     }
