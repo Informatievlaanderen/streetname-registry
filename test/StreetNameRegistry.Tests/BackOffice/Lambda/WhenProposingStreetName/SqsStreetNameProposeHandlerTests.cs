@@ -45,14 +45,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
         [Fact]
         public async Task ThenTheStreetNameIsProposed()
         {
-            const int expectedLocation = 5;
+            const int persistentLocalId = 5;
 
             //Arrange
             var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
-            var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
-            mockPersistentLocalIdGenerator
-                .Setup(x => x.GenerateNextPersistentLocalId())
-                .Returns(new PersistentLocalId(expectedLocation));
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
             ImportMunicipality(municipalityId, new NisCode("23002"));
@@ -64,7 +60,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 MockTicketing(result => { etag = result; }).Object,
-                mockPersistentLocalIdGenerator.Object,
                 new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext),
                 _backOfficeContext,
                 Container.Resolve<IMunicipalities>());
@@ -72,6 +67,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             //Act
             await handler.Handle(new ProposeStreetNameLambdaRequest(municipalityId, new ProposeStreetNameSqsRequest
                 {
+                    PersistentLocalId = new PersistentLocalId(persistentLocalId),
                     Request = new ProposeStreetNameRequest
                     {
                         GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
@@ -91,7 +87,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             stream.Messages.First().JsonMetadata.Should().Contain(etag.ETag);
             stream.Messages.First().JsonMetadata.Should().Contain(Provenance.ProvenanceMetadataKey.ToLower());
 
-            var municipalityIdByPersistentLocalId = await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(expectedLocation);
+            var municipalityIdByPersistentLocalId = await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(persistentLocalId);
             municipalityIdByPersistentLocalId.Should().NotBeNull();
             municipalityIdByPersistentLocalId.MunicipalityId.Should().Be(municipalityLatestItem.MunicipalityId);
         }
@@ -108,7 +104,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
-                Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname))
                     .Object,
                 _backOfficeContext,
@@ -142,7 +137,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
-                Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object,
                 _backOfficeContext,
                 Mock.Of<IMunicipalities>());
@@ -174,7 +168,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
-                Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<StreetNameNameLanguageIsNotSupportedException>().Object,
                 _backOfficeContext,
                 Mock.Of<IMunicipalities>());
@@ -207,7 +200,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
-                Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<StreetNameIsMissingALanguageException>().Object,
                 _backOfficeContext,
                 Mock.Of<IMunicipalities>());
@@ -258,7 +250,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
-                persistentLocalIdGenerator.Object,
                 MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object,
                 _backOfficeContext,
                 municipalities);
@@ -266,6 +257,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             // Act
             await proposeStreetNameHandler.Handle(new ProposeStreetNameLambdaRequest(municipalityId.ToString(), new ProposeStreetNameSqsRequest
             {
+                PersistentLocalId = new PersistentLocalId(123),
                 Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string> { { Taal.NL, "Bosstraat" } }},
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),

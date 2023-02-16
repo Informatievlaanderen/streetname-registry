@@ -17,6 +17,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Consumer.Infrastructure.Modules;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
 
     public sealed class ApiModule : Module
     {
@@ -52,6 +53,10 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             builder.Register(c => new AcmIdmProvenanceFactory(Application.StreetNameRegistry, c.Resolve<IActionContextAccessor>()))
                 .As<IProvenanceFactory>()
                 .InstancePerLifetimeScope()
+                .AsSelf();
+
+            builder
+                .RegisterType<ProposeStreetNameRequestFactory>()
                 .AsSelf();
 
             builder
