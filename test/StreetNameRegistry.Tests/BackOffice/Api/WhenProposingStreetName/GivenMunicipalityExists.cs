@@ -11,10 +11,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
+    using Municipality;
     using NodaTime;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
+    using Testing;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -43,6 +45,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             var result = (AcceptedResult) await Controller.Propose(
                 MockPassingRequestValidator<ProposeStreetNameRequest>(),
+                new ProposeStreetNameRequestFactory(new FakePersistentLocalIdGenerator()),
                 request,
                 CancellationToken.None);
 

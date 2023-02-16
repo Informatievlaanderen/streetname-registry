@@ -19,8 +19,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
                 sqsRequest.ProvenanceData.ToProvenance(),
                 sqsRequest.Metadata)
         {
+            PersistentLocalId = new PersistentLocalId(sqsRequest.PersistentLocalId);
             Request = sqsRequest.Request;
         }
+
+        public PersistentLocalId PersistentLocalId { get; }
 
         public ProposeStreetNameRequest Request { get; init; }
 
@@ -28,8 +31,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
         /// Map to ProposeStreetName command
         /// </summary>
         /// <returns>ProposeStreetName.</returns>
-        public ProposeStreetName ToCommand(
-            PersistentLocalId persistentLocalId)
+        public ProposeStreetName ToCommand()
         {
             var names = new Names(
                 Request.Straatnamen.Select(x => new StreetNameName(x.Value, TaalMapper.ToLanguage(x.Key))));
@@ -37,7 +39,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
             return new ProposeStreetName(
                 this.MunicipalityPersistentLocalId(),
                 names,
-                persistentLocalId,
+                this.PersistentLocalId,
                 Provenance);
         }
     }

@@ -14,19 +14,16 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Municipality.Commands;
     using Municipality.Exceptions;
     using Requests;
-    using StreetNameRegistry.StreetName;
     using TicketingService.Abstractions;
 
     public sealed class ProposeStreetNameHandler : StreetNameLambdaHandler<ProposeStreetNameLambdaRequest>
     {
-        private readonly IPersistentLocalIdGenerator _persistentLocalIdGenerator;
         private readonly BackOfficeContext _backOfficeContext;
 
         public ProposeStreetNameHandler(
             IConfiguration configuration,
             ICustomRetryPolicy retryPolicy,
             ITicketing ticketing,
-            IPersistentLocalIdGenerator persistentLocalIdGenerator,
             IIdempotentCommandHandler idempotentCommandHandler,
             BackOfficeContext backOfficeContext,
             IMunicipalities municipalities)
@@ -37,15 +34,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 ticketing,
                 idempotentCommandHandler)
         {
-            _persistentLocalIdGenerator = persistentLocalIdGenerator;
             _backOfficeContext = backOfficeContext;
         }
 
         protected override async Task<ETagResponse> InnerHandle(ProposeStreetNameLambdaRequest request, CancellationToken cancellationToken)
         {
-            var persistentLocalId = _persistentLocalIdGenerator.GenerateNextPersistentLocalId();
-
-            var cmd = request.ToCommand(persistentLocalId);
+            var cmd = request.ToCommand();
 
             try
             {
@@ -54,24 +48,18 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                     cmd,
                     request.Metadata,
                     cancellationToken);
-
-                await _backOfficeContext
-                    .AddIdempotentMunicipalityStreetNameIdRelation(persistentLocalId, request.MunicipalityPersistentLocalId(), cancellationToken);
-                await _backOfficeContext.SaveChangesAsync(cancellationToken);
-
-                var lastHash = await GetStreetNameHash(request.MunicipalityPersistentLocalId(), persistentLocalId, cancellationToken);
-                return new ETagResponse(string.Format(DetailUrlFormat, persistentLocalId), lastHash);
-
             }
             catch (IdempotencyException)
             {
-                var municipality = await Municipalities.GetAsync(new MunicipalityStreamId(request.MunicipalityPersistentLocalId()), cancellationToken);
-
-                var streetName = GetStreetNameFromMunicipality(municipality, cmd);
-
-                var lastHash = await GetStreetNameHash(request.MunicipalityPersistentLocalId(), streetName.PersistentLocalId, cancellationToken);
-                return new ETagResponse(string.Format(DetailUrlFormat, streetName.PersistentLocalId), lastHash);
+                // Idempotent: Do Nothing return last etag
             }
+
+            await _backOfficeContext
+                .AddIdempotentMunicipalityStreetNameIdRelation(request.PersistentLocalId, request.MunicipalityPersistentLocalId(), cancellationToken);
+            await _backOfficeContext.SaveChangesAsync(cancellationToken);
+
+            var lastHash = await GetStreetNameHash(request.MunicipalityPersistentLocalId(), request.PersistentLocalId, cancellationToken);
+            return new ETagResponse(string.Format(DetailUrlFormat, request.PersistentLocalId), lastHash);
         }
 
         private static MunicipalityStreetName GetStreetNameFromMunicipality(Municipality municipality, ProposeStreetName proposeStreetName)

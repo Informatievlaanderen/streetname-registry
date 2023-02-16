@@ -22,6 +22,7 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <summary>
         /// Stel een straatnaam voor.
         /// </summary>
+        /// <param name="proposeStreetNameRequestFactory"></param>
         /// <param name="request"></param>
         /// <param name="validator"></param>
         /// <param name="cancellationToken"></param>
@@ -37,6 +38,7 @@ namespace StreetNameRegistry.Api.BackOffice
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyNames.Adres.DecentraleBijwerker)]
         public async Task<IActionResult> Propose(
             [FromServices] IValidator<ProposeStreetNameRequest> validator,
+            [FromServices] ProposeStreetNameRequestFactory proposeStreetNameRequestFactory,
             [FromBody] ProposeStreetNameRequest request,
             CancellationToken cancellationToken = default)
         {
@@ -45,12 +47,8 @@ namespace StreetNameRegistry.Api.BackOffice
             try
             {
                 var result = await _mediator.Send(
-                    new ProposeStreetNameSqsRequest
-                    {
-                        Request = request,
-                        Metadata = GetMetadata(),
-                        ProvenanceData = new ProvenanceData(CreateProvenance(Modification.Insert))
-                    }, cancellationToken);
+                    proposeStreetNameRequestFactory.Create(request, GetMetadata(), new ProvenanceData(CreateProvenance(Modification.Insert))),
+                    cancellationToken);
 
                 return Accepted(result);
             }
