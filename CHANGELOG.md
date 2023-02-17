@@ -1,3 +1,10 @@
+## [3.19.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.19.2...v3.19.3) (2023-02-17)
+
+
+### Bug Fixes
+
+* registration sequence module ([eca9afb](https://github.com/informatievlaanderen/streetname-registry/commit/eca9afbd08851954a8752dddccc3fa3c0b97a85f))
+
 ## [3.19.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.19.1...v3.19.2) (2023-02-17)
 
 
