@@ -275,5 +275,52 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                         municipality.GetStreetNameHash(new PersistentLocalId(123)))),
                     CancellationToken.None));
         }
+
+        [Fact]
+        public async Task GivenRetryingRequest_ThenTicketingCompleteIsExpected()
+        {
+            // Arrange
+            var municipalityId = Fixture.Create<MunicipalityId>();
+            var nisCode = Fixture.Create<NisCode>();
+
+            ImportMunicipality(municipalityId, nisCode);
+            SetMunicipalityToCurrent(municipalityId);
+            AddOfficialLanguageDutch(municipalityId);
+
+            var ticketing = new Mock<ITicketing>();
+            var municipalities = Container.Resolve<IMunicipalities>();
+
+            var proposeStreetNameHandler = new ProposeStreetNameHandler(
+                Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
+                ticketing.Object,
+                new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext),
+                _backOfficeContext,
+                municipalities);
+
+            var request = new ProposeStreetNameLambdaRequest(municipalityId.ToString(), new ProposeStreetNameSqsRequest
+            {
+                PersistentLocalId = new PersistentLocalId(123),
+                Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string> { { Taal.NL, "Bosstraat" } } },
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            });
+
+            // Act
+            await proposeStreetNameHandler.Handle(request, CancellationToken.None);
+            await proposeStreetNameHandler.Handle(request, CancellationToken.None);
+
+            //Assert
+            var municipality = await municipalities.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None);
+
+            ticketing.Verify(x =>
+                x.Complete(
+                    It.IsAny<Guid>(),
+                    new TicketResult(new ETagResponse(
+                        string.Format(ConfigDetailUrl, new PersistentLocalId(123)),
+                        municipality.GetStreetNameHash(new PersistentLocalId(123)))),
+                    CancellationToken.None));
+        }
     }
 }
