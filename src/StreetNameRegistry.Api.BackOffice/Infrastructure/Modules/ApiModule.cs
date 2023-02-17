@@ -62,6 +62,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             builder
                 .RegisterModule(new BackOfficeModule(_configuration, _services, _loggerFactory))
                 .RegisterModule(new AggregateSourceModule(_configuration))
+                .RegisterModule(new SequenceModule(_configuration, _services, _loggerFactory))
                 .RegisterModule(new MediatRModule())
                 .RegisterModule(new SqsHandlersModule(_configuration[SqsQueueUrlConfigKey]))
                 .RegisterModule(new TicketingModule(_configuration, _services))
