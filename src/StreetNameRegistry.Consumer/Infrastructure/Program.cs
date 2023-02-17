@@ -109,7 +109,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                         var bootstrapServers = hostContext.Configuration["Kafka:BootstrapServers"];
                         var topic = $"{hostContext.Configuration["MunicipalityTopic"]}" ?? throw new ArgumentException("Configuration has no MunicipalityTopic.");
                         var suffix = hostContext.Configuration["GroupSuffix"];
-                        var consumerGroupId = $"{nameof(StreetNameRegistry)}.MunicipalityConsumer.{topic}{suffix}";
+                        var consumerGroupId = $"{nameof(StreetNameRegistry)}.Consumer.{topic}{suffix}";
 
                         var consumerOptions = new ConsumerOptions(
                             new BootstrapServers(bootstrapServers),
