@@ -1,3 +1,14 @@
+## [3.19.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.19.1...v3.19.2) (2023-02-17)
+
+
+### Bug Fixes
+
+* consumer group name ([88bfc75](https://github.com/informatievlaanderen/streetname-registry/commit/88bfc75a40dceacafd45e3362ba0cefd916ac4b1))
+* number ksql ([91e62f9](https://github.com/informatievlaanderen/streetname-registry/commit/91e62f953c3c6d1f344d56918b6a3372c74720e7))
+* propose streetname lambda handler idempotency ([b36b858](https://github.com/informatievlaanderen/streetname-registry/commit/b36b85897f09969adf31ae5dad519a8efc2e37b2))
+* use merge queue ([725dbc1](https://github.com/informatievlaanderen/streetname-registry/commit/725dbc11da190802bb78fa7866d959169bc395e6))
+* yield persistentlocalid on propose streetname (idempotency) ([b94c722](https://github.com/informatievlaanderen/streetname-registry/commit/b94c72268a048897a8c5e9ee7dddba6cd5b6cd93))
+
 ## [3.19.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.19.0...v3.19.1) (2023-02-13)
 
 
