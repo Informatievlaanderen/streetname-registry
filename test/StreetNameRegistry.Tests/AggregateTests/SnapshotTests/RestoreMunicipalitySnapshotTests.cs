@@ -27,6 +27,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             Fixture.Customize(new WithMunicipalityStatus());
+            Fixture.Customize(new WithValidHomonymAddition());
 
             Fixture.Register<Fixture, MunicipalityStreetNames>(fixture =>
             {
@@ -37,7 +38,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                         fixture.Create<PersistentLocalId>(),
                         fixture.Create<StreetNameStatus>(),
                         new Names(fixture.Create<IDictionary<Language, string>>()),
-                        new HomonymAdditions(fixture.Create<IDictionary<Language, string>>()),
+                        new HomonymAdditions(fixture.Create<List<StreetNameHomonymAddition>>()),
                         fixture.Create<bool>(),
                         fixture.Create<StreetNameId?>(),
                         fixture.Create<string>(),
