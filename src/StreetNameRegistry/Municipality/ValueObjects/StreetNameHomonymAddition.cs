@@ -1,7 +1,9 @@
 namespace StreetNameRegistry.Municipality
 {
+    using System;
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Exceptions;
 
     public sealed class StreetNameHomonymAddition : ValueObject<StreetNameHomonymAddition>
     {
@@ -10,6 +12,16 @@ namespace StreetNameRegistry.Municipality
 
         public StreetNameHomonymAddition(string homonymAddition, Language language)
         {
+            if (string.IsNullOrWhiteSpace(homonymAddition))
+            {
+                throw new ArgumentNullException(nameof(homonymAddition), "Value cannot be null or empty.");
+            }
+
+            if (homonymAddition.Length > 20)
+            {
+                throw new HomonymAdditionMaxCharacterLengthExceededException(language.ToString());
+            }
+            
             HomonymAddition = homonymAddition;
             Language = language;
         }

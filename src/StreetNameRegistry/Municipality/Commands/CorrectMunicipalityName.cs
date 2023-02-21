@@ -23,7 +23,7 @@ namespace StreetNameRegistry.Municipality.Commands
 
         public Guid CreateCommandId()
             => Deterministic.Create(Namespace, $"{nameof(CorrectMunicipalityName)}-{ToString()}");
-        
+
         public override string? ToString()
             => ToStringBuilder.ToString(IdentityFields());
 
@@ -37,6 +37,5 @@ namespace StreetNameRegistry.Municipality.Commands
                 yield return field;
             }
         }
-
     }
 }

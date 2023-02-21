@@ -38,6 +38,8 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasCorrectedFromApprovedToProposed>(When);
             Register<StreetNameWasCorrectedFromRejectedToProposed>(When);
             Register<StreetNameWasCorrectedFromRetiredToCurrent>(When);
+            Register<StreetNameHomonymAdditionsWereCorrected>(When);
+            Register<StreetNameHomonymAdditionsWereRemoved>(When);
         }
 
         private void When(StreetNameWasMigratedToMunicipality @event)
@@ -104,6 +106,26 @@ namespace StreetNameRegistry.Municipality
         private void When(StreetNameWasCorrectedFromRetiredToCurrent @event)
         {
             Status = StreetNameStatus.Current;
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameHomonymAdditionsWereCorrected @event)
+        {
+            foreach(var (language, homonymAddition) in @event.HomonymAdditions)
+            {
+                HomonymAdditions.AddOrUpdate(language, homonymAddition);
+            }
+
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameHomonymAdditionsWereRemoved @event)
+        {
+            foreach(var language in @event.Languages)
+            {
+                HomonymAdditions.Remove(language);
+            }
+
             _lastEvent = @event;
         }
     }

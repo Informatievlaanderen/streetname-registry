@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Municipality
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using DataStructures;
@@ -95,6 +96,47 @@ namespace StreetNameRegistry.Municipality
             guardUniqueActiveStreetNameNames(Names, HomonymAdditions, PersistentLocalId);
 
             Apply(new StreetNameWasCorrectedFromRetiredToCurrent(_municipalityId, PersistentLocalId));
+        }
+
+        public void CorrectHomonymAdditions(
+            HomonymAdditions homonymAdditions,
+            Action<Names, HomonymAdditions, PersistentLocalId> guardUniqueActiveStreetNameNames)
+        {
+            GuardStreetNameStatus(StreetNameStatus.Proposed, StreetNameStatus.Current);
+
+            foreach (var item in homonymAdditions)
+            {
+                if (!HomonymAdditions.HasLanguage(item.Language))
+                {
+                    throw new CannotCorrectNonExistentHomonymAdditionException(item.Language.ToString());
+                }
+            }
+
+            guardUniqueActiveStreetNameNames(Names, homonymAdditions, PersistentLocalId);
+
+            var changedHomonymAdditions = homonymAdditions.Except(HomonymAdditions).ToList();
+
+            if (changedHomonymAdditions.Any())
+            {
+                Apply(new StreetNameHomonymAdditionsWereCorrected(_municipalityId, PersistentLocalId, changedHomonymAdditions));
+            }
+        }
+
+        public void RemoveHomonymAdditions(
+            List<Language> languages,
+            Action<Names, HomonymAdditions, PersistentLocalId> guardUniqueActiveStreetNameNames)
+        {
+            GuardStreetNameStatus(StreetNameStatus.Proposed, StreetNameStatus.Current);
+
+            var names =  new Names(Names.Where(x => languages.Contains(x.Language)));
+            guardUniqueActiveStreetNameNames(names, new HomonymAdditions(), PersistentLocalId);
+
+            var homonymAdditionsToRemove = languages.Where(x => HomonymAdditions.HasLanguage(x)).ToList();
+
+            if (homonymAdditionsToRemove.Any())
+            {
+                Apply(new StreetNameHomonymAdditionsWereRemoved(_municipalityId, PersistentLocalId, homonymAdditionsToRemove));
+            }
         }
 
         public void RestoreSnapshot(MunicipalityId municipalityId, StreetNameData streetNameData)

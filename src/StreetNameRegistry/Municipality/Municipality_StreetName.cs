@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Municipality
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Events;
     using Exceptions;
@@ -140,6 +141,20 @@ namespace StreetNameRegistry.Municipality
             }
 
             streetName.CorrectRetirement(GuardUniqueActiveStreetNameNames);
+        }
+
+        public void CorrectStreetNameHomonymAdditions(PersistentLocalId persistentLocalId, HomonymAdditions homonymAdditions)
+        {
+            StreetNames
+                .GetNotRemovedByPersistentLocalId(persistentLocalId)
+                .CorrectHomonymAdditions(homonymAdditions, GuardUniqueActiveStreetNameNames);
+        }
+
+        public void RemoveStreetNameHomonymAdditions(PersistentLocalId persistentLocalId, List<Language> languages)
+        {
+            StreetNames
+                .GetNotRemovedByPersistentLocalId(persistentLocalId)
+                .RemoveHomonymAdditions(languages, GuardUniqueActiveStreetNameNames);
         }
 
         private void GuardUniqueActiveStreetNameNames(Names streetNameNames, HomonymAdditions homonymAdditions, PersistentLocalId persistentLocalId)

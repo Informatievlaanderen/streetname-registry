@@ -120,6 +120,26 @@ namespace StreetNameRegistry.Municipality
                     var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.CorrectStreetNameName(message.Command.StreetNameNames, message.Command.PersistentLocalId);
                 });
+
+            For<CorrectStreetNameHomonymAdditions>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<CorrectStreetNameHomonymAdditions, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.CorrectStreetNameHomonymAdditions(message.Command.PersistentLocalId, message.Command.HomonymAdditions);
+                });
+
+            For<RemoveStreetNameHomonymAdditions>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<RemoveStreetNameHomonymAdditions, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.RemoveStreetNameHomonymAdditions(message.Command.PersistentLocalId, message.Command.Languages);
+                });
         }
     }
 }
