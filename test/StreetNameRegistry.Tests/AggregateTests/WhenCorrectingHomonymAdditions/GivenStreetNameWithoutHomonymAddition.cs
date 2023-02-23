@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions;
 
+using System.Collections.Generic;
 using AutoFixture;
 using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
 using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
@@ -35,6 +36,7 @@ public class GivenStreetNameWithoutHomonymAddition : StreetNameRegistryTest
             {
                 new StreetNameHomonymAddition("DEF", Language.German)
             },
+            new List<Language>(),
             Fixture.Create<Provenance>());
 
         var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
@@ -66,6 +68,6 @@ public class GivenStreetNameWithoutHomonymAddition : StreetNameRegistryTest
                 Fixture.Create<MunicipalityBecameCurrent>(),
                 streetNameWasMigratedToMunicipality)
             .When(command)
-            .Throws(new CannotCorrectNonExistentHomonymAdditionException(Language.German.ToString())));
+            .Throws(new CannotAddHomonymAdditionException(Language.German)));
     }
 }

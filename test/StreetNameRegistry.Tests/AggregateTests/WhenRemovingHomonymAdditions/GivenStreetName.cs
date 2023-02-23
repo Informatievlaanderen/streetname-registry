@@ -31,9 +31,10 @@ public class GivenStreetName : StreetNameRegistryTest
     [Fact]
     public void WithSameLanguage_ThenStreetNameHomonymAdditionsWereRemoved()
     {
-        var command = new RemoveStreetNameHomonymAdditions(
+        var command = new CorrectStreetNameHomonymAdditions(
             Fixture.Create<MunicipalityId>(),
             Fixture.Create<PersistentLocalId>(),
+            new HomonymAdditions(),
             new List<Language>() { Language.Dutch },
             Fixture.Create<Provenance>());
 
@@ -75,9 +76,10 @@ public class GivenStreetName : StreetNameRegistryTest
     [Fact]
     public void WithNoMatchingLanguage_ThenNone()
     {
-        var command = new RemoveStreetNameHomonymAdditions(
+        var command = new CorrectStreetNameHomonymAdditions(
             Fixture.Create<MunicipalityId>(),
             Fixture.Create<PersistentLocalId>(),
+            new HomonymAdditions(),
             new List<Language>() { Language.Dutch },
             Fixture.Create<Provenance>());
 
@@ -116,9 +118,10 @@ public class GivenStreetName : StreetNameRegistryTest
     [InlineData(StreetNameStatus.Proposed)]
     public void WithValidStatus_ThenStreetNameHomonymAdditionsCorrectedEvent(StreetNameStatus status)
     {
-        var command = new RemoveStreetNameHomonymAdditions(
+        var command = new CorrectStreetNameHomonymAdditions(
             Fixture.Create<MunicipalityId>(),
             Fixture.Create<PersistentLocalId>(),
+            new HomonymAdditions(),
             new List<Language>() { Language.Dutch },
             Fixture.Create<Provenance>());
 

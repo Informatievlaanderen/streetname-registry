@@ -23,7 +23,7 @@ public class StreetNameHomonymAdditionTests
         execute
             .Should()
             .Throw<HomonymAdditionMaxCharacterLengthExceededException>()
-            .Where(item => item.LanguageCode == Language.Dutch.ToString());
+            .Where(item => item.Language == Language.Dutch);
     }
 
     [Theory]

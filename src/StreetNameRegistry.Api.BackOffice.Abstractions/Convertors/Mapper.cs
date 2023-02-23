@@ -8,23 +8,26 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Convertors
     {
         public static Language ToLanguage(this Taal taal)
         {
-            switch (taal)
+            return taal switch
             {
-                case Taal.NL:
-                    return Language.Dutch;
+                Taal.NL => Language.Dutch,
+                Taal.FR => Language.French,
+                Taal.DE => Language.German,
+                Taal.EN => Language.English,
+                _ => throw new ArgumentOutOfRangeException(nameof(taal), taal, $"Non existing language '{taal}'.")
+            };
+        }
 
-                case Taal.FR:
-                    return Language.French;
-
-                case Taal.DE:
-                    return Language.German;
-
-                case Taal.EN:
-                    return Language.English;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(taal), taal, $"Non existing language '{taal}'.");
-            }
+        public static Taal ToTaal(this Language language)
+        {
+            return language switch
+            {
+                Language.Dutch => Taal.NL,
+                Language.French => Taal.FR,
+                Language.German => Taal.DE,
+                Language.English => Taal.EN,
+                _ => throw new ArgumentOutOfRangeException(nameof(language), language, $"Non existing language '{language}'.")
+            };
         }
     }
 

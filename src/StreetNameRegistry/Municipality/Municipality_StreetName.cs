@@ -143,7 +143,9 @@ namespace StreetNameRegistry.Municipality
             streetName.CorrectRetirement(GuardUniqueActiveStreetNameNames);
         }
 
-        public void CorrectStreetNameHomonymAdditions(PersistentLocalId persistentLocalId, HomonymAdditions homonymAdditions)
+        public void CorrectStreetNameHomonymAdditions(
+            PersistentLocalId persistentLocalId,
+            HomonymAdditions homonymAdditions)
         {
             StreetNames
                 .GetNotRemovedByPersistentLocalId(persistentLocalId)

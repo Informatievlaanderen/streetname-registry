@@ -108,7 +108,7 @@ namespace StreetNameRegistry.Municipality
             {
                 if (!HomonymAdditions.HasLanguage(item.Language))
                 {
-                    throw new CannotCorrectNonExistentHomonymAdditionException(item.Language.ToString());
+                    throw new CannotAddHomonymAdditionException(item.Language);
                 }
             }
 

@@ -65,6 +65,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
                     await mediator.Send(new CorrectStreetNameRetirementLambdaRequest(messageMetadata.MessageGroupId!, request), cancellationToken);
                     break;
 
+                case CorrectStreetNameHomonymAdditionsSqsRequest request:
+                    await mediator.Send(new CorrectStreetNameHomonymAdditionsLambdaRequest(messageMetadata.MessageGroupId!, request), cancellationToken);
+                    break;
+
                 default:
                     throw new NotImplementedException(
                         $"{sqsRequest.GetType().Name} has no corresponding SqsLambdaRequest defined.");
