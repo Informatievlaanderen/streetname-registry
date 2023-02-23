@@ -30,9 +30,10 @@ public class GivenStreetNameNameWithHomonymAdditionAlreadyExists : StreetNameReg
     [Fact]
     public void ThenStreetNameNameAlreadyExistsException()
     {
-        var command = new RemoveStreetNameHomonymAdditions(
+        var command = new CorrectStreetNameHomonymAdditions(
             Fixture.Create<MunicipalityId>(),
             new PersistentLocalId(123),
+            new HomonymAdditions(),
             new List<Language>() { Language.Dutch },
             Fixture.Create<Provenance>());
 
@@ -87,9 +88,10 @@ public class GivenStreetNameNameWithHomonymAdditionAlreadyExists : StreetNameReg
     [Fact]
     public void WithNoMatchingLanguage_ThenNone()
     {
-        var command = new RemoveStreetNameHomonymAdditions(
+        var command = new CorrectStreetNameHomonymAdditions(
             Fixture.Create<MunicipalityId>(),
             Fixture.Create<PersistentLocalId>(),
+            new HomonymAdditions(),
             new List<Language>() { Language.Dutch },
             Fixture.Create<Provenance>());
 
@@ -134,6 +136,7 @@ public class GivenStreetNameNameWithHomonymAdditionAlreadyExists : StreetNameReg
                 new StreetNameHomonymAddition("DEF", Language.Dutch),
                 new StreetNameHomonymAddition("SameFrenchAddition", Language.French),
             },
+            new List<Language>(),
             Fixture.Create<Provenance>());
 
         var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
@@ -185,6 +188,7 @@ public class GivenStreetNameNameWithHomonymAdditionAlreadyExists : StreetNameReg
                 new StreetNameHomonymAddition("ABC", Language.Dutch),
                 new StreetNameHomonymAddition("DEF", Language.French),
             },
+            new List<Language>(),
             Fixture.Create<Provenance>());
 
         var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(

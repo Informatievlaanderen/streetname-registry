@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions;
 
+using System.Collections.Generic;
 using AutoFixture;
 using Be.Vlaanderen.Basisregisters.AggregateSource;
 using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
@@ -38,6 +39,7 @@ public class GivenStreetNameInvalidStatus : StreetNameRegistryTest
             {
                 new StreetNameHomonymAddition("DEF", Language.Dutch)
             },
+            new List<Language>(),
             Fixture.Create<Provenance>());
 
         var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(

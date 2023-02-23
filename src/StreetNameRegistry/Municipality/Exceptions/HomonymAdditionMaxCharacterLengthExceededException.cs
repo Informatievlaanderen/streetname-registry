@@ -6,21 +6,20 @@ namespace StreetNameRegistry.Municipality.Exceptions
     [Serializable]
     public sealed class HomonymAdditionMaxCharacterLengthExceededException : StreetNameRegistryException
     {
-        public string LanguageCode { get; }
+        public Language Language { get; }
 
         public HomonymAdditionMaxCharacterLengthExceededException()
         {
         }
 
-        public HomonymAdditionMaxCharacterLengthExceededException(string languageCode)
+        public HomonymAdditionMaxCharacterLengthExceededException(Language language)
         {
-            LanguageCode = languageCode;
+            Language = language;
         }
 
         private HomonymAdditionMaxCharacterLengthExceededException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-
         }
     }
 }

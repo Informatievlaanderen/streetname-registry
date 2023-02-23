@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Municipality
 {
     using System;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
@@ -128,17 +129,20 @@ namespace StreetNameRegistry.Municipality
                 .Handle(async (message, ct) =>
                 {
                     var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
-                    municipality.CorrectStreetNameHomonymAdditions(message.Command.PersistentLocalId, message.Command.HomonymAdditions);
-                });
 
-            For<RemoveStreetNameHomonymAdditions>()
-                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
-                .AddEventHash<RemoveStreetNameHomonymAdditions, Municipality>(getUnitOfWork)
-                .AddProvenance(getUnitOfWork, provenanceFactory)
-                .Handle(async (message, ct) =>
-                {
-                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
-                    municipality.RemoveStreetNameHomonymAdditions(message.Command.PersistentLocalId, message.Command.Languages);
+                    if (message.Command.HomonymAdditionsToCorrect.Any())
+                    {
+                        municipality.CorrectStreetNameHomonymAdditions(
+                            message.Command.PersistentLocalId,
+                            message.Command.HomonymAdditionsToCorrect);
+                    }
+
+                    if (message.Command.HomonymAdditionsToRemove.Any())
+                    {
+                        municipality.RemoveStreetNameHomonymAdditions(
+                            message.Command.PersistentLocalId,
+                            message.Command.HomonymAdditionsToRemove);
+                    }
                 });
         }
     }

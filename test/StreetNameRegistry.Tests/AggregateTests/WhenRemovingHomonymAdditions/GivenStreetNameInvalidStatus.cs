@@ -31,9 +31,10 @@ public class GivenStreetNameInvalidStatus : StreetNameRegistryTest
     [InlineData(StreetNameStatus.Retired)]
     public void ThenThrowsStreetNameHasInvalidStatusException(StreetNameStatus status)
     {
-        var command = new RemoveStreetNameHomonymAdditions(
+        var command = new CorrectStreetNameHomonymAdditions(
             Fixture.Create<MunicipalityId>(),
             Fixture.Create<PersistentLocalId>(),
+            new HomonymAdditions(),
             new List<Language>() { Language.Dutch },
             Fixture.Create<Provenance>());
 

@@ -39,6 +39,7 @@ public class GivenStreetName : StreetNameRegistryTest
             {
                 new StreetNameHomonymAddition("DEF", Language.Dutch)
             },
+            new List<Language>(),
             Fixture.Create<Provenance>());
 
         var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
@@ -90,6 +91,7 @@ public class GivenStreetName : StreetNameRegistryTest
                 new StreetNameHomonymAddition("DEF", Language.Dutch),
                 new StreetNameHomonymAddition("SameFrenchAddition", Language.French),
             },
+            new List<Language>(),
             Fixture.Create<Provenance>());
 
         var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
@@ -141,6 +143,7 @@ public class GivenStreetName : StreetNameRegistryTest
                 new StreetNameHomonymAddition("ABC", Language.Dutch),
                 new StreetNameHomonymAddition("DEF", Language.French),
             },
+            new List<Language>(),
             Fixture.Create<Provenance>());
 
         var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
@@ -187,6 +190,7 @@ public class GivenStreetName : StreetNameRegistryTest
             {
                 new StreetNameHomonymAddition("DEF", Language.Dutch)
             },
+            new List<Language>(),
             Fixture.Create<Provenance>());
 
         var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
