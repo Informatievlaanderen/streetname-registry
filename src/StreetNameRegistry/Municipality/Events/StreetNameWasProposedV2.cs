@@ -23,7 +23,7 @@ namespace StreetNameRegistry.Municipality.Events
         public string NisCode { get; }
 
         [EventPropertyDescription("De straatnamen in de officiële en (eventuele) faciliteitentaal van de gemeente. Mogelijkheden: Dutch, French, German of English.")]
-        public List<StreetNameName> StreetNameNames { get; }
+        public IDictionary<Language, string> StreetNameNames { get; }
 
         [EventPropertyDescription("Objectidentificator van de straatnaam.")]
         public int PersistentLocalId { get; }
@@ -39,7 +39,7 @@ namespace StreetNameRegistry.Municipality.Events
         {
             MunicipalityId = municipalityId;
             NisCode = nisCode;
-            StreetNameNames = streetNameNames;
+            StreetNameNames = streetNameNames.ToDictionary();
             PersistentLocalId = persistentLocalId;
         }
 
@@ -47,7 +47,7 @@ namespace StreetNameRegistry.Municipality.Events
         private StreetNameWasProposedV2(
             Guid municipalityId,
             string nisCode,
-            List<StreetNameName> streetNameNames,
+            IDictionary<Language, string> streetNameNames,
             int persistentLocalId,
             ProvenanceData provenance
         ) :
@@ -66,7 +66,7 @@ namespace StreetNameRegistry.Municipality.Events
             fields.Add(MunicipalityId.ToString("D"));
             fields.Add(NisCode);
             fields.Add(PersistentLocalId.ToString());
-            fields.AddRange(StreetNameNames.Select(streetNameName => streetNameName.ToString()));
+            fields.AddRange(StreetNameNames.Select(streetNameName => $"{streetNameName.Key}: {streetNameName.Value}"));
             return fields;
         }
 

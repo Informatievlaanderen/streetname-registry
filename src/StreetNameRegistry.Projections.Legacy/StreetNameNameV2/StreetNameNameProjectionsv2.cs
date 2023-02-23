@@ -10,7 +10,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
     using Municipality;
     using Municipality.Events;
     using NodaTime;
-    using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("API endpoint straatnamen ifv BOSA DT")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor straatnamen ifv BOSA DT voorziet.")]
@@ -31,7 +30,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
                     IsFlemishRegion = RegionFilter.IsFlemishRegion(message.Message.NisCode)
                 };
 
-                UpdateNameByLanguage(streetNameNameV2, new Names(message.Message.Names));
+                UpdateNameByLanguage(streetNameNameV2, message.Message.Names);
 
                 await context
                     .StreetNameNamesV2
@@ -138,30 +137,30 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
             });
         }
 
-        private static void UpdateNameByLanguage(StreetNameNameV2 entity, List<StreetNameName> streetNameNames)
+        private static void UpdateNameByLanguage(StreetNameNameV2 entity, IDictionary<Language, string> streetNameNames)
         {
-            foreach (var streetNameName in streetNameNames)
+            foreach (var (language, streetNameName) in streetNameNames)
             {
-                switch (streetNameName.Language)
+                switch (language)
                 {
                     case Language.Dutch:
-                        entity.NameDutch = streetNameName.Name;
-                        entity.NameDutchSearch = streetNameName.Name.SanitizeForBosaSearch();
+                        entity.NameDutch = streetNameName;
+                        entity.NameDutchSearch = streetNameName.SanitizeForBosaSearch();
                         break;
 
                     case Language.French:
-                        entity.NameFrench = streetNameName.Name;
-                        entity.NameFrenchSearch = streetNameName.Name.SanitizeForBosaSearch();
+                        entity.NameFrench = streetNameName;
+                        entity.NameFrenchSearch = streetNameName.SanitizeForBosaSearch();
                         break;
 
                     case Language.German:
-                        entity.NameGerman = streetNameName.Name;
-                        entity.NameGermanSearch = streetNameName.Name.SanitizeForBosaSearch();
+                        entity.NameGerman = streetNameName;
+                        entity.NameGermanSearch = streetNameName.SanitizeForBosaSearch();
                         break;
 
                     case Language.English:
-                        entity.NameEnglish = streetNameName.Name;
-                        entity.NameEnglishSearch = streetNameName.Name.SanitizeForBosaSearch();
+                        entity.NameEnglish = streetNameName;
+                        entity.NameEnglishSearch = streetNameName.SanitizeForBosaSearch();
                         break;
                 }
             }

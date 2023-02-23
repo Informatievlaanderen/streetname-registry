@@ -31,6 +31,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
             Fixture.Customize(new WithFixedPersistentLocalId());
             _municipalityId = Fixture.Create<MunicipalityId>();
             _streamId = Fixture.Create<MunicipalityStreamId>();
+
+            Fixture.Register(() => new Names(Fixture.Create<Dictionary<Language, string>>()));
         }
 
         [Fact]
@@ -38,6 +40,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
         {
             var command = Fixture.Create<CorrectStreetNameNames>()
                 .WithMunicipalityId(_municipalityId)
+                .WithStreetNameNames(new Names())
                 .WithStreetNameName(new StreetNameName("Kapelstraat", Language.Dutch))
                 .WithStreetNameName(new StreetNameName("Rue de la Croix - Rouge", Language.French));
 
@@ -197,6 +200,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
             var command = Fixture.Create<CorrectStreetNameNames>()
                 .WithPersistentLocalId(new PersistentLocalId(123))
                 .WithMunicipalityId(_municipalityId)
+                .WithStreetNameNames(new Names())
                 .WithStreetNameName(streetNameNames.First());
 
             var languageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
@@ -293,6 +297,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
 
             var command = Fixture.Create<CorrectStreetNameNames>()
                 .WithMunicipalityId(_municipalityId)
+                .WithStreetNameNames(new Names())
                 .WithStreetNameName(streetNameNames.First())
                 .WithStreetNameName(new StreetNameName("rue de la loi", Language.French));
 
@@ -491,7 +496,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                 Fixture.Create<MunicipalityBecameCurrent>(),
                 dutchLanguageWasAdded,
                 frenchLanguageWasAdded,
-                Fixture.Create<StreetNameWasProposedV2>()
+                Fixture.Create<StreetNameWasProposedV2>().WithNames(new Names(new Dictionary<Language, string>
+                {
+                    { Language.Dutch, Fixture.Create<string>() },
+                    { Language.French, Fixture.Create<string>() }
+                }))
             });
 
             // Act

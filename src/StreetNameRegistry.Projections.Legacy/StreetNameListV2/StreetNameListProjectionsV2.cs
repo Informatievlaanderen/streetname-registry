@@ -34,7 +34,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     Status = message.Message.Status
                 };
 
-                UpdateNameByLanguage(streetNameListItemV2, new Names(message.Message.Names));
+                UpdateNameByLanguage(streetNameListItemV2, message.Message.Names);
                 UpdateHomonymAdditionByLanguage(streetNameListItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
 
                 await context
@@ -211,30 +211,30 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
             });
         }
 
-        private static void UpdateNameByLanguage(StreetNameListItemV2 entity, List<StreetNameName> streetNameNames)
+        private static void UpdateNameByLanguage(StreetNameListItemV2 entity, IDictionary<Language, string> streetNameNames)
         {
-            foreach (var streetNameName in streetNameNames)
+            foreach (var (language, streetNameName) in streetNameNames)
             {
-                switch (streetNameName.Language)
+                switch (language)
                 {
                     case Language.Dutch:
-                        entity.NameDutch = streetNameName.Name;
-                        entity.NameDutchSearch = streetNameName.Name.RemoveDiacritics();
+                        entity.NameDutch = streetNameName;
+                        entity.NameDutchSearch = streetNameName.RemoveDiacritics();
                         break;
 
                     case Language.French:
-                        entity.NameFrench = streetNameName.Name;
-                        entity.NameFrenchSearch = streetNameName.Name.RemoveDiacritics();
+                        entity.NameFrench = streetNameName;
+                        entity.NameFrenchSearch = streetNameName.RemoveDiacritics();
                         break;
 
                     case Language.German:
-                        entity.NameGerman = streetNameName.Name;
-                        entity.NameGermanSearch = streetNameName.Name.RemoveDiacritics();
+                        entity.NameGerman = streetNameName;
+                        entity.NameGermanSearch = streetNameName.RemoveDiacritics();
                         break;
 
                     case Language.English:
-                        entity.NameEnglish = streetNameName.Name;
-                        entity.NameEnglishSearch = streetNameName.Name.RemoveDiacritics();
+                        entity.NameEnglish = streetNameName;
+                        entity.NameEnglishSearch = streetNameName.RemoveDiacritics();
                         break;
                 }
             }

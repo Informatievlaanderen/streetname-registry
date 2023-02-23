@@ -23,7 +23,7 @@ namespace StreetNameRegistry.Municipality.Events
         public int PersistentLocalId { get; }
 
         [EventPropertyDescription("De straatnamen in de officiële en (eventuele) faciliteitentaal van de gemeente. Mogelijkheden: Dutch, French, German of English.")]
-        public List<StreetNameName> StreetNameNames { get; }
+        public IDictionary<Language, string> StreetNameNames { get; }
 
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
@@ -35,18 +35,19 @@ namespace StreetNameRegistry.Municipality.Events
         {
             MunicipalityId = municipalityId;
             PersistentLocalId = persistentLocalId;
-            StreetNameNames = streetNameNames;
+            StreetNameNames = streetNameNames.ToDictionary();
         }
 
         [JsonConstructor]
         private StreetNameNamesWereCorrected(
             Guid municipalityId,
             int persistentLocalId,
-            List<StreetNameName> streetNameNames,
+            IDictionary<Language, string> streetNameNames,
             ProvenanceData provenance) :
             this(
                 new MunicipalityId(municipalityId),
-                new PersistentLocalId(persistentLocalId), new Names(streetNameNames))
+                new PersistentLocalId(persistentLocalId),
+                new Names(streetNameNames))
             => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
 
         void ISetProvenance.SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);
@@ -56,7 +57,7 @@ namespace StreetNameRegistry.Municipality.Events
             var fields = Provenance.GetHashFields().ToList();
             fields.Add(MunicipalityId.ToString("D"));
             fields.Add(PersistentLocalId.ToString());
-            fields.AddRange(StreetNameNames.Select(streetNameName => streetNameName.ToString()));
+            fields.AddRange(StreetNameNames.Select(streetNameName => $"{streetNameName.Key}: {streetNameName.Value}"));
             return fields;
         }
 

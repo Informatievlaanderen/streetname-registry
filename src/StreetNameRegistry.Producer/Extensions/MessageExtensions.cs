@@ -110,7 +110,7 @@ namespace StreetNameRegistry.Producer.Extensions
             new Contracts.StreetNameWasProposedV2(
                 message.MunicipalityId.ToString("D"),
                 message.NisCode,
-                message.StreetNameNames.ToDictionary(x => x.Language.ToString(), x => x.Name),
+                message.StreetNameNames.ToDictionary(x => x.Key.ToString(), x => x.Value),
                 message.PersistentLocalId,
                 message.Provenance.ToContract());
 
@@ -151,7 +151,7 @@ namespace StreetNameRegistry.Producer.Extensions
             new Contracts.StreetNameNamesWereCorrected(
                 message.MunicipalityId.ToString("D"),
                 message.PersistentLocalId,
-                message.StreetNameNames.ToDictionary(x => x.Language.ToString(), x => x.Name),
+                message.StreetNameNames.ToDictionary(x => x.Key.ToString(), x => x.Value),
                 message.Provenance.ToContract());
     }
 }
