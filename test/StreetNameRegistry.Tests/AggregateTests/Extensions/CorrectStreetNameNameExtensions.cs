@@ -13,7 +13,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.Extensions
 
         public static CorrectStreetNameNames WithStreetNameName(this CorrectStreetNameNames command, StreetNameName name)
         {
-            var names = new Names(command.StreetNameNames.Concat(new[] { name }));
+            var names = new Names(command.StreetNameNames);
+            if (command.StreetNameNames.HasLanguage(name.Language))
+            {
+                names.Remove(name.Language);
+            }
+
+            names = new Names(names.Concat(new[] { name }));
 
             return new CorrectStreetNameNames(command.MunicipalityId, command.PersistentLocalId, names, command.Provenance);
         }
@@ -22,7 +28,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.Extensions
         {
             return new CorrectStreetNameNames(
                 command.MunicipalityId,
-                command.PersistentLocalId, new Names(command.StreetNameNames.Concat(names)), command.Provenance);
+                command.PersistentLocalId,
+                names,
+                command.Provenance);
         }
 
         public static CorrectStreetNameNames WithPersistentLocalId(this CorrectStreetNameNames command, PersistentLocalId persistentLocalId)

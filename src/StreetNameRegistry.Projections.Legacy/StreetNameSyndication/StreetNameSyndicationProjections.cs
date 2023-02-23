@@ -11,7 +11,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     using StreetName.Events;
     using StreetName.Events.Crab;
     using LanguageHelpers = StreetName.LanguageHelpers;
-    using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("Feed endpoint straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor de straatnamen feed voorziet.")]
@@ -252,7 +251,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                     Status = message.Message.Status,
                     IsComplete = true
                 };
-                UpdateNameByLanguage(streetNameSyndicationItem, new Names(message.Message.Names));
+                UpdateNameByLanguage(streetNameSyndicationItem, message.Message.Names);
                 UpdateHomonymAdditionByLanguage(streetNameSyndicationItem, new HomonymAdditions(message.Message.HomonymAdditions));
                 streetNameSyndicationItem.ApplyProvenance(message.Message.Provenance);
                 streetNameSyndicationItem.SetEventData(message.Message, message.EventName);
@@ -384,11 +383,11 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             }
         }
 
-        private static void UpdateNameByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, List<StreetNameName> streetNameNames)
+        private static void UpdateNameByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, IDictionary<Language, string> streetNameNames)
         {
-            foreach (var streetNameName in streetNameNames)
+            foreach (var (language, streetNameName) in streetNameNames)
             {
-                UpdateNameByLanguage(streetNameSyndicationItem, streetNameName.Name, streetNameName.Language);
+                UpdateNameByLanguage(streetNameSyndicationItem, streetNameName, language);
             }
         }
 

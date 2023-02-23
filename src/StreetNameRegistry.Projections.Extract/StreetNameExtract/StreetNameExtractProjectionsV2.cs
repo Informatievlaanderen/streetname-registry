@@ -105,7 +105,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     }.ToBytes(_encoding)
                 };
                 UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
-                UpdateStraatnm(streetNameExtractItemV2, new Names(message.Message.Names));
+                UpdateStraatnm(streetNameExtractItemV2, message.Message.Names);
                 UpdateHomoniemtv(streetNameExtractItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
 
                 var status = message.Message.Status switch
@@ -188,24 +188,24 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }
             });
 
-        private void UpdateStraatnm(StreetNameExtractItemV2 streetName, List<StreetNameName> streetNameNames)
+        private void UpdateStraatnm(StreetNameExtractItemV2 streetName, IDictionary<Language, string> streetNameNames)
             => UpdateRecord(streetName, record =>
             {
-                foreach (var streetNameName in streetNameNames)
+                foreach (var (language, streetNameName) in streetNameNames)
                 {
-                    switch (streetNameName.Language)
+                    switch (language)
                     {
                         case Language.Dutch:
-                            streetName.NameDutch = streetNameName.Name;
+                            streetName.NameDutch = streetNameName;
                             break;
                         case Language.French:
-                            streetName.NameFrench = streetNameName.Name;
+                            streetName.NameFrench = streetNameName;
                             break;
                         case Language.German:
-                            streetName.NameGerman = streetNameName.Name;
+                            streetName.NameGerman = streetNameName;
                             break;
                         case Language.English:
-                            streetName.NameEnglish = streetNameName.Name;
+                            streetName.NameEnglish = streetNameName;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(streetName), streetName, null);

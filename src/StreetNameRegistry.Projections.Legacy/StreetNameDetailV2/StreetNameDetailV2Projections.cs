@@ -10,7 +10,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
     using Municipality;
     using Municipality.Events;
     using NodaTime;
-    using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("API endpoint detail straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor het straatnamen detail voorziet.")]
@@ -30,7 +29,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                     Status = message.Message.Status
                 };
 
-                UpdateNameByLanguage(streetNameDetailV2, new Names(message.Message.Names));
+                UpdateNameByLanguage(streetNameDetailV2, message.Message.Names);
                 UpdateHomonymAdditionByLanguage(streetNameDetailV2, new HomonymAdditions(message.Message.HomonymAdditions));
                 UpdateHash(streetNameDetailV2, message);
 
@@ -140,30 +139,30 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
             entity.LastEventHash = wrappedEvent.Metadata[AddEventHashPipe.HashMetadataKey].ToString()!;
         }
 
-        private static void UpdateNameByLanguage(StreetNameDetailV2 entity, List<StreetNameName> streetNameNames)
+        private static void UpdateNameByLanguage(StreetNameDetailV2 entity, IDictionary<Language, string> streetNameNames)
         {
-            foreach (var streetNameName in streetNameNames)
+            foreach (var (language, streetNameName) in streetNameNames)
             {
-                switch (streetNameName.Language)
+                switch (language)
                 {
                     case Language.Dutch:
-                        entity.NameDutch = streetNameName.Name;
+                        entity.NameDutch = streetNameName;
                         break;
 
                     case Language.French:
-                        entity.NameFrench = streetNameName.Name;
+                        entity.NameFrench = streetNameName;
                         break;
 
                     case Language.German:
-                        entity.NameGerman = streetNameName.Name;
+                        entity.NameGerman = streetNameName;
                         break;
 
                     case Language.English:
-                        entity.NameEnglish = streetNameName.Name;
+                        entity.NameEnglish = streetNameName;
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(streetNameName.Language), streetNameName.Language, null);
+                        throw new ArgumentOutOfRangeException(nameof(language), streetNameName, null);
                 }
             }
         }

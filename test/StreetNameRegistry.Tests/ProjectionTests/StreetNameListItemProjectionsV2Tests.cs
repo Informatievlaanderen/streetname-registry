@@ -346,9 +346,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 });
         }
 
-        private string DetermineExpectedNameForLanguage(IEnumerable<StreetNameName> streetNameNames, Language language)
-        {
-            return streetNameNames.SingleOrDefault(x => x.Language == language)?.Name;
-        }
+        private static string? DetermineExpectedNameForLanguage(IDictionary<Language, string> streetNameNames, Language language)
+            => streetNameNames.ContainsKey(language) ? streetNameNames[language] : null;
     }
 }

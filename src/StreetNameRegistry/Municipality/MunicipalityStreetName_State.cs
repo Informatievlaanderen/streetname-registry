@@ -84,9 +84,9 @@ namespace StreetNameRegistry.Municipality
 
         private void When(StreetNameNamesWereCorrected @event)
         {
-            foreach (var streetNameName in @event.StreetNameNames)
+            foreach (var (language, name) in @event.StreetNameNames)
             {
-                Names.AddOrUpdate(streetNameName.Language, streetNameName.Name);
+                Names.AddOrUpdate(language, name);
             }
             _lastEvent = @event;
         }
