@@ -136,6 +136,42 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     }, ct);
             });
 
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.PersistentLocalId, streetNameListItemV2 =>
+                    {
+                        UpdateHomonymAdditionByLanguage(streetNameListItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
+                        UpdateVersionTimestamp(streetNameListItemV2, message.Message.Provenance.Timestamp);
+                    }, ct);
+            });
+
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.PersistentLocalId, streetNameListItemV2 =>
+                    {
+                        foreach (var language in message.Message.Languages)
+                        {
+                            switch (language)
+                            {
+                                case Language.Dutch: streetNameListItemV2.HomonymAdditionDutch = null;
+                                    break;
+                                case Language.French: streetNameListItemV2.HomonymAdditionFrench = null;
+                                    break;
+                                case Language.German: streetNameListItemV2.HomonymAdditionGerman = null;
+                                    break;
+                                case Language.English: streetNameListItemV2.HomonymAdditionEnglish = null;
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+
+                        UpdateVersionTimestamp(streetNameListItemV2, message.Message.Provenance.Timestamp);
+                    }, ct);
+            });
+
             When<Envelope<MunicipalityWasImported>>(async (context, message, ct) =>
             {
                 var streetNameListMunicipality = new StreetNameListMunicipality

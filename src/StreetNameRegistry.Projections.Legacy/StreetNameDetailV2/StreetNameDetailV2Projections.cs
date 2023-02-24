@@ -127,6 +127,42 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                     UpdateVersionTimestamp(streetNameDetailV2, message.Message.Provenance.Timestamp);
                 }, ct);
             });
+
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameDetailV2(message.Message.PersistentLocalId, streetNameDetailV2 =>
+                {
+                    UpdateHomonymAdditionByLanguage(streetNameDetailV2, new HomonymAdditions(message.Message.HomonymAdditions));
+                    UpdateHash(streetNameDetailV2, message);
+                    UpdateVersionTimestamp(streetNameDetailV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameDetailV2(message.Message.PersistentLocalId, streetNameDetailV2 =>
+                {
+                    foreach (var language in message.Message.Languages)
+                    {
+                        switch (language)
+                        {
+                            case Language.Dutch: streetNameDetailV2.HomonymAdditionDutch = null;
+                                break;
+                            case Language.French: streetNameDetailV2.HomonymAdditionFrench = null;
+                                break;
+                            case Language.German: streetNameDetailV2.HomonymAdditionGerman = null;
+                                break;
+                            case Language.English: streetNameDetailV2.HomonymAdditionEnglish = null;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
+
+                    UpdateHash(streetNameDetailV2, message);
+                    UpdateVersionTimestamp(streetNameDetailV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
         }
 
         private static void UpdateHash<T>(StreetNameDetailV2 entity, Envelope<T> wrappedEvent) where T : IHaveHash, IMessage

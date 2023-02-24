@@ -130,6 +130,40 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
                     UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
                 }, ct);
             });
+
+
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
+                {
+                    UpdateHomonymAdditionByLanguage(streetNameHelperV2, new HomonymAdditions(message.Message.HomonymAdditions));
+                    UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
+                {
+                    foreach (var language in message.Message.Languages)
+                    {
+                        switch (language)
+                        {
+                            case Language.Dutch: streetNameHelperV2.HomonymAdditionDutch = null;
+                                break;
+                            case Language.French: streetNameHelperV2.HomonymAdditionFrench = null;
+                                break;
+                            case Language.German: streetNameHelperV2.HomonymAdditionGerman = null;
+                                break;
+                            case Language.English: streetNameHelperV2.HomonymAdditionEnglish = null;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
+                    UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
         }
 
         private static void UpdateNameByLanguage(StreetNameHelperV2 entity, IDictionary<Language, string> streetNameNames)

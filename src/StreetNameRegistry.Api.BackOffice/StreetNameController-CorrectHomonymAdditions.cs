@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <param name="ifMatchHeaderValue"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="validator"></param>
-        [HttpPost("{persistentLocalId}/acties/corrigeren/homoniem")]
+        [HttpPost("{persistentLocalId}/acties/corrigeren/homoniemtoevoeging")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]
