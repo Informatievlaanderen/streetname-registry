@@ -5,48 +5,58 @@ updates:
   directory: "/"
   schedule:
     interval: daily
+  rebase-strategy: "disabled"
 
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
     interval: daily
+  rebase-strategy: "disabled"
 
 - package-ecosystem: npm
   directory: "/"
   schedule:
     interval: daily
+  rebase-strategy: "disabled"
 
 - package-ecosystem: docker
   directory: "/src/StreetNameRegistry.Api.CrabImport"
   schedule:
     interval: daily
+  rebase-strategy: "disabled"
 
 - package-ecosystem: docker
   directory: "/src/StreetNameRegistry.Api.Extract"
   schedule:
     interval: daily
+  rebase-strategy: "disabled"
 
 - package-ecosystem: docker
   directory: "/src/StreetNameRegistry.Api.Legacy"
   schedule:
     interval: daily
+  rebase-strategy: "disabled"
 
 - package-ecosystem: docker
   directory: "/src/StreetNameRegistry.Api.Oslo"
   schedule:
     interval: daily
+  rebase-strategy: "disabled"
 
 - package-ecosystem: docker
   directory: "/src/StreetNameRegistry.Api.BackOffice"
   schedule:
     interval: daily
+  rebase-strategy: "disabled"
 
 - package-ecosystem: docker
   directory: "/src/StreetNameRegistry.Projections.Syndication"
   schedule:
     interval: daily
+  rebase-strategy: "disabled"
 
 - package-ecosystem: docker
   directory: "/src/StreetNameRegistry.Projector"
   schedule:
     interval: daily
+  rebase-strategy: "disabled"
