@@ -46,7 +46,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameHomony
             };
 
             var persistentLocalId = 123;
-            var result = (AcceptedResult) await Controller.CorrectHomonymAddition(
+            var result = (AcceptedResult) await Controller.CorrectHomonymAdditions(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<CorrectStreetNameHomonymAdditionsRequest>(),
                 persistentLocalId,
@@ -80,7 +80,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameHomony
             var persistentLocalId = 123;
             Func<Task> act = async () =>
             {
-                await Controller.CorrectHomonymAddition(
+                await Controller.CorrectHomonymAdditions(
                     MockValidIfMatchValidator(),
                     MockPassingRequestValidator<CorrectStreetNameHomonymAdditionsRequest>(),
                     persistentLocalId,
@@ -109,7 +109,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameHomony
             var persistentLocalId = 123;
             Func<Task> act = async () =>
             {
-                await Controller.CorrectHomonymAddition(
+                await Controller.CorrectHomonymAdditions(
                     MockValidIfMatchValidator(),
                     MockPassingRequestValidator<CorrectStreetNameHomonymAdditionsRequest>(),
                     persistentLocalId,
@@ -131,7 +131,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameHomony
         [Fact]
         public async Task WithIfMatchHeaderValueMismatch_ThenReturnsPreconditionFailedResult()
         {
-            var result = await Controller.CorrectHomonymAddition(
+            var result = await Controller.CorrectHomonymAdditions(
                 MockValidIfMatchValidator(false),
                 MockPassingRequestValidator<CorrectStreetNameHomonymAdditionsRequest>(),
                 123,
