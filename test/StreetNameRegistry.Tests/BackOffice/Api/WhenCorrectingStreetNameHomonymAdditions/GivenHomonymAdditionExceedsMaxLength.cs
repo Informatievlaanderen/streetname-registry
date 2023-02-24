@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameHomony
         {
             Func<Task> act = async () =>
             {
-                await Controller.CorrectHomonymAddition(
+                await Controller.CorrectHomonymAdditions(
                     MockValidIfMatchValidator(),
                     new StreetNameCorrectHomonymAdditionsRequestValidator(),
                     123,
