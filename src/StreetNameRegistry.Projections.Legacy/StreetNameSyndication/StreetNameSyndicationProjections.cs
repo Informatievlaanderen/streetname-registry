@@ -341,6 +341,37 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 }, ct);
             });
 
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
+            {
+                await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
+                {
+                    UpdateHomonymAdditionByLanguage(streetNameNameV2, new HomonymAdditions(message.Message.HomonymAdditions));
+                }, ct);
+            });
+
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (context, message, ct) =>
+            {
+                await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
+                {
+                    foreach (var language in message.Message.Languages)
+                    {
+                        switch (language)
+                        {
+                            case Language.Dutch: streetNameNameV2.HomonymAdditionDutch = null;
+                                break;
+                            case Language.French: streetNameNameV2.HomonymAdditionFrench = null;
+                                break;
+                            case Language.German: streetNameNameV2.HomonymAdditionGerman = null;
+                                break;
+                            case Language.English: streetNameNameV2.HomonymAdditionEnglish = null;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
+                }, ct);
+            });
+
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {
                 var persistentLocalIds = context

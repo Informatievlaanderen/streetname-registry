@@ -92,6 +92,40 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }, ct);
             });
 
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                {
+                    UpdateHomoniemtv(x, new HomonymAdditions(message.Message.HomonymAdditions));
+                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                {
+                    foreach (var language in message.Message.Languages)
+                    {
+                        switch (language)
+                        {
+                            case Language.Dutch: x.HomonymDutch = null;
+                                break;
+                            case Language.French: x.HomonymFrench = null;
+                                break;
+                            case Language.German: x.HomonymGerman = null;
+                                break;
+                            case Language.English: x.HomonymEnglish = null;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
+                    
+                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
             {
                 var streetNameExtractItemV2 = new StreetNameExtractItemV2

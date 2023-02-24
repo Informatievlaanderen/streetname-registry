@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Xunit;
 
     public class IntegrationTests : IClassFixture<IntegrationTestFixture>
@@ -18,16 +19,18 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         }
 
         [Theory]
-        [InlineData("/v2/straatnamen/acties/voorstellen", "dv_ar_adres_beheer")]
-        [InlineData("/v2/straatnamen/1/acties/goedkeuren", "dv_ar_adres_beheer")]
-        [InlineData("/v2/straatnamen/1/acties/corrigeren/goedkeuring", "dv_ar_adres_beheer dv_ar_adres_uitzonderingen")]
-        [InlineData("/v2/straatnamen/1/acties/afkeuren", "dv_ar_adres_beheer")]
-        [InlineData("/v2/straatnamen/1/acties/corrigeren/afkeuring", "dv_ar_adres_beheer dv_ar_adres_uitzonderingen")]
-        [InlineData("/v2/straatnamen/1/acties/opheffen", "dv_ar_adres_beheer")]
-        [InlineData("/v2/straatnamen/1/acties/corrigeren/opheffing", "dv_ar_adres_beheer dv_ar_adres_uitzonderingen")]
-        [InlineData("/v2/straatnamen/1/acties/corrigeren/straatnaam", "dv_ar_adres_beheer")]
+        [InlineData("/v2/straatnamen/acties/voorstellen", Scopes.DvArAdresBeheer)]
+        [InlineData("/v2/straatnamen/1/acties/goedkeuren", Scopes.DvArAdresBeheer)]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/goedkeuring", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/homoniemtoevoeging", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
+        [InlineData("/v2/straatnamen/1/acties/afkeuren", Scopes.DvArAdresBeheer)]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/afkeuring", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
+        [InlineData("/v2/straatnamen/1/acties/opheffen", Scopes.DvArAdresBeheer)]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/opheffing", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/straatnaam", Scopes.DvArAdresBeheer)]
         public async Task ReturnsSuccess(string endpoint, string requiredScopes)
         {
+
             var client = _fixture.TestServer.CreateClient();
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", await _fixture.GetAccessToken(requiredScopes));
@@ -43,6 +46,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         [InlineData("/v2/straatnamen/acties/voorstellen")]
         [InlineData("/v2/straatnamen/1/acties/goedkeuren")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/goedkeuring")]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/homoniemtoevoeging")]
         [InlineData("/v2/straatnamen/1/acties/afkeuren")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/afkeuring")]
         [InlineData("/v2/straatnamen/1/acties/opheffen")]
@@ -62,6 +66,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         [InlineData("/v2/straatnamen/acties/voorstellen")]
         [InlineData("/v2/straatnamen/1/acties/goedkeuren")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/goedkeuring")]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/homoniemtoevoeging")]
         [InlineData("/v2/straatnamen/1/acties/afkeuren")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/afkeuring")]
         [InlineData("/v2/straatnamen/1/acties/opheffen")]

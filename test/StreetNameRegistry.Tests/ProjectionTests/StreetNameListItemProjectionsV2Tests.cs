@@ -132,6 +132,109 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         }
 
         [Fact]
+        public async Task WhenStreetNameHomonymAdditionsWereCorrected_ThenStreetNameHomonymAdditionsWereCorrected()
+        {
+            var importMunicipality =
+                new MunicipalityWasImported(_fixture.Create<MunicipalityId>(), new NisCode("1011"));
+            ((ISetProvenance)importMunicipality).SetProvenance(_fixture.Create<Provenance>());
+
+            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                _fixture.Create<MunicipalityId>(),
+                _fixture.Create<NisCode>(),
+                _fixture.Create<StreetNameId>(),
+                _fixture.Create<PersistentLocalId>(),
+                StreetNameStatus.Current,
+                Language.Dutch,
+                null,
+                new Names
+                {
+                    new StreetNameName("Bergstraat", Language.Dutch),
+                    new StreetNameName("Rue de la montagne", Language.French),
+                },
+                new HomonymAdditions(new[]
+                {
+                    new StreetNameHomonymAddition("ABC", Language.Dutch),
+                    new StreetNameHomonymAddition("XYZ", Language.French),
+                }),
+                true,
+                false);
+            ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(_fixture.Create<Provenance>());
+
+            var streetNameHomonymAdditionsWereCorrected = new StreetNameHomonymAdditionsWereCorrected(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasMigratedToMunicipality.PersistentLocalId),
+                new List<StreetNameHomonymAddition>
+                {
+                    new StreetNameHomonymAddition("DFG", Language.Dutch)
+                });
+            ((ISetProvenance)streetNameHomonymAdditionsWereCorrected).SetProvenance(_fixture.Create<Provenance>());
+
+            await Sut
+                .Given(
+                    importMunicipality,
+                    streetNameWasMigratedToMunicipality,
+                    streetNameHomonymAdditionsWereCorrected)
+                .Then(async ct =>
+                {
+                    var expectedStreetName = (await ct.FindAsync<StreetNameListItemV2>(streetNameWasMigratedToMunicipality.PersistentLocalId));
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName.VersionTimestamp.Should().Be(streetNameHomonymAdditionsWereCorrected.Provenance.Timestamp);
+                    expectedStreetName.HomonymAdditionDutch.Should().Be("DFG");
+                    expectedStreetName.HomonymAdditionFrench.Should().Be("XYZ");
+                });
+        }
+
+        [Fact]
+        public async Task WhenStreetNameHomonymAdditionsWereRemoved_ThenStreetNameHomonymAdditionsWereRemoved()
+        {
+            var importMunicipality =
+                new MunicipalityWasImported(_fixture.Create<MunicipalityId>(), new NisCode("1011"));
+            ((ISetProvenance)importMunicipality).SetProvenance(_fixture.Create<Provenance>());
+
+            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                _fixture.Create<MunicipalityId>(),
+                _fixture.Create<NisCode>(),
+                _fixture.Create<StreetNameId>(),
+                _fixture.Create<PersistentLocalId>(),
+                StreetNameStatus.Current,
+                Language.Dutch,
+                null,
+                new Names
+                {
+                    new StreetNameName("Bergstraat", Language.Dutch),
+                    new StreetNameName("Rue de la montagne", Language.French),
+                },
+                new HomonymAdditions(new[]
+                {
+                    new StreetNameHomonymAddition("ABC", Language.Dutch),
+                    new StreetNameHomonymAddition("XYZ", Language.French),
+                }),
+                true,
+                false);
+            ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(_fixture.Create<Provenance>());
+
+            var streetNameHomonymAdditionsWereRemoved = new StreetNameHomonymAdditionsWereRemoved(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasMigratedToMunicipality.PersistentLocalId),
+                new List<Language> {Language.Dutch} );
+            ((ISetProvenance)streetNameHomonymAdditionsWereRemoved).SetProvenance(_fixture.Create<Provenance>());
+
+            await Sut
+                .Given(
+                    importMunicipality,
+                    streetNameWasMigratedToMunicipality,
+                    streetNameHomonymAdditionsWereRemoved)
+                .Then(async ct =>
+                {
+                    var expectedStreetName = (await ct.FindAsync<StreetNameListItemV2>(streetNameWasMigratedToMunicipality.PersistentLocalId));
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName.VersionTimestamp.Should().Be(streetNameHomonymAdditionsWereRemoved.Provenance.Timestamp);
+                    expectedStreetName.HomonymAdditionDutch.Should().BeNull();
+                    expectedStreetName.HomonymAdditionFrench.Should().Be("XYZ");
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameWasRejected_ThenStreetNameStatusWasChangedToRejected()
         {
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));

@@ -223,6 +223,16 @@ namespace StreetNameRegistry.Producer
             {
                 await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position, ct);
             });
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameHomonymAdditionsWereCorrected>>(async (_, message, ct) =>
+            {
+                await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position, ct);
+            });
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameHomonymAdditionsWereRemoved>>(async (_, message, ct) =>
+            {
+                await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position, ct);
+            });
         }
 
         private async Task Produce<T>(
