@@ -1,3 +1,10 @@
+# [3.21.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.20.0...v3.21.0) (2023-02-24)
+
+
+### Features
+
+* correct homonymadditons api & lambda ([e451655](https://github.com/informatievlaanderen/streetname-registry/commit/e451655a9ff4c7f97704b1e43ede007a708ea8ca))
+
 # [3.20.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.19.3...v3.20.0) (2023-02-24)
 
 
