@@ -1,3 +1,16 @@
+# [3.20.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.19.3...v3.20.0) (2023-02-24)
+
+
+### Bug Fixes
+
+* consumer should commit if message is already processed ([7690d91](https://github.com/informatievlaanderen/streetname-registry/commit/7690d91f38578db1d5789fcd6ada696d68bc80fe))
+* remove valueobject from events ([a8257e5](https://github.com/informatievlaanderen/streetname-registry/commit/a8257e5ae7a606b16363593ff0c7163be7470923))
+
+
+### Features
+
+* correct streetname homonymadditions ([ab04c35](https://github.com/informatievlaanderen/streetname-registry/commit/ab04c35bbf228d307069f4ebc1538c465a9974c3))
+
 ## [3.19.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.19.2...v3.19.3) (2023-02-17)
 
 
