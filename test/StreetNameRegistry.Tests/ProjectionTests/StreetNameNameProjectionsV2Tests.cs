@@ -300,6 +300,54 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 });
         }
 
+        [Fact]
+        public async Task WhenStreetNameHomonymAdditionsWereCorrected_ThenUpdateVersion()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+            var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
+
+            var @event = new StreetNameHomonymAdditionsWereCorrected(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId),
+                new List<StreetNameHomonymAddition>());
+            ((ISetProvenance)@event).SetProvenance(_fixture.Create<Provenance>());
+
+            await Sut
+                .Given(
+                    streetNameWasProposedV2,
+                    @event)
+                .Then(async ct =>
+                {
+                    var expectedStreetName = await ct.FindAsync<StreetNameNameV2>(streetNameWasProposedV2.PersistentLocalId);
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName.VersionTimestamp.Should().Be(@event.Provenance.Timestamp);
+                });
+        }
+
+        [Fact]
+        public async Task WhenStreetNameHomonymAdditionsWereRemoved_ThenUpdateVersion()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+            var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
+
+            var @event = new StreetNameHomonymAdditionsWereRemoved(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId),
+                new List<Language>());
+            ((ISetProvenance)@event).SetProvenance(_fixture.Create<Provenance>());
+
+            await Sut
+                .Given(
+                    streetNameWasProposedV2,
+                    @event)
+                .Then(async ct =>
+                {
+                    var expectedStreetName = await ct.FindAsync<StreetNameNameV2>(streetNameWasProposedV2.PersistentLocalId);
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName.VersionTimestamp.Should().Be(@event.Provenance.Timestamp);
+                });
+        }
+
         private static string? DetermineExpectedNameForLanguage(IDictionary<Language, string> streetNameNames, Language language)
             => streetNameNames.ContainsKey(language) ? streetNameNames[language] : null;
     }
