@@ -1,3 +1,13 @@
+## [3.21.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.21.0...v3.21.1) (2023-02-27)
+
+
+### Bug Fixes
+
+* bump basisregisters-sqs ([647a906](https://github.com/informatievlaanderen/streetname-registry/commit/647a906e2706e4d84d4cad746d72e1346efd441e))
+* bump grar common to 18.1.1 ([a57da16](https://github.com/informatievlaanderen/streetname-registry/commit/a57da16720f22f7d8eb56f69adead0e25a7d2bb5))
+* bump MediatR ([eb41590](https://github.com/informatievlaanderen/streetname-registry/commit/eb41590d26bacaa7e71911e83d1577830319145f))
+* remove ServiceFactory delegate ([5a1a226](https://github.com/informatievlaanderen/streetname-registry/commit/5a1a22622cadb002a98069097a3eec9e1b832145))
+
 # [3.21.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.20.0...v3.21.0) (2023-02-24)
 
 
