@@ -121,58 +121,29 @@ namespace StreetNameRegistry.Municipality
             StreetNames.Add(streetName);
         }
 
-        private void When(StreetNameWasApproved @event)
-        {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
-        }
+        private void When(StreetNameWasApproved @event) => RouteToStreetName(@event);
 
-        private void When(StreetNameWasRejected @event)
-        {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
-        }
+        private void When(StreetNameWasRejected @event) => RouteToStreetName(@event);
 
-        private void When(StreetNameWasRetiredV2 @event)
-        {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
-        }
+        private void When(StreetNameWasRetiredV2 @event) => RouteToStreetName(@event);
 
-        private void When(StreetNameNamesWereCorrected @event)
-        {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
-        }
+        private void When(StreetNameNamesWereCorrected @event) => RouteToStreetName(@event);
 
-        private void When(StreetNameWasCorrectedFromApprovedToProposed @event)
-        {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
-        }
+        private void When(StreetNameWasCorrectedFromApprovedToProposed @event) => RouteToStreetName(@event);
 
-        private void When(StreetNameWasCorrectedFromRejectedToProposed @event)
-        {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
-        }
+        private void When(StreetNameWasCorrectedFromRejectedToProposed @event) => RouteToStreetName(@event);
 
-        private void When(StreetNameWasCorrectedFromRetiredToCurrent @event)
-        {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
-        }
+        private void When(StreetNameWasCorrectedFromRetiredToCurrent @event) => RouteToStreetName(@event);
 
-        private void When(StreetNameHomonymAdditionsWereCorrected @event)
-        {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
-        }
+        private void When(StreetNameHomonymAdditionsWereCorrected @event) => RouteToStreetName(@event);
 
-        private void When(StreetNameHomonymAdditionsWereRemoved @event)
+        private void When(StreetNameHomonymAdditionsWereRemoved @event) => RouteToStreetName(@event);
+
+        private void RouteToStreetName<TEvent>(TEvent @event) where TEvent : IHasPersistentLocalId, IMunicipalityEvent
         {
-            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
-            streetName.Route(@event);
+            StreetNames
+                .GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId))
+                .Route(@event);
         }
 
         private void When(MunicipalitySnapshot @event)

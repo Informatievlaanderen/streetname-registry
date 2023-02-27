@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventTags(EventTag.For.Sync, EventTag.For.Edit)]
     [EventName(EventName)]
     [EventDescription("De homoniemtoevoegingen van de straatnaam (in een bepaalde taal) werd(en) verwijderd.")]
-    public sealed class StreetNameHomonymAdditionsWereRemoved : IMunicipalityEvent
+    public sealed class StreetNameHomonymAdditionsWereRemoved : IMunicipalityEvent, IHasPersistentLocalId
     {
         public const string EventName = "StreetNameHomonymAdditionsWereRemoved"; // BE CAREFUL CHANGING THIS!!
 
