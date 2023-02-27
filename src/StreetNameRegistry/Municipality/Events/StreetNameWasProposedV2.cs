@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventTags(EventTag.For.Sync, EventTag.For.Edit)]
     [EventName(EventName)]
     [EventDescription("De straatnaam werd voorgesteld.")]
-    public sealed class StreetNameWasProposedV2 : IMunicipalityEvent
+    public sealed class StreetNameWasProposedV2 : IMunicipalityEvent, IHasPersistentLocalId
     {
         public const string EventName = "StreetNameWasProposedV2"; // BE CAREFUL CHANGING THIS!!
 

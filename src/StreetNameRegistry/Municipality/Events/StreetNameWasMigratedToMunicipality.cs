@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventTags(EventTag.For.Sync, Tag.Migration)]
     [EventName(EventName)]
     [EventDescription("De straatnaam werd gemigreerd naar gemeente.")]
-    public sealed class StreetNameWasMigratedToMunicipality : IMunicipalityEvent
+    public sealed class StreetNameWasMigratedToMunicipality : IMunicipalityEvent, IHasPersistentLocalId
     {
         public const string EventName = "StreetNameWasMigratedToMunicipality"; // BE CAREFUL CHANGING THIS!!
 
@@ -40,7 +40,7 @@ namespace StreetNameRegistry.Municipality.Events
         public bool IsRemoved { get; }
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
-        
+
         public StreetNameWasMigratedToMunicipality(
             MunicipalityId municipalityId,
             NisCode nisCode,

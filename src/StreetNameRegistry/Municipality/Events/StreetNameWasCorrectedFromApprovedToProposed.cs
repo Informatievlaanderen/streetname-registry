@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventTags(EventTag.For.Sync, EventTag.For.Edit)]
     [EventName(EventName)]
     [EventDescription("De straatnaam met status inGebruik werd gecorrigeerd naar status voorgesteld.")]
-    public sealed class StreetNameWasCorrectedFromApprovedToProposed : IMunicipalityEvent
+    public sealed class StreetNameWasCorrectedFromApprovedToProposed : IMunicipalityEvent, IHasPersistentLocalId
     {
         public const string EventName = "StreetNameWasCorrectedFromApprovedToProposed"; // BE CAREFUL CHANGING THIS!!
 
