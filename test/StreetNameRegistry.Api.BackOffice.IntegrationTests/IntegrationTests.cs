@@ -30,10 +30,8 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         [InlineData("/v2/straatnamen/1/acties/corrigeren/straatnaam", Scopes.DvArAdresBeheer)]
         public async Task ReturnsSuccess(string endpoint, string requiredScopes)
         {
-
             var client = _fixture.TestServer.CreateClient();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", await _fixture.GetAccessToken(requiredScopes));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await _fixture.GetAccessToken(requiredScopes));
 
             var response = await client.PostAsync(endpoint,
                 new StringContent("{}", Encoding.UTF8, "application/json"), CancellationToken.None);
