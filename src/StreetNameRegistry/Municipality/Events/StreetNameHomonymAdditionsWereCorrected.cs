@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventTags(EventTag.For.Sync, EventTag.For.Edit)]
     [EventName(EventName)]
     [EventDescription("De homoniemtoevoegingen van de straatnaam (in een bepaalde taal) werd(en) gecorrigeerd.")]
-    public sealed class StreetNameHomonymAdditionsWereCorrected : IMunicipalityEvent
+    public sealed class StreetNameHomonymAdditionsWereCorrected : IMunicipalityEvent, IHasPersistentLocalId
     {
         public const string EventName = "StreetNameHomonymAdditionsWereCorrected"; // BE CAREFUL CHANGING THIS!!
 
