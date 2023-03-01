@@ -132,15 +132,18 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Detail
 
     public class StreetNameNotFoundResponseExamples : IExamplesProvider<ProblemDetails>
     {
+        protected string ApiVersion { get; }
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ProblemDetailsHelper _problemDetailsHelper;
 
         public StreetNameNotFoundResponseExamples(
             IHttpContextAccessor httpContextAccessor,
-            ProblemDetailsHelper problemDetailsHelper)
+            ProblemDetailsHelper problemDetailsHelper,
+            string apiVersion = "v1")
         {
             _httpContextAccessor = httpContextAccessor;
             _problemDetailsHelper = problemDetailsHelper;
+            ApiVersion = apiVersion;
         }
 
         public ProblemDetails GetExamples()
@@ -157,20 +160,31 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Detail
                 HttpStatus = StatusCodes.Status404NotFound,
                 Title = ProblemDetails.DefaultTitle,
                 Detail = "Onbestaande straatnaam.",
-                ProblemInstanceUri = _problemDetailsHelper.GetInstanceUri(httpContext)
+                ProblemInstanceUri = _problemDetailsHelper.GetInstanceUri(httpContext, ApiVersion)
             };
         }
     }
 
+    public class StreetNameNotFoundResponseExamplesV2 : StreetNameNotFoundResponseExamples
+    {
+        public StreetNameNotFoundResponseExamplesV2(
+            IHttpContextAccessor httpContextAccessor,
+            ProblemDetailsHelper problemDetailsHelper) : base(httpContextAccessor, problemDetailsHelper, "v2")
+        { }
+    }
+
     public class StreetNameGoneResponseExamples : IExamplesProvider<ProblemDetails>
     {
+        protected string ApiVersion { get; }
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ProblemDetailsHelper _problemDetailsHelper;
 
         public StreetNameGoneResponseExamples(
             IHttpContextAccessor httpContextAccessor,
-            ProblemDetailsHelper problemDetailsHelper)
+            ProblemDetailsHelper problemDetailsHelper,
+            string apiVersion = "v1")
         {
+            ApiVersion = apiVersion;
             _httpContextAccessor = httpContextAccessor;
             _problemDetailsHelper = problemDetailsHelper;
         }
@@ -189,8 +203,16 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Detail
                 HttpStatus = StatusCodes.Status410Gone,
                 Title = ProblemDetails.DefaultTitle,
                 Detail = "Verwijderde straatnaam.",
-                ProblemInstanceUri = _problemDetailsHelper.GetInstanceUri(httpContext)
+                ProblemInstanceUri = _problemDetailsHelper.GetInstanceUri(httpContext, ApiVersion)
             };
         }
+    }
+
+    public class StreetNameGoneResponseExamplesV2 : StreetNameGoneResponseExamples
+    {
+        public StreetNameGoneResponseExamplesV2(
+            IHttpContextAccessor httpContextAccessor,
+            ProblemDetailsHelper problemDetailsHelper) : base(httpContextAccessor, problemDetailsHelper, "v2")
+        { }
     }
 }
