@@ -1,3 +1,10 @@
+## [3.22.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.22.0...v3.22.1) (2023-03-01)
+
+
+### Bug Fixes
+
+* response examples ([b220b6f](https://github.com/informatievlaanderen/streetname-registry/commit/b220b6f62e6f825421ad14dbd5b42bc6d2f646e5))
+
 # [3.22.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.21.1...v3.22.0) (2023-03-01)
 
 
