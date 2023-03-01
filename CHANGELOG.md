@@ -1,3 +1,15 @@
+# [3.22.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.21.1...v3.22.0) (2023-03-01)
+
+
+### Bug Fixes
+
+* no merge group for ksql ([839db65](https://github.com/informatievlaanderen/streetname-registry/commit/839db653199f69c348bed55b8f5d4c01ef0700d0))
+
+
+### Features
+
+* add v2 examples ([e1c487a](https://github.com/informatievlaanderen/streetname-registry/commit/e1c487ad545ee72a9882690af1a8445746f46a7d))
+
 ## [3.21.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.21.0...v3.21.1) (2023-02-27)
 
 
