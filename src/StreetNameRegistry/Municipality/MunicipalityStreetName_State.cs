@@ -40,6 +40,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasCorrectedFromRetiredToCurrent>(When);
             Register<StreetNameHomonymAdditionsWereCorrected>(When);
             Register<StreetNameHomonymAdditionsWereRemoved>(When);
+            Register<StreetNameWasRemovedV2>(When);
         }
 
         private void When(StreetNameWasMigratedToMunicipality @event)
@@ -125,6 +126,13 @@ namespace StreetNameRegistry.Municipality
             {
                 HomonymAdditions.Remove(language);
             }
+
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameWasRemovedV2 @event)
+        {
+            IsRemoved = true;
 
             _lastEvent = @event;
         }

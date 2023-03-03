@@ -48,6 +48,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasCorrectedFromRetiredToCurrent>(When);
             Register<StreetNameHomonymAdditionsWereCorrected>(When);
             Register<StreetNameHomonymAdditionsWereRemoved>(When);
+            Register<StreetNameWasRemovedV2>(When);
 
             Register<MunicipalitySnapshot>(When);
         }
@@ -138,6 +139,8 @@ namespace StreetNameRegistry.Municipality
         private void When(StreetNameHomonymAdditionsWereCorrected @event) => RouteToStreetName(@event);
 
         private void When(StreetNameHomonymAdditionsWereRemoved @event) => RouteToStreetName(@event);
+
+        private void When(StreetNameWasRemovedV2 @event) => RouteToStreetName(@event);
 
         private void RouteToStreetName<TEvent>(TEvent @event) where TEvent : IHasPersistentLocalId, IMunicipalityEvent
         {

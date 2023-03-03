@@ -159,6 +159,18 @@ namespace StreetNameRegistry.Municipality
                 .RemoveHomonymAdditions(languages, GuardUniqueActiveStreetNameNames);
         }
 
+        public void RemoveStreetName(PersistentLocalId persistentLocalId)
+        {
+            var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
+
+            if (streetName.IsRemoved)
+            {
+                return;
+            }
+
+            ApplyChange(new StreetNameWasRemovedV2(_municipalityId, streetName.PersistentLocalId));
+        }
+
         private void GuardUniqueActiveStreetNameNames(Names streetNameNames, HomonymAdditions homonymAdditions, PersistentLocalId persistentLocalId)
         {
             var namesWithActiveStreetNameName = streetNameNames

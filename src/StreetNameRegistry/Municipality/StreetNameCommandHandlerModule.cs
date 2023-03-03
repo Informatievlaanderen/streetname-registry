@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Municipality
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Pipes;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Commands;
+    using Events;
     using SqlStreamStore;
 
     public sealed class StreetNameCommandHandlerModule : CommandHandlerModule
@@ -143,6 +144,16 @@ namespace StreetNameRegistry.Municipality
                             message.Command.PersistentLocalId,
                             message.Command.HomonymAdditionsToRemove);
                     }
+                });
+
+            For<RemoveStreetName>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<RemoveStreetName, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.RemoveStreetName(message.Command.PersistentLocalId);
                 });
         }
     }
