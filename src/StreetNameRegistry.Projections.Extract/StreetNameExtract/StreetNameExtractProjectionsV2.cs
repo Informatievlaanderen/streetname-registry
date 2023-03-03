@@ -177,6 +177,15 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     .AddAsync(streetNameExtractItemV2, ct);
             });
 
+            When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                {
+                    UpdateRecord(x, record => record.IsDeleted = true);
+                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {
                 var streetNames = context

@@ -114,7 +114,8 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure.Modules
                                 c.Resolve<IOsloProxy>(),
                                 SnapshotManagerOptions.Create(
                                     _configuration["RetryPolicy:MaxRetryWaitIntervalSeconds"],
-                                    _configuration["RetryPolicy:RetryBackoffFactor"])));
+                                    _configuration["RetryPolicy:RetryBackoffFactor"])),
+                            _configuration["OsloNamespace"]);
                     },
                     connectedProjectionSettings);
         }

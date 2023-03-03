@@ -30,7 +30,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
         /// <summary>
         /// Map to command
         /// </summary>
-        /// <returns>ApproveStreetName.</returns>
+        /// <returns>RemoveStreetName.</returns>
         public RemoveStreetName ToCommand()
         {
             return new RemoveStreetName(this.MunicipalityPersistentLocalId(), new PersistentLocalId(StreetNamePersistentLocalId), Provenance);

@@ -10,7 +10,6 @@ namespace StreetNameRegistry.Municipality
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Pipes;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Commands;
-    using Events;
     using SqlStreamStore;
 
     public sealed class StreetNameCommandHandlerModule : CommandHandlerModule

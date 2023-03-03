@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
     using Municipality;
     using Municipality.Events;
     using NodaTime;
+    using StreetName.Events;
 
     [ConnectedProjectionName("API endpoint straatnamen ifv BOSA DT")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor straatnamen ifv BOSA DT voorziet.")]
@@ -150,6 +151,15 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
                 }
 
                 await Task.Yield();
+            });
+
+            When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameName(message.Message.PersistentLocalId, streetNameNameV2 =>
+                {
+                    streetNameNameV2.Removed = true;
+                    UpdateVersionTimestamp(streetNameNameV2, message.Message.Provenance.Timestamp);
+                }, ct);
             });
         }
 

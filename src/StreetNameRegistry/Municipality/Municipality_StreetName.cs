@@ -163,11 +163,6 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
 
-            if (streetName is null)
-            {
-                throw new StreetNameIsNotFoundException(persistentLocalId);
-            }
-
             if (streetName.IsRemoved)
             {
                 return;

@@ -167,5 +167,8 @@ namespace StreetNameRegistry.Producer.Extensions
                 message.PersistentLocalId,
                 message.Languages.Select(x => x.ToString()).ToList(),
                 message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasRemovedV2 ToContract(this StreetNameWasRemovedV2 message) =>
+            new Contracts.StreetNameWasRemovedV2(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
     }
 }
