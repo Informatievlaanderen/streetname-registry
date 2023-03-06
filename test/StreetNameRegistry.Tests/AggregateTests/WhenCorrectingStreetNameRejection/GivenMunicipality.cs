@@ -174,14 +174,15 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameReject
             var streetNameName = Fixture.Create<StreetNameName>();
             Fixture.Register(() => new Names { streetNameName });
 
-            var command = Fixture.Create<CorrectStreetNameRejection>();
+            var command = Fixture.Create<CorrectStreetNameRejection>()
+                .WithPersistentLocalId(new PersistentLocalId(1));
 
             Assert(new Scenario()
                 .Given(_streamId,
                     Fixture.Create<MunicipalityBecameCurrent>(),
-                    Fixture.Create<StreetNameWasProposedV2>(),
-                    Fixture.Create<StreetNameWasRejected>(),
-                    Fixture.Create<StreetNameWasProposedV2>().WithPersistentLocalId(new PersistentLocalId(1)))
+                    Fixture.Create<StreetNameWasProposedV2>().WithPersistentLocalId(new PersistentLocalId(1)),
+                    Fixture.Create<StreetNameWasRejected>().WithPersistentLocalId(new PersistentLocalId(1)),
+                    Fixture.Create<StreetNameWasProposedV2>().WithPersistentLocalId(new PersistentLocalId(2)))
                 .When(command)
                 .Throws(new StreetNameNameAlreadyExistsException(streetNameName.Name)));
         }
