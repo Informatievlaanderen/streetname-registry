@@ -245,6 +245,16 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     streetName.NisCode = message.Message.NisCode;
                 }
             });
+
+            When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.PersistentLocalId, streetNameListItemV2 =>
+                    {
+                        streetNameListItemV2.Removed = true;
+                        UpdateVersionTimestamp(streetNameListItemV2, message.Message.Provenance.Timestamp);
+                    }, ct);
+            });
         }
 
         private static void UpdateNameByLanguage(StreetNameListItemV2 entity, IDictionary<Language, string> streetNameNames)

@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
 
         private readonly IProducer _producer;
 
-        public ProducerProjections(IProducer producer, ISnapshotManager snapshotManager)
+        public ProducerProjections(IProducer producer, ISnapshotManager snapshotManager, string osloNamespace)
         {
             _producer = producer;
 
@@ -165,10 +165,10 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
                     ct);
             });
 
-            //When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameWasRemovedV2>>(async (_, message, ct) =>
-            //{
-            //    await Produce($"{osloNamespace}/{message.Message.PersistentLocalId}", "{}", ct);
-            //});
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameWasRemovedV2>>(async (_, message, ct) =>
+            {
+                await Produce($"{osloNamespace}/{message.Message.PersistentLocalId}", "{}", message.Position, ct);
+            });
         }
 
         private async Task FindAndProduce(

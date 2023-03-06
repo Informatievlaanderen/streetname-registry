@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Tests.Testing
 {
     using System.Collections.Generic;
     using Autofac;
+    using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore.Autofac;
     using Be.Vlaanderen.Basisregisters.EventHandling;
@@ -17,12 +18,13 @@ namespace StreetNameRegistry.Tests.Testing
     {
         protected Fixture Fixture { get; }
         protected string ConfigDetailUrl => "http://base/{0}";
-        
+
         protected JsonSerializerSettings EventSerializerSettings { get; } = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
 
         protected StreetNameRegistryTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture = new Fixture();
+            Fixture.Customize(new InfrastructureCustomization());
             Fixture.Register(() => (ISnapshotStrategy)NoSnapshotStrategy.Instance);
         }
 

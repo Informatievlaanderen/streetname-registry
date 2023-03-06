@@ -162,6 +162,15 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
                     UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
                 }, ct);
             });
+
+            When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
+                {
+                    streetNameHelperV2.Removed = true;
+                    UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
         }
 
         private static void UpdateNameByLanguage(StreetNameHelperV2 entity, IDictionary<Language, string> streetNameNames)

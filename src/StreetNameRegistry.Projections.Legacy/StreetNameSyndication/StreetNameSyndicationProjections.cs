@@ -393,6 +393,11 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                     }, ct);
                 }
             });
+
+            When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
+            {
+                await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 => { }, ct);
+            });
         }
 
         private static void UpdateNameByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, string? name, Language? language)

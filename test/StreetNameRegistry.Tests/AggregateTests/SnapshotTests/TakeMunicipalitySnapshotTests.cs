@@ -532,5 +532,42 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     nameWasCorrectedFromRetiredToCurrent.Provenance)
             });
         }
+
+        [Fact]
+        public void StreetNameWasRemovedIsSavedInSnapshot()
+        {
+            var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();
+
+            var streetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasApproved = Fixture.Create<StreetNameWasApproved>();
+            var streetNameWasRemovedV2 = Fixture.Create<StreetNameWasRemovedV2>();
+            ((ISetProvenance)streetNameWasRemovedV2).SetProvenance(Fixture.Create<Provenance>());
+
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>(),
+                streetNameWasProposedV2,
+                streetNameWasApproved,
+                streetNameWasRemovedV2
+            });
+
+            var snapshot = aggregate.TakeSnapshot();
+
+            snapshot.Should().BeOfType<MunicipalitySnapshot>();
+            var municipalitySnapshot = (MunicipalitySnapshot)snapshot;
+
+            municipalitySnapshot.StreetNames.Should().BeEquivalentTo(new List<StreetNameData>
+            {
+                new StreetNameData(
+                    new PersistentLocalId(streetNameWasRemovedV2.PersistentLocalId),
+                    StreetNameStatus.Current,
+                    new Names(streetNameWasProposedV2.StreetNameNames),
+                    new HomonymAdditions(),
+                    true,
+                    null,
+                    streetNameWasRemovedV2.GetHash(),
+                    streetNameWasRemovedV2.Provenance)
+            });
+        }
     }
 }

@@ -144,6 +144,16 @@ namespace StreetNameRegistry.Municipality
                             message.Command.HomonymAdditionsToRemove);
                     }
                 });
+
+            For<RemoveStreetName>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<RemoveStreetName, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.RemoveStreetName(message.Command.PersistentLocalId);
+                });
         }
     }
 }
