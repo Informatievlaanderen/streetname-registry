@@ -1,3 +1,11 @@
+# [3.23.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.22.1...v3.23.0) (2023-03-06)
+
+
+### Features
+
+* add CorrectStreetNameHomonymAdditionsRequest examples ([e8689a3](https://github.com/informatievlaanderen/streetname-registry/commit/e8689a3513d9b34191daef72343893d43e209fe8))
+* remove streetname v2 ([974bed0](https://github.com/informatievlaanderen/streetname-registry/commit/974bed0cab79128f8e3ee97e562be92a744e0e29))
+
 ## [3.22.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.22.0...v3.22.1) (2023-03-01)
 
 
