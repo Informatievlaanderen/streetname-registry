@@ -43,7 +43,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
 
         public async Task InitializeAsync()
         {
-            _ = DockerComposer.Compose("sqlserver.yml", "streetname-integration-tests");
+            using var _ = DockerComposer.Compose("sqlserver.yml", "streetname-integration-tests");
             await WaitForSqlServerToBecomeAvailable();
 
             await CreateDatabase();
