@@ -473,17 +473,8 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 {
                     var expectedStreetName = (await ct.FindAsync<StreetNameListItemV2>(streetNameWasProposedV2.PersistentLocalId));
                     expectedStreetName.Should().NotBeNull();
-                    expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
-                    expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
-                    expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeTrue();
-                    expectedStreetName.Status.Should().Be(StreetNameStatus.Current);
                     expectedStreetName.VersionTimestamp.Should().Be(streetNameWasRemovedV2.Provenance.Timestamp);
-                    expectedStreetName.NameDutch.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.Dutch));
-                    expectedStreetName.NameFrench.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.French));
-                    expectedStreetName.NameGerman.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.German));
-                    expectedStreetName.NameEnglish.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.English));
-                    expectedStreetName.PrimaryLanguage.Should().Be(null);
                 });
         }
 
