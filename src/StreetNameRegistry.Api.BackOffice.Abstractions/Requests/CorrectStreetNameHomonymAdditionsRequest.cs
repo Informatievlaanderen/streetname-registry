@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     public sealed class CorrectStreetNameHomonymAdditionsRequest
     {
         /// <summary>
-        /// De homoniemtoevoegingen in de officiële taal en faciliteitentaal van de gemeente.
+        /// De homoniemtoevoeging in elke officiële taal en faciliteitentaal van de gemeente.
         /// </summary>
         [DataMember(Name = "Homoniemtoevoegingen", Order = 1)]
         [JsonProperty(Required = Required.Always)]
