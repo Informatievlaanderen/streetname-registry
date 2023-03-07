@@ -1,3 +1,10 @@
+## [3.23.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.23.0...v3.23.1) (2023-03-07)
+
+
+### Bug Fixes
+
+* make producer reliable ([08c6287](https://github.com/informatievlaanderen/streetname-registry/commit/08c6287d82e662e7d929a1d97a51abc439488097))
+
 # [3.23.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.22.1...v3.23.0) (2023-03-06)
 
 
