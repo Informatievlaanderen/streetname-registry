@@ -35,6 +35,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasRejected>(When);
             Register<StreetNameWasRetiredV2>(When);
             Register<StreetNameNamesWereCorrected>(When);
+            Register<StreetNameNamesWereChanged>(When);
             Register<StreetNameWasCorrectedFromApprovedToProposed>(When);
             Register<StreetNameWasCorrectedFromRejectedToProposed>(When);
             Register<StreetNameWasCorrectedFromRetiredToCurrent>(When);
@@ -84,6 +85,15 @@ namespace StreetNameRegistry.Municipality
         }
 
         private void When(StreetNameNamesWereCorrected @event)
+        {
+            foreach (var (language, name) in @event.StreetNameNames)
+            {
+                Names.AddOrUpdate(language, name);
+            }
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameNamesWereChanged @event)
         {
             foreach (var (language, name) in @event.StreetNameNames)
             {
