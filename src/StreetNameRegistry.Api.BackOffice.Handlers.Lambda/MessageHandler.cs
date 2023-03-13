@@ -45,6 +45,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
                     await mediator.Send(new CorrectStreetNameNamesLambdaRequest(messageMetadata.MessageGroupId!, request), cancellationToken);
                     break;
 
+                case ChangeStreetNameNamesSqsRequest request:
+                    await mediator.Send(new ChangeStreetNameNamesLambdaRequest(messageMetadata.MessageGroupId!, request), cancellationToken);
+                    break;
+
                 case ProposeStreetNameSqsRequest request:
                     await mediator.Send(new ProposeStreetNameLambdaRequest(messageMetadata.MessageGroupId!, request), cancellationToken);
                     break;
