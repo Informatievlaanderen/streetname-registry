@@ -495,6 +495,46 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
         }
 
         [Fact]
+        public void StreetNameNamesWereChangedIsSavedInSnapshot()
+        {
+            var names = new Names(new[] { new StreetNameName("Kapelstraat", Language.Dutch) });
+            var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();
+
+            var streetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasApproved = Fixture.Create<StreetNameWasApproved>();
+            var streetNameNamesWereChanged = new StreetNameNamesWereChanged(
+                Fixture.Create<MunicipalityId>(),
+                Fixture.Create<PersistentLocalId>(), names);
+            ((ISetProvenance)streetNameNamesWereChanged).SetProvenance(Fixture.Create<Provenance>());
+
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>(),
+                streetNameWasProposedV2,
+                streetNameWasApproved,
+                streetNameNamesWereChanged
+            });
+
+            var snapshot = aggregate.TakeSnapshot();
+
+            snapshot.Should().BeOfType<MunicipalitySnapshot>();
+            var municipalitySnapshot = (MunicipalitySnapshot)snapshot;
+
+            municipalitySnapshot.StreetNames.Should().BeEquivalentTo(new List<StreetNameData>
+            {
+                new StreetNameData(
+                    new PersistentLocalId(streetNameNamesWereChanged.PersistentLocalId),
+                    StreetNameStatus.Current,
+                    names,
+                    new HomonymAdditions(),
+                    false,
+                    null,
+                    streetNameNamesWereChanged.GetHash(),
+                    streetNameNamesWereChanged.Provenance)
+            });
+        }
+
+        [Fact]
         public void StreetNameWasCorrectedFromRetiredToCurrentIsSavedInSnapshot()
         {
             var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();

@@ -130,6 +130,15 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
                 }, ct);
             });
 
+            When<Envelope<StreetNameNamesWereChanged>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
+                {
+                    UpdateNameByLanguage(streetNameHelperV2, message.Message.StreetNameNames);
+                    UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>

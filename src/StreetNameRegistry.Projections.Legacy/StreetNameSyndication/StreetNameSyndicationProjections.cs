@@ -341,6 +341,14 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 }, ct);
             });
 
+            When<Envelope<StreetNameNamesWereChanged>>(async (context, message, ct) =>
+            {
+                await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
+                {
+                    UpdateNameByLanguage(streetNameNameV2, message.Message.StreetNameNames);
+                }, ct);
+            });
+
             When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
             {
                 await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
