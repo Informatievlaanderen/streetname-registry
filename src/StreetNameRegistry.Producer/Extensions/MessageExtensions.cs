@@ -154,6 +154,13 @@ namespace StreetNameRegistry.Producer.Extensions
                 message.StreetNameNames.ToDictionary(x => x.Key.ToString(), x => x.Value),
                 message.Provenance.ToContract());
 
+        public static Contracts.StreetNameNamesWereChanged ToContract(this StreetNameNamesWereChanged message) =>
+            new Contracts.StreetNameNamesWereChanged(
+                message.MunicipalityId.ToString("D"),
+                message.PersistentLocalId,
+                message.StreetNameNames.ToDictionary(x => x.Key.ToString(), x => x.Value),
+                message.Provenance.ToContract());
+
         public static Contracts.StreetNameHomonymAdditionsWereCorrected ToContract(
             this StreetNameHomonymAdditionsWereCorrected message) =>
             new Contracts.StreetNameHomonymAdditionsWereCorrected(message.MunicipalityId.ToString("D"),

@@ -388,6 +388,57 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 });
         }
 
+        [Fact]
+        public async Task WhenStreetNameNamesWereChanged_ThenStreetNameNamesWereChanged()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+            var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
+
+            var metadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, streetNameWasProposedV2.GetHash() }
+            };
+
+            var streetNameNamesWereChanged = new StreetNameNamesWereChanged(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId),
+                new Names(
+                    new []
+                    {
+                        new StreetNameName("Kapelstraat", Language.Dutch),
+                        new StreetNameName("Rue de la chapelle", Language.French),
+                        new StreetNameName("Kapellenstraate", Language.German),
+                        new StreetNameName("Chapel street", Language.English)
+                    }));
+
+            ((ISetProvenance)streetNameNamesWereChanged).SetProvenance(_fixture.Create<Provenance>());
+            var streetNameNamesWereCorrectedMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, streetNameNamesWereChanged.GetHash() }
+            };
+
+            await Sut
+                .Given(
+                    new Envelope<StreetNameWasProposedV2>(new Envelope(streetNameWasProposedV2, metadata)),
+                    new Envelope<StreetNameNamesWereChanged>(new Envelope(streetNameNamesWereChanged, streetNameNamesWereCorrectedMetadata)))
+                .Then(async ct =>
+                {
+                    var expectedStreetName = (await ct.FindAsync<StreetNameDetailV2>(streetNameWasProposedV2.PersistentLocalId));
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
+                    expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
+                    expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
+                    expectedStreetName.Removed.Should().BeFalse();
+                    expectedStreetName.Status.Should().Be(StreetNameStatus.Proposed);
+                    expectedStreetName.VersionTimestamp.Should().Be(streetNameNamesWereChanged.Provenance.Timestamp);
+                    expectedStreetName.NameDutch.Should().Be(DetermineExpectedNameForLanguage(streetNameNamesWereChanged.StreetNameNames, Language.Dutch));
+                    expectedStreetName.NameFrench.Should().Be(DetermineExpectedNameForLanguage(streetNameNamesWereChanged.StreetNameNames, Language.French));
+                    expectedStreetName.NameGerman.Should().Be(DetermineExpectedNameForLanguage(streetNameNamesWereChanged.StreetNameNames, Language.German));
+                    expectedStreetName.NameEnglish.Should().Be(DetermineExpectedNameForLanguage(streetNameNamesWereChanged.StreetNameNames, Language.English));
+                    expectedStreetName.LastEventHash.Should().Be(streetNameNamesWereChanged.GetHash());
+                });
+        }
+
         private static string? DetermineExpectedNameForLanguage(IDictionary<Language, string> streetNameNames, Language language)
             => streetNameNames.ContainsKey(language) ? streetNameNames[language] : null;
 

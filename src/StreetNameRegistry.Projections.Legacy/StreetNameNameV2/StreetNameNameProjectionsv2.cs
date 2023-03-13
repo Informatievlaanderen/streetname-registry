@@ -121,6 +121,15 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
                 }, ct);
             });
 
+            When<Envelope<StreetNameNamesWereChanged>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameName(message.Message.PersistentLocalId, streetNameNameV2 =>
+                {
+                    UpdateNameByLanguage(streetNameNameV2, message.Message.StreetNameNames);
+                    UpdateVersionTimestamp(streetNameNameV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameName(message.Message.PersistentLocalId, streetNameNameV2 =>
