@@ -1,3 +1,10 @@
+## [3.23.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.23.1...v3.23.2) (2023-03-13)
+
+
+### Bug Fixes
+
+* error code and message of homonymaddition Validations ([8b9e38c](https://github.com/informatievlaanderen/streetname-registry/commit/8b9e38c2a23d59ba08fc21e7cd185e94718657c8))
+
 ## [3.23.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.23.0...v3.23.1) (2023-03-07)
 
 
