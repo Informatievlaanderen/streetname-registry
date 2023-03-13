@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
         {
             RuleForEach(x => x.HomoniemToevoegingen)
                 .Must(h => h.Value.Length <= 20)
-                .WithMessage((_, homonymAddition) => ValidationErrors.CorrectStreetNameHomonymAdditions.HomonymAdditionMaxCharacterLengthExceeded.Message(homonymAddition.Key))
+                .WithMessage((_, homonymAddition) => ValidationErrors.CorrectStreetNameHomonymAdditions.HomonymAdditionMaxCharacterLengthExceeded.Message(homonymAddition.Key, homonymAddition.Value.Length))
                 .WithErrorCode(ValidationErrors.CorrectStreetNameHomonymAdditions.HomonymAdditionMaxCharacterLengthExceeded.Code);
         }
     }

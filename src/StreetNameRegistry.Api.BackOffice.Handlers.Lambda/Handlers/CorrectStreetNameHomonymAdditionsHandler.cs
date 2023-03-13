@@ -68,7 +68,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                     ValidationErrors.CorrectStreetNameHomonymAdditions.CannotAddHomonymAddition.ToTicketError(e.Language),
 
                 HomonymAdditionMaxCharacterLengthExceededException e =>
-                    ValidationErrors.CorrectStreetNameHomonymAdditions.HomonymAdditionMaxCharacterLengthExceeded.ToTicketError(e.Language),
+                    ValidationErrors.CorrectStreetNameHomonymAdditions.HomonymAdditionMaxCharacterLengthExceeded.ToTicketError(e.Language, e.NumberOfCharacters),
 
                 _ => null
             };
