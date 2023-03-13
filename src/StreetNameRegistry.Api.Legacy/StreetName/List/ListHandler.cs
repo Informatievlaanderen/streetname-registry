@@ -33,26 +33,28 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.List
 
         public override async Task<StreetNameListResponse> Handle(ListRequest request, CancellationToken cancellationToken)
         {
-            var pagedStreetNames = new StreetNameListQuery(_legacyContext, _syndicationContext)
+            var streetNameQuery = new StreetNameListQuery(_legacyContext, _syndicationContext)
                 .Fetch<StreetNameListItem, StreetNameListItem>(request.Filtering, request.Sorting, request.Pagination);
+
+            var pagedStreetNames = await streetNameQuery
+                .Items
+                .Select(m => new StreetNameListItemResponse(
+                    m.PersistentLocalId,
+                    _responseOptions.Value.Naamruimte,
+                    _responseOptions.Value.DetailUrl,
+                    GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
+                    GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
+                    m.Status.ConvertFromStreetNameStatus(),
+                    m.VersionTimestamp.ToBelgianDateTimeOffset()))
+                .ToListAsync(cancellationToken);
 
             return
                 new StreetNameListResponse
                 {
-                    Straatnamen = await pagedStreetNames
-                        .Items
-                        .Select(m => new StreetNameListItemResponse(
-                            m.PersistentLocalId,
-                            _responseOptions.Value.Naamruimte,
-                            _responseOptions.Value.DetailUrl,
-                            GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
-                            GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
-                            m.Status.ConvertFromStreetNameStatus(),
-                            m.VersionTimestamp.ToBelgianDateTimeOffset()))
-                        .ToListAsync(cancellationToken),
-                    Volgende = BuildNextUri(pagedStreetNames.PaginationInfo, _responseOptions.Value.VolgendeUrl),
-                    Pagination = pagedStreetNames.PaginationInfo,
-                    Sorting = pagedStreetNames.Sorting
+                    Straatnamen = pagedStreetNames,
+                    Volgende = BuildNextUri(streetNameQuery.PaginationInfo, pagedStreetNames.Count, _responseOptions.Value.VolgendeUrl),
+                    Pagination = streetNameQuery.PaginationInfo,
+                    Sorting = streetNameQuery.Sorting
                 };
         }
 
