@@ -13,12 +13,12 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
 
     public abstract class OsloListHandlerBase : IRequestHandler<OsloListRequest, StreetNameListOsloResponse>
     {
-        protected static Uri? BuildNextUri(PaginationInfo paginationInfo, string nextUrlBase)
+        protected static Uri? BuildNextUri(PaginationInfo paginationInfo, int itemsInCollection, string nextUrlBase)
         {
             var offset = paginationInfo.Offset;
             var limit = paginationInfo.Limit;
 
-            return paginationInfo.HasNextPage
+            return paginationInfo.HasNextPage(itemsInCollection)
                 ? new Uri(string.Format(nextUrlBase, offset + limit, limit))
                 : null;
         }
