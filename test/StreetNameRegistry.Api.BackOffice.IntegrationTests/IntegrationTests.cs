@@ -28,6 +28,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         [InlineData("/v2/straatnamen/1/acties/opheffen", Scopes.DvArAdresBeheer)]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/opheffing", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/straatnaam", Scopes.DvArAdresBeheer)]
+        [InlineData("/v2/straatnamen/1/acties/wijzigen/straatnaam", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
         [InlineData("/v2/straatnamen/1/acties/verwijderen", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
         public async Task ReturnsSuccess(string endpoint, string requiredScopes)
         {
@@ -51,6 +52,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         [InlineData("/v2/straatnamen/1/acties/opheffen")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/opheffing")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/straatnaam")]
+        [InlineData("/v2/straatnamen/1/acties/wijzigen/straatnaam")]
         [InlineData("/v2/straatnamen/1/acties/verwijderen")]
         public async Task ReturnsUnauthorized(string endpoint)
         {
@@ -72,6 +74,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         [InlineData("/v2/straatnamen/1/acties/opheffen")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/opheffing")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/straatnaam")]
+        [InlineData("/v2/straatnamen/1/acties/wijzigen/straatnaam")]
         [InlineData("/v2/straatnamen/1/acties/verwijderen")]
         public async Task ReturnsForbidden(string endpoint)
         {
