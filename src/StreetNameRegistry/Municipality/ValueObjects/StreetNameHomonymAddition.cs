@@ -19,7 +19,7 @@ namespace StreetNameRegistry.Municipality
 
             if (homonymAddition.Length > 20)
             {
-                throw new HomonymAdditionMaxCharacterLengthExceededException(language);
+                throw new HomonymAdditionMaxCharacterLengthExceededException(language, homonymAddition.Length);
             }
 
             HomonymAddition = homonymAddition;

@@ -19,17 +19,18 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         [Fact]
         public void GivenMaxLenghtExceeded_ThenReturnsExpectedMessage()
         {
+            var homonymAddition = "This exceeds the max lenght of 20";
             var result = _validator.TestValidate(new CorrectStreetNameHomonymAdditionsRequest()
             {
                 HomoniemToevoegingen = new Dictionary<Taal, string>
                 {
-                    { Taal.NL, "This exceeds the max lenght of 20" }
+                    { Taal.NL,  homonymAddition}
                 }
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(CorrectStreetNameHomonymAdditionsRequest.HomoniemToevoegingen)}[0]")
-                .WithErrorMessage("Homoniemtoevoeging mag maximaal 20 karakters lang zijn.")
-                .WithErrorCode("StraatnaamHomoniemMaxlengteValidatie");
+                .WithErrorMessage($"Maximum lengte van een homoniemToevoeging in 'nl' is 20 tekens. U heeft momenteel {homonymAddition.Length} tekens.")
+                .WithErrorCode("StraatnaamHomoniemToevoegingMaxlengteValidatie");
         }
     }
 }

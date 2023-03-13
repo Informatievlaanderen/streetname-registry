@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameHomonymAdditions
+namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameHomonymAdditions
 {
     using System;
     using System.Collections.Generic;
@@ -36,7 +36,7 @@
                 new FakeRetryPolicy(),
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
-                MockExceptionIdempotentCommandHandler(() => new HomonymAdditionMaxCharacterLengthExceededException(Language.French)).Object);
+                MockExceptionIdempotentCommandHandler(() => new HomonymAdditionMaxCharacterLengthExceededException(Language.French, 22)).Object);
 
             // Act
             await sut.Handle(new CorrectStreetNameHomonymAdditionsLambdaRequest(Guid.NewGuid().ToString(),
@@ -54,8 +54,8 @@
                 x.Error(
                     It.IsAny<Guid>(),
                     new TicketError(
-                        "Homoniemtoevoeging mag maximaal 20 karakters lang zijn.",
-                        "StraatnaamHomoniemMaxlengteValidatie"),
+                        "Maximum lengte van een homoniemToevoeging in 'fr' is 20 tekens. U heeft momenteel 22 tekens.",
+                        "StraatnaamHomoniemToevoegingMaxlengteValidatie"),
                     CancellationToken.None));
         }
     }

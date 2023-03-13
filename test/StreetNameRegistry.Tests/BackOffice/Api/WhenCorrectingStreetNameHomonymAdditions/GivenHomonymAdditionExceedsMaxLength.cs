@@ -36,6 +36,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameHomony
         [Fact]
         public void ThenThrowsHomonymAdditionMaxCharacterLengthExceededException()
         {
+            var homonymAddition = "this homonymaddition exceeds max length of 20";
             Func<Task> act = async () =>
             {
                 await Controller.CorrectHomonymAdditions(
@@ -46,7 +47,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameHomony
                     {
                         HomoniemToevoegingen = new Dictionary<Taal, string>
                         {
-                            {Taal.NL, "this homonymaddition exceeds max length of 20"}
+                            {Taal.NL, homonymAddition}
                         }
                     },
                     string.Empty,
@@ -59,8 +60,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameHomony
                 .ThrowAsync<ValidationException>()
                 .Result
                 .Where(x => x.Errors.Any(x =>
-                    x.ErrorMessage == "Homoniemtoevoeging mag maximaal 20 karakters lang zijn." &&
-                    x.ErrorCode == "StraatnaamHomoniemMaxlengteValidatie"));
+                    x.ErrorMessage == $"Maximum lengte van een homoniemToevoeging in 'nl' is 20 tekens. U heeft momenteel {homonymAddition.Length} tekens." &&
+                    x.ErrorCode == "StraatnaamHomoniemToevoegingMaxlengteValidatie"));
         }
     }
 }

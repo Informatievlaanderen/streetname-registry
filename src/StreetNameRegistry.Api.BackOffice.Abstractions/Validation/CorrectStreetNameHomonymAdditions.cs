@@ -19,24 +19,24 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Validation
 
             public static class StreetNameNameWithHomonymAdditionAlreadyExists
             {
-                public const string Code = "StraatnaamHomoniemBestaatReedsInGemeente";
-                public const string Message = "Binnen deze gemeente bestaat er reeds een niet-gehistoreerd straatnaamobject met dezelfde straatnaam en homoniemtoevoeging.";
+                public const string Code = "StraatnaamHomoniemToevoegingBestaatReedsInGemeente";
+                public const string Message = "Binnen deze gemeente bestaat er reeds een straatnaam met status 'voorgesteld' of 'inGebruik' met dezelfde straatnaam en homoniemToevoeging.";
 
                 public static TicketError ToTicketError() => new TicketError(Message, Code);
             }
 
             public static class HomonymAdditionMaxCharacterLengthExceeded
             {
-                public const string Code = "StraatnaamHomoniemMaxlengteValidatie";
-                public static string Message(Taal taalCode) => $"Homoniemtoevoeging mag maximaal 20 karakters lang zijn.";
+                public const string Code = "StraatnaamHomoniemToevoegingMaxlengteValidatie";
+                public static string Message(Taal taalCode, int numberOfCharacters) => $"Maximum lengte van een homoniemToevoeging in '{taalCode.ToString().ToLower()}' is 20 tekens. U heeft momenteel {numberOfCharacters} tekens.";
 
-                public static TicketError ToTicketError(Language language) => new TicketError(Message(language.ToTaal()), Code);
+                public static TicketError ToTicketError(Language language, int numberOfCharacters) => new TicketError(Message(language.ToTaal(), numberOfCharacters), Code);
             }
 
             public static class CannotAddHomonymAddition
             {
                 public const string Code = "StraatnaamHomoniemToevoeging";
-                public static string Message(Taal taalCode) => $"Er kan geen homoniemToevoeging worden toegevoegd voor taalcode {taalCode}.";
+                public static string Message(Taal taalCode) => $"Er kan geen homoniemToevoeging worden toegevoegd voor taalcode '{taalCode.ToString().ToLower()}'.";
 
                 public static TicketError ToTicketError(Language language) => new TicketError(Message(language.ToTaal()), Code);
             }

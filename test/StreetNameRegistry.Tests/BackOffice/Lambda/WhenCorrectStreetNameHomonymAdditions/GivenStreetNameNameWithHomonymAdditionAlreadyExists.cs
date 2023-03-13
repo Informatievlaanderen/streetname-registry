@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameHomonymAdditions
+namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameHomonymAdditions
 {
     using System;
     using System.Collections.Generic;
@@ -54,8 +54,8 @@
                 x.Error(
                     It.IsAny<Guid>(),
                     new TicketError(
-                        "Binnen deze gemeente bestaat er reeds een niet-gehistoreerd straatnaamobject met dezelfde straatnaam en homoniemtoevoeging.",
-                        "StraatnaamHomoniemBestaatReedsInGemeente"),
+                        "Binnen deze gemeente bestaat er reeds een straatnaam met status 'voorgesteld' of 'inGebruik' met dezelfde straatnaam en homoniemToevoeging.",
+                        "StraatnaamHomoniemToevoegingBestaatReedsInGemeente"),
                     CancellationToken.None));
         }
     }
