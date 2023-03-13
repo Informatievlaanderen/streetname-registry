@@ -12,8 +12,8 @@ namespace StreetNameRegistry.Municipality.Commands
 
         public MunicipalityId MunicipalityId { get; }
         public PersistentLocalId PersistentLocalId { get; }
-        public Provenance Provenance { get; }
         public Names StreetNameNames { get; }
+        public Provenance Provenance { get; }
 
         public ChangeStreetNameNames(MunicipalityId municipalityId,
             PersistentLocalId persistentLocalId,

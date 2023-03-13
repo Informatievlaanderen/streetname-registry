@@ -65,13 +65,13 @@ namespace StreetNameRegistry.Municipality
             GuardStreetNameStatus(StreetNameStatus.Proposed, StreetNameStatus.Current);
             guardStreetNameNames(names, HomonymAdditions, PersistentLocalId);
 
-            var newNames = new Names(names.Where(name => !Names.HasMatch(name.Language, name.Name)));
-            if (!newNames.Any())
+            var changedNames = new Names(names.Where(name => !Names.HasMatch(name.Language, name.Name)));
+            if (!changedNames.Any())
             {
                 return;
             }
 
-            Apply(new StreetNameNamesWereChanged(_municipalityId, PersistentLocalId, newNames));
+            Apply(new StreetNameNamesWereChanged(_municipalityId, PersistentLocalId, changedNames));
         }
 
         public void CorrectApproval()
