@@ -60,6 +60,20 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameNamesWereCorrected(_municipalityId, PersistentLocalId, correctedNames));
         }
 
+        public void ChangeNames(Names names, Action<Names, HomonymAdditions, PersistentLocalId> guardStreetNameNames)
+        {
+            GuardStreetNameStatus(StreetNameStatus.Proposed, StreetNameStatus.Current);
+            guardStreetNameNames(names, HomonymAdditions, PersistentLocalId);
+
+            var newNames = new Names(names.Where(name => !Names.HasMatch(name.Language, name.Name)));
+            if (!newNames.Any())
+            {
+                return;
+            }
+
+            Apply(new StreetNameNamesWereChanged(_municipalityId, PersistentLocalId, newNames));
+        }
+
         public void CorrectApproval()
         {
             if (Status == StreetNameStatus.Proposed)

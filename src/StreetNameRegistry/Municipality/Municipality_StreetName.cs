@@ -107,6 +107,13 @@ namespace StreetNameRegistry.Municipality
                 .CorrectNames(streetNameNames, GuardStreetNameNames);
         }
 
+        public void ChangeStreetNameName(Names streetNameNames, PersistentLocalId persistentLocalId)
+        {
+            StreetNames
+                .GetNotRemovedByPersistentLocalId(persistentLocalId)
+                .ChangeNames(streetNameNames, GuardStreetNameNames);
+        }
+
         public void CorrectStreetNameApproval(PersistentLocalId persistentLocalId)
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);

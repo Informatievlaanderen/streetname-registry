@@ -122,6 +122,16 @@ namespace StreetNameRegistry.Municipality
                     municipality.CorrectStreetNameName(message.Command.StreetNameNames, message.Command.PersistentLocalId);
                 });
 
+             For<ChangeStreetNameNames>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<ChangeStreetNameNames, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.ChangeStreetNameName(message.Command.StreetNameNames, message.Command.PersistentLocalId);
+                });
+
             For<CorrectStreetNameHomonymAdditions>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
                 .AddEventHash<CorrectStreetNameHomonymAdditions, Municipality>(getUnitOfWork)
