@@ -1,3 +1,10 @@
+# [3.25.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.24.0...v3.25.0) (2023-03-14)
+
+
+### Features
+
+* add example request for change streetname ([1b62060](https://github.com/informatievlaanderen/streetname-registry/commit/1b62060c9ef655cfccfb8a8dab384b1e92cad612))
+
 # [3.24.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.23.2...v3.24.0) (2023-03-14)
 
 
