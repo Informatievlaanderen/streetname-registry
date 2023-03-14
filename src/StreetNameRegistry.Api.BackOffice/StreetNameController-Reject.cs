@@ -71,10 +71,6 @@ namespace StreetNameRegistry.Api.BackOffice
             {
                 throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
             }
-            catch (StreetNameIsNotFoundException)
-            {
-                throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
-            }
         }
     }
 }
