@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using FluentAssertions;
     using global::AutoFixture;
     using Moq;
@@ -109,7 +110,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
             Func<Task> act = async() => await sut.IsValid(string.Empty, streetNamePersistentLocalId, CancellationToken.None);
 
             // Assert
-            await act.Should().ThrowAsync<StreetNameIsNotFoundException>();
+            await act.Should().ThrowAsync<AggregateIdIsNotFoundException>();
         }
     }
 }

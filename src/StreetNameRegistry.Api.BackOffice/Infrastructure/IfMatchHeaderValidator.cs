@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using System.Threading.Tasks;
     using Abstractions;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
+    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Municipality;
     using Municipality.Exceptions;
 
@@ -35,7 +36,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                 .FindAsync((int)streetNamePersistentLocalId);
             if (municipalityIdByPersistentLocalId is null)
             {
-                throw new StreetNameIsNotFoundException();
+                throw new AggregateIdIsNotFoundException();
             }
 
             var municipalityId = new MunicipalityId(municipalityIdByPersistentLocalId.MunicipalityId);
