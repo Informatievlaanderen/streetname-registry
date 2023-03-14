@@ -1,3 +1,18 @@
+# [3.24.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.23.2...v3.24.0) (2023-03-14)
+
+
+### Bug Fixes
+
+* comments pr ([9a0941a](https://github.com/informatievlaanderen/streetname-registry/commit/9a0941afb74c20e0742e4b0ff015f08abb59b22e))
+
+
+### Features
+
+* add change streetname domain ([9d9311c](https://github.com/informatievlaanderen/streetname-registry/commit/9d9311c3f777b541491f66cf37eef6719390aa9f))
+* add integration tests for change streetnameÃ ([0449dc0](https://github.com/informatievlaanderen/streetname-registry/commit/0449dc0ece1b09504d438b397ab2e77eba319d9f))
+* add StreetNameNamesWereChanged projections ([026ea9e](https://github.com/informatievlaanderen/streetname-registry/commit/026ea9ed88f43eaec7aad92ed88918740b513e7d))
+* StreetNameNamesWereChanged backoffice ([f3abb9d](https://github.com/informatievlaanderen/streetname-registry/commit/f3abb9da8d17d805df77059f0f6d3eaf6ac68c71))
+
 ## [3.23.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.23.1...v3.23.2) (2023-03-13)
 
 
