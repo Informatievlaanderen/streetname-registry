@@ -17,14 +17,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             _validator = new StreetNameCorrectNamesRequestValidator(consumerContext);
         }
 
-        [Fact]
-        public void GivenEmptyStreetName_ThenReturnsExpectedMessage()
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GivenEmptyOrNullStreetName_ThenReturnsExpectedMessage(string name)
         {
             var result = _validator.TestValidate(new CorrectStreetNameNamesRequest()
             {
                 Straatnamen = new Dictionary<Taal, string>
                 {
-                    { Taal.NL, "" }
+                    { Taal.NL, name }
                 }
             });
 
