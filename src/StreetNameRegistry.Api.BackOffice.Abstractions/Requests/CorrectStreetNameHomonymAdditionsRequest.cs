@@ -13,6 +13,6 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
         /// </summary>
         [DataMember(Name = "Homoniemtoevoegingen", Order = 1)]
         [JsonProperty(Required = Required.Always)]
-        public Dictionary<Taal, string> HomoniemToevoegingen { get; set; }
+        public Dictionary<Taal, string?> HomoniemToevoegingen { get; set; }
     }
 }

@@ -16,6 +16,23 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             _validator = new StreetNameCorrectHomonymAdditionsRequestValidator();
         }
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("BE")]
+        public void GivenValidRequest_ThenValidationSucceeds(string? homonymAddition)
+        {
+            var result = _validator.TestValidate(new CorrectStreetNameHomonymAdditionsRequest()
+            {
+                HomoniemToevoegingen = new Dictionary<Taal, string>
+                {
+                    { Taal.NL,  homonymAddition}
+                }
+            });
+
+            result.ShouldNotHaveAnyValidationErrors();
+        }
+
         [Fact]
         public void GivenMaxLenghtExceeded_ThenReturnsExpectedMessage()
         {
