@@ -7,6 +7,6 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     {
         public const string Code = "StraatnaamMaxlengteValidatie";
 
-        public static bool IsValid(KeyValuePair<Taal, string> streetName) => streetName.Value.Length <= 60;
+        public static bool IsValid(KeyValuePair<Taal, string> streetName) => string.IsNullOrEmpty(streetName.Value) || streetName.Value.Length <= 60;
     }
 }
