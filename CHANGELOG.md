@@ -1,3 +1,11 @@
+## [3.25.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.0...v3.25.1) (2023-03-16)
+
+
+### Bug Fixes
+
+* allow null on language for correct homonym addition request ([036925f](https://github.com/informatievlaanderen/streetname-registry/commit/036925fc98616790f71ba12fe4e8492f1c0a2c57))
+* prevents null on correct streetnamename request ([0b94c83](https://github.com/informatievlaanderen/streetname-registry/commit/0b94c83e6df621f65a525e436994390b828cf71c))
+
 # [3.25.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.24.0...v3.25.0) (2023-03-14)
 
 
