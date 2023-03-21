@@ -1,0 +1,33 @@
+CREATE OR REPLACE STREAM IF NOT EXISTS GRB_STREETNAME_STREAM_FLATTEN
+WITH (KAFKA_TOPIC='grb.temp.streetname.flatten', PARTITIONS=1, VALUE_FORMAT='JSON_SR', KEY_FORMAT='JSON_SR')
+AS SELECT
+
+    PERSISTENTLOCALID ObjectId, 
+    VERSIONASSTRING VersieId,
+    PERSISTENTLOCALID StrnmId,
+    CONCAT('https://data.vlaanderen.be/id/straatnaam/', CAST(PERSISTENTLOCALID AS STRING)) Id,
+
+    IFNULL(NAMEDUTCH,
+        IFNULL(NAMEFRENCH,
+            NAMEGERMAN)) Strnm,
+
+    NISCODE NisCode,
+
+    CASE 
+        WHEN STATUS = 0 THEN 'voorgesteld'
+        WHEN STATUS = 1 THEN 'inGebruik'
+        WHEN STATUS = 2 THEN 'gehistoreerd'
+        WHEN STATUS = 3 THEN 'afgekeurd'
+        ELSE ''
+    END Status,
+
+    IFNULL(HOMONYMADDITIONDUTCH,
+        IFNULL(HOMONYMADDITIONFRENCH, 
+            HOMONYMADDITIONGERMAN)) Homoniem,
+
+    CASE 
+        WHEN REMOVED = 1 THEN TRUE 
+        ELSE FALSE 
+    END Removed
+
+FROM GRB_TEMP_STREETNAME_STREAM;
