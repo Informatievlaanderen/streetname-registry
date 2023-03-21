@@ -1,0 +1,20 @@
+CREATE OR REPLACE STREAM IF NOT EXISTS grb_temp_streetname_stream (
+    streetNameId varchar,
+    persistentLocalId int,
+    municipalityId varchar,
+    nisCode varchar,
+    nameDutch varchar,
+    nameFrench varchar,
+    nameGerman varchar,
+    nameEnglish varchar,
+    homonymAdditionDutch varchar,
+    homonymAdditionFrench varchar,
+    homonymAdditionGerman varchar,
+    homonymAdditionEnglish varchar,
+    status int,
+    complete int,
+    removed int,
+    versionTimestamp bigint,
+    versionAsString varchar
+)
+WITH (KAFKA_TOPIC='wmsGrbStreetName', VALUE_FORMAT='JSON');
