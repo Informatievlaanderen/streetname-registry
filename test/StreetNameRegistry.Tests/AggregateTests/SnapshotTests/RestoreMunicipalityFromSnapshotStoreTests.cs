@@ -3,24 +3,29 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+    using Autofac;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
     using global::AutoFixture;
     using Municipality;
     using Municipality.DataStructures;
     using Municipality.Events;
+    using SqlStreamStore;
+    using SqlStreamStore.Streams;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
 
-    public sealed class RestoreMunicipalitySnapshotTests : StreetNameRegistryTest
+    public sealed class RestoreMunicipalityFromSnapshotStoreTests : StreetNameRegistryTest
     {
         private readonly Municipality _sut;
         private readonly MunicipalitySnapshot _municipalitySnapshot;
 
-        public RestoreMunicipalitySnapshotTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public RestoreMunicipalityFromSnapshotStoreTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             var random = new Random(Fixture.Create<int>());
 
@@ -67,10 +72,26 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
 
             _sut = new MunicipalityFactory(IntervalStrategy.Default).Create();
             _municipalitySnapshot = Fixture.Create<MunicipalitySnapshot>();
-            _sut.Initialize(new List<object>
-            {
-                _municipalitySnapshot
-            });
+
+            var eventSerializer = Container.Resolve<EventSerializer>();
+            var eventMapping = Container.Resolve<EventMapping>();
+
+            var streamId = new MunicipalityStreamId(Fixture.Create<MunicipalityId>());
+            Container.Resolve<ISnapshotStore>().SaveSnapshotAsync(streamId,
+                new SnapshotContainer
+                {
+                    Data = eventSerializer.SerializeObject(_municipalitySnapshot),
+                    Info = new SnapshotInfo
+                    {
+                        StreamVersion = 1,
+                        Type = eventMapping.GetEventName(_municipalitySnapshot.GetType()),
+                    }
+                },
+                CancellationToken.None);
+
+            Container.Resolve<IStreamStore>().AppendToStream(new StreamId(streamId), ExpectedVersion.NoStream, Fixture.Create<NewStreamMessage>());
+
+            _sut = Container.Resolve<IMunicipalities>().GetAsync(streamId, CancellationToken.None).GetAwaiter().GetResult();
         }
 
         [Fact]
@@ -93,7 +114,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
 
                 snapshotStreetName.Should().NotBeNull();
 
-                streetName.Status.Should().Be(snapshotStreetName.Status);
+                streetName.Status.Should().Be(snapshotStreetName!.Status);
                 streetName.IsRemoved.Should().Be(snapshotStreetName.IsRemoved);
                 streetName.Names.Should().BeEquivalentTo(new Names(snapshotStreetName.Names));
                 streetName.HomonymAdditions.Should().BeEquivalentTo(new HomonymAdditions(snapshotStreetName.HomonymAdditions));
@@ -107,7 +128,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     streetName.LegacyStreetNameId.Should().Be(new StreetNameId(snapshotStreetName.LegacyStreetNameId.Value));
                 }
 
-                streetName.LastProvenanceData.Should().Be(snapshotStreetName.LastProvenanceData);
+                streetName.LastProvenanceData.Should().BeEquivalentTo(snapshotStreetName.LastProvenanceData);
                 streetName.LastEventHash.Should().Be(snapshotStreetName.LastEventHash);
             }
         }

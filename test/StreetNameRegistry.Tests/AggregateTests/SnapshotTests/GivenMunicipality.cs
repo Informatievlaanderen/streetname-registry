@@ -123,5 +123,4 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
             };
         }
     }
-
 }
