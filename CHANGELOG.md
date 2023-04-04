@@ -1,3 +1,10 @@
+## [3.25.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.1...v3.25.2) (2023-04-04)
+
+
+### Bug Fixes
+
+* remove special characters from error message ([c7685d0](https://github.com/informatievlaanderen/streetname-registry/commit/c7685d09cccebe758e73def38b591c27c76351ab))
+
 ## [3.25.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.0...v3.25.1) (2023-03-16)
 
 
