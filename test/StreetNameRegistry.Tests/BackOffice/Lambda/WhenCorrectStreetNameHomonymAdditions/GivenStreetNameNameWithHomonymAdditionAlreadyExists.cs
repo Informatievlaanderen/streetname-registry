@@ -54,7 +54,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameHomony
                 x.Error(
                     It.IsAny<Guid>(),
                     new TicketError(
-                        "Binnen deze gemeente bestaat er reeds een straatnaam met status 'voorgesteld' of 'inGebruik' met dezelfde straatnaam en homoniemToevoeging.",
+                        "Binnen deze gemeente bestaat er reeds een straatnaam met status 'voorgesteld' of 'inGebruik' met dezelfde straatnaam en homoniemToevoeging.",
                         "StraatnaamHomoniemToevoegingBestaatReedsInGemeente"),
                     CancellationToken.None));
         }

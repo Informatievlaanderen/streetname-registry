@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Validation
             public static class StreetNameNameWithHomonymAdditionAlreadyExists
             {
                 public const string Code = "StraatnaamHomoniemToevoegingBestaatReedsInGemeente";
-                public const string Message = "Binnen deze gemeente bestaat er reeds een straatnaam met status 'voorgesteld' of 'inGebruik' met dezelfde straatnaam en homoniemToevoeging.";
+                public const string Message = "Binnen deze gemeente bestaat er reeds een straatnaam met status 'voorgesteld' of 'inGebruik' met dezelfde straatnaam en homoniemToevoeging.";
 
                 public static TicketError ToTicketError() => new TicketError(Message, Code);
             }
