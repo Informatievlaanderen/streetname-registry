@@ -1,5 +1,7 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
+    using System;
+    using System.Linq;
     using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
@@ -46,6 +48,13 @@ namespace StreetNameRegistry.Api.BackOffice
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
             CancellationToken cancellationToken = default)
         {
+            var nisCodeInClaim = User.Claims.FirstOrDefault(x => x.Type == AcmIdmClaimTypes.NisCode)?.Value;
+            var nisCodeInRequest = await new NisCodeFinderByPersistentLocalId(_streetNames).FindNisCode(request, cancellationToken);
+            if (!nisCodeInClaim.IsValidFor(nisCodeInRequest))
+            {
+                throw new Exception("zomg! niscode is not allowed");
+            }
+
             try
             {
                 if (!await ifMatchHeaderValidator.IsValid(ifMatchHeaderValue,

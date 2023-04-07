@@ -1,5 +1,7 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
+    using System;
+    using System.Linq;
     using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
@@ -52,37 +54,44 @@ namespace StreetNameRegistry.Api.BackOffice
         {
            await validator.ValidateAndThrowAsync(request, cancellationToken);
 
-            try
-            {
-                if (!await ifMatchHeaderValidator.IsValid(ifMatchHeaderValue, new PersistentLocalId(persistentLocalId), cancellationToken))
-                {
-                    return new PreconditionFailedResult();
-                }
+           var nisCodeInClaim = User.Claims.FirstOrDefault(x => x.Type == AcmIdmClaimTypes.NisCode)?.Value;
+           var nisCodeInRequest = await new NisCodeFinderByPersistentLocalId(_streetNames).FindNisCode(request, cancellationToken);
+           if (!nisCodeInClaim.IsValidFor(nisCodeInRequest))
+           {
+               throw new Exception("zomg! niscode is not allowed");
+           }
 
-                var result = await _mediator.Send(
-                    new CorrectStreetNameNamesSqsRequest
-                    {
-                        Request = request,
-                        PersistentLocalId = persistentLocalId,
-                        Metadata = GetMetadata(),
-                        ProvenanceData = new ProvenanceData(CreateFakeProvenance()),
-                        IfMatchHeaderValue = ifMatchHeaderValue
-                    }, cancellationToken);
+           try
+           {
+               if (!await ifMatchHeaderValidator.IsValid(ifMatchHeaderValue, new PersistentLocalId(persistentLocalId), cancellationToken))
+               {
+                   return new PreconditionFailedResult();
+               }
 
-                return Accepted(result);
-            }
-            catch (AggregateIdIsNotFoundException)
-            {
-                throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
-            }
-            catch (AggregateNotFoundException)
-            {
-                throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
-            }
-            catch (StreetNameIsNotFoundException)
-            {
-                throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
-            }
+               var result = await _mediator.Send(
+                   new CorrectStreetNameNamesSqsRequest
+                   {
+                       Request = request,
+                       PersistentLocalId = persistentLocalId,
+                       Metadata = GetMetadata(),
+                       ProvenanceData = new ProvenanceData(CreateFakeProvenance()),
+                       IfMatchHeaderValue = ifMatchHeaderValue
+                   }, cancellationToken);
+
+               return Accepted(result);
+           }
+           catch (AggregateIdIsNotFoundException)
+           {
+               throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
+           }
+           catch (AggregateNotFoundException)
+           {
+               throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
+           }
+           catch (StreetNameIsNotFoundException)
+           {
+               throw new ApiException(ValidationErrors.Common.StreetNameNotFound.Message, StatusCodes.Status404NotFound);
+           }
         }
     }
 }
