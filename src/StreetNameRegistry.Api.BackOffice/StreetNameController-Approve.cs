@@ -48,9 +48,9 @@ namespace StreetNameRegistry.Api.BackOffice
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
             CancellationToken cancellationToken = default)
         {
-            var nisCodeRequested = await new NisCodeFinderByPersistentLocalId(_streetNames).FindNisCode(request, cancellationToken);
             var nisCodeClaim = User.Claims.FirstOrDefault(x => x.Type == AcmIdmClaimTypes.NisCode)?.Value;
-            if (nisCodeRequested != nisCodeClaim)
+            var nisCodeRequested = await new NisCodeFinderByPersistentLocalId(_streetNames).FindNisCode(request, cancellationToken);
+            if (!nisCodeClaim.IsValidFor(nisCodeRequested))
             {
                 throw new Exception("zomg! niscode is not allowed");
             }
