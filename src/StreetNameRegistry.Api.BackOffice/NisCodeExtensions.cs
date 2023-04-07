@@ -13,7 +13,9 @@
 
         public static bool IsValidFor(this string? nisCodeInClaim, string? nisCodeInRequest)
         {
-            // check whitelist
+            ArgumentNullException.ThrowIfNull(nisCodeInClaim);
+            ArgumentNullException.ThrowIfNull(nisCodeInRequest);
+
             return s_whiteList.Any(x => x.Equals(nisCodeInRequest, StringComparison.InvariantCultureIgnoreCase))
                 || nisCodeInClaim.Equals(nisCodeInRequest, StringComparison.InvariantCultureIgnoreCase);
         }
