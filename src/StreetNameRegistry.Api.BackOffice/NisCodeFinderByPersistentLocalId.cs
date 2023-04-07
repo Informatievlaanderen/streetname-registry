@@ -16,22 +16,40 @@ namespace StreetNameRegistry.Api.BackOffice
         }
 
         public async Task<string?> FindNisCode<TRequest>(TRequest request, CancellationToken cancellationToken)
+            where TRequest : IHavePersistentLocalId
         {
-            await Task.Yield();
-            if (typeof(TRequest) == typeof(ApproveStreetNameRequest))
-            {
-                var approveStreetNameRequest = request as ApproveStreetNameRequest;
-                if (approveStreetNameRequest is null)
-                {
-                    return null;
-                }
+            var streetNamePersistentLocalId = new PersistentLocalId(request!.PersistentLocalId);
+            var streetName = await _streetNames.GetAsync(streetNamePersistentLocalId, cancellationToken);
+            return streetName.NisCode;
 
-                var streetNamePersistentLocalId = new PersistentLocalId(approveStreetNameRequest!.PersistentLocalId);
-                var streetName = await _streetNames.GetAsync(streetNamePersistentLocalId, cancellationToken);
-                return streetName.NisCode;
-            }
-
-            return null;
+            // switch (request)
+            // {
+            //     case ApproveStreetNameRequest approveStreetNameRequest:
+            //     {
+            //         var streetNamePersistentLocalId = new PersistentLocalId(approveStreetNameRequest!.PersistentLocalId);
+            //         var streetName = await _streetNames.GetAsync(streetNamePersistentLocalId, cancellationToken);
+            //         return streetName.NisCode;
+            //     }
+            //     case CorrectStreetNameApprovalRequest correctStreetNameApprovalRequest:
+            //     {
+            //         var streetNamePersistentLocalId = new PersistentLocalId(correctStreetNameApprovalRequest!.PersistentLocalId);
+            //         var streetName = await _streetNames.GetAsync(streetNamePersistentLocalId, cancellationToken);
+            //         return streetName.NisCode;
+            //     }
+            //     case CorrectStreetNameRejectionRequest correctStreetNameRejectionRequest:
+            //     {
+            //         var streetNamePersistentLocalId = new PersistentLocalId(correctStreetNameRejectionRequest!.PersistentLocalId);
+            //         var streetName = await _streetNames.GetAsync(streetNamePersistentLocalId, cancellationToken);
+            //         return streetName.NisCode;
+            //     }
+            //
+            //     // TODO: add other request types
+            //
+            //     default:
+            //         // ...
+            //
+            //         return null;
+            // }
         }
     }
 }

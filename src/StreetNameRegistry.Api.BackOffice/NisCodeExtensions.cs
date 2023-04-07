@@ -6,6 +6,7 @@
 
     public static class NisCodeExtensions
     {
+        // TODO: OVO-codes
         private static List<string> s_whiteList = new List<string>
         {
             // add whitelisted niscodes
@@ -16,7 +17,8 @@
             ArgumentNullException.ThrowIfNull(nisCodeInClaim);
             ArgumentNullException.ThrowIfNull(nisCodeInRequest);
 
-            return s_whiteList.Any(x => x.Equals(nisCodeInRequest, StringComparison.InvariantCultureIgnoreCase))
+            // TODO: OVO-codes
+            return s_whiteList.Any(x => x.Equals(nisCodeInClaim, StringComparison.InvariantCultureIgnoreCase))
                 || nisCodeInClaim.Equals(nisCodeInRequest, StringComparison.InvariantCultureIgnoreCase);
         }
     }
