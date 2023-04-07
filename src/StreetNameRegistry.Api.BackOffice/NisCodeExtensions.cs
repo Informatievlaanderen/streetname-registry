@@ -11,7 +11,7 @@
             // add whitelisted niscodes
         };
 
-        public static bool IsValidFor(this string nisCodeInClaim, string nisCodeInRequest)
+        public static bool IsValidFor(this string? nisCodeInClaim, string? nisCodeInRequest)
         {
             // check whitelist
             return s_whiteList.Any(x => x.Equals(nisCodeInRequest, StringComparison.InvariantCultureIgnoreCase))
