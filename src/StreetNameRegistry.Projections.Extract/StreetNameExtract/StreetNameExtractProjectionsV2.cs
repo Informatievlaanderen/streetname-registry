@@ -130,7 +130,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                                 throw new ArgumentOutOfRangeException();
                         }
                     }
-                    
+
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
                 }, ct);
             });
@@ -188,10 +188,9 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, streetName =>
                 {
-                    UpdateRecord(x, record => record.IsDeleted = true);
-                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                    context.StreetNameExtractV2.Remove(streetName);
                 }, ct);
             });
 
@@ -208,7 +207,6 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     UpdateRecord(streetName, i => i.gemeenteid.Value = message.Message.NisCode);
                 }
             });
-
         }
 
         private void UpdateHomoniemtv(StreetNameExtractItemV2 streetName, List<StreetNameHomonymAddition> homonymAdditions)
