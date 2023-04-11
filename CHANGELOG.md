@@ -1,3 +1,10 @@
+## [3.25.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.2...v3.25.3) (2023-04-11)
+
+
+### Bug Fixes
+
+* don't include in extract when removed ([fccaf7a](https://github.com/informatievlaanderen/streetname-registry/commit/fccaf7a19956608747a26be5c0aadbe0eaee2e51))
+
 ## [3.25.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.1...v3.25.2) (2023-04-04)
 
 
