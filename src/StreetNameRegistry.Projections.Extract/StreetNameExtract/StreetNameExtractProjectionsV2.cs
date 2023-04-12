@@ -137,6 +137,9 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
             {
+                if (message.Message.IsRemoved)
+                    return;
+                
                 var streetNameExtractItemV2 = new StreetNameExtractItemV2
                 {
                     StreetNamePersistentLocalId = message.Message.PersistentLocalId,
