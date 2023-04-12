@@ -28,8 +28,10 @@ namespace StreetNameRegistry.Municipality
 
         protected override IEnumerable<object> Reflect()
         {
-            yield return HomonymAddition;
+            yield return HomonymAddition.ToLowerInvariant();
             yield return Language;
         }
+
+        public override string ToString() => $"{HomonymAddition} ({Language})";
     }
 }

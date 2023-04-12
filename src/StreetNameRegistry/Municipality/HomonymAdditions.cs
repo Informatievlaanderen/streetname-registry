@@ -18,7 +18,10 @@ namespace StreetNameRegistry.Municipality
         { }
 
         public bool HasMatch(Language language, string homonymAddition)
-            => this.Any(addition => addition.Language == language && addition.HomonymAddition == homonymAddition);
+        {
+            var homonymAdditionToMatch = new StreetNameHomonymAddition(homonymAddition, language);
+            return this.Any(addition => addition == homonymAdditionToMatch);
+        }
 
         public bool HasLanguage(Language language)
             => this.Any(homonymAddition => homonymAddition.Language == language);
