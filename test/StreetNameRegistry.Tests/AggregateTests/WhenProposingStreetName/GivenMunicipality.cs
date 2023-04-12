@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 {
+    using System.Collections.Generic;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
@@ -52,24 +53,29 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 }));
         }
 
-        [Fact]
-        public void WithExistingStreetName_ThenStreetNameNameAlreadyExistsExceptionWasThrown()
+        [Theory]
+        [InlineData("Bremstraat", "Bremstraat")]
+        [InlineData("Bremstraat", "bremstraat")]
+        public void WithExistingStreetName_ThenStreetNameNameAlreadyExistsExceptionWasThrown(string name, string newName)
         {
-            var streetNameName = Fixture.Create<StreetNameName>();
-            Fixture.Register(() => new Names { streetNameName });
-
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
-            var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>();
+            var municipalityOfficialLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(Fixture.Create<MunicipalityId>(), Language.Dutch);
+            municipalityOfficialLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
+
+            var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>()
+                .WithNames(new Names(new List<StreetNameName>{ new StreetNameName(name, Language.Dutch) }));
 
             var command = Fixture.Create<ProposeStreetName>()
+                .WithStreetNameNames(new Names(new List<StreetNameName>{ new StreetNameName(newName, Language.Dutch) }))
                 .WithMunicipalityId(_municipalityId);
 
             Assert(new Scenario()
                 .Given(_streamId,
                     municipalityWasImported,
+                    municipalityOfficialLanguageWasAdded,
                     streetNameWasProposed)
                 .When(command)
-                .Throws(new StreetNameNameAlreadyExistsException(streetNameName.Name)));
+                .Throws(new StreetNameNameAlreadyExistsException(newName)));
         }
 
         [Fact]

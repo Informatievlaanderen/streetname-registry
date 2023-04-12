@@ -17,7 +17,7 @@ namespace StreetNameRegistry.Municipality
 
         protected override IEnumerable<object> Reflect()
         {
-            yield return Name;
+            yield return Name.ToLowerInvariant();
             yield return Language;
         }
 

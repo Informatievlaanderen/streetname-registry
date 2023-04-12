@@ -26,15 +26,17 @@ public class GivenStreetNameNameWithoutHomonymAdditionAlreadyExists : StreetName
         _streamId = Fixture.Create<MunicipalityStreamId>();
     }
 
-    [Fact]
-    public void ThenThrowsStreetNameNameAlreadyExistsException()
+    [Theory]
+    [InlineData("HO", "HO")]
+    [InlineData("HO", "ho")]
+    public void ThenThrowsStreetNameNameAlreadyExistsException(string homonymAddition, string newHomonymAddition)
     {
         var command = new CorrectStreetNameHomonymAdditions(
             Fixture.Create<MunicipalityId>(),
             new PersistentLocalId(123),
             new HomonymAdditions
             {
-                new StreetNameHomonymAddition("B", Language.Dutch)
+                new StreetNameHomonymAddition(newHomonymAddition, Language.Dutch)
             },
             new List<Language>(),
             Fixture.Create<Provenance>());
@@ -73,7 +75,7 @@ public class GivenStreetNameNameWithoutHomonymAdditionAlreadyExists : StreetName
             },
             new HomonymAdditions(new[]
             {
-                new StreetNameHomonymAddition("B", Language.Dutch),
+                new StreetNameHomonymAddition(homonymAddition, Language.Dutch),
             }),
             true,
             false);
