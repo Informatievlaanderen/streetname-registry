@@ -1,3 +1,11 @@
+## [3.25.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.3...v3.25.4) (2023-04-13)
+
+
+### Bug Fixes
+
+* case insensitive streetname name and homonym addition comparison ([c193ce0](https://github.com/informatievlaanderen/streetname-registry/commit/c193ce0cd50269fe065e7ef5063be060c538d08b))
+* don't put migrated removed streetname in extract ([4f72c6c](https://github.com/informatievlaanderen/streetname-registry/commit/4f72c6c791b6128d7a2e3cf19d373cac59897caa))
+
 ## [3.25.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.2...v3.25.3) (2023-04-11)
 
 
