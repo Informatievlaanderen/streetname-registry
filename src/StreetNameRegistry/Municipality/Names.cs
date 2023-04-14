@@ -10,11 +10,13 @@ namespace StreetNameRegistry.Municipality
         { }
 
         public Names(IEnumerable<StreetNameName> streetNameNames)
-            : base(streetNameNames)
+            : base(streetNameNames.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
         { }
 
         public Names(IDictionary<Language, string> streetNameNames)
-            : base(streetNameNames.Select(x => new StreetNameName(x.Value, x.Key)))
+            : base(streetNameNames
+                .Where(x => !string.IsNullOrWhiteSpace(x.Value))
+                .Select(x => new StreetNameName(x.Value, x.Key)))
         { }
 
         public bool HasMatch(Language language, string name)
