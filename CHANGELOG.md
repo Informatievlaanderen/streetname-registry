@@ -1,3 +1,10 @@
+## [3.25.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.4...v3.25.5) (2023-04-14)
+
+
+### Bug Fixes
+
+* valueobject Names to filter out empty values ([9bcf96e](https://github.com/informatievlaanderen/streetname-registry/commit/9bcf96ef6887f859aaa9c80e85014c0c45517d1f))
+
 ## [3.25.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.3...v3.25.4) (2023-04-13)
 
 
