@@ -16,14 +16,18 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
         public BackOfficeContext(DbContextOptions<BackOfficeContext> options)
             : base(options) { }
 
-        public DbSet<MunicipalityIdByPersistentLocalId> MunicipalityIdByPersistentLocalId { get; set; }
+        public DbSet<MunicipalityIdByPersistentLocalId> MunicipalityIdByPersistentLocalId => Set<MunicipalityIdByPersistentLocalId>();
 
-        public async Task<MunicipalityIdByPersistentLocalId> AddIdempotentMunicipalityStreetNameIdRelation(int streetNamePersistentLocalId, Guid municipalityId, CancellationToken cancellationToken)
+        public async Task<MunicipalityIdByPersistentLocalId> AddIdempotentMunicipalityStreetNameIdRelation(
+            int streetNamePersistentLocalId,
+            Guid municipalityId,
+            string nisCode,
+            CancellationToken cancellationToken)
         {
             var relation = await MunicipalityIdByPersistentLocalId.FindAsync(new object?[] { streetNamePersistentLocalId }, cancellationToken: cancellationToken);
             if (relation is null)
             {
-                relation = new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId);
+                relation = new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId, nisCode);
                 await MunicipalityIdByPersistentLocalId.AddAsync(relation, cancellationToken);
             }
 
@@ -45,6 +49,12 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
 
             modelBuilder.Entity<MunicipalityIdByPersistentLocalId>()
                 .Property(x => x.MunicipalityId);
+
+            modelBuilder.Entity<MunicipalityIdByPersistentLocalId>()
+                .Property(x => x.NisCode);
+
+            modelBuilder.Entity<MunicipalityIdByPersistentLocalId>()
+                .HasIndex(x => x.NisCode);
         }
     }
 
@@ -52,14 +62,16 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
     {
         public int PersistentLocalId { get; set; }
         public Guid MunicipalityId { get; set; }
+        public string NisCode { get; set; }
 
         private MunicipalityIdByPersistentLocalId()
         { }
 
-        public MunicipalityIdByPersistentLocalId(int persistentLocalId, Guid municipalityId)
+        public MunicipalityIdByPersistentLocalId(int persistentLocalId, Guid municipalityId, string nisCode)
         {
             PersistentLocalId = persistentLocalId;
             MunicipalityId = municipalityId;
+            NisCode = nisCode;
         }
     }
 

@@ -22,7 +22,6 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using Modules;
     using Polly;
     using Serilog;
-    using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.StreetName;
     using StreetNameRegistry.StreetName.Commands;
     using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -194,7 +193,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
             processedIds.Add(id);
 
             await backOfficeContext.MunicipalityIdByPersistentLocalId
-                .AddAsync(new MunicipalityIdByPersistentLocalId(streetName.PersistentLocalId, municipality.MunicipalityId), cancellationToken);
+                .AddAsync(new MunicipalityIdByPersistentLocalId(streetName.PersistentLocalId, municipality.MunicipalityId, municipality.NisCode!), cancellationToken);
             await backOfficeContext.SaveChangesAsync(cancellationToken);
 
             return true;

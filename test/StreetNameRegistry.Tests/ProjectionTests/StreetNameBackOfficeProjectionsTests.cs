@@ -60,6 +60,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var expectedRelation = await _fakeBackOfficeContext.AddIdempotentMunicipalityStreetNameIdRelation(
                 streetNameWasProposedV2.PersistentLocalId,
                 streetNameWasProposedV2.MunicipalityId,
+                streetNameWasProposedV2.NisCode,
                 CancellationToken.None);
 
             await Sut

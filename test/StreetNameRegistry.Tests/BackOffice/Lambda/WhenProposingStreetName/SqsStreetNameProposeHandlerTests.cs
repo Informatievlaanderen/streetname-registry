@@ -51,7 +51,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
-            ImportMunicipality(municipalityId, new NisCode("23002"));
+            var nisCode = "23002";
+
+            ImportMunicipality(municipalityId, new NisCode(nisCode));
             AddOfficialLanguageDutch(municipalityId);
             AddOfficialLanguageFrench(municipalityId);
 
@@ -90,6 +92,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             var municipalityIdByPersistentLocalId = await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(persistentLocalId);
             municipalityIdByPersistentLocalId.Should().NotBeNull();
             municipalityIdByPersistentLocalId.MunicipalityId.Should().Be(municipalityLatestItem.MunicipalityId);
+            municipalityIdByPersistentLocalId.NisCode.Should().Be(nisCode);
         }
 
         [Fact]
@@ -258,7 +261,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             await proposeStreetNameHandler.Handle(new ProposeStreetNameLambdaRequest(municipalityId.ToString(), new ProposeStreetNameSqsRequest
             {
                 PersistentLocalId = new PersistentLocalId(123),
-                Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string> { { Taal.NL, "Bosstraat" } }},
+                Request = new ProposeStreetNameRequest { GemeenteId = "http://puri/11001", Straatnamen = new Dictionary<Taal, string> { { Taal.NL, "Bosstraat" } }},
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()
@@ -301,7 +304,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             var request = new ProposeStreetNameLambdaRequest(municipalityId.ToString(), new ProposeStreetNameSqsRequest
             {
                 PersistentLocalId = new PersistentLocalId(123),
-                Request = new ProposeStreetNameRequest { Straatnamen = new Dictionary<Taal, string> { { Taal.NL, "Bosstraat" } } },
+                Request = new ProposeStreetNameRequest { GemeenteId = "http://puri/11001", Straatnamen = new Dictionary<Taal, string> { { Taal.NL, "Bosstraat" } } },
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object?>(),
                 ProvenanceData = Fixture.Create<ProvenanceData>()

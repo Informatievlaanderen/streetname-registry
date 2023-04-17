@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Projections.BackOffice
             When<Envelope<StreetNameWasProposedV2>>(async (_, message, cancellationToken) =>
             {
                 await using var backOfficeContext = await backOfficeContextFactory.CreateDbContextAsync(cancellationToken);
-                await backOfficeContext.AddIdempotentMunicipalityStreetNameIdRelation(message.Message.PersistentLocalId, message.Message.MunicipalityId, cancellationToken);
+                await backOfficeContext.AddIdempotentMunicipalityStreetNameIdRelation(message.Message.PersistentLocalId, message.Message.MunicipalityId, message.Message.NisCode, cancellationToken);
                 await backOfficeContext.SaveChangesAsync(cancellationToken);
             });
         }
