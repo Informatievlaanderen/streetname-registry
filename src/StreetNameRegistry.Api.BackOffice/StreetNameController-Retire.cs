@@ -1,24 +1,24 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using Abstractions.Requests;
+    using Abstractions.SqsRequests;
+    using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Infrastructure;
+    using Infrastructure.Authorization;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Municipality;
-    using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Abstractions.SqsRequests;
-    using Abstractions.Validation;
-    using Be.Vlaanderen.Basisregisters.AggregateSource;
 
     public partial class StreetNameController
     {
@@ -30,6 +30,7 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <param name="ifMatchHeaderValue"></param>
         /// <param name="cancellationToken"></param>
         [HttpPost("{persistentLocalId}/acties/opheffen")]
+        [PersistentLocalId(Name = "persistentLocalId")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]

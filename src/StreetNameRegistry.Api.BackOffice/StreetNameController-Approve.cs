@@ -40,6 +40,7 @@ namespace StreetNameRegistry.Api.BackOffice
         [SwaggerResponseExample(StatusCodes.Status412PreconditionFailed, typeof(PreconditionFailedResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyNames.Adres.DecentraleBijwerker)]
+        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "NisCodePolicy")]
         public async Task<IActionResult> Approve(
             [FromServices] IIfMatchHeaderValidator ifMatchHeaderValidator,
             [FromRoute] ApproveStreetNameRequest request,

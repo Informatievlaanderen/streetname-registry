@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 {
     using Abstractions;
+    using Authorization;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
@@ -15,7 +16,9 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
     using Consumer.Infrastructure.Modules;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using NisCodeService.DynamoDb.Extensions;
     using StreetNameRegistry.Infrastructure.Modules;
     using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
 
@@ -76,7 +79,10 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 
             builder.RegisterSnapshotModule(_configuration);
 
-            _services.AddAcmIdmAuthorizationHandlers();
+            _services.AddDynamoDbNisCodeService();
+
+             _services.AddSingleton<IAuthorizationHandler, NisCodeAuthorizationHandler>();
+             _services.AddAcmIdmAuthorizationHandlers();
 
             builder.Populate(_services);
         }
