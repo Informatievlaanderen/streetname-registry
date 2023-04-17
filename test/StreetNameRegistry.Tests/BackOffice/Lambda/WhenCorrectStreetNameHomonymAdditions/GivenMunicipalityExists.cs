@@ -53,8 +53,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameHomony
             // Arrange
             var municipalityId = Fixture.Create<MunicipalityId>();
             var streetNamePersistentLocalId = Fixture.Create<PersistentLocalId>();
+            var nisCode = "23002";
 
-            ImportMunicipality(municipalityId, Fixture.Create<NisCode>());
+            ImportMunicipality(municipalityId, new NisCode(nisCode));
             SetMunicipalityToCurrent(municipalityId);
             AddOfficialLanguageDutch(municipalityId);
 
@@ -72,7 +73,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameHomony
                 Fixture.Create<Provenance>()));
 
             await _backOfficeContext.MunicipalityIdByPersistentLocalId.AddAsync(
-                new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId));
+                new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId, nisCode));
             await _backOfficeContext.SaveChangesAsync();
 
             var etag = new ETagResponse(string.Empty, Fixture.Create<string>());

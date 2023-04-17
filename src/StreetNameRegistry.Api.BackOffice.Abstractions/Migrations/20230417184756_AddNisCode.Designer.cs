@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreetNameRegistry.Api.BackOffice.Abstractions;
 
@@ -11,9 +12,10 @@ using StreetNameRegistry.Api.BackOffice.Abstractions;
 namespace StreetNameRegistry.Api.BackOffice.Abstractions.Migrations
 {
     [DbContext(typeof(BackOfficeContext))]
-    partial class BackOfficeContextModelSnapshot : ModelSnapshot
+    [Migration("20230417184756_AddNisCode")]
+    partial class AddNisCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

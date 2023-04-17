@@ -47,8 +47,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             var municipalityId = new MunicipalityId(Guid.NewGuid());
             var streetNamePersistentLocalId = new PersistentLocalId(456);
             var provenance = Fixture.Create<Provenance>();
+            var nisCode = "23002";
 
-            ImportMunicipality(municipalityId, new NisCode("23002"));
+            ImportMunicipality(municipalityId, new NisCode(nisCode));
             SetMunicipalityToCurrent(municipalityId);
             AddOfficialLanguageDutch(municipalityId);
             ProposeStreetName(
@@ -58,7 +59,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
                 provenance);
 
             await _backOfficeContext.MunicipalityIdByPersistentLocalId.AddAsync(
-                new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId));
+                new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId, nisCode));
             await _backOfficeContext.SaveChangesAsync();
 
             var etag = new ETagResponse(string.Empty, Fixture.Create<string>());

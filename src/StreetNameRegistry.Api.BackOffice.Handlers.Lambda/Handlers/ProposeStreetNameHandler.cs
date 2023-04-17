@@ -3,8 +3,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions;
+    using Abstractions.Convertors;
     using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
@@ -54,8 +56,16 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 // Idempotent: Do Nothing return last etag
             }
 
+            var nisCode = request.Request.GemeenteId
+                .AsIdentifier()
+                .Map(IdentifierMappings.MunicipalityNisCode);
+
             await _backOfficeContext
-                .AddIdempotentMunicipalityStreetNameIdRelation(request.PersistentLocalId, request.MunicipalityPersistentLocalId(), cancellationToken);
+                .AddIdempotentMunicipalityStreetNameIdRelation(
+                    request.PersistentLocalId,
+                    request.MunicipalityPersistentLocalId(),
+                    nisCode,
+                    cancellationToken);
             await _backOfficeContext.SaveChangesAsync(cancellationToken);
 
             var lastHash = await GetStreetNameHash(request.MunicipalityPersistentLocalId(), request.PersistentLocalId, cancellationToken);
