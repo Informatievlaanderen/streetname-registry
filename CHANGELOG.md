@@ -1,3 +1,10 @@
+# [3.26.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.5...v3.26.0) (2023-04-18)
+
+
+### Features
+
+* add NisCode to BackOfficeContext ([8697c6b](https://github.com/informatievlaanderen/streetname-registry/commit/8697c6b121245e6f81d6c3e8912f5c6ce85e9c30))
+
 ## [3.25.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.4...v3.25.5) (2023-04-14)
 
 
