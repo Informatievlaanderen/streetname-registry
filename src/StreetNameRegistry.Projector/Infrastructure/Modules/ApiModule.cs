@@ -19,6 +19,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using SqlStreamStore;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Projections.Extract;
     using StreetNameRegistry.Projections.Extract.StreetNameExtract;
@@ -86,8 +87,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 RegisterLegacyProjectionsV2(builder);
                 RegisterWfsProjectionsV2(builder);
                 RegisterWmsProjectionsV2(builder);
-                RegisterWfsProjections(builder); //TODO: Remove when Wfs has been filled in staging
-                RegisterWmsProjections(builder); //TODO: Remove when Wms has been filled in staging
             }
             else
             {
@@ -128,7 +127,11 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                     _configuration,
                     _loggerFactory)
                 .RegisterProjections<StreetNameExtractProjectionsV2, ExtractContext>(
-                    context => new StreetNameExtractProjectionsV2(context.Resolve<IOptions<ExtractConfig>>(), DbaseCodePage.Western_European_ANSI.ToEncoding()),
+                    context => new StreetNameExtractProjectionsV2(
+                        context.Resolve<IReadonlyStreamStore>(),
+                        context.Resolve<EventDeserializer>(),
+                        context.Resolve<IOptions<ExtractConfig>>(),
+                        DbaseCodePage.Western_European_ANSI.ToEncoding()),
                     ConnectedProjectionSettings.Default);
         }
 

@@ -4,14 +4,19 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Microsoft.Extensions.Options;
     using Municipality;
     using Municipality.Events;
     using NodaTime;
+    using SqlStreamStore;
+    using SqlStreamStore.Streams;
+    using StreetName.Events;
 
     [ConnectedProjectionName("Extract straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor het straatnamen extract voorziet.")]
@@ -24,10 +29,81 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         private readonly Encoding _encoding;
         private readonly ExtractConfig _extractConfig;
 
-        public StreetNameExtractProjectionsV2(IOptions<ExtractConfig> extractConfig, Encoding encoding)
+        public StreetNameExtractProjectionsV2(
+            IReadonlyStreamStore streamStore,
+            EventDeserializer eventDeserializer,
+            IOptions<ExtractConfig> extractConfig,
+            Encoding encoding)
         {
             _extractConfig = extractConfig.Value ?? throw new ArgumentNullException(nameof(extractConfig));
             _encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
+
+             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
+            {
+                if (message.Message.IsRemoved)
+                    return;
+
+                var firstEventJsonData = await streamStore
+                    .ReadStreamForwards(message.Message.StreetNameId.ToString("D"), StreamVersion.Start, 1, cancellationToken: ct)
+                    .GetAwaiter()
+                    .GetResult()
+                    .Messages
+                    .First()
+                    .GetJsonData(ct);
+
+                var firstEvent = (IHasProvenance) eventDeserializer.DeserializeObject(firstEventJsonData, typeof(StreetNameWasRegistered));
+                var creationDateAsString = firstEvent.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset();
+
+                var streetNameExtractItemV2 = new StreetNameExtractItemV2
+                {
+                    StreetNamePersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    DbaseRecord = new StreetNameDbaseRecordV2
+                    {
+                        gemeenteid = { Value = message.Message.NisCode },
+                        creatieid = { Value = creationDateAsString },
+                        versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
+                    }.ToBytes(_encoding)
+                };
+                UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
+                UpdateStraatnm(streetNameExtractItemV2, message.Message.Names);
+                UpdateHomoniemtv(streetNameExtractItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
+
+                var status = message.Message.Status switch
+                {
+                    StreetNameStatus.Current => InUse,
+                    StreetNameStatus.Proposed => Proposed,
+                    StreetNameStatus.Retired => Retired,
+                    _ => throw new ArgumentOutOfRangeException(nameof(message.Message.Status))
+                };
+
+                UpdateStatus(streetNameExtractItemV2, status);
+
+                await context
+                    .StreetNameExtractV2
+                    .AddAsync(streetNameExtractItemV2, ct);
+            });
+
+            When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
+            {
+                var streetNameExtractItemV2 = new StreetNameExtractItemV2
+                {
+                    StreetNamePersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    DbaseRecord = new StreetNameDbaseRecordV2
+                    {
+                        gemeenteid = { Value = message.Message.NisCode},
+                        creatieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() },
+                        versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
+                    }.ToBytes(_encoding)
+                };
+                UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
+                UpdateStraatnm(streetNameExtractItemV2, message.Message.StreetNameNames);
+                UpdateStatus(streetNameExtractItemV2, Proposed);
+                await context
+                    .StreetNameExtractV2
+                    .AddAsync(streetNameExtractItemV2, ct);
+            });
 
             When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
             {
@@ -135,60 +211,6 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }, ct);
             });
 
-            When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
-            {
-                if (message.Message.IsRemoved)
-                    return;
-                
-                var streetNameExtractItemV2 = new StreetNameExtractItemV2
-                {
-                    StreetNamePersistentLocalId = message.Message.PersistentLocalId,
-                    MunicipalityId = message.Message.MunicipalityId,
-                    DbaseRecord = new StreetNameDbaseRecord
-                    {
-                        gemeenteid = { Value = message.Message.NisCode },
-                        versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
-                    }.ToBytes(_encoding)
-                };
-                UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
-                UpdateStraatnm(streetNameExtractItemV2, message.Message.Names);
-                UpdateHomoniemtv(streetNameExtractItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
-
-                var status = message.Message.Status switch
-                {
-                    StreetNameStatus.Current => InUse,
-                    StreetNameStatus.Proposed => Proposed,
-                    StreetNameStatus.Retired => Retired,
-                    _ => throw new ArgumentOutOfRangeException(nameof(message.Message.Status))
-                };
-
-                UpdateStatus(streetNameExtractItemV2, status);
-
-                await context
-                    .StreetNameExtractV2
-                    .AddAsync(streetNameExtractItemV2, ct);
-            });
-
-            When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
-            {
-                var streetNameExtractItemV2 = new StreetNameExtractItemV2
-                {
-                    StreetNamePersistentLocalId = message.Message.PersistentLocalId,
-                    MunicipalityId = message.Message.MunicipalityId,
-                    DbaseRecord = new StreetNameDbaseRecord
-                    {
-                        gemeenteid = { Value = message.Message.NisCode},
-                        versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
-                    }.ToBytes(_encoding)
-                };
-                UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
-                UpdateStraatnm(streetNameExtractItemV2, message.Message.StreetNameNames);
-                UpdateStatus(streetNameExtractItemV2, Proposed);
-                await context
-                    .StreetNameExtractV2
-                    .AddAsync(streetNameExtractItemV2, ct);
-            });
-
             When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, streetName =>
@@ -279,9 +301,9 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         private void UpdateVersie(StreetNameExtractItemV2 streetName, Instant timestamp)
             => UpdateRecord(streetName, record => record.versieid.SetValue(timestamp.ToBelgianDateTimeOffset()));
 
-        private void UpdateRecord(StreetNameExtractItemV2 municipality, Action<StreetNameDbaseRecord> updateFunc)
+        private void UpdateRecord(StreetNameExtractItemV2 municipality, Action<StreetNameDbaseRecordV2> updateFunc)
         {
-            var record = new StreetNameDbaseRecord();
+            var record = new StreetNameDbaseRecordV2();
             record.FromBytes(municipality.DbaseRecord, _encoding);
 
             updateFunc(record);
