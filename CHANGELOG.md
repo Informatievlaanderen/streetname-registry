@@ -1,3 +1,10 @@
+## [3.26.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.26.0...v3.26.1) (2023-04-18)
+
+
+### Bug Fixes
+
+* niscode migration ([fdf755b](https://github.com/informatievlaanderen/streetname-registry/commit/fdf755b55097eb85c7a1108e77e81c0b87048ceb))
+
 # [3.26.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.25.5...v3.26.0) (2023-04-18)
 
 
