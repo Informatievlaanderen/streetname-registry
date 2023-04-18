@@ -105,8 +105,8 @@ namespace StreetNameRegistry.Api.Extract.Extracts
 
             byte[] TransformRecord(StreetNameExtractItemV2 r)
             {
-                var item = new StreetNameDbaseRecord();
-                item.FromBytes(r.DbaseRecord, DbfFileWriter<StreetNameDbaseRecord>.Encoding);
+                var item = new StreetNameDbaseRecordV2();
+                item.FromBytes(r.DbaseRecord, DbfFileWriter<StreetNameDbaseRecordV2>.Encoding);
 
                 var municipality = cachedMunicipalities.First(x => x.NisCode == item.gemeenteid.Value);
 
@@ -133,12 +133,12 @@ namespace StreetNameRegistry.Api.Extract.Extracts
                         break;
                 }
 
-                return item.ToBytes(DbfFileWriter<StreetNameDbaseRecord>.Encoding);
+                return item.ToBytes(DbfFileWriter<StreetNameDbaseRecordV2>.Encoding);
             }
 
-            yield return ExtractBuilder.CreateDbfFile<StreetNameExtractItemV2, StreetNameDbaseRecord>(
+            yield return ExtractBuilder.CreateDbfFile<StreetNameExtractItemV2, StreetNameDbaseRecordV2>(
                 ExtractController.ZipName,
-                new StreetNameDbaseSchema(),
+                new StreetNameDbaseSchemaV2(),
                 extractItems,
                 extractItems.Count,
                 TransformRecord);
