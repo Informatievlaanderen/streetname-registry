@@ -16,6 +16,10 @@ namespace StreetNameRegistry.Projections.BackOffice
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
     using Be.Vlaanderen.Basisregisters.Projector.Modules;
     using Destructurama;
+    using Elastic.Apm.DiagnosticSource;
+    using Elastic.Apm.EntityFrameworkCore;
+    using Elastic.Apm.Extensions.Hosting;
+    using Elastic.Apm.SqlClient;
     using Infrastructure;
     using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
@@ -107,6 +111,10 @@ namespace StreetNameRegistry.Projections.BackOffice
                         c => new BackOfficeProjections(c.Resolve<IDbContextFactory<BackOfficeContext>>()),
                         ConnectedProjectionSettings.Default);
                 })
+                .UseElasticApm(
+                    new EfCoreDiagnosticsSubscriber(),
+                    new HttpDiagnosticsSubscriber(),
+                    new SqlClientDiagnosticSubscriber())
                 .UseConsoleLifetime()
                 .Build();
 

@@ -22,6 +22,11 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using System.Reflection;
     using System.Threading;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
+    using Elastic.Apm.AspNetCore;
+    using Elastic.Apm.AspNetCore.DiagnosticListener;
+    using Elastic.Apm.DiagnosticSource;
+    using Elastic.Apm.EntityFrameworkCore;
+    using Elastic.Apm.SqlClient;
     using Microsoft.Extensions.Options;
     using StreetNameRegistry.Projections.Wfs;
     using StreetNameRegistry.Projections.Wms;
@@ -167,6 +172,13 @@ namespace StreetNameRegistry.Projector.Infrastructure
                         ServiceName = _configuration["DataDog:ServiceName"],
                     }
                 })
+
+                .UseElasticApm(_configuration,
+                    new AspNetCoreDiagnosticSubscriber(),
+                    new AspNetCoreErrorDiagnosticsSubscriber(),
+                    new EfCoreDiagnosticsSubscriber(),
+                    new HttpDiagnosticsSubscriber(),
+                    new SqlClientDiagnosticSubscriber())
 
                 .UseDefaultForApi(new StartupUseOptions
                 {

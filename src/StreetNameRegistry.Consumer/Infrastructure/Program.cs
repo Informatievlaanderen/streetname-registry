@@ -12,6 +12,10 @@ namespace StreetNameRegistry.Consumer.Infrastructure
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer;
     using Destructurama;
+    using Elastic.Apm.DiagnosticSource;
+    using Elastic.Apm.EntityFrameworkCore;
+    using Elastic.Apm.Extensions.Hosting;
+    using Elastic.Apm.SqlClient;
     using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -143,6 +147,10 @@ namespace StreetNameRegistry.Consumer.Infrastructure
 
                     containerBuilder.Populate(services);
                 })
+                .UseElasticApm(
+                    new EfCoreDiagnosticsSubscriber(),
+                    new HttpDiagnosticsSubscriber(),
+                    new SqlClientDiagnosticSubscriber())
                 .UseConsoleLifetime()
                 .Build();
 

@@ -1,4 +1,3 @@
-
 Be.Vlaanderen.Basisregisters.Aws.DistributedMutex
 Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac
 
@@ -34,8 +33,13 @@ Microsoft.Extensions.Configuration.EnvironmentVariables
 Microsoft.Extensions.Configuration.Json
 Microsoft.Extensions.Hosting
 
-SourceLink.Embed.AllSourceFiles
-SourceLink.Copy.PdbFiles
-
 Polly
 Destructurama.JsonNet
+
+Elastic.Apm
+Elastic.Apm.EntityFrameworkCore
+Elastic.Apm.Extensions.Hosting
+Elastic.Apm.SqlClient
+
+SourceLink.Embed.AllSourceFiles
+SourceLink.Copy.PdbFiles
