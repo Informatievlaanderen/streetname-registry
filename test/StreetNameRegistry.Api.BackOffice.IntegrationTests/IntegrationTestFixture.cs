@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
     using System.IO;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.DockerUtilities;
     using IdentityModel;
@@ -15,6 +16,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
     using Microsoft.Data.SqlClient;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Xunit;
 
     public class IntegrationTestFixture : IAsyncLifetime
@@ -66,6 +68,13 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
             await WaitForSqlServerToBecomeAvailable();
 
             await CreateDatabase();
+
+            // This is necessary for Migration StreetNameRegistry.Api.BackOffice.Abstractions.Migrations.AddNisCode
+            // We don't want to run this migration in the BackOffice.Api itself.
+            await Consumer.Infrastructure.MigrationsHelper.RunAsync(
+                configuration.GetConnectionString("ConsumerAdmin"),
+                new NullLoggerFactory(),
+                CancellationToken.None);
 
             var hostBuilder = new WebHostBuilder()
                 .UseConfiguration(configuration)

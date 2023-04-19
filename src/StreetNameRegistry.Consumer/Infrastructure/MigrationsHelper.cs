@@ -19,7 +19,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken = default)
         {
-            var logger = loggerFactory?.CreateLogger<MigrationsLogger>();
+            var logger = loggerFactory.CreateLogger<MigrationsLogger>();
 
             return Policy
                 .Handle<SqlException>()
