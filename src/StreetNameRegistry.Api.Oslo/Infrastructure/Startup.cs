@@ -9,6 +9,12 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Configuration;
+    using Elastic.Apm.AspNetCore;
+    using Elastic.Apm.AspNetCore.DiagnosticListener;
+    using Elastic.Apm.DiagnosticSource;
+    using Elastic.Apm.EntityFrameworkCore;
+    using Elastic.Apm.SqlClient;
+    using ElasticApm.MediatR;
     using FeatureToggles;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -48,8 +54,6 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
             var baseUrlForExceptions = baseUrl.EndsWith("/")
                 ? baseUrl[..^1]
                 : baseUrl;
-
-            var useProjectionsV2Toggle = new UseProjectionsV2Toggle(false);
 
             services
                 .ConfigureDefaultForApi<Startup>(new StartupConfigureOptions
@@ -149,6 +153,14 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
                         ServiceName = _configuration["DataDog:ServiceName"]
                     }
                 })
+
+                .UseElasticApm(_configuration,
+                    new AspNetCoreDiagnosticSubscriber(),
+                    new AspNetCoreErrorDiagnosticsSubscriber(),
+                    new EfCoreDiagnosticsSubscriber(),
+                    new HttpDiagnosticsSubscriber(),
+                    new SqlClientDiagnosticSubscriber(),
+                    new MediatrDiagnosticsSubscriber())
 
                 .UseDefaultForApi(new StartupUseOptions
                 {

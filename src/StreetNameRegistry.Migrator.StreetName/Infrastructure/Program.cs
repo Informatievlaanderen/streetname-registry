@@ -60,7 +60,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 
             var container = ConfigureServices(configuration);
 
-            Log.Information("Starting StreetNameRegistry.Consumer");
+            Log.Information("Starting StreetNameRegistry.Migrator");
 
             try
             {

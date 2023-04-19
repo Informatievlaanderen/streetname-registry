@@ -27,5 +27,9 @@ Be.Vlaanderen.Basisregisters.Aws.DistributedMutex
 
 Be.Vlaanderen.Basisregisters.GrAr.Legacy
 
+Elastic.Apm
+Elastic.Apm.EntityFrameworkCore
+Elastic.Apm.SqlClient
+
 SourceLink.Embed.AllSourceFiles
 SourceLink.Copy.PdbFiles
