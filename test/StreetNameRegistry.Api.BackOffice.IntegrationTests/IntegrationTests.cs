@@ -19,17 +19,17 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         }
 
         [Theory]
-        // [InlineData("/v2/straatnamen/acties/voorstellen", Scopes.DvArAdresBeheer)]
+        [InlineData("/v2/straatnamen/acties/voorstellen", Scopes.DvArAdresBeheer)]
         [InlineData("/v2/straatnamen/1/acties/goedkeuren", Scopes.DvArAdresBeheer)]
-        // [InlineData("/v2/straatnamen/1/acties/corrigeren/goedkeuring", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
-        // [InlineData("/v2/straatnamen/1/acties/corrigeren/homoniemtoevoeging", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
-        // [InlineData("/v2/straatnamen/1/acties/afkeuren", Scopes.DvArAdresBeheer)]
-        // [InlineData("/v2/straatnamen/1/acties/corrigeren/afkeuring", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
-        // [InlineData("/v2/straatnamen/1/acties/opheffen", Scopes.DvArAdresBeheer)]
-        // [InlineData("/v2/straatnamen/1/acties/corrigeren/opheffing", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
-        // [InlineData("/v2/straatnamen/1/acties/corrigeren/straatnaam", Scopes.DvArAdresBeheer)]
-        // [InlineData("/v2/straatnamen/1/acties/wijzigen/straatnaam", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
-        // [InlineData("/v2/straatnamen/1/acties/verwijderen", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/goedkeuring", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/homoniemtoevoeging", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
+        [InlineData("/v2/straatnamen/1/acties/afkeuren", Scopes.DvArAdresBeheer)]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/afkeuring", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
+        [InlineData("/v2/straatnamen/1/acties/opheffen", Scopes.DvArAdresBeheer)]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/opheffing", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
+        [InlineData("/v2/straatnamen/1/acties/corrigeren/straatnaam", Scopes.DvArAdresBeheer)]
+        [InlineData("/v2/straatnamen/1/acties/wijzigen/straatnaam", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
+        [InlineData("/v2/straatnamen/1/acties/verwijderen", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
         public async Task ReturnsSuccess(string endpoint, string requiredScopes)
         {
             var client = _fixture.TestServer.CreateClient();

@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions.Requests;
@@ -25,12 +26,12 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <summary>
         /// Hef een straatnaam op.
         /// </summary>
+        /// <param name="nisCodeAuthorizer"></param>
         /// <param name="ifMatchHeaderValidator"></param>
         /// <param name="request"></param>
         /// <param name="ifMatchHeaderValue"></param>
         /// <param name="cancellationToken"></param>
         [HttpPost("{persistentLocalId}/acties/opheffen")]
-        [PersistentLocalId(Name = "persistentLocalId")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]
@@ -41,6 +42,7 @@ namespace StreetNameRegistry.Api.BackOffice
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyNames.Adres.DecentraleBijwerker)]
         public async Task<IActionResult> Retire(
+            [FromServices] INisCodeAuthorizer<PersistentLocalId> nisCodeAuthorizer,
             [FromServices] IIfMatchHeaderValidator ifMatchHeaderValidator,
             [FromRoute] RetireStreetNameRequest request,
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
@@ -48,6 +50,11 @@ namespace StreetNameRegistry.Api.BackOffice
         {
             try
             {
+                if (await nisCodeAuthorizer.IsNotAuthorized(HttpContext, new PersistentLocalId(request.PersistentLocalId), cancellationToken))
+                {
+                    throw new ApiException(ValidationErrors.NisCodeAuthorization.NotAuthorized.Message, (int)HttpStatusCode.Forbidden);
+                }
+
                 if (!await ifMatchHeaderValidator.IsValid(ifMatchHeaderValue, new PersistentLocalId(request.PersistentLocalId), cancellationToken))
                 {
                     return new PreconditionFailedResult();

@@ -1,26 +1,24 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 {
     using Abstractions;
+    using Abstractions.SqsRequests;
     using Authorization;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
+    using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Be.Vlaanderen.Basisregisters.DependencyInjection;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
+    using Consumer.Infrastructure.Modules;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
-    using Be.Vlaanderen.Basisregisters.AcmIdm;
-    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
-    using Consumer.Infrastructure.Modules;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc.Infrastructure;
-    using NisCodeService.DynamoDb.Extensions;
     using StreetNameRegistry.Infrastructure.Modules;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
 
     public sealed class ApiModule : Module
     {
@@ -79,10 +77,10 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 
             builder.RegisterSnapshotModule(_configuration);
 
-            _services.AddDynamoDbNisCodeService();
-
-             _services.AddSingleton<IAuthorizationHandler, NisCodeAuthorizationHandler>();
-             _services.AddAcmIdmAuthorizationHandlers();
+            // Authorization
+            _services
+                .AddAcmIdmAuthorizationHandlers()
+                .AddNisCodeAuthorizationWithDynamoDb();
 
             builder.Populate(_services);
         }

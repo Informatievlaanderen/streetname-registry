@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
+    using System.Net;
     using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
@@ -12,13 +13,13 @@ namespace StreetNameRegistry.Api.BackOffice
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Municipality;
-    using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions.SqsRequests;
     using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Infrastructure.Authorization;
 
     public partial class StreetNameController
     {
@@ -26,6 +27,7 @@ namespace StreetNameRegistry.Api.BackOffice
         /// Keur een straatnaam goed.
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="nisCodeAuthorizer"></param>
         /// <param name="ifMatchHeaderValidator"></param>
         /// <param name="ifMatchHeaderValue"></param>
         /// <param name="cancellationToken"></param>
@@ -40,8 +42,8 @@ namespace StreetNameRegistry.Api.BackOffice
         [SwaggerResponseExample(StatusCodes.Status412PreconditionFailed, typeof(PreconditionFailedResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyNames.Adres.DecentraleBijwerker)]
-        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "NisCodePolicy")]
         public async Task<IActionResult> Approve(
+            [FromServices] INisCodeAuthorizer<PersistentLocalId> nisCodeAuthorizer,
             [FromServices] IIfMatchHeaderValidator ifMatchHeaderValidator,
             [FromRoute] ApproveStreetNameRequest request,
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
@@ -49,6 +51,11 @@ namespace StreetNameRegistry.Api.BackOffice
         {
             try
             {
+                if (await nisCodeAuthorizer.IsNotAuthorized(HttpContext, new PersistentLocalId(request.PersistentLocalId), cancellationToken))
+                {
+                    throw new ApiException(ValidationErrors.NisCodeAuthorization.NotAuthorized.Message, (int)HttpStatusCode.Forbidden);
+                }
+
                 if (!await ifMatchHeaderValidator.IsValid(ifMatchHeaderValue,
                         new PersistentLocalId(request.PersistentLocalId), cancellationToken))
                 {

@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
+    using System.Net;
     using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
@@ -20,12 +21,14 @@ namespace StreetNameRegistry.Api.BackOffice
     using Abstractions.SqsRequests;
     using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Infrastructure.Authorization;
 
     public partial class StreetNameController
     {
         /// <summary>
         /// Corrigeer de straatnaam van een straatnaam.
         /// </summary>
+        /// <param name="nisCodeAuthorizer"></param>
         /// <param name="ifMatchHeaderValidator"></param>
         /// <param name="validator"></param>
         /// <param name="persistentLocalId"></param>
@@ -43,6 +46,7 @@ namespace StreetNameRegistry.Api.BackOffice
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyNames.Adres.DecentraleBijwerker)]
         public async Task<IActionResult> CorrectStreetNameNames(
+            [FromServices] INisCodeAuthorizer<PersistentLocalId> nisCodeAuthorizer,
             [FromServices] IIfMatchHeaderValidator ifMatchHeaderValidator,
             [FromServices] IValidator<CorrectStreetNameNamesRequest> validator,
             [FromRoute] int persistentLocalId,
@@ -50,7 +54,12 @@ namespace StreetNameRegistry.Api.BackOffice
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
             CancellationToken cancellationToken = default)
         {
-           await validator.ValidateAndThrowAsync(request, cancellationToken);
+            if (await nisCodeAuthorizer.IsNotAuthorized(HttpContext, new PersistentLocalId(persistentLocalId), cancellationToken))
+            {
+                throw new ApiException(ValidationErrors.NisCodeAuthorization.NotAuthorized.Message, (int)HttpStatusCode.Forbidden);
+            }
+
+            await validator.ValidateAndThrowAsync(request, cancellationToken);
 
             try
             {

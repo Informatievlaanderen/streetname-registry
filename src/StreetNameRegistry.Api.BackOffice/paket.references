@@ -1,5 +1,6 @@
 AspNetCore.HealthChecks.SqlServer
 Be.Vlaanderen.Basisregisters.NisCodeService.DynamoDb
+Be.Vlaanderen.Basisregisters.NisCodeService.HardCoded
 Be.Vlaanderen.Basisregisters.AcmIdm
 Be.Vlaanderen.Basisregisters.Api
 Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency

@@ -20,6 +20,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     using Municipality;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Infrastructure;
+    using StreetNameRegistry.Api.BackOffice.Infrastructure.Authorization;
     using StreetNameRegistry.Api.BackOffice.Infrastructure.Options;
     using Testing;
     using Xunit.Abstractions;
@@ -53,6 +54,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
             MockMediator
                 .Setup(x => x.Send(It.IsAny<TRequest>(), CancellationToken.None))
                 .Returns(Task.FromResult(response));
+        }
+
+        protected INisCodeAuthorizer<PersistentLocalId> MockNisCodeAuthorizer(bool authorized = true)
+        {
+            var mock = new Mock<INisCodeAuthorizer<PersistentLocalId>>();
+            mock
+                .Setup(x =>
+                    x.IsNotAuthorized(It.IsAny<HttpContext>(), It.IsAny<PersistentLocalId>(), CancellationToken.None))
+                .ReturnsAsync(!authorized);
+            return mock.Object;
         }
 
         protected IIfMatchHeaderValidator MockValidIfMatchValidator(bool result = true)

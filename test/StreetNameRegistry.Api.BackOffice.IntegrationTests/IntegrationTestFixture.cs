@@ -73,7 +73,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
             // We don't want to run this migration in the BackOffice.Api itself.
             await Consumer.Infrastructure.MigrationsHelper.RunAsync(
                 configuration.GetConnectionString("ConsumerAdmin"),
-                new NullLoggerFactory(),
+                NullLoggerFactory.Instance,
                 CancellationToken.None);
 
             var hostBuilder = new WebHostBuilder()

@@ -23,8 +23,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using System;
     using System.Linq;
     using System.Reflection;
-    using Authorization;
-    using Be.Vlaanderen.Basisregisters.AcmIdm.AuthorizationHandlers;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Elastic.Apm.AspNetCore;
     using Elastic.Apm.AspNetCore.DiagnosticListener;
@@ -115,15 +113,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 
                             Authorization = options =>
                             {
-                                options.AddPolicy(PolicyNames.Adres.DecentraleBijwerker, builder =>
-                                {
-                                    builder.AddRequirements(new AcmIdmAuthorizationRequirement(new[] { Scopes.DvArAdresBeheer }));
-                                    builder.AddRequirements(new NisCodeAuthorizationRequirement("persistentLocalId"));
-                                });
-                                options.AddPolicy(PolicyNames.Adres.InterneBijwerker, builder =>
-                                {
-                                    builder.AddRequirements(new AcmIdmAuthorizationRequirement(new[] { Scopes.DvArAdresUitzonderingen }));
-                                });
+                                options.AddAcmIdmAuthorization();
                             }
                         }
                     }
@@ -221,6 +211,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
             StreetNameRegistry.Infrastructure.MigrationsHelper.Run(
                 _configuration.GetConnectionString("Sequences"),
                 serviceProvider.GetService<ILoggerFactory>());
+
             MigrationsHelper.Run(
                 _configuration.GetConnectionString("BackOffice"),
                 serviceProvider.GetService<ILoggerFactory>());

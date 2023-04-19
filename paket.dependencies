@@ -87,7 +87,8 @@ nuget Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer 4.8.
 nuget Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer 4.8.1
 nuget Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple 4.8.1
 
-nuget Be.Vlaanderen.Basisregisters.NisCodeService.DynamoDb 1.2.0
+nuget Be.Vlaanderen.Basisregisters.NisCodeService.DynamoDb 1.2.2
+nuget Be.Vlaanderen.Basisregisters.NisCodeService.HardCoded 1.2.2
 
 nuget Be.Vlaanderen.Basisregisters.Shaperon 9.0.1
 
