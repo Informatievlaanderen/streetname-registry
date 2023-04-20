@@ -1,3 +1,10 @@
+## [3.27.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.0...v3.27.1) (2023-04-20)
+
+
+### Bug Fixes
+
+* find and update extractv2 ([ed0da3e](https://github.com/informatievlaanderen/streetname-registry/commit/ed0da3ea7ee9756e89a49b1cc4979c37f4d8aeb7))
+
 # [3.27.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.26.1...v3.27.0) (2023-04-20)
 
 
