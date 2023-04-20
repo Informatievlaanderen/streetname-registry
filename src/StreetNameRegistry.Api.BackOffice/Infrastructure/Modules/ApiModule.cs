@@ -80,7 +80,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             // Authorization
             _services
                 .AddAcmIdmAuthorizationHandlers()
-                .AddNisCodeAuthorizationWithDynamoDb();
+                .AddNisCodeAuthorizationWithDynamoDb(_configuration);
 
             builder.Populate(_services);
         }

@@ -10,11 +10,16 @@
     {
         private readonly INisCodeFinder<T> _nisCodeFinder;
         private readonly INisCodeService _nisCodeService;
+        private readonly IOvoCodeWhiteList _ovoCodeWhiteList;
 
-        public NisCodeAuthorizer(INisCodeFinder<T> nisCodeFinder, INisCodeService nisCodeService)
+        public NisCodeAuthorizer(
+            INisCodeFinder<T> nisCodeFinder,
+            INisCodeService nisCodeService,
+            IOvoCodeWhiteList ovoCodeWhiteList)
         {
             _nisCodeFinder = nisCodeFinder;
             _nisCodeService = nisCodeService;
+            _ovoCodeWhiteList = ovoCodeWhiteList;
         }
 
         public async Task<bool> IsNotAuthorized(HttpContext httpContext, T id, CancellationToken ct)
@@ -24,6 +29,11 @@
             if (ovoCodeClaim is null)
             {
                 return true;
+            }
+
+            if (await _ovoCodeWhiteList.IsWhiteListed(ovoCodeClaim.Value, ct))
+            {
+                return false;
             }
 
             var requestNisCode = await _nisCodeService.Get(ovoCodeClaim.Value, ct);

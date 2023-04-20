@@ -19,6 +19,7 @@
         private readonly NisCodeAuthorizer<PersistentLocalId> _authorizer;
         private readonly Mock<INisCodeFinder<PersistentLocalId>> _nisCodeFinder;
         private readonly Mock<INisCodeService> _nisCodeService;
+        private readonly Mock<IOvoCodeWhiteList> _ovoCodeWhiteList;
 
         private readonly IDictionary<string, string> _ovoCodeToNisCodes = new Dictionary<string, string>
         {
@@ -31,9 +32,11 @@
         {
             _nisCodeService = new Mock<INisCodeService>();
             _nisCodeFinder = new Mock<INisCodeFinder<PersistentLocalId>>();
+            _ovoCodeWhiteList = new Mock<IOvoCodeWhiteList>();
             _authorizer = new NisCodeAuthorizer<PersistentLocalId>(
                 _nisCodeFinder.Object,
-                _nisCodeService.Object);
+                _nisCodeService.Object,
+                _ovoCodeWhiteList.Object);
 
             foreach (var (ovoCode, nisCode) in _ovoCodeToNisCodes)
             {
@@ -94,6 +97,23 @@
                 CancellationToken.None);
 
             isNotAuthorized.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task WhenOvoCodeIsWhiteListed_ThenIsAuthorized()
+        {
+            var ovoCodeFromClaim = _ovoCodeToNisCodes.First().Key;
+
+            _ovoCodeWhiteList
+                .Setup(x => x.IsWhiteListed(ovoCodeFromClaim, CancellationToken.None))
+                .ReturnsAsync(true);
+
+            var isNotAuthorized = await _authorizer.IsNotAuthorized(
+                new DefaultHttpContext { User = CreateUserWithOvoCodeClaim(ovoCodeFromClaim) },
+                new PersistentLocalId(1),
+                CancellationToken.None);
+
+            isNotAuthorized.Should().BeFalse();
         }
 
         [Fact]
