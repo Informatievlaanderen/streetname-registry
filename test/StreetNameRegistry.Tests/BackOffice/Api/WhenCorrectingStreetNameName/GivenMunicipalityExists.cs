@@ -45,7 +45,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
 
             var persistentLocalId = 123;
             var result = (AcceptedResult) await Controller.CorrectStreetNameNames(
-                MockNisCodeAuthorizer(),
+                MockNisCodeAuthorizer<PersistentLocalId>(),
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<CorrectStreetNameNamesRequest>(),
                 persistentLocalId,
@@ -79,7 +79,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             Func<Task> act = async () =>
             {
                 await Controller.CorrectStreetNameNames(
-                    MockNisCodeAuthorizer(),
+                    MockNisCodeAuthorizer<PersistentLocalId>(),
                     MockValidIfMatchValidator(),
                     MockPassingRequestValidator<CorrectStreetNameNamesRequest>(),
                     persistentLocalId,
@@ -109,7 +109,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             Func<Task> act = async () =>
             {
                 await Controller.CorrectStreetNameNames(
-                    MockNisCodeAuthorizer(),
+                    MockNisCodeAuthorizer<PersistentLocalId>(),
                     MockValidIfMatchValidator(),
                     MockPassingRequestValidator<CorrectStreetNameNamesRequest>(),
                     persistentLocalId,
@@ -134,7 +134,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             Func<Task> act = async () =>
             {
                 await Controller.CorrectStreetNameNames(
-                    MockNisCodeAuthorizer(false),
+                    MockNisCodeAuthorizer<PersistentLocalId>(false),
                     MockValidIfMatchValidator(),
                     MockPassingRequestValidator<CorrectStreetNameNamesRequest>(),
                     100000,
@@ -157,7 +157,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
         public async Task WithIfMatchHeaderValueMismatch_ThenReturnsPreconditionFailedResult()
         {
             var result = await Controller.CorrectStreetNameNames(
-                MockNisCodeAuthorizer(),
+                MockNisCodeAuthorizer<PersistentLocalId>(),
                 MockValidIfMatchValidator(false),
                 MockPassingRequestValidator<CorrectStreetNameNamesRequest>(),
                 123,

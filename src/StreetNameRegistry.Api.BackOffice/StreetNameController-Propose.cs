@@ -1,21 +1,22 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
-    using Abstractions;
+    using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Abstractions.Requests;
+    using Abstractions.SqsRequests;
+    using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using FluentValidation;
+    using Infrastructure.Authorization;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Swashbuckle.AspNetCore.Filters;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Abstractions.SqsRequests;
-    using Abstractions.Validation;
 
     public partial class StreetNameController
     {
@@ -24,6 +25,7 @@ namespace StreetNameRegistry.Api.BackOffice
         /// </summary>
         /// <param name="proposeStreetNameRequestFactory"></param>
         /// <param name="request"></param>
+        /// <param name="nisCodeAuthorizer"></param>
         /// <param name="validator"></param>
         /// <param name="cancellationToken"></param>
         [HttpPost("acties/voorstellen")]
@@ -37,11 +39,17 @@ namespace StreetNameRegistry.Api.BackOffice
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyNames.Adres.DecentraleBijwerker)]
         public async Task<IActionResult> Propose(
+            [FromServices] INisCodeAuthorizer<MunicipalityPuri> nisCodeAuthorizer,
             [FromServices] IValidator<ProposeStreetNameRequest> validator,
             [FromServices] ProposeStreetNameRequestFactory proposeStreetNameRequestFactory,
             [FromBody] ProposeStreetNameRequest request,
             CancellationToken cancellationToken = default)
         {
+            if (await nisCodeAuthorizer.IsNotAuthorized(HttpContext, new MunicipalityPuri(request.GemeenteId), cancellationToken))
+            {
+                throw new ApiException(ValidationErrors.NisCodeAuthorization.NotAuthorized.Message, (int)HttpStatusCode.Forbidden);
+            }
+
             await validator.ValidateAndThrowAsync(request, cancellationToken);
 
             try

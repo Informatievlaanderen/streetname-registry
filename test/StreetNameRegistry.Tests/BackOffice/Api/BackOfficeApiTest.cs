@@ -56,12 +56,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
                 .Returns(Task.FromResult(response));
         }
 
-        protected INisCodeAuthorizer<PersistentLocalId> MockNisCodeAuthorizer(bool authorized = true)
+        protected INisCodeAuthorizer<T> MockNisCodeAuthorizer<T>(bool authorized = true)
         {
-            var mock = new Mock<INisCodeAuthorizer<PersistentLocalId>>();
+            var mock = new Mock<INisCodeAuthorizer<T>>();
             mock
                 .Setup(x =>
-                    x.IsNotAuthorized(It.IsAny<HttpContext>(), It.IsAny<PersistentLocalId>(), CancellationToken.None))
+                    x.IsNotAuthorized(It.IsAny<HttpContext>(), It.IsAny<T>(), CancellationToken.None))
                 .ReturnsAsync(!authorized);
             return mock.Object;
         }

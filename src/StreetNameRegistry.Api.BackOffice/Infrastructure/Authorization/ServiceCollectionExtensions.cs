@@ -10,8 +10,9 @@
         public static IServiceCollection AddNisCodeAuthorizationWithDynamoDb(this IServiceCollection services)
         {
             services.AddSingleton<INisCodeAuthorizer<PersistentLocalId>, NisCodeAuthorizer<PersistentLocalId>>();
-            services.AddSingleton<INisCodeAuthorizer<MunicipalityId>, NisCodeAuthorizer<MunicipalityId>>();
+            services.AddSingleton<INisCodeAuthorizer<MunicipalityPuri>, NisCodeAuthorizer<MunicipalityPuri>>();
             services.AddSingleton<INisCodeFinder<PersistentLocalId>, StreetNameNisCodeFinder>();
+            services.AddSingleton<INisCodeFinder<MunicipalityPuri>, MunicipalityNisCodeFinder>();
             services.AddDynamoDbNisCodeService();
             return services;
         }

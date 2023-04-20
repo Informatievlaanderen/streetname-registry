@@ -43,7 +43,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             };
 
             var result = (AcceptedResult) await Controller.Retire(
-                MockNisCodeAuthorizer(),
+                MockNisCodeAuthorizer<PersistentLocalId>(),
                 MockValidIfMatchValidator(),
                 request,
                 ifMatchHeaderValue: expectedIfMatchHeader,
@@ -73,7 +73,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             Func<Task> act = async () =>
             {
                 await Controller.Retire(
-                    MockNisCodeAuthorizer(),
+                    MockNisCodeAuthorizer<PersistentLocalId>(),
                     MockValidIfMatchValidator(),
                     request,
                     string.Empty,
@@ -101,7 +101,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             Func<Task> act = async () =>
             {
                 await Controller.Retire(
-                    MockNisCodeAuthorizer(),
+                    MockNisCodeAuthorizer<PersistentLocalId>(),
                     MockValidIfMatchValidator(),
                     request,
                     string.Empty,
@@ -125,7 +125,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             Func<Task> act = async () =>
             {
                 await Controller.Retire(
-                    MockNisCodeAuthorizer(false),
+                    MockNisCodeAuthorizer<PersistentLocalId>(false),
                     MockValidIfMatchValidator(),
                     request,
                     string.Empty,
@@ -146,7 +146,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
         public async Task WithIfMatchHeaderValueMismatch_ThenReturnsPreconditionFailedResult()
         {
             var result = await Controller.Retire(
-                MockNisCodeAuthorizer(),
+                MockNisCodeAuthorizer<PersistentLocalId>(),
                 MockValidIfMatchValidator(false),
                 new RetireStreetNameRequest { PersistentLocalId = 123 },
                 string.Empty,

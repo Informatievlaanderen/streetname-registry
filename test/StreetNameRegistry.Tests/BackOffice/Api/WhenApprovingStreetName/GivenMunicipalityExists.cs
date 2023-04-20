@@ -40,7 +40,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             var request = new ApproveStreetNameRequest { PersistentLocalId = 123 };
 
             var result = (AcceptedResult)await Controller.Approve(
-                MockNisCodeAuthorizer(),
+                MockNisCodeAuthorizer<PersistentLocalId>(),
                 MockValidIfMatchValidator(),
                 request,
                 ifMatchHeaderValue: expectedIfMatchHeader,
@@ -71,7 +71,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             Func<Task> act = async () =>
             {
                 await Controller.Approve(
-                    MockNisCodeAuthorizer(),
+                    MockNisCodeAuthorizer<PersistentLocalId>(),
                     MockValidIfMatchValidator(),
                     request,
                     string.Empty,
@@ -99,7 +99,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             Func<Task> act = async () =>
             {
                 await Controller.Approve(
-                    MockNisCodeAuthorizer(),
+                    MockNisCodeAuthorizer<PersistentLocalId>(),
                     MockValidIfMatchValidator(),
                     request,
                     string.Empty,
@@ -123,7 +123,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             Func<Task> act = async () =>
             {
                 await Controller.Approve(
-                    MockNisCodeAuthorizer(false),
+                    MockNisCodeAuthorizer<PersistentLocalId>(false),
                     MockValidIfMatchValidator(),
                     request,
                     string.Empty,
@@ -144,7 +144,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         public async Task WithIfMatchHeaderValueMismatch_ThenReturnsPreconditionFailedResult()
         {
             var result = await Controller.Approve(
-                MockNisCodeAuthorizer(),
+                MockNisCodeAuthorizer<PersistentLocalId>(),
                 MockValidIfMatchValidator(false),
                 new ApproveStreetNameRequest { PersistentLocalId = 123 },
                 string.Empty,
