@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         {
             var streetName = await context
                 .StreetNameExtractV2
-                .SingleOrDefaultAsync(x => x.StreetNamePersistentLocalId == persistentLocalId, cancellationToken: ct);
+                .FindAsync(new object[] { persistentLocalId }, ct);
 
             if (streetName == null)
             {
