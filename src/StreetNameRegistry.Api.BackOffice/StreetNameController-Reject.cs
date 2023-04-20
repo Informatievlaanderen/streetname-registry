@@ -1,10 +1,16 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
     using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Abstractions.Requests;
-    using Be.Vlaanderen.Basisregisters.AcmIdm;
+    using Abstractions.SqsRequests;
+    using Abstractions.Validation;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Auth;
+    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Infrastructure;
@@ -13,14 +19,7 @@ namespace StreetNameRegistry.Api.BackOffice
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Municipality;
-    using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Abstractions.SqsRequests;
-    using Abstractions.Validation;
-    using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Infrastructure.Authorization;
 
     public partial class StreetNameController
     {
@@ -51,7 +50,7 @@ namespace StreetNameRegistry.Api.BackOffice
         {
             try
             {
-                if (await nisCodeAuthorizer.IsNotAuthorized(HttpContext, new PersistentLocalId(request.PersistentLocalId), cancellationToken))
+                if (!await nisCodeAuthorizer.IsAuthorized(HttpContext.FindOvoCodeClaim(), new PersistentLocalId(request.PersistentLocalId), cancellationToken))
                 {
                     throw new ApiException(ValidationErrors.NisCodeAuthorization.NotAuthorized.Message, (int)HttpStatusCode.Forbidden);
                 }

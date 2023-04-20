@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Api.BackOffice
 {
     using System.Net;
     using Abstractions.Requests;
-    using Be.Vlaanderen.Basisregisters.AcmIdm;
+    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
@@ -19,6 +19,7 @@ namespace StreetNameRegistry.Api.BackOffice
     using Abstractions.SqsRequests;
     using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.Auth;
     using Infrastructure.Authorization;
 
     public partial class StreetNameController
@@ -51,7 +52,7 @@ namespace StreetNameRegistry.Api.BackOffice
         {
             try
             {
-                if (await nisCodeAuthorizer.IsNotAuthorized(HttpContext, new PersistentLocalId(request.PersistentLocalId), cancellationToken))
+                if (!await nisCodeAuthorizer.IsAuthorized(HttpContext.FindOvoCodeClaim(), new PersistentLocalId(request.PersistentLocalId), cancellationToken))
                 {
                     throw new ApiException(ValidationErrors.NisCodeAuthorization.NotAuthorized.Message, (int)HttpStatusCode.Forbidden);
                 }

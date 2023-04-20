@@ -5,8 +5,9 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Authorization
     using System.Threading.Tasks;
     using Abstractions.Convertors;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
+    using NisCodeService.Abstractions;
 
-    public class MunicipalityNisCodeFinder : INisCodeFinder<MunicipalityPuri>
+    public class MunicipalityRegistryNisCodeFinder : INisCodeFinder<MunicipalityPuri>
     {
         public async Task<string?> FindAsync(MunicipalityPuri municipalityPuri,  CancellationToken ct)
         {

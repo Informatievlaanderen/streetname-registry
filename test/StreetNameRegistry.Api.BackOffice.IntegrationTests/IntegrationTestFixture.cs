@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.DockerUtilities;
+    using Ductus.FluentDocker.Services;
     using IdentityModel;
     using IdentityModel.Client;
     using Infrastructure;
@@ -18,14 +19,33 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
     using Xunit;
+    using Xunit.Abstractions;
 
     public class IntegrationTestFixture : IAsyncLifetime
     {
         private string _clientId;
         private string _clientSecret;
         private readonly IDictionary<string, AccessToken> _accessTokens = new Dictionary<string, AccessToken>();
+        private IConfigurationRoot? _configuration;
+        private ICompositeService _sqlService;
 
-        public TestServer TestServer { get; private set; }
+        public ITestOutputHelper? TestOutputHelper { get; set; }
+
+        public Lazy<TestServer> TestServer => new Lazy<TestServer>(() =>
+        {
+            var hostBuilder = new WebHostBuilder()
+                .UseConfiguration(_configuration)
+                .UseStartup<Startup>()
+                .UseTestServer()
+                .UseEnvironment("Development")
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddProvider(new XunitTestOutputLoggerProvider(TestOutputHelper));
+                });
+
+            return new TestServer(hostBuilder);
+        });
         public SqlConnection SqlConnection { get; private set; }
 
         public async Task<string> GetAccessToken(string requiredScopes = "")
@@ -54,17 +74,17 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
 
         public async Task InitializeAsync()
         {
-            var configuration = new ConfigurationBuilder()
+            _configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
                 .AddJsonFile($"appsettings.{Environment.MachineName.ToLowerInvariant()}.json", optional: true, reloadOnChange: false)
                 .AddEnvironmentVariables()
                 .Build();
 
-            _clientId = configuration.GetValue<string>("ClientId");
-            _clientSecret = configuration.GetValue<string>("ClientSecret");
+            _clientId = _configuration.GetValue<string>("ClientId");
+            _clientSecret = _configuration.GetValue<string>("ClientSecret");
 
-            using var _ = DockerComposer.Compose("sqlserver.yml", "streetname-integration-tests");
+            _sqlService = DockerComposer.Compose("sqlserver.yml", "streetname-integration-tests");
             await WaitForSqlServerToBecomeAvailable();
 
             await CreateDatabase();
@@ -72,17 +92,9 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
             // This is necessary for Migration StreetNameRegistry.Api.BackOffice.Abstractions.Migrations.AddNisCode
             // We don't want to run this migration in the BackOffice.Api itself.
             await Consumer.Infrastructure.MigrationsHelper.RunAsync(
-                configuration.GetConnectionString("ConsumerAdmin"),
+                _configuration.GetConnectionString("ConsumerAdmin"),
                 NullLoggerFactory.Instance,
                 CancellationToken.None);
-
-            var hostBuilder = new WebHostBuilder()
-                .UseConfiguration(configuration)
-                .UseStartup<Startup>()
-                .ConfigureLogging(loggingBuilder => loggingBuilder.AddConsole())
-                .UseTestServer();
-
-            TestServer = new TestServer(hostBuilder);
         }
 
         private async Task WaitForSqlServerToBecomeAvailable()
@@ -121,6 +133,8 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         public async Task DisposeAsync()
         {
             await SqlConnection.DisposeAsync();
+            _sqlService.Dispose();
+            TestOutputHelper = null;
         }
     }
 
@@ -137,6 +151,49 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         {
             _expiresAt = DateTime.Now.AddSeconds(expiresIn);
             Token = token;
+        }
+    }
+
+    public class XunitTestOutputLoggerProvider : ILoggerProvider
+    {
+        private readonly ITestOutputHelper _output;
+
+        public XunitTestOutputLoggerProvider(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        public ILogger CreateLogger(string categoryName)
+        {
+            return new XunitTestOutputLogger(_output);
+        }
+
+        public void Dispose() { }
+    }
+
+    public class XunitTestOutputLogger : ILogger
+    {
+        private readonly ITestOutputHelper _output;
+
+        public XunitTestOutputLogger(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        public IDisposable BeginScope<TState>(TState state)
+        {
+            return null;
+        }
+
+        public bool IsEnabled(LogLevel logLevel)
+        {
+            return true;
+        }
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            var message = formatter(state, exception);
+            _output.WriteLine(message);
         }
     }
 }

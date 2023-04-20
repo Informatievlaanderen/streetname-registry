@@ -3,14 +3,15 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Authorization
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
+    using NisCodeService.Abstractions;
     using StreetNameRegistry.Api.BackOffice.Abstractions;
     using StreetNameRegistry.Municipality;
 
-    public class StreetNameNisCodeFinder : INisCodeFinder<PersistentLocalId>
+    public class StreetNameRegistryNisCodeFinder : INisCodeFinder<PersistentLocalId>
     {
         private readonly BackOfficeContext _backOfficeContext;
 
-        public StreetNameNisCodeFinder(BackOfficeContext backOfficeContext)
+        public StreetNameRegistryNisCodeFinder(BackOfficeContext backOfficeContext)
         {
             _backOfficeContext = backOfficeContext;
         }

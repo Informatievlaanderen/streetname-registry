@@ -2,11 +2,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;
+    using FluentAssertions;
     using global::AutoFixture;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
@@ -59,6 +62,30 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                         sqsRequest.ProvenanceData.Modification == Modification.Insert),
                     CancellationToken.None));
             AssertLocation(result.Location, ticketId);
+        }
+
+        [Fact]
+        public void WithUnauthorizedNisCode_ThenThrowsApiException()
+        {
+            var request = new ProposeStreetNameRequest { GemeenteId = "123" };
+            Func<Task> act = async () =>
+            {
+                await Controller.Propose(
+                    MockNisCodeAuthorizer<MunicipalityPuri>(false),
+                    MockPassingRequestValidator<ProposeStreetNameRequest>(),
+                    new ProposeStreetNameRequestFactory(new FakePersistentLocalIdGenerator()),
+                    request,
+                    CancellationToken.None);
+            };
+
+            //Assert
+            act
+                .Should()
+                .ThrowAsync<ApiException>()
+                .Result
+                .Where(x =>
+                    x.Message.Contains("User has insufficient privileges to make edit changes on the municipality.")
+                    && x.StatusCode == (int)HttpStatusCode.Forbidden);
         }
     }
 }

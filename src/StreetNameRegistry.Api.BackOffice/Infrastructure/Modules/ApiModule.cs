@@ -1,22 +1,30 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 {
+    using System;
+    using System.Collections.Generic;
     using Abstractions;
     using Abstractions.SqsRequests;
     using Authorization;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
-    using Be.Vlaanderen.Basisregisters.AcmIdm;
+    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Auth;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Be.Vlaanderen.Basisregisters.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
     using Consumer.Infrastructure.Modules;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using Municipality;
+    using NisCodeService.DynamoDb.Extensions;
+    using NisCodeService.HardCoded.Extensions;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
 
@@ -27,15 +35,18 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
         private readonly IConfiguration _configuration;
         private readonly IServiceCollection _services;
         private readonly ILoggerFactory _loggerFactory;
+        private readonly IWebHostEnvironment _environment;
 
         public ApiModule(
             IConfiguration configuration,
             IServiceCollection services,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IWebHostEnvironment environment)
         {
             _configuration = configuration;
             _services = services;
             _loggerFactory = loggerFactory;
+            _environment = environment;
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -78,9 +89,23 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             builder.RegisterSnapshotModule(_configuration);
 
             // Authorization
+            _services.AddAcmIdmAuthorizationHandlers();
+
+            var ovoCodeWhiteList = _configuration.GetSection("OvoCodeWhiteList").Get<List<string>>();
+
+            if (_environment.IsDevelopment())
+            {
+                _services.AddHardCodedNisCodeService();
+            }
+            else
+            {
+                _services.AddDynamoDbNisCodeService();
+            }
+
             _services
-                .AddAcmIdmAuthorizationHandlers()
-                .AddNisCodeAuthorizationWithDynamoDb(_configuration);
+                .AddNisCodeAuthorization<PersistentLocalId, StreetNameRegistryNisCodeFinder>()
+                .AddNisCodeAuthorization<MunicipalityPuri, MunicipalityRegistryNisCodeFinder>()
+                .AddOvoCodeWhiteList(ovoCodeWhiteList);
 
             builder.Populate(_services);
         }

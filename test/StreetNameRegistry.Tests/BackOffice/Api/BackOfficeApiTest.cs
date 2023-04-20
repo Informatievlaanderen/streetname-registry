@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     using System.Security.Claims;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.Auth;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
     using FluentAssertions;
@@ -61,8 +62,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
             var mock = new Mock<INisCodeAuthorizer<T>>();
             mock
                 .Setup(x =>
-                    x.IsNotAuthorized(It.IsAny<HttpContext>(), It.IsAny<T>(), CancellationToken.None))
-                .ReturnsAsync(!authorized);
+                    x.IsAuthorized(It.IsAny<string>(), It.IsAny<T>(), CancellationToken.None))
+                .ReturnsAsync(authorized);
             return mock.Object;
         }
 

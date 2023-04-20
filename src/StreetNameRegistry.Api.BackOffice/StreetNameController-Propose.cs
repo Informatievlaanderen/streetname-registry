@@ -6,8 +6,9 @@ namespace StreetNameRegistry.Api.BackOffice
     using Abstractions.Requests;
     using Abstractions.SqsRequests;
     using Abstractions.Validation;
-    using Be.Vlaanderen.Basisregisters.AcmIdm;
+    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Auth;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using FluentValidation;
@@ -45,7 +46,7 @@ namespace StreetNameRegistry.Api.BackOffice
             [FromBody] ProposeStreetNameRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (await nisCodeAuthorizer.IsNotAuthorized(HttpContext, new MunicipalityPuri(request.GemeenteId), cancellationToken))
+            if (!await nisCodeAuthorizer.IsAuthorized(HttpContext.FindOvoCodeClaim(), new MunicipalityPuri(request.GemeenteId), cancellationToken))
             {
                 throw new ApiException(ValidationErrors.NisCodeAuthorization.NotAuthorized.Message, (int)HttpStatusCode.Forbidden);
             }
