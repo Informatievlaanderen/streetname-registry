@@ -10,13 +10,14 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     {
         public static async Task<StreetNameExtractItemV2> FindAndUpdateStreetNameExtract(
             this ExtractContext context,
+            Guid municipalityId,
             int persistentLocalId,
             Action<StreetNameExtractItemV2> updateFunc,
             CancellationToken ct)
         {
             var streetName = await context
                 .StreetNameExtractV2
-                .FindAsync(new object[] { persistentLocalId }, ct);
+                .FindAsync(new object[] { municipalityId, persistentLocalId }, ct);
 
             if (streetName == null)
             {

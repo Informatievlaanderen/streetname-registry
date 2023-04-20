@@ -107,7 +107,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
                 {
                     UpdateStatus(x, InUse);
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
@@ -116,7 +119,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameWasCorrectedFromApprovedToProposed>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
                 {
                     UpdateStatus(x, Proposed);
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
@@ -125,7 +131,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameWasRejected>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
                 {
                     UpdateStatus(x, Rejected);
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
@@ -134,7 +143,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
                 {
                     UpdateStatus(x, Proposed);
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
@@ -143,7 +155,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
                 {
                     UpdateStatus(x, Retired);
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
@@ -152,7 +167,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameWasCorrectedFromRetiredToCurrent>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
                 {
                     UpdateStatus(x, InUse);
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
@@ -161,7 +179,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
                 {
                     UpdateStraatnm(x, message.Message.StreetNameNames);
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
@@ -170,7 +191,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
              When<Envelope<StreetNameNamesWereChanged>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
                 {
                     UpdateStraatnm(x, message.Message.StreetNameNames);
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
@@ -179,7 +203,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
                 {
                     UpdateHomoniemtv(x, new HomonymAdditions(message.Message.HomonymAdditions));
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
@@ -188,7 +215,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
                 {
                     foreach (var language in message.Message.Languages)
                     {
@@ -213,7 +243,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
             {
-                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, streetName =>
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    streetName =>
                 {
                     context.StreetNameExtractV2.Remove(streetName);
                 }, ct);
