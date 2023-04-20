@@ -1,3 +1,10 @@
+## [3.27.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.1...v3.27.2) (2023-04-20)
+
+
+### Bug Fixes
+
+* extractv2 lookup projections ([a6ca17d](https://github.com/informatievlaanderen/streetname-registry/commit/a6ca17dce58199886026b2e81646d91ef5c73cbf))
+
 ## [3.27.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.0...v3.27.1) (2023-04-20)
 
 
