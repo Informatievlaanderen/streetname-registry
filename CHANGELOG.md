@@ -1,3 +1,11 @@
+# [3.27.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.26.1...v3.27.0) (2023-04-20)
+
+
+### Features
+
+* add creatieid to extract v2 ([159f0e0](https://github.com/informatievlaanderen/streetname-registry/commit/159f0e091fbbb501f4322563beecfb5f4c5bdf8a))
+* add elastic apm ([1b0402a](https://github.com/informatievlaanderen/streetname-registry/commit/1b0402a17904fdd65b3be8afd9ffe6b4c2562abe))
+
 ## [3.26.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.26.0...v3.26.1) (2023-04-18)
 
 
