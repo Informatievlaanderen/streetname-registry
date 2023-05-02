@@ -1,3 +1,10 @@
+## [3.27.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.2...v3.27.3) (2023-05-02)
+
+
+### Bug Fixes
+
+* change validation errorcodes so they are unique GAWR-4817 ([5ac96fc](https://github.com/informatievlaanderen/streetname-registry/commit/5ac96fc25f8498cac81ff6394d5f971b4f203fac))
+
 ## [3.27.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.1...v3.27.2) (2023-04-20)
 
 
