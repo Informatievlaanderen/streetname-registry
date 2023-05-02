@@ -119,7 +119,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
                     It.IsAny<Guid>(),
                     new TicketError(
                         "Deze actie is enkel toegestaan op straatnamen met status 'gehistoreerd'.",
-                        "StraatnaamVoorgesteldOfAfgekeurd"),
+                        "StraatnaamAfgekeurdOfVoorgesteld"),
                     CancellationToken.None));
         }
 
