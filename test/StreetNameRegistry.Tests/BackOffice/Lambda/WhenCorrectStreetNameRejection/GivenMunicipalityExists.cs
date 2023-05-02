@@ -116,7 +116,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameReject
                     It.IsAny<Guid>(),
                     new TicketError(
                         "Deze actie is enkel toegestaan op straatnamen met status 'afgekeurd'.",
-                        "StraatnaamInGebruikOfGehistoreerd"),
+                        "StraatnaamGehistoreerdOfInGebruik"),
                     CancellationToken.None));
         }
 

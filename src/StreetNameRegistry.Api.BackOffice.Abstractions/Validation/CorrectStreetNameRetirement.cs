@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Validation
         {
             public static class InvalidStatus
             {
-                public const string Code = "StraatnaamVoorgesteldOfAfgekeurd";
+                public const string Code = "StraatnaamAfgekeurdOfVoorgesteld";
                 public const string Message = "Deze actie is enkel toegestaan op straatnamen met status 'gehistoreerd'.";
 
                 public static TicketError ToTicketError() => new TicketError(Message, Code);
