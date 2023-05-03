@@ -6,16 +6,20 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.AcmIdm;
+    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Xunit;
+    using Xunit.Abstractions;
 
     public class IntegrationTests : IClassFixture<IntegrationTestFixture>
     {
         private readonly IntegrationTestFixture _fixture;
+        private readonly HttpClient _client;
 
-        public IntegrationTests(IntegrationTestFixture fixture)
+        public IntegrationTests(IntegrationTestFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
+            _fixture.TestOutputHelper = testOutputHelper;
+            _client = _fixture.TestServer.Value.CreateClient();
         }
 
         [Theory]
@@ -32,10 +36,9 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         [InlineData("/v2/straatnamen/1/acties/verwijderen", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
         public async Task ReturnsSuccess(string endpoint, string requiredScopes)
         {
-            var client = _fixture.TestServer.CreateClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await _fixture.GetAccessToken(requiredScopes));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await _fixture.GetAccessToken(requiredScopes));
 
-            var response = await client.PostAsync(endpoint,
+            var response = await _client.PostAsync(endpoint,
                 new StringContent("{}", Encoding.UTF8, "application/json"), CancellationToken.None);
             Assert.NotNull(response);
             Assert.NotEqual(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -56,9 +59,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         [InlineData("/v2/straatnamen/1/acties/verwijderen")]
         public async Task ReturnsUnauthorized(string endpoint)
         {
-            var client = _fixture.TestServer.CreateClient();
-
-            var response = await client.PostAsync(endpoint,
+            var response = await _client.PostAsync(endpoint,
                 new StringContent("{}", Encoding.UTF8, "application/json"), CancellationToken.None);
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -78,11 +79,10 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
         [InlineData("/v2/straatnamen/1/acties/verwijderen")]
         public async Task ReturnsForbidden(string endpoint)
         {
-            var client = _fixture.TestServer.CreateClient();
-            client.DefaultRequestHeaders.Authorization =
+            _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", await _fixture.GetAccessToken());
 
-            var response = await client.PostAsync(endpoint,
+            var response = await _client.PostAsync(endpoint,
                 new StringContent("{}", Encoding.UTF8, "application/json"), CancellationToken.None);
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);

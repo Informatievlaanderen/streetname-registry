@@ -18,13 +18,20 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
 
         public DbSet<MunicipalityIdByPersistentLocalId> MunicipalityIdByPersistentLocalId => Set<MunicipalityIdByPersistentLocalId>();
 
+        public async Task<MunicipalityIdByPersistentLocalId?> FindMunicipalityIdByPersistentLocalId(
+            int streetNamePersistentLocalId,
+            CancellationToken cancellationToken)
+        {
+            return await MunicipalityIdByPersistentLocalId.FindAsync(new object?[] { streetNamePersistentLocalId }, cancellationToken: cancellationToken);
+        }
+
         public async Task<MunicipalityIdByPersistentLocalId> AddIdempotentMunicipalityStreetNameIdRelation(
             int streetNamePersistentLocalId,
             Guid municipalityId,
             string nisCode,
             CancellationToken cancellationToken)
         {
-            var relation = await MunicipalityIdByPersistentLocalId.FindAsync(new object?[] { streetNamePersistentLocalId }, cancellationToken: cancellationToken);
+            var relation = await FindMunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, cancellationToken);
             if (relation is null)
             {
                 relation = new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId, nisCode);

@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 {
+    using System.Linq;
     using Autofac;
     using MediatR;
     using System.Reflection;
@@ -15,7 +16,10 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 .As<IMediator>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterAssemblyTypes(typeof(ProposeStreetNameHandler).GetTypeInfo().Assembly).AsImplementedInterfaces();
+            builder
+                .RegisterAssemblyTypes(typeof(ProposeStreetNameHandler).GetTypeInfo().Assembly)
+                .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>)))
+                .AsImplementedInterfaces();
         }
     }
 }

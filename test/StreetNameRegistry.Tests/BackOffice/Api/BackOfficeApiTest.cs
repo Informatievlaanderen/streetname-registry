@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     using System.Security.Claims;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.Auth;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
     using FluentAssertions;
@@ -20,6 +21,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     using Municipality;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Infrastructure;
+    using StreetNameRegistry.Api.BackOffice.Infrastructure.Authorization;
     using StreetNameRegistry.Api.BackOffice.Infrastructure.Options;
     using Testing;
     using Xunit.Abstractions;
@@ -53,6 +55,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
             MockMediator
                 .Setup(x => x.Send(It.IsAny<TRequest>(), CancellationToken.None))
                 .Returns(Task.FromResult(response));
+        }
+
+        protected INisCodeAuthorizer<T> MockNisCodeAuthorizer<T>(bool authorized = true)
+        {
+            var mock = new Mock<INisCodeAuthorizer<T>>();
+            mock
+                .Setup(x =>
+                    x.IsAuthorized(It.IsAny<string>(), It.IsAny<T>(), CancellationToken.None))
+                .ReturnsAsync(authorized);
+            return mock.Object;
         }
 
         protected IIfMatchHeaderValidator MockValidIfMatchValidator(bool result = true)

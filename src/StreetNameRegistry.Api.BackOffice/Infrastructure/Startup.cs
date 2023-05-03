@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 {
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
-    using Be.Vlaanderen.Basisregisters.AcmIdm;
+    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
@@ -41,13 +41,16 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
+        private readonly IWebHostEnvironment _env;
 
         public Startup(
             IConfiguration configuration,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IWebHostEnvironment env)
         {
             _configuration = configuration;
             _loggerFactory = loggerFactory;
+            _env = env;
         }
 
         /// <summary>Configures services for the application.</summary>
@@ -122,7 +125,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                 .AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule(new ApiModule(_configuration, services, _loggerFactory));
+            containerBuilder.RegisterModule(new ApiModule(_configuration, services, _loggerFactory, _env));
             _applicationContainer = containerBuilder.Build();
 
             return new AutofacServiceProvider(_applicationContainer);
@@ -211,6 +214,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
             StreetNameRegistry.Infrastructure.MigrationsHelper.Run(
                 _configuration.GetConnectionString("Sequences"),
                 serviceProvider.GetService<ILoggerFactory>());
+
             MigrationsHelper.Run(
                 _configuration.GetConnectionString("BackOffice"),
                 serviceProvider.GetService<ILoggerFactory>());

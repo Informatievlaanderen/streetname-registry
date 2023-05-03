@@ -18,7 +18,10 @@
     "StreetNameRegistry.Api.BackOffice": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AWS_ACCESS_KEY_ID": "your-access-key",
+        "AWS_SECRET_ACCESS_KEY": "your-secret-key",
+        "AWS_REGION": "local"
       },
       "applicationUrl": "http://localhost:5000/"
     }

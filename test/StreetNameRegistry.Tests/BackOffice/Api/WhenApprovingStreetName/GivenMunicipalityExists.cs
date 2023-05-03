@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
 {
     using System;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
@@ -39,6 +40,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             var request = new ApproveStreetNameRequest { PersistentLocalId = 123 };
 
             var result = (AcceptedResult)await Controller.Approve(
+                MockNisCodeAuthorizer<PersistentLocalId>(),
                 MockValidIfMatchValidator(),
                 request,
                 ifMatchHeaderValue: expectedIfMatchHeader,
@@ -69,6 +71,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             Func<Task> act = async () =>
             {
                 await Controller.Approve(
+                    MockNisCodeAuthorizer<PersistentLocalId>(),
                     MockValidIfMatchValidator(),
                     request,
                     string.Empty,
@@ -96,6 +99,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             Func<Task> act = async () =>
             {
                 await Controller.Approve(
+                    MockNisCodeAuthorizer<PersistentLocalId>(),
                     MockValidIfMatchValidator(),
                     request,
                     string.Empty,
@@ -113,9 +117,34 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         }
 
         [Fact]
+        public void WithUnauthorizedNisCode_ThenThrowsApiException()
+        {
+            var request = new ApproveStreetNameRequest { PersistentLocalId = 123 };
+            Func<Task> act = async () =>
+            {
+                await Controller.Approve(
+                    MockNisCodeAuthorizer<PersistentLocalId>(false),
+                    MockValidIfMatchValidator(),
+                    request,
+                    string.Empty,
+                    CancellationToken.None);
+            };
+
+            //Assert
+            act
+                .Should()
+                .ThrowAsync<ApiException>()
+                .Result
+                .Where(x =>
+                    x.Message.Contains("User has insufficient privileges to make edit changes on the municipality.")
+                    && x.StatusCode == (int)HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
         public async Task WithIfMatchHeaderValueMismatch_ThenReturnsPreconditionFailedResult()
         {
             var result = await Controller.Approve(
+                MockNisCodeAuthorizer<PersistentLocalId>(),
                 MockValidIfMatchValidator(false),
                 new ApproveStreetNameRequest { PersistentLocalId = 123 },
                 string.Empty,
