@@ -1,3 +1,10 @@
+## [3.27.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.3...v3.27.4) (2023-05-10)
+
+
+### Bug Fixes
+
+* produce oslo snapshot based upon timestamp and etag ([6d31561](https://github.com/informatievlaanderen/streetname-registry/commit/6d31561d7ba63126c42784b3aff5993c126c5e7e))
+
 ## [3.27.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.2...v3.27.3) (2023-05-02)
 
 
