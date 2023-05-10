@@ -24,6 +24,7 @@ namespace StreetNameRegistry.Tests
             var result = await snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse("2022-03-23T14:24:04+01:00")),
+                null,
                 1111,
                 throwStaleWhenGone: false,
                 CancellationToken.None);
@@ -53,6 +54,7 @@ namespace StreetNameRegistry.Tests
             var result = snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse(eventVersion)),
+                null,
                 1111,
                 throwStaleWhenGone: false,
                 CancellationToken.None);
@@ -84,6 +86,7 @@ namespace StreetNameRegistry.Tests
             var result = snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse(eventVersion)),
+                null,
                 1111,
                 throwStaleWhenGone: false,
                 CancellationToken.None);
@@ -136,6 +139,7 @@ namespace StreetNameRegistry.Tests
             var result = await snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse(eventVersion)),
+                null,
                 1111,
                 throwStaleWhenGone: false,
                 CancellationToken.None);
@@ -181,6 +185,7 @@ namespace StreetNameRegistry.Tests
             var result = await snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse(eventVersion)),
+                null,
                 1111,
                 throwStaleWhenGone,
                 CancellationToken.None);
@@ -205,6 +210,7 @@ namespace StreetNameRegistry.Tests
             var result = await snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse("2022-03-23T14:24:04+01:00")),
+                null,
                 1111,
                 doNotThrowStaleWhenGone,
                 CancellationToken.None);
@@ -262,6 +268,7 @@ namespace StreetNameRegistry.Tests
             await snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse(eventVersion)),
+                null,
                 1111,
                 throwStaleWhenGone: false,
                 CancellationToken.None);
