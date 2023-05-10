@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Api.BackOffice
 {
     using Abstractions;
     using Abstractions.Requests;
-    using Be.Vlaanderen.Basisregisters.AcmIdm;
+    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
