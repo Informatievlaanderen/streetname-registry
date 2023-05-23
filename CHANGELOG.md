@@ -1,3 +1,10 @@
+## [3.27.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.4...v3.27.5) (2023-05-23)
+
+
+### Bug Fixes
+
+* add CI/CD pipeline new production ([bea389e](https://github.com/informatievlaanderen/streetname-registry/commit/bea389e1996dc0c4f0eae59a9b9581a5101dcbb2))
+
 ## [3.27.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.3...v3.27.4) (2023-05-10)
 
 
