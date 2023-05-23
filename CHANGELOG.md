@@ -1,3 +1,10 @@
+## [3.27.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.5...v3.27.6) (2023-05-23)
+
+
+### Bug Fixes
+
+* update update niscode migration to -events database ([3832fe0](https://github.com/informatievlaanderen/streetname-registry/commit/3832fe0b4de7371c1cf4de31381c87fba4e23dc8))
+
 ## [3.27.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.4...v3.27.5) (2023-05-23)
 
 
