@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Migrations
                 nullable: true,
                 defaultValue: null);
 
-            migrationBuilder.Sql($"UPDATE [{Schema.BackOffice}].[MunicipalityIdByPersistentLocalId] SET [NisCode] = (SELECT [NisCode] FROM [streetname-registry].[{Schema.ConsumerProjections}].[MunicipalityConsumer] WHERE [MunicipalityId] = [MunicipalityIdByPersistentLocalId].[MunicipalityId])");
+            migrationBuilder.Sql($"UPDATE [{Schema.BackOffice}].[MunicipalityIdByPersistentLocalId] SET [NisCode] = (SELECT [NisCode] FROM [streetname-registry-events].[{Schema.ConsumerProjections}].[MunicipalityConsumer] WHERE [MunicipalityId] = [MunicipalityIdByPersistentLocalId].[MunicipalityId])");
 
             migrationBuilder.AlterColumn<string>(
                 name: "NisCode",
