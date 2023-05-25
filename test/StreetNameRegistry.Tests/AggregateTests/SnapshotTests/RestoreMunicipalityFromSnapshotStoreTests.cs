@@ -65,7 +65,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     return names;
                 }).Create().ToList();
 
-                municipalityStreetNames.AddRange(streetNames);
+                foreach (var municipalityStreetName in streetNames)
+                {
+                    municipalityStreetNames.Add(municipalityStreetName);
+                }
 
                 return municipalityStreetNames;
             });
