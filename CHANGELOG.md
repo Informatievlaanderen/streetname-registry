@@ -1,3 +1,15 @@
+# [3.28.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.6...v3.28.0) (2023-05-26)
+
+
+### Features
+
+* add elasticapm in lambda ([42976d5](https://github.com/informatievlaanderen/streetname-registry/commit/42976d54cefbc5191107dad1cb863f0012a1705b))
+
+
+### Performance Improvements
+
+* improve municipality streetnames lookups ([6ebea98](https://github.com/informatievlaanderen/streetname-registry/commit/6ebea98f36190ea1b6ca79f939ac086eac551998))
+
 ## [3.27.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.5...v3.27.6) (2023-05-23)
 
 
