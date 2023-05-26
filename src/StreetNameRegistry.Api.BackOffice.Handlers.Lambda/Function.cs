@@ -15,6 +15,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Consumer.Infrastructure.Modules;
+    using Elastic.Apm;
+    using Elastic.Apm.DiagnosticSource;
+    using Elastic.Apm.EntityFrameworkCore;
+    using Elastic.Apm.SqlClient;
+    using ElasticApm.MediatR;
     using Infrastructure;
     using MediatR;
     using Microsoft.Extensions.Configuration;
@@ -28,7 +33,13 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     {
         public Function()
             : base(new List<Assembly> { typeof(ApproveStreetNameSqsRequest).Assembly })
-        { }
+        {
+            Agent.Setup(new AgentComponents());
+            Agent.Subscribe(new SqlClientDiagnosticSubscriber(),
+                new EfCoreDiagnosticsSubscriber(),
+                new HttpDiagnosticsSubscriber(),
+                new MediatrDiagnosticsSubscriber());
+        }
 
         protected override IServiceProvider ConfigureServices(IServiceCollection services)
         {
