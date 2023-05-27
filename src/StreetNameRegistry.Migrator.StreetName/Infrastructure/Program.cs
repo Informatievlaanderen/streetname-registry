@@ -20,6 +20,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Modules;
+    using Municipality.Commands;
     using Polly;
     using Serilog;
     using StreetNameRegistry.StreetName;
@@ -30,6 +31,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     {
         private static readonly AutoResetEvent Closing = new AutoResetEvent(false);
         private static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        private static List<MunicipalityConsumerItem> _municipalities = new List<MunicipalityConsumerItem>();
 
         protected Program()
         { }
@@ -117,49 +119,142 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
             var makeComplete = Convert.ToBoolean(configuration["MakeComplete"]);
 
             var actualContainer = container.GetRequiredService<ILifetimeScope>();
+            await using (var consumerContext = actualContainer.Resolve<ConsumerContext>())
+            {
+                _municipalities = await consumerContext.MunicipalityConsumerItems.AsNoTracking().ToListAsync(cancellationToken);
+            }
 
             var streetNameRepo = actualContainer.Resolve<IStreetNames>();
-            var consumerContext = actualContainer.Resolve<ConsumerContext>();
             var backOfficeContext = actualContainer.Resolve<BackOfficeContext>();
             var sqlStreamTable = new SqlStreamsTable(connectionString);
 
             var streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
 
-            async Task<bool> ProcessStream(IEnumerable<string> streamsToProcess)
+            //async Task<bool> ProcessStream(IEnumerable<string> streamsToProcess)
+            //{
+            //    foreach (var id in streamsToProcess)
+            //    {
+            //        if (!await ProcessStreamId(processedIds, id, logger, streetNameRepo, makeComplete, consumerContext, actualContainer, processedIdsTable, backOfficeContext, cancellationToken))
+            //        {
+            //            return false;
+            //        }
+            //    }
+
+            //    return true;
+            //}
+
+            while (streams.Any() && !cancellationToken.IsCancellationRequested)
             {
-                foreach (var id in streamsToProcess)
-                {
-                    if (!await ProcessStreamId(processedIds, id, logger, streetNameRepo, makeComplete, consumerContext, actualContainer, processedIdsTable, backOfficeContext, cancellationToken))
+                //if (!await ProcessStream(streams))
+                //{
+                //    break;
+                //}
+                var migrationCommands = new Dictionary<string, MigrateStreetNameToMunicipality>();
+
+                await Parallel.ForEachAsync(
+                    streams,
+                    cancellationToken,
+                    async (stream, innerCt) =>
                     {
-                        return false;
-                    }
-                }
+                        if (innerCt.IsCancellationRequested)
+                            return;
 
-                return true;
-            }
+                        var command = await CreateMigrationCommands(processedIds, stream, logger, streetNameRepo, makeComplete, innerCt);
+                        if (command is not null)
+                            migrationCommands.Add(stream, command);
+                    });
 
-            while (streams.Any())
-            {
-                if (!await ProcessStream(streams))
-                {
+                if (cancellationToken.IsCancellationRequested)
                     break;
-                }
 
+                var groupedMigrationCommands = migrationCommands.GroupBy(command => command.Value.MunicipalityId);
+                await Parallel.ForEachAsync(
+                    groupedMigrationCommands,
+                    cancellationToken,
+                    async (commandsByMunicipality, innerCt) =>
+                    {
+                        foreach (var (streamId, migrateCommand) in commandsByMunicipality)
+                        {
+                            if(innerCt.IsCancellationRequested)
+                                break;
+
+                            var municipality = _municipalities.Single(x => x.MunicipalityId == migrateCommand.MunicipalityId);
+
+                            var markMigrated = new MarkStreetNameMigrated(new MunicipalityId(municipality.MunicipalityId), new StreetNameId(migrateCommand.StreetNameId), migrateCommand.Provenance);
+                            await CreateAndDispatchCommand(migrateCommand, markMigrated, actualContainer, innerCt);
+
+                            await processedIdsTable.Add(streamId);
+                            processedIds.Add(streamId);
+
+                            await backOfficeContext.MunicipalityIdByPersistentLocalId.AddAsync(new MunicipalityIdByPersistentLocalId(migrateCommand.PersistentLocalId, municipality.MunicipalityId, municipality.NisCode!), innerCt);
+                            await backOfficeContext.SaveChangesAsync(innerCt);
+                        }
+                    });
+
+                backOfficeContext.ChangeTracker.Clear();
                 streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
             }
         }
 
-        private static async Task<bool> ProcessStreamId(List<string> processedIds, string id, ILogger logger, IStreetNames streetNameRepo, bool makeComplete, ConsumerContext consumerContext, ILifetimeScope actualContainer, ProcessedIdsTable processedIdsTable, BackOfficeContext backOfficeContext, CancellationToken cancellationToken)
-        {
-            if (CancellationTokenSource.IsCancellationRequested)
-            {
-                return false;
-            }
+        //private static async Task<bool> ProcessStreamId(List<string> processedIds, string id, ILogger logger, IStreetNames streetNameRepo, bool makeComplete, ConsumerContext consumerContext, ILifetimeScope actualContainer, ProcessedIdsTable processedIdsTable, BackOfficeContext backOfficeContext, CancellationToken cancellationToken)
+        //{
+        //    if (CancellationTokenSource.IsCancellationRequested)
+        //    {
+        //        return false;
+        //    }
 
+        //    if (processedIds.Contains(id, StringComparer.InvariantCultureIgnoreCase))
+        //    {
+        //        logger.LogDebug($"Already migrated '{id}', skipping...");
+        //        return true;
+        //    }
+
+        //    var streetNameId = new StreetNameId(Guid.Parse(id));
+        //    var streetName = await streetNameRepo.GetAsync(streetNameId, cancellationToken);
+
+        //    if (!streetName.IsCompleted)
+        //    {
+        //        if (streetName.IsRemoved)
+        //        {
+        //            logger.LogDebug($"Skipping incomplete & removed StreetnameId '{id}'.");
+        //            return true;
+        //        }
+
+        //        if (!makeComplete)
+        //        {
+        //            throw new InvalidOperationException($"Incomplete but not removed Streetname '{id}'.");
+        //        }
+        //    }
+
+        //    var municipality = await consumerContext.MunicipalityConsumerItems.SingleOrDefaultAsync(x =>
+        //            x.NisCode == streetName.NisCode, cancellationToken);
+
+        //    if (municipality == null)
+        //    {
+        //        throw new InvalidOperationException("Municipality for NisCode '{streetName.NisCode}' was not found.");
+        //    }
+
+        //    var municipalityId = new MunicipalityId(municipality.MunicipalityId);
+        //    var migrateCommand = streetName.CreateMigrateCommand(municipalityId, makeComplete);
+        //    var markMigrated = new MarkStreetNameMigrated(municipalityId, new StreetNameId(migrateCommand.StreetNameId), migrateCommand.Provenance);
+        //    await CreateAndDispatchCommand(migrateCommand, markMigrated, actualContainer, cancellationToken);
+
+        //    await processedIdsTable.Add(id);
+        //    processedIds.Add(id);
+
+        //    await backOfficeContext.MunicipalityIdByPersistentLocalId
+        //        .AddAsync(new MunicipalityIdByPersistentLocalId(streetName.PersistentLocalId, municipality.MunicipalityId, municipality.NisCode!), cancellationToken);
+        //    await backOfficeContext.SaveChangesAsync(cancellationToken);
+
+        //    return true;
+        //}
+
+        private static async Task<MigrateStreetNameToMunicipality?> CreateMigrationCommands(List<string> processedIds, string id, ILogger logger, IStreetNames streetNameRepo, bool makeComplete, CancellationToken cancellationToken)
+        {
             if (processedIds.Contains(id, StringComparer.InvariantCultureIgnoreCase))
             {
                 logger.LogDebug($"Already migrated '{id}', skipping...");
-                return true;
+                return null;
             }
 
             var streetNameId = new StreetNameId(Guid.Parse(id));
@@ -170,7 +265,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                 if (streetName.IsRemoved)
                 {
                     logger.LogDebug($"Skipping incomplete & removed StreetnameId '{id}'.");
-                    return true;
+                    return null;
                 }
 
                 if (!makeComplete)
@@ -179,37 +274,24 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                 }
             }
 
-            var municipality = await consumerContext.MunicipalityConsumerItems.SingleOrDefaultAsync(x =>
-                    x.NisCode == streetName.NisCode, cancellationToken);
-
+            var municipality = _municipalities.SingleOrDefault(x => x.NisCode == streetName.NisCode);
             if (municipality == null)
             {
                 throw new InvalidOperationException("Municipality for NisCode '{streetName.NisCode}' was not found.");
             }
 
-            await CreateAndDispatchCommand(municipality, streetName, makeComplete, actualContainer, cancellationToken);
+            var municipalityId = new MunicipalityId(municipality.MunicipalityId);
+            var migrateCommand = streetName.CreateMigrateCommand(municipalityId, makeComplete);
 
-            await processedIdsTable.Add(id);
-            processedIds.Add(id);
-
-            await backOfficeContext.MunicipalityIdByPersistentLocalId
-                .AddAsync(new MunicipalityIdByPersistentLocalId(streetName.PersistentLocalId, municipality.MunicipalityId, municipality.NisCode!), cancellationToken);
-            await backOfficeContext.SaveChangesAsync(cancellationToken);
-
-            return true;
+            return migrateCommand;
         }
 
         private static async Task CreateAndDispatchCommand(
-            MunicipalityConsumerItem municipality,
-            StreetName streetName,
-            bool makeComplete,
+            MigrateStreetNameToMunicipality migrateCommand,
+            MarkStreetNameMigrated markMigrated,
             ILifetimeScope actualContainer,
             CancellationToken ct)
         {
-            var municipalityId = new MunicipalityId(municipality.MunicipalityId);
-            var migrateCommand = streetName.CreateMigrateCommand(municipalityId, makeComplete);
-            var markMigrated = new MarkStreetNameMigrated(municipalityId, new StreetNameId(migrateCommand.StreetNameId), migrateCommand.Provenance);
-
             await using (var scope = actualContainer.BeginLifetimeScope())
             {
                 var cmdResolver = scope.Resolve<ICommandHandlerResolver>();
