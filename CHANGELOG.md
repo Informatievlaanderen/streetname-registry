@@ -1,3 +1,10 @@
+## [3.28.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.28.1...v3.28.2) (2023-05-27)
+
+
+### Bug Fixes
+
+* consumer group suffix ([a727ff2](https://github.com/informatievlaanderen/streetname-registry/commit/a727ff2d727873554b3451cdb47ffc731ee2417f))
+
 ## [3.28.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.28.0...v3.28.1) (2023-05-27)
 
 
