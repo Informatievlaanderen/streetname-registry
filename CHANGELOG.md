@@ -1,3 +1,10 @@
+## [3.28.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.28.0...v3.28.1) (2023-05-27)
+
+
+### Performance Improvements
+
+* use parallelization for migrator ([758c294](https://github.com/informatievlaanderen/streetname-registry/commit/758c294dbfd7ae9e022ff7f0aeab4356d124a429))
+
 # [3.28.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.27.6...v3.28.0) (2023-05-26)
 
 
