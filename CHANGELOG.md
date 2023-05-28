@@ -1,3 +1,10 @@
+## [3.28.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.28.2...v3.28.3) (2023-05-28)
+
+
+### Performance Improvements
+
+* use dbcontextfactory in migrator ([3fd9faa](https://github.com/informatievlaanderen/streetname-registry/commit/3fd9faa90be0d3c02dfb9882a11a52756bbec976))
+
 ## [3.28.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.28.1...v3.28.2) (2023-05-27)
 
 
