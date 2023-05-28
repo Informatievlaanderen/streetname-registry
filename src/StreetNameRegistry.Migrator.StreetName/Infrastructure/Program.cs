@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -150,7 +151,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                 //{
                 //    break;
                 //}
-                var migrationCommands = new Dictionary<string, MigrateStreetNameToMunicipality>();
+                var migrationCommands = new ConcurrentDictionary<string, MigrateStreetNameToMunicipality>();
 
                 await Parallel.ForEachAsync(
                     streams,
@@ -162,7 +163,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 
                         var command = await CreateMigrationCommands(processedIds, stream, logger, streetNameRepo, makeComplete, innerCt);
                         if (command is not null)
-                            migrationCommands.Add(stream, command);
+                            migrationCommands.TryAdd(stream, command);
                     });
 
                 if (cancellationToken.IsCancellationRequested)
