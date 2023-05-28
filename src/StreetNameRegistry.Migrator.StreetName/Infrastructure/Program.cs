@@ -23,6 +23,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using Municipality.Commands;
     using Polly;
     using Serilog;
+    using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.StreetName;
     using StreetNameRegistry.StreetName.Commands;
     using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -125,7 +126,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
             }
 
             var streetNameRepo = actualContainer.Resolve<IStreetNames>();
-            var backOfficeContext = actualContainer.Resolve<BackOfficeContext>();
+            var backOfficeContextFactory = actualContainer.Resolve<IDbContextFactory<BackOfficeContext>>();
             var sqlStreamTable = new SqlStreamsTable(connectionString);
 
             var streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
@@ -173,9 +174,10 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                     cancellationToken,
                     async (commandsByMunicipality, innerCt) =>
                     {
+                        await using var backOfficeContext = await backOfficeContextFactory.CreateDbContextAsync(innerCt);
                         foreach (var (streamId, migrateCommand) in commandsByMunicipality)
                         {
-                            if(innerCt.IsCancellationRequested)
+                            if (innerCt.IsCancellationRequested)
                                 break;
 
                             var municipality = _municipalities.Single(x => x.MunicipalityId == migrateCommand.MunicipalityId);
@@ -186,12 +188,12 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                             await processedIdsTable.Add(streamId);
                             processedIds.Add(streamId);
 
+                            
                             await backOfficeContext.MunicipalityIdByPersistentLocalId.AddAsync(new MunicipalityIdByPersistentLocalId(migrateCommand.PersistentLocalId, municipality.MunicipalityId, municipality.NisCode!), innerCt);
                             await backOfficeContext.SaveChangesAsync(innerCt);
                         }
                     });
 
-                backOfficeContext.ChangeTracker.Clear();
                 streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
             }
         }
@@ -322,8 +324,19 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
             var loggerFactory = tempProvider.GetRequiredService<ILoggerFactory>();
 
             builder.RegisterModule(new ApiModule(configuration, services, loggerFactory));
-
             builder.RegisterModule(new ProjectorModule(configuration));
+
+            var backOfficeConnectionString = configuration.GetConnectionString("BackOffice");
+
+            services
+                .AddDbContextFactory<BackOfficeContext>((_, options) =>
+                    options
+                        .UseLoggerFactory(loggerFactory)
+                        .UseSqlServer(backOfficeConnectionString, sqlServerOptions =>
+                        {
+                            sqlServerOptions.EnableRetryOnFailure();
+                            sqlServerOptions.MigrationsHistoryTable(MigrationTables.BackOffice, Schema.BackOffice);
+                        }));
 
             builder.Populate(services);
 
