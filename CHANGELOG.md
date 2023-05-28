@@ -1,3 +1,10 @@
+## [3.28.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.28.3...v3.28.4) (2023-05-28)
+
+
+### Bug Fixes
+
+* add concurrentdictionary in migrator ([12b2fc1](https://github.com/informatievlaanderen/streetname-registry/commit/12b2fc18064f2cd386422869ea29c1a04ff0ce30))
+
 ## [3.28.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.28.2...v3.28.3) (2023-05-28)
 
 
