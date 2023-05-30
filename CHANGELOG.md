@@ -1,3 +1,15 @@
+# [3.29.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.28.4...v3.29.0) (2023-05-30)
+
+
+### Bug Fixes
+
+* flaky test ([834d6ec](https://github.com/informatievlaanderen/streetname-registry/commit/834d6ec01936f975b1fe8765c5528ca11ae81b24))
+
+
+### Features
+
+* add migrate producer projections ([606caa4](https://github.com/informatievlaanderen/streetname-registry/commit/606caa457fdc3d2a6bde25449d1f1a2094dec990))
+
 ## [3.28.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.28.3...v3.28.4) (2023-05-28)
 
 
