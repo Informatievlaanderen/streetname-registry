@@ -177,7 +177,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                 _municipalityId,
                 new NisCode("abc"),
                 streetNameNames,
-                new PersistentLocalId(123));
+                new PersistentLocalId(command.PersistentLocalId + 1));
             ((ISetProvenance)streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
 
             // Act, assert
@@ -186,8 +186,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                     Fixture.Create<MunicipalityWasImported>(),
                     Fixture.Create<MunicipalityBecameCurrent>(),
                     languageWasAdded,
-                    Fixture.Create<StreetNameWasProposedV2>(),
-                    streetNameWasProposedV2,
+                    Fixture.Create<StreetNameWasProposedV2>(), //123
+                    streetNameWasProposedV2, //123
                     Fixture.Create<StreetNameWasRejected>())
                 .When(command)
                 .Throws(new StreetNameHasInvalidStatusException(command.PersistentLocalId)));
