@@ -1,3 +1,10 @@
+## [3.29.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.29.0...v3.29.1) (2023-06-01)
+
+
+### Bug Fixes
+
+* to trigger build update CI newprd lambda ([b5dc250](https://github.com/informatievlaanderen/streetname-registry/commit/b5dc2500cfcc69e5ec945691f34ad3dc6ee2f2f3))
+
 # [3.29.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.28.4...v3.29.0) (2023-05-30)
 
 
