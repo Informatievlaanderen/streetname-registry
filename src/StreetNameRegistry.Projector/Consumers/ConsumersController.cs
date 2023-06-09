@@ -25,7 +25,7 @@
             await using var sqlConnection = new SqlConnection(configuration.GetConnectionString(ConsumerConnectionStringKey));
             var result =
                 await sqlConnection.QueryFirstAsync<ProcessedMessage>(
-                    $"SELECT * FROM [{Schema.Consumer}].[{IdempotentConsumerContext.ProcessedMessageTable}] ORDER BY [{nameof(ProcessedMessage.DateProcessed)}] DESC");
+                    $"SELECT TOP(1) [{nameof(ProcessedMessage.DateProcessed)}] FROM [{Schema.Consumer}].[{IdempotentConsumerContext.ProcessedMessageTable}] ORDER BY [{nameof(ProcessedMessage.DateProcessed)}] DESC");
 
             return Ok(new []
             {
