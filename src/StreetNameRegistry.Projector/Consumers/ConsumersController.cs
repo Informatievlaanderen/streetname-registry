@@ -1,5 +1,6 @@
 ﻿namespace StreetNameRegistry.Projector.Consumers
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api;
@@ -24,7 +25,7 @@
         {
             await using var sqlConnection = new SqlConnection(configuration.GetConnectionString(ConsumerConnectionStringKey));
             var result =
-                await sqlConnection.QueryFirstAsync<ProcessedMessage>(
+                await sqlConnection.QueryFirstAsync<DateTimeOffset>(
                     $"SELECT TOP(1) [{nameof(ProcessedMessage.DateProcessed)}] FROM [{Schema.Consumer}].[{IdempotentConsumerContext.ProcessedMessageTable}] ORDER BY [{nameof(ProcessedMessage.DateProcessed)}] DESC");
 
             return Ok(new []
