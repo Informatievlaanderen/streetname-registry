@@ -1,3 +1,15 @@
+# [3.30.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.29.1...v3.30.0) (2023-06-12)
+
+
+### Bug Fixes
+
+* returning only date on status controller consumer ([adf637c](https://github.com/informatievlaanderen/streetname-registry/commit/adf637c64d630ece175ac0d371def41f9b8bcc0e))
+
+
+### Features
+
+* add consumer status endpoint in projector GAWR-4879 ([e60a907](https://github.com/informatievlaanderen/streetname-registry/commit/e60a907fbd31afe24dae9a39fe7236ceeba062bd))
+
 ## [3.29.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.29.0...v3.29.1) (2023-06-01)
 
 
