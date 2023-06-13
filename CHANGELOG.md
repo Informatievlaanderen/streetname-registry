@@ -1,3 +1,10 @@
+## [3.30.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.30.0...v3.30.1) (2023-06-13)
+
+
+### Bug Fixes
+
+* add idempotent municipality-streetname relation ([172e7c0](https://github.com/informatievlaanderen/streetname-registry/commit/172e7c036f791888e3c938932c90cae24d7147df))
+
 # [3.30.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.29.1...v3.30.0) (2023-06-12)
 
 
