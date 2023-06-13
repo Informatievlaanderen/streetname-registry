@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
     using System.Threading;
     using System.Threading.Tasks;
     using Infrastructure;
+    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
     using Microsoft.Extensions.Configuration;
@@ -25,10 +26,33 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
             CancellationToken cancellationToken)
         {
             var relation = await MunicipalityIdByPersistentLocalId.FindAsync(new object?[] { streetNamePersistentLocalId }, cancellationToken: cancellationToken);
-            if (relation is null)
+            if (relation is not null)
+            {
+                return relation;
+            }
+
+            try
             {
                 relation = new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId, nisCode);
                 await MunicipalityIdByPersistentLocalId.AddAsync(relation, cancellationToken);
+
+                await SaveChangesAsync(cancellationToken);
+            }
+            catch(DbUpdateException exception)
+            {
+                // It can happen that the back office projections were faster adding the relation than the executor (or vice versa).
+                if (exception.InnerException is not SqlException { Number: 2627 })
+                {
+                    throw;
+                }
+
+                relation = await MunicipalityIdByPersistentLocalId.FirstOrDefaultAsync(
+                    x => x.MunicipalityId == municipalityId, cancellationToken);
+
+                if (relation is null)
+                {
+                    throw;
+                }
             }
 
             return relation;

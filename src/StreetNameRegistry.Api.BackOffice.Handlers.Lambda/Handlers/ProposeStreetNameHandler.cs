@@ -66,7 +66,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                     request.MunicipalityPersistentLocalId(),
                     nisCode,
                     cancellationToken);
-            await _backOfficeContext.SaveChangesAsync(cancellationToken);
 
             var lastHash = await GetStreetNameHash(request.MunicipalityPersistentLocalId(), request.PersistentLocalId, cancellationToken);
             return new ETagResponse(string.Format(DetailUrlFormat, request.PersistentLocalId), lastHash);
