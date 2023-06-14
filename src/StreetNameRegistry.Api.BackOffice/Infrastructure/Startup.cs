@@ -24,12 +24,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using System.Linq;
     using System.Reflection;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
-    using Elastic.Apm.AspNetCore;
-    using Elastic.Apm.AspNetCore.DiagnosticListener;
-    using Elastic.Apm.DiagnosticSource;
-    using Elastic.Apm.EntityFrameworkCore;
-    using Elastic.Apm.SqlClient;
-    using ElasticApm.MediatR;
+
     using Microsoft.AspNetCore.Mvc.Infrastructure;
 
     /// <summary>Represents the startup process for the application.</summary>
@@ -162,14 +157,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                         ServiceName = _configuration["DataDog:ServiceName"],
                     }
                 })
-
-                .UseElasticApm(_configuration,
-                    new AspNetCoreDiagnosticSubscriber(),
-                    new AspNetCoreErrorDiagnosticsSubscriber(),
-                    new EfCoreDiagnosticsSubscriber(),
-                    new HttpDiagnosticsSubscriber(),
-                    new SqlClientDiagnosticSubscriber(),
-                    new MediatrDiagnosticsSubscriber())
 
                 .UseDefaultForApi(new StartupUseOptions
                 {

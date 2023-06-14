@@ -9,12 +9,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Configuration;
-    using Elastic.Apm.AspNetCore;
-    using Elastic.Apm.AspNetCore.DiagnosticListener;
-    using Elastic.Apm.DiagnosticSource;
-    using Elastic.Apm.EntityFrameworkCore;
-    using Elastic.Apm.SqlClient;
-    using ElasticApm.MediatR;
+
     using FeatureToggles;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -154,13 +149,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
                     }
                 })
 
-                .UseElasticApm(_configuration,
-                    new AspNetCoreDiagnosticSubscriber(),
-                    new AspNetCoreErrorDiagnosticsSubscriber(),
-                    new EfCoreDiagnosticsSubscriber(),
-                    new HttpDiagnosticsSubscriber(),
-                    new SqlClientDiagnosticSubscriber(),
-                    new MediatrDiagnosticsSubscriber())
+
 
                 .UseDefaultForApi(new StartupUseOptions
                 {
