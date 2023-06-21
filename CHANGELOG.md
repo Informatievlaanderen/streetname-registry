@@ -1,3 +1,10 @@
+## [3.30.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.30.2...v3.30.3) (2023-06-21)
+
+
+### Bug Fixes
+
+* naming producers migration ([af79840](https://github.com/informatievlaanderen/streetname-registry/commit/af79840b4b12c006cb0f5c67cd82d5a2b8e725f4))
+
 ## [3.30.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.30.1...v3.30.2) (2023-06-14)
 
 
