@@ -1,6 +1,7 @@
-﻿namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
-
-public sealed class RemoveStreetNameRequest
+﻿namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
 {
-    public int PersistentLocalId { get; set; }
+    public sealed class RemoveStreetNameRequest
+    {
+        public int PersistentLocalId { get; set; }
+    }
 }

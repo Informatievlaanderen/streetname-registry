@@ -1,73 +1,74 @@
-namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions;
-
-using System.Collections.Generic;
-using AutoFixture;
-using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
-using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-using global::AutoFixture;
-using Municipality;
-using Municipality.Commands;
-using Municipality.Events;
-using Municipality.Exceptions;
-using Testing;
-using Xunit;
-using Xunit.Abstractions;
-
-public class GivenStreetNameWithoutHomonymAddition : StreetNameRegistryTest
+namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
 {
-    private readonly MunicipalityStreamId _streamId;
+    using System.Collections.Generic;
+    using AutoFixture;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using global::AutoFixture;
+    using Municipality;
+    using Municipality.Commands;
+    using Municipality.Events;
+    using Municipality.Exceptions;
+    using Testing;
+    using Xunit;
+    using Xunit.Abstractions;
 
-    public GivenStreetNameWithoutHomonymAddition(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+    public class GivenStreetNameWithoutHomonymAddition : StreetNameRegistryTest
     {
-        Fixture.Customize(new WithFixedMunicipalityId());
-        Fixture.Customize(new WithFixedPersistentLocalId());
-        Fixture.Customize(new InfrastructureCustomization());
+        private readonly MunicipalityStreamId _streamId;
 
-        _streamId = Fixture.Create<MunicipalityStreamId>();
-    }
+        public GivenStreetNameWithoutHomonymAddition(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+            Fixture.Customize(new WithFixedMunicipalityId());
+            Fixture.Customize(new WithFixedPersistentLocalId());
+            Fixture.Customize(new InfrastructureCustomization());
 
-    [Fact]
-    public void ThenThrowsCannotCorrectNonExistentHomonymAdditionException()
-    {
-        var command = new CorrectStreetNameHomonymAdditions(
-            Fixture.Create<MunicipalityId>(),
-            Fixture.Create<PersistentLocalId>(),
-            new HomonymAdditions
-            {
-                new StreetNameHomonymAddition("DEF", Language.German)
-            },
-            new List<Language>(),
-            Fixture.Create<Provenance>());
+            _streamId = Fixture.Create<MunicipalityStreamId>();
+        }
 
-        var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
-            Fixture.Create<MunicipalityId>(),
-            Fixture.Create<NisCode>(),
-            Fixture.Create<StreetNameId>(),
-            Fixture.Create<PersistentLocalId>(),
-            StreetNameStatus.Current,
-            Language.Dutch,
-            null,
-            new Names
-            {
-                new StreetNameName("Bergstraat", Language.Dutch),
-                new StreetNameName("Rue De Montaigne", Language.French),
-            },
-            new HomonymAdditions(new[]
-            {
-                new StreetNameHomonymAddition("ABC", Language.Dutch),
-                new StreetNameHomonymAddition("QRS", Language.French),
-            }),
-            true,
-            false);
-        ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+        [Fact]
+        public void ThenThrowsCannotCorrectNonExistentHomonymAdditionException()
+        {
+            var command = new CorrectStreetNameHomonymAdditions(
+                Fixture.Create<MunicipalityId>(),
+                Fixture.Create<PersistentLocalId>(),
+                new HomonymAdditions
+                {
+                    new StreetNameHomonymAddition("DEF", Language.German)
+                },
+                new List<Language>(),
+                Fixture.Create<Provenance>());
 
-        // Act, assert
-        Assert(new Scenario()
-            .Given(_streamId,
-                Fixture.Create<MunicipalityWasImported>(),
-                Fixture.Create<MunicipalityBecameCurrent>(),
-                streetNameWasMigratedToMunicipality)
-            .When(command)
-            .Throws(new CannotAddHomonymAdditionException(Language.German)));
+            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                Fixture.Create<MunicipalityId>(),
+                Fixture.Create<NisCode>(),
+                Fixture.Create<StreetNameId>(),
+                Fixture.Create<PersistentLocalId>(),
+                StreetNameStatus.Current,
+                Language.Dutch,
+                null,
+                new Names
+                {
+                    new StreetNameName("Bergstraat", Language.Dutch),
+                    new StreetNameName("Rue De Montaigne", Language.French),
+                },
+                new HomonymAdditions(new[]
+                {
+                    new StreetNameHomonymAddition("ABC", Language.Dutch),
+                    new StreetNameHomonymAddition("QRS", Language.French),
+                }),
+                true,
+                false);
+            ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    streetNameWasMigratedToMunicipality)
+                .When(command)
+                .Throws(new CannotAddHomonymAdditionException(Language.German)));
+        }
     }
 }
