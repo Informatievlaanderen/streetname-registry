@@ -13,6 +13,14 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Validation
 
                 public static TicketError ToTicketError() => new TicketError(Message, Code);
             }
+
+            public static class ChangeLimitExceeded
+            {
+                public const string Code = "StraatnaamCorrectieOngeldig";
+                public const string Message = "Deze straatnaamcorrectie is niet toegelaten.";
+
+                public static TicketError ToTicketError() => new TicketError(Message, Code);
+            }
         }
     }
 }

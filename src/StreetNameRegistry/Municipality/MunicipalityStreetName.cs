@@ -10,6 +10,8 @@ namespace StreetNameRegistry.Municipality
 
     public sealed partial class MunicipalityStreetName : Entity
     {
+        public const int CorrectionChangeLimitPercentage = 30;
+
         public void Approve()
         {
             if (Status == StreetNameStatus.Current)
@@ -46,15 +48,26 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
         }
 
-        public void CorrectNames(Names names, Action<Names, HomonymAdditions, PersistentLocalId> guardStreetNameNames)
+        public void CorrectNames(Names namesToCorrect, Action<Names, HomonymAdditions, PersistentLocalId> guardStreetNameNames)
         {
             GuardStreetNameStatus(StreetNameStatus.Proposed, StreetNameStatus.Current);
-            guardStreetNameNames(names, HomonymAdditions, PersistentLocalId);
+            guardStreetNameNames(namesToCorrect, HomonymAdditions, PersistentLocalId);
 
-            var correctedNames = new Names(names.Where(name => !Names.HasMatch(name.Language, name.Name)));
+            var correctedNames = new Names(namesToCorrect.Where(name => !Names.HasMatch(name.Language, name.Name)));
             if (!correctedNames.Any())
             {
                 return;
+            }
+
+            foreach (var correctedName in namesToCorrect)
+            {
+                var originalName = Names.Single(x => x.Language == correctedName.Language);
+                var changeDifference = LevenshteinDistanceCalculator.CalculatePercentage(correctedName.Name, originalName.Name);
+
+                if (changeDifference > CorrectionChangeLimitPercentage)
+                {
+                    throw new StreetNameNameCorrectionExceededCharacterChangeLimitException(correctedName.Name);
+                }
             }
 
             Apply(new StreetNameNamesWereCorrected(_municipalityId, PersistentLocalId, correctedNames));

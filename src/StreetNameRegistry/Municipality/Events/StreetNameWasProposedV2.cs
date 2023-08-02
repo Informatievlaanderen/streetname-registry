@@ -56,9 +56,9 @@ namespace StreetNameRegistry.Municipality.Events
                 new NisCode(nisCode),
                 new Names(streetNameNames),
                 new PersistentLocalId(persistentLocalId))
-        => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
+        => SetProvenance(provenance.ToProvenance());
 
-        void ISetProvenance.SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);
+        public void SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);
 
         public IEnumerable<string> GetHashFields()
         {
