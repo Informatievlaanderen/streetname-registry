@@ -485,8 +485,8 @@ jobs:
       shell: bash
       run: |
         echo Push Lambda functions to S3 Test
-        echo aws s3 cp ~/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-        aws s3 cp ~/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        echo aws s3 cp lambda.zip s3://196194905350-vbr-test-lam-sr-sqsbackoffice/$SEMVER/lambda.zip  --source-region eu-west-1 --region eu-west-1 --sse aws:kms --sse-kms-key-id arn:aws:kms:eu-west-1:196194905350:key/0738224b-1ecb-4377-a6da-2bc618fabc03
+        aws s3 cp lambda.zip s3://196194905350-vbr-test-lam-sr-sqsbackoffice/$SEMVER/lambda.zip  --source-region eu-west-1 --region eu-west-1 --sse aws:kms --sse-kms-key-id arn:aws:kms:eu-west-1:196194905350:key/0738224b-1ecb-4377-a6da-2bc618fabc03
       env:
         SEMVER: ${{ needs.release.outputs.version }}
 
@@ -942,8 +942,8 @@ jobs:
     - name: Prepare Lambda(s)
       shell: bash
       run: |
-        echo aws s3 cp s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
-        aws s3 cp s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$VERSION/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/lambda.zip --copy-props none
+        echo aws s3 cp s3://196194905350-vbr-test-lam-sr-sqsbackoffice/$VERSION/lambda.zip s3://196194905350-vbr-test-lam-sr-sqsbackoffice/lambda.zip  --source-region eu-west-1 --region eu-west-1 --sse aws:kms --sse-kms-key-id arn:aws:kms:eu-west-1:196194905350:key/0738224b-1ecb-4377-a6da-2bc618fabc03 --copy-props none
+        aws s3 cp s3://196194905350-vbr-test-lam-sr-sqsbackoffice/$VERSION/lambda.zip s3://196194905350-vbr-test-lam-sr-sqsbackoffice/lambda.zip  --source-region eu-west-1 --region eu-west-1 --sse aws:kms --sse-kms-key-id arn:aws:kms:eu-west-1:196194905350:key/0738224b-1ecb-4377-a6da-2bc618fabc03 --copy-props none
       env:
         VERSION: ${{ needs.release.outputs.version }}
 
