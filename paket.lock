@@ -575,6 +575,7 @@ NUGET
       Fake.Core.Trace (>= 5.22)
       FSharp.Core (>= 6.0)
     Fare (2.2)
+    Fastenshtein (1.0.0.8)
     FluentAssertions (6.5.1)
       System.Configuration.ConfigurationManager (>= 4.4) - restriction: || (&& (== net472) (>= netcoreapp2.1)) (&& (== net472) (>= netcoreapp3.0)) (== net6.0)
       System.Net.Http (>= 4.3.4) - restriction: || (== net472) (&& (== net6.0) (>= net47))
