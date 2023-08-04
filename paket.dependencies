@@ -24,6 +24,7 @@ nuget MediatR.Contracts 2.0.1
 nuget Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite 6.0.3
 nuget NetTopologySuite 2.4.0
 nuget Dapper 2.0.123
+nuget Fastenshtein 1.0.0.8
 
 nuget AsyncEnumerator 4.0.2
 nuget Destructurama.JsonNet 2.0.0

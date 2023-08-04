@@ -62,6 +62,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                     ValidationErrors.CorrectStreetNameNames.InvalidStatus.ToTicketError(),
                 StreetNameNameLanguageIsNotSupportedException _ =>
                     ValidationErrors.Common.StreetNameNameLanguageIsNotSupported.ToTicketError(),
+                StreetNameNameCorrectionExceededCharacterChangeLimitException _ =>
+                    ValidationErrors.CorrectStreetNameNames.ChangeLimitExceeded.ToTicketError(),
                 _ => null
             };
         }

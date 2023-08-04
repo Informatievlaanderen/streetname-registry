@@ -56,7 +56,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             AddOfficialLanguageFrench(municipalityId);
             ProposeStreetName(
                 municipalityId,
-                new Names(new Dictionary<Language, string>{{Language.Dutch, "Bremt"}, { Language.French, "Rue de la Croix-Rouge" } }),
+                new Names(new Dictionary<Language, string>{{Language.Dutch, "Roodekruisstraat"}, { Language.French, "Rue de la Croix-Rouge" } }),
                 streetNamePersistentLocalId,
                 provenance);
 
@@ -158,6 +158,38 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                     new TicketError(
                         "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'.",
                         "StraatnaamGehistoreerdOfAfgekeurd"),
+                    CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task WhenStreetNameCorrectionExceedsLevenshteinThresholdException_ThenTicketingErrorIsExpected()
+        {
+            // Arrange
+            var ticketing = new Mock<ITicketing>();
+
+            var sut = new CorrectStreetNameNamesHandler(
+                Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
+                ticketing.Object,
+                Mock.Of<IMunicipalities>(),
+                MockExceptionIdempotentCommandHandler<StreetNameNameCorrectionExceededCharacterChangeLimitException>().Object);
+
+            // Act
+            await sut.Handle(new CorrectStreetNameNamesLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameNamesSqsRequest
+            {
+                Request = new CorrectStreetNameNamesRequest { Straatnamen = new Dictionary<Taal, string>() },
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError(
+                        "Deze straatnaamcorrectie is niet toegelaten.",
+                        "StraatnaamCorrectieOngeldig"),
                     CancellationToken.None));
         }
 

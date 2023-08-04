@@ -38,16 +38,27 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
         [Fact]
         public void ThenStreetNameNameWasCorrected()
         {
+            var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
+            dutchLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
+            var frenchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.French);
+            frenchLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
+
+            var streetNameWasProposed = new StreetNameWasProposedV2(
+                _municipalityId,
+                new NisCode("1011"),
+                new Names(new List<StreetNameName>()
+                {
+                    new StreetNameName("Kaplestraat", Language.Dutch),
+                    new StreetNameName("Rue d'la Croix - Rouge", Language.French),
+                }),
+                Fixture.Create<PersistentLocalId>());
+            streetNameWasProposed.SetProvenance(Fixture.Create<Provenance>());
+
             var command = Fixture.Create<CorrectStreetNameNames>()
                 .WithMunicipalityId(_municipalityId)
                 .WithStreetNameNames(new Names())
                 .WithStreetNameName(new StreetNameName("Kapelstraat", Language.Dutch))
                 .WithStreetNameName(new StreetNameName("Rue de la Croix - Rouge", Language.French));
-
-            var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
-            ((ISetProvenance)dutchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
-            var frenchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.French);
-            ((ISetProvenance)frenchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
 
             // Act, assert
             Assert(new Scenario()
@@ -56,14 +67,88 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                     Fixture.Create<MunicipalityBecameCurrent>(),
                     dutchLanguageWasAdded,
                     frenchLanguageWasAdded,
-                    Fixture.Create<StreetNameWasProposedV2>())
+                    streetNameWasProposed)
                 .When(command)
                 .Then(new Fact(_streamId, new StreetNameNamesWereCorrected(_municipalityId,
-                    command.PersistentLocalId, new Names(new []
-                    {
-                        new StreetNameName("Kapelstraat", Language.Dutch),
-                        new StreetNameName("Rue de la Croix - Rouge", Language.French)
-                    })))));
+                    command.PersistentLocalId,  command.StreetNameNames))
+                ));
+        }
+
+        [Fact]
+        public void WhenCorrectionExceedsLevenshteinThreshold_ThrowException()
+        {
+            var originalName = "0123546789";
+            var correctedName = "012354----";
+
+            var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
+            dutchLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
+            var frenchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.French);
+            frenchLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
+
+            var streetNameWasProposed = new StreetNameWasProposedV2(
+                _municipalityId,
+                new NisCode("1011"),
+                new Names(new List<StreetNameName>()
+                {
+                    new StreetNameName(originalName, Language.Dutch)
+                }),
+                Fixture.Create<PersistentLocalId>());
+            streetNameWasProposed.SetProvenance(Fixture.Create<Provenance>());
+
+            var command = Fixture.Create<CorrectStreetNameNames>()
+                .WithMunicipalityId(_municipalityId)
+                .WithStreetNameNames(new Names())
+                .WithStreetNameName(new StreetNameName(correctedName, Language.Dutch));
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    dutchLanguageWasAdded,
+                    frenchLanguageWasAdded,
+                    streetNameWasProposed)
+                .When(command)
+                .Throws(new StreetNameNameCorrectionExceededCharacterChangeLimitException(correctedName)));
+        }
+
+        [Fact]
+        public void WhenCorrectionExactly30Percent_ThenStreetNameWasCorrected()
+        {
+            var originalName = "0123456789";
+            var correctedName = "0123456---";
+
+            var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
+            dutchLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
+            var frenchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.French);
+            frenchLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
+
+            var streetNameWasProposed = new StreetNameWasProposedV2(
+                _municipalityId,
+                new NisCode("1011"),
+                new Names(new List<StreetNameName>()
+                {
+                    new StreetNameName(originalName, Language.Dutch)
+                }),
+                Fixture.Create<PersistentLocalId>());
+            streetNameWasProposed.SetProvenance(Fixture.Create<Provenance>());
+
+            var command = Fixture.Create<CorrectStreetNameNames>()
+                .WithMunicipalityId(_municipalityId)
+                .WithStreetNameNames(new Names())
+                .WithStreetNameName(new StreetNameName(correctedName, Language.Dutch));
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    dutchLanguageWasAdded,
+                    frenchLanguageWasAdded,
+                    streetNameWasProposed)
+                .When(command)
+                .Then(new Fact(_streamId, new StreetNameNamesWereCorrected(_municipalityId,
+                    command.PersistentLocalId,  command.StreetNameNames))
+                ));
         }
 
         [Fact]
@@ -105,7 +190,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                         true,
                         isRemoved: true);
 
-                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    ((ISetProvenance) streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
                     return streetNameWasMigratedToMunicipality;
                 })
                 .Create();
@@ -146,7 +231,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                         true,
                         isRemoved: false);
 
-                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    ((ISetProvenance) streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
                     return streetNameWasMigratedToMunicipality;
                 })
                 .Create();
@@ -171,14 +256,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                 .WithStreetNameName(streetNameNames.First());
 
             var languageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
-            ((ISetProvenance)languageWasAdded).SetProvenance(Fixture.Create<Provenance>());
+            ((ISetProvenance) languageWasAdded).SetProvenance(Fixture.Create<Provenance>());
 
             var streetNameWasProposedV2 = new StreetNameWasProposedV2(
                 _municipalityId,
                 new NisCode("abc"),
                 streetNameNames,
                 new PersistentLocalId(command.PersistentLocalId + 1));
-            ((ISetProvenance)streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
+            ((ISetProvenance) streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
 
             // Act, assert
             Assert(new Scenario()
@@ -204,14 +289,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                 .WithStreetNameName(streetNameNames.First());
 
             var languageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
-            ((ISetProvenance)languageWasAdded).SetProvenance(Fixture.Create<Provenance>());
+            ((ISetProvenance) languageWasAdded).SetProvenance(Fixture.Create<Provenance>());
 
             var streetNameWasProposedV2 = new StreetNameWasProposedV2(
                 _municipalityId,
                 new NisCode("abc"),
                 streetNameNames,
                 new PersistentLocalId(456));
-            ((ISetProvenance)streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
+            ((ISetProvenance) streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
 
             // Act, assert
             Assert(new Scenario()
@@ -229,16 +314,18 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
         [Fact]
         public void WithInvalidLanguage_ThenThrowsStreetNameNameLanguageNotSupportedException()
         {
-            var streetNameNames = new Names(new[] {
+            var streetNameNames = new Names(new[]
+            {
                 new StreetNameName("Kapelstraat", Language.Dutch),
-                new StreetNameName("Rue de la Chapelle", Language.French) });
+                new StreetNameName("Rue de la Chapelle", Language.French)
+            });
 
             var command = Fixture.Create<CorrectStreetNameNames>()
                 .WithMunicipalityId(_municipalityId)
                 .WithStreetNameNames(streetNameNames);
 
             var languageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.French);
-            ((ISetProvenance)languageWasAdded).SetProvenance(Fixture.Create<Provenance>());
+            ((ISetProvenance) languageWasAdded).SetProvenance(Fixture.Create<Provenance>());
 
             // Act, assert
             Assert(new Scenario()
@@ -255,26 +342,28 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
         [Fact]
         public void WithNoChanges_ThenNothing()
         {
-            var streetNameNames = new Names(new[] {
+            var streetNameNames = new Names(new[]
+            {
                 new StreetNameName("Kapelstraat", Language.Dutch),
-                new StreetNameName("Rue de la Chapelle", Language.French) });
+                new StreetNameName("Rue de la Chapelle", Language.French)
+            });
 
             var command = Fixture.Create<CorrectStreetNameNames>()
                 .WithMunicipalityId(_municipalityId)
                 .WithStreetNameNames(streetNameNames);
 
             var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
-            ((ISetProvenance)dutchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
+            ((ISetProvenance) dutchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
 
             var frenchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.French);
-            ((ISetProvenance)frenchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
+            ((ISetProvenance) frenchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
 
             var streetNameWasProposedV2 = new StreetNameWasProposedV2(
                 _municipalityId,
                 new NisCode("abc"),
                 streetNameNames,
                 Fixture.Create<PersistentLocalId>());
-            ((ISetProvenance)streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
+            ((ISetProvenance) streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
 
             // Act, assert
             Assert(new Scenario()
@@ -291,28 +380,30 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
         [Fact]
         public void WithOneChange_ThenOnlyOneStreetNameNameWasChanged()
         {
-            var streetNameNames = new Names(new[] {
-                new StreetNameName("Kapelstraat", Language.Dutch),
-                new StreetNameName("Rue de la Chapelle", Language.French) });
-
-            var command = Fixture.Create<CorrectStreetNameNames>()
-                .WithMunicipalityId(_municipalityId)
-                .WithStreetNameNames(new Names())
-                .WithStreetNameName(streetNameNames.First())
-                .WithStreetNameName(new StreetNameName("rue de la loi", Language.French));
+            var streetNameNames = new Names(new[]
+            {
+                new StreetNameName("Kaplestraat", Language.Dutch),
+                new StreetNameName("Rue d'la Chapelle", Language.French)
+            });
 
             var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
-            ((ISetProvenance)dutchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
+            dutchLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
 
             var frenchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.French);
-            ((ISetProvenance)frenchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
+            frenchLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
 
             var streetNameWasProposedV2 = new StreetNameWasProposedV2(
                 _municipalityId,
                 new NisCode("abc"),
                 streetNameNames,
                 Fixture.Create<PersistentLocalId>());
-            ((ISetProvenance)streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
+            streetNameWasProposedV2.SetProvenance(Fixture.Create<Provenance>());
+
+            var command = Fixture.Create<CorrectStreetNameNames>()
+                .WithMunicipalityId(_municipalityId)
+                .WithStreetNameNames(new Names())
+                .WithStreetNameName(streetNameNames.First())
+                .WithStreetNameName(new StreetNameName("Rue de la Chapelle", Language.French));
 
             // Act, assert
             Assert(new Scenario()
@@ -324,7 +415,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                     streetNameWasProposedV2)
                 .When(command)
                 .Then(new Fact(_streamId, new StreetNameNamesWereCorrected(
-                    _municipalityId, command.PersistentLocalId, new Names(new[] { new StreetNameName("rue de la loi", Language.French) })))));
+                    _municipalityId, command.PersistentLocalId, new Names(new[]
+                    {
+                        new StreetNameName("Rue de la Chapelle", Language.French),
+                    })))));
         }
 
         [Theory]
@@ -357,7 +451,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                         true,
                         false);
 
-                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    ((ISetProvenance) streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
                     return streetNameWasMigratedToMunicipality;
                 })
                 .Create();
@@ -380,7 +474,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                         true,
                         false);
 
-                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    ((ISetProvenance) streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
                     return streetNameWasMigratedToMunicipality;
                 })
                 .Create();
@@ -431,7 +525,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                         true,
                         false);
 
-                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    ((ISetProvenance) streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
                     return streetNameWasMigratedToMunicipality;
                 })
                 .Create();
@@ -447,21 +541,21 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                         StreetNameStatus.Current,
                         Language.Dutch,
                         null,
-                        new Names(new[] { new StreetNameName("Kapelstraat", Language.Dutch) }),
+                        new Names(new[] { new StreetNameName("Kaplestraat", Language.Dutch) }),
                         !string.IsNullOrEmpty(homonymAdditionB)
                             ? new HomonymAdditions(new[] { new StreetNameHomonymAddition(homonymAdditionB, Language.Dutch) })
                             : new HomonymAdditions(),
                         true,
                         false);
 
-                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    ((ISetProvenance) streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
                     return streetNameWasMigratedToMunicipality;
                 })
                 .Create();
 
             var command = Fixture.Create<CorrectStreetNameNames>()
                 .WithMunicipalityId(_municipalityId)
-                .WithStreetNameName(Fixture.Create<Names>().First())
+                .WithStreetNameName(new StreetNameName("kapelstraat", Language.Dutch))
                 .WithPersistentLocalId(new PersistentLocalId(streetNameBWasMigrated.PersistentLocalId));
 
             Assert(new Scenario()
@@ -477,18 +571,20 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
         [Fact]
         public void StateCheck()
         {
-            var streetNameNames = new Names(new[] {
-                new StreetNameName("Kapelstraat", Language.Dutch),
-                new StreetNameName("Rue de la Chapelle", Language.French) });
+            var streetNameNames = new Names(new[]
+            {
+                new StreetNameName("Kaplestraat", Language.Dutch),
+                new StreetNameName("Rue d'la Chapelle", Language.French)
+            });
 
             var persistentLocalId = Fixture.Create<PersistentLocalId>();
             var aggregate = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
 
             var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
-            ((ISetProvenance)dutchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
+            ((ISetProvenance) dutchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
 
             var frenchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.French);
-            ((ISetProvenance)frenchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
+            ((ISetProvenance) frenchLanguageWasAdded).SetProvenance(Fixture.Create<Provenance>());
 
             aggregate.Initialize(new List<object>
             {
@@ -498,8 +594,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                 frenchLanguageWasAdded,
                 Fixture.Create<StreetNameWasProposedV2>().WithNames(new Names(new Dictionary<Language, string>
                 {
-                    { Language.Dutch, Fixture.Create<string>() },
-                    { Language.French, Fixture.Create<string>() }
+                    { Language.Dutch, "Kapelstraat" },
+                    { Language.French, "Rue de la Chapelle" }
                 }))
             });
 
