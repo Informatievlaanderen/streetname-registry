@@ -1,3 +1,15 @@
+# [3.31.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.30.3...v3.31.0) (2023-08-07)
+
+
+### Bug Fixes
+
+* remove elastic apm ([eb50358](https://github.com/informatievlaanderen/streetname-registry/commit/eb50358e0028a45e5e1a31fc1bd64a3542e24a12))
+
+
+### Features
+
+* add levenshtein distance calculation when correcting streetname ([44b8e6c](https://github.com/informatievlaanderen/streetname-registry/commit/44b8e6c8a2c4da379b31b929d6753d2a697c2b72))
+
 ## [3.30.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.30.2...v3.30.3) (2023-06-21)
 
 
