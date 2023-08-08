@@ -485,8 +485,8 @@ jobs:
       shell: bash
       run: |
         echo Push Lambda functions to S3 Test
-        echo aws s3 cp lambda.zip s3://196194905350-vbr-test-lam-sr-sqsbackoffice/$SEMVER/lambda.zip  --source-region eu-west-1 --region eu-west-1 --sse aws:kms --sse-kms-key-id arn:aws:kms:eu-west-1:196194905350:key/0738224b-1ecb-4377-a6da-2bc618fabc03
-        aws s3 cp lambda.zip s3://196194905350-vbr-test-lam-sr-sqsbackoffice/$SEMVER/lambda.zip  --source-region eu-west-1 --region eu-west-1 --sse aws:kms --sse-kms-key-id arn:aws:kms:eu-west-1:196194905350:key/0738224b-1ecb-4377-a6da-2bc618fabc03
+        echo aws s3 cp ~/lambda.zip s3://196194905350-vbr-test-lam-sr-sqsbackoffice/$SEMVER/lambda.zip  --source-region eu-west-1 --region eu-west-1 --sse aws:kms --sse-kms-key-id arn:aws:kms:eu-west-1:196194905350:key/0738224b-1ecb-4377-a6da-2bc618fabc03
+        aws s3 cp ~/lambda.zip s3://196194905350-vbr-test-lam-sr-sqsbackoffice/$SEMVER/lambda.zip  --source-region eu-west-1 --region eu-west-1 --sse aws:kms --sse-kms-key-id arn:aws:kms:eu-west-1:196194905350:key/0738224b-1ecb-4377-a6da-2bc618fabc03
       env:
         SEMVER: ${{ needs.release.outputs.version }}
 
