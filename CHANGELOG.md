@@ -1,3 +1,10 @@
+## [3.31.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.1...v3.31.2) (2023-08-08)
+
+
+### Bug Fixes
+
+* add ~/ before lambda.zip in push to s3 test step ([d1bdb03](https://github.com/informatievlaanderen/streetname-registry/commit/d1bdb0317d37946ad7667906d524c284914894d6))
+
 ## [3.31.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.0...v3.31.1) (2023-08-08)
 
 
