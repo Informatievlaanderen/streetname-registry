@@ -1,3 +1,10 @@
+## [3.31.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.2...v3.31.3) (2023-08-08)
+
+
+### Bug Fixes
+
+* remove no longer needed cp lambda.zip parameters from release ([e00fbc9](https://github.com/informatievlaanderen/streetname-registry/commit/e00fbc954a35725bdad68df0daabe149ba33addd))
+
 ## [3.31.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.1...v3.31.2) (2023-08-08)
 
 
