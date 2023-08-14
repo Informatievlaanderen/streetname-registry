@@ -103,5 +103,4 @@ jobs:
         SONAR_TOKEN: ${{ secrets.VBR_SONAR_TOKEN }}
       shell: bash
       run: |
-        ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.VBR_SONAR_TOKEN }}" 
-  # removed from sonar end command > /dev/null 2>&1
+        ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.VBR_SONAR_TOKEN }}" > /dev/null 2>&1
