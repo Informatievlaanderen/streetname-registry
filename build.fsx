@@ -38,6 +38,7 @@ let push = push dockerRepository
 supportedRuntimeIdentifiers <- [ "msil"; "linux-x64" ]
 
 // Solution -----------------------------------------------------------------------
+
 Target.create "Restore_Solution" (fun _ -> restore "StreetNameRegistry")
 
 Target.create "Build_Solution" (fun _ ->
