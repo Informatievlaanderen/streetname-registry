@@ -40,7 +40,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator.VerifyNoOtherCalls();
@@ -64,7 +64,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             var act = async () => await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             await act.Should().ThrowAsync<NotImplementedException>();
@@ -88,7 +88,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -99,7 +99,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.IfMatchHeaderValue == null &&
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -131,7 +131,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -163,7 +163,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -184,7 +184,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -196,7 +196,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata &&
                     request.StreetNamePersistentLocalId == messageData.PersistentLocalId
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -217,7 +217,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -229,7 +229,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata &&
                     request.StreetNamePersistentLocalId == messageData.PersistentLocalId
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -250,7 +250,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -261,7 +261,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -282,7 +282,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -293,7 +293,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -314,7 +314,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -325,7 +325,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -346,7 +346,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -357,7 +357,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -378,7 +378,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -390,7 +390,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -411,7 +411,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             await sut.HandleMessage(
                 messageData,
                 messageMetadata,
-                CancellationToken.None);
+                It.IsAny<CancellationToken>());
 
             // Assert
             mediator
@@ -422,7 +422,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                     request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
                     request.Provenance == messageData.ProvenanceData.ToProvenance() &&
                     request.Metadata == messageData.Metadata
-                ), CancellationToken.None), Times.Once);
+                ), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 
