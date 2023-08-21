@@ -1,3 +1,10 @@
+## [3.31.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.5...v3.31.6) (2023-08-21)
+
+
+### Bug Fixes
+
+* call cancel on lambda cancellationToken after 5 minutes ([16cefe0](https://github.com/informatievlaanderen/streetname-registry/commit/16cefe005f57564ef1fc8a4e14318fbc53269dd8))
+
 ## [3.31.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.4...v3.31.5) (2023-08-14)
 
 
