@@ -1005,7 +1005,7 @@ jobs:
 
   deploy_to_staging:
     if: github.repository_owner == 'Informatievlaanderen'
-    needs: [ push_images_to_staging, deploy_to_test_finish_slack, release ]
+    needs: [ push_images_to_staging, deploy_to_staging_start_slack, release ]
     name: Deploy to staging
     runs-on: ubuntu-latest
     strategy:
