@@ -81,7 +81,8 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
             builder.Property(x => x.Status);
             builder.Property(x => x.Removed);
 
-            builder.HasIndex(x => x.Removed);
+            builder.HasIndex(x => x.Removed)
+                .IncludeProperties(x => x.NisCode);
             builder.HasIndex(x => x.MunicipalityId);
         }
     }
