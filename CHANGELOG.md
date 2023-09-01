@@ -1,3 +1,15 @@
+## [3.31.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.6...v3.31.7) (2023-09-01)
+
+
+### Bug Fixes
+
+* bump lambda ([a91f2b1](https://github.com/informatievlaanderen/streetname-registry/commit/a91f2b110ea36227f01331f34fb1a0e7a48b8f89))
+
+
+### Performance Improvements
+
+* recreate wms index to add include niscode ([1b881f9](https://github.com/informatievlaanderen/streetname-registry/commit/1b881f95d05d3adc7d5181b0b2218f57e8a7d1d0))
+
 ## [3.31.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.5...v3.31.6) (2023-08-21)
 
 
