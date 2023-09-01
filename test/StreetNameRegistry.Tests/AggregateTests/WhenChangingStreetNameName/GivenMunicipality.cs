@@ -173,21 +173,23 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingStreetNameName
             var languageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
             ((ISetProvenance)languageWasAdded).SetProvenance(Fixture.Create<Provenance>());
 
-            var streetNameWasProposedV2 = new StreetNameWasProposedV2(
+            var streetNameWasProposedV2_1 = Fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasProposedV2_2 = new StreetNameWasProposedV2(
                 _municipalityId,
                 new NisCode("abc"),
                 streetNameNames,
-                new PersistentLocalId(123));
-            ((ISetProvenance)streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
+                new PersistentLocalId(streetNameWasProposedV2_1.PersistentLocalId + 1));
+            ((ISetProvenance)streetNameWasProposedV2_2).SetProvenance(Fixture.Create<Provenance>());
 
             // Act, assert
+
             Assert(new Scenario()
                 .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>(),
                     Fixture.Create<MunicipalityBecameCurrent>(),
                     languageWasAdded,
-                    Fixture.Create<StreetNameWasProposedV2>(),
-                    streetNameWasProposedV2,
+                    streetNameWasProposedV2_1,
+                    streetNameWasProposedV2_2,
                     Fixture.Create<StreetNameWasRejected>())
                 .When(command)
                 .Throws(new StreetNameHasInvalidStatusException(command.PersistentLocalId)));
@@ -251,7 +253,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingStreetNameName
                 .Throws(new StreetNameNameLanguageIsNotSupportedException(
                     $"The language '{Language.Dutch}' is not an official or facility language of municipality '{_municipalityId}'.")));
         }
-        
+
         [Fact]
         public void WithNoChanges_ThenNothing()
         {
