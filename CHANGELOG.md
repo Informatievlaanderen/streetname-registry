@@ -1,3 +1,10 @@
+## [3.31.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.7...v3.31.8) (2023-09-01)
+
+
+### Bug Fixes
+
+* bump lambda package ([81e23c2](https://github.com/informatievlaanderen/streetname-registry/commit/81e23c29536c9bff4b2d53b12260f18b4d5c0719))
+
 ## [3.31.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.6...v3.31.7) (2023-09-01)
 
 
