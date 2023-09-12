@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Municipality
         private readonly List<Language> _facilityLanguages = new List<Language>();
         public MunicipalityStreetNames StreetNames { get; } = new MunicipalityStreetNames();
 
-        internal MunicipalityId MunicipalityId => _municipalityId;
+        public MunicipalityId MunicipalityId => _municipalityId;
         internal NisCode NisCode => _nisCode;
         internal IReadOnlyList<Language> OfficialLanguages => _officialLanguages;
         internal IReadOnlyList<Language> FacilityLanguages => _facilityLanguages;

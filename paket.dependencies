@@ -37,22 +37,24 @@ nuget Be.Vlaanderen.Basisregisters.Testing.Infrastructure.Events 3.0.0 content: 
 
 nuget Be.Vlaanderen.Basisregisters.Auth.AcmIdm 1.4.0
 
-nuget Be.Vlaanderen.Basisregisters.AggregateSource 8.0.0
-nuget Be.Vlaanderen.Basisregisters.AggregateSource.ExplicitRouting 8.0.0
-nuget Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore.Autofac 8.0.0
-nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing 8.0.0
-nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing.CommandHandling 8.0.0
-nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing.SqlStreamStore.Autofac 8.0.0
-nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing.Xunit 8.0.0
+nuget Be.Vlaanderen.Basisregisters.AggregateSource 8.2.0
+nuget Be.Vlaanderen.Basisregisters.AggregateSource.ExplicitRouting 8.2.0
+nuget Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore.Autofac 8.2.0
+nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing 8.2.0
+nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing.CommandHandling 8.2.0
+nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing.SqlStreamStore.Autofac 8.2.0
+nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing.Xunit 8.2.0
 
 nuget Be.Vlaanderen.Basisregisters.Api 20.0.0
 
 nuget Be.Vlaanderen.Basisregisters.Aws.DistributedMutex 3.0.1
 nuget Be.Vlaanderen.Basisregisters.Aws.Lambda 3.0.3
 
-nuget Be.Vlaanderen.Basisregisters.CommandHandling 8.0.0
-nuget Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency 8.0.0
-nuget Be.Vlaanderen.Basisregisters.CommandHandling.SqlStreamStore 8.0.0
+nuget Be.Vlaanderen.Basisregisters.CommandHandling 8.2.0
+nuget Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency 8.2.0
+nuget Be.Vlaanderen.Basisregisters.CommandHandling.SqlStreamStore 8.2.0
+
+nuget Be.Vlaanderen.Basisregisters.SnapshotVerifier 8.2.0
 
 nuget Be.Vlaanderen.Basisregisters.EventHandling 4.2.3
 nuget Be.Vlaanderen.Basisregisters.EventHandling.Autofac 4.2.3
