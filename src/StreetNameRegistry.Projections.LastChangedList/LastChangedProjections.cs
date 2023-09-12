@@ -15,7 +15,7 @@ namespace StreetNameRegistry.Projections.LastChangedList
     [ConnectedProjectionDescription("Projectie die markeert voor hoeveel straatnamen de gecachte data nog geüpdated moeten worden.")]
     public sealed class LastChangedProjections : LastChangedListConnectedProjection
     {
-        private static readonly AcceptType[] SupportedAcceptTypes = { AcceptType.Json, AcceptType.Xml, AcceptType.JsonLd };
+        private static readonly AcceptType[] SupportedAcceptTypes = { AcceptType.JsonLd };
 
         public LastChangedProjections()
             : base(SupportedAcceptTypes)
@@ -243,8 +243,6 @@ namespace StreetNameRegistry.Projections.LastChangedList
             var shortenedAcceptType = acceptType.ToString().ToLowerInvariant();
             return acceptType switch
             {
-                AcceptType.Json => $"legacy/streetname:{{0}}.{shortenedAcceptType}",
-                AcceptType.Xml => $"legacy/streetname:{{0}}.{shortenedAcceptType}",
                 AcceptType.JsonLd => $"oslo/streetname:{{0}}.{shortenedAcceptType}",
                 _ => throw new NotImplementedException($"Cannot build CacheKey for type {typeof(AcceptType)}")
             };
@@ -254,8 +252,6 @@ namespace StreetNameRegistry.Projections.LastChangedList
         {
             return acceptType switch
             {
-                AcceptType.Json => "/v1/straatnamen/{0}",
-                AcceptType.Xml => "/v1/straatnamen/{0}",
                 AcceptType.JsonLd => "/v2/straatnamen/{0}",
                 _ => throw new NotImplementedException($"Cannot build Uri for type {typeof(AcceptType)}")
             };
