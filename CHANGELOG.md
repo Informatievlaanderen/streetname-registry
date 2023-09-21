@@ -1,3 +1,10 @@
+# [3.32.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.10...v3.32.0) (2023-09-21)
+
+
+### Features
+
+* add snapshot verifier ([d705da7](https://github.com/informatievlaanderen/streetname-registry/commit/d705da7507271a360b116050b31f75cc6d01d1e9))
+
 ## [3.31.10](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.9...v3.31.10) (2023-09-04)
 
 
