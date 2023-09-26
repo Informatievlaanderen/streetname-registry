@@ -1,3 +1,10 @@
+# [3.33.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.32.0...v3.33.0) (2023-09-26)
+
+
+### Features
+
+* don't cache legacy GAWR-5195 ([13ebfe6](https://github.com/informatievlaanderen/streetname-registry/commit/13ebfe6858ce0a45c230e4226b9257de1996b3eb))
+
 # [3.32.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.31.10...v3.32.0) (2023-09-21)
 
 
