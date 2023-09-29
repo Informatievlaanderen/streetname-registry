@@ -68,6 +68,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             if (!string.IsNullOrEmpty(filtering.Filter.NameGerman))
                 streetNames = streetNames.Where(s => s.NameGerman.Contains(filtering.Filter.NameGerman));
 
+            if (filtering.Filter.IsInFlemishRegion.HasValue)
+                streetNames = streetNames.Where(x => x.IsInFlemishRegion);
+
             var filterMunicipalityName = filtering.Filter.MunicipalityName.RemoveDiacritics();
             if (!string.IsNullOrEmpty(filtering.Filter.MunicipalityName))
             {
@@ -156,5 +159,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public string Status { get; set; } = string.Empty;
         public string? NisCode { get; set; } = string.Empty;
         public string? PostalCode { get; set; } = string.Empty;
+
+        public bool? IsInFlemishRegion { get; set; } = null;
     }
 }
