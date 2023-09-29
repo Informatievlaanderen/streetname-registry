@@ -9,7 +9,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
     using Municipality;
     using Municipality.Events;
     using NodaTime;
-    using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("API endpoint lijst straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor de straatnamen lijst voorziet.")]
@@ -28,6 +27,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     PersistentLocalId = message.Message.PersistentLocalId,
                     MunicipalityId = message.Message.MunicipalityId,
                     NisCode = message.Message.NisCode,
+                    IsInFlemishRegion = RegionFilter.IsFlemishRegion(message.Message.NisCode),
                     VersionTimestamp = message.Message.Provenance.Timestamp,
                     Removed = message.Message.IsRemoved,
                     PrimaryLanguage = municipality.PrimaryLanguage,
@@ -53,6 +53,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     PersistentLocalId = message.Message.PersistentLocalId,
                     MunicipalityId = message.Message.MunicipalityId,
                     NisCode = message.Message.NisCode,
+                    IsInFlemishRegion = RegionFilter.IsFlemishRegion(message.Message.NisCode),
                     VersionTimestamp = message.Message.Provenance.Timestamp,
                     Removed = false,
                     PrimaryLanguage = municipality.PrimaryLanguage,
@@ -260,9 +261,11 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     .Where(s => s.MunicipalityId == message.Message.MunicipalityId)
                     .Union(context.StreetNameListV2.Where(s => s.MunicipalityId == message.Message.MunicipalityId));
 
+                var streetNameIsInFlemishRegion = RegionFilter.IsFlemishRegion(message.Message.NisCode);
                 foreach (var streetName in streetNames)
                 {
                     streetName.NisCode = message.Message.NisCode;
+                    streetName.IsInFlemishRegion = streetNameIsInFlemishRegion;
                 }
             });
 

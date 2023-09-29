@@ -37,6 +37,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
 
         public string NisCode { get; set; }
 
+        public bool IsInFlemishRegion { get; set; }
+
         private DateTimeOffset VersionTimestampAsDateTimeOffset { get; set; }
 
         public Instant VersionTimestamp
@@ -88,6 +90,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
             builder.Property(x => x.PrimaryLanguage);
 
             builder.Property(x => x.NisCode);
+            builder.Property(x => x.IsInFlemishRegion);
 
             builder.HasIndex(x => x.NisCode);
             builder.HasIndex(x => x.Status);
@@ -99,7 +102,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
 
             builder.HasIndex(x => x.MunicipalityId);
             builder.HasIndex(x => x.Removed);
-
+            builder.HasIndex(x => x.IsInFlemishRegion);
         }
     }
 }

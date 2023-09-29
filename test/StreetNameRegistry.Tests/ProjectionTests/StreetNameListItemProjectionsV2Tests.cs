@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
     using global::AutoFixture;
@@ -55,6 +56,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     expectedStreetName.Should().NotBeNull();
                     expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
+                    expectedStreetName.IsInFlemishRegion.Should().Be(RegionFilter.IsFlemishRegion(streetNameWasProposedV2.NisCode));
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
                     expectedStreetName.Status.Should().Be(StreetNameStatus.Proposed);
@@ -88,6 +90,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     expectedStreetName.Should().NotBeNull();
                     expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
+                    expectedStreetName.IsInFlemishRegion.Should().Be(RegionFilter.IsFlemishRegion(streetNameWasProposedV2.NisCode));
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
                     expectedStreetName.Status.Should().Be(StreetNameStatus.Current);
@@ -255,6 +258,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     expectedStreetName.Should().NotBeNull();
                     expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
+                    expectedStreetName.IsInFlemishRegion.Should().Be(RegionFilter.IsFlemishRegion(streetNameWasProposedV2.NisCode));
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
                     expectedStreetName.Status.Should().Be(StreetNameStatus.Rejected);
@@ -327,6 +331,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     expectedStreetName.Should().NotBeNull();
                     expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
+                    expectedStreetName.IsInFlemishRegion.Should().Be(RegionFilter.IsFlemishRegion(streetNameWasProposedV2.NisCode));
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
                     expectedStreetName.Status.Should().Be(StreetNameStatus.Retired);
@@ -437,6 +442,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     expectedStreetName.Should().NotBeNull();
                     expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
+                    expectedStreetName.IsInFlemishRegion.Should().Be(RegionFilter.IsFlemishRegion(streetNameWasProposedV2.NisCode));
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
                     expectedStreetName.Status.Should().Be(StreetNameStatus.Proposed);
@@ -478,6 +484,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     expectedStreetName.Should().NotBeNull();
                     expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
+                    expectedStreetName.IsInFlemishRegion.Should().Be(RegionFilter.IsFlemishRegion(streetNameWasProposedV2.NisCode));
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
                     expectedStreetName.Status.Should().Be(StreetNameStatus.Proposed);
