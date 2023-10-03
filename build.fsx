@@ -67,6 +67,7 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Migrator.StreetName"
     "StreetNameRegistry.Projections.BackOffice"
     "StreetNameRegistry.Projections.Syndication"
+    "StreetNameRegistry.Snapshot.Verifier"
   |] |> Array.Parallel.iter publishSource)
 
 Target.create "Pack_Solution" (fun _ ->
@@ -93,6 +94,7 @@ Target.create "Containerize" (fun _ ->
     { Project = "StreetNameRegistry.Migrator.StreetName"; Container = "migrator-streetname" }
     { Project = "StreetNameRegistry.Projections.Syndication"; Container = "projections-syndication" }
     { Project = "StreetNameRegistry.Projections.BackOffice"; Container = "projections-backoffice" }
+    { Project = "StreetNameRegistry.Snapshot.Verifier"; Container = "snapshot-verifier" }
   |] |> Array.Parallel.iter (fun o -> containerize o.Project o.Container))
 
 Target.create "SetAssemblyVersions" (fun _ -> setVersions "SolutionInfo.cs")
@@ -109,6 +111,7 @@ Target.create "Containerize_ProducerSnapshotOslo" (fun _ -> containerize "Street
 Target.create "Containerize_MigratorStreetName" (fun _ -> containerize "StreetNameRegistry.Migrator.StreetName" "migrator-streetname")
 Target.create "Containerize_ProjectionsSyndication" (fun _ -> containerize "StreetNameRegistry.Projections.Syndication" "projections-syndication")
 Target.create "Containerize_ProjectionsBackOffice" (fun _ -> containerize "StreetNameRegistry.Projections.BackOffice" "projections-backoffice")
+Target.create "Containerize_SnapshotVerifier" (fun _ -> containerize "StreetNameRegistry.Snapshot.Verifier" "snapshot-verifier")
 // --------------------------------------------------------------------------------
 
 Target.create "Build" ignore
