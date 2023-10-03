@@ -1,3 +1,11 @@
+## [3.33.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.33.0...v3.33.1) (2023-10-03)
+
+
+### Bug Fixes
+
+* add snapshot-verifier to release pipeline ([1939af1](https://github.com/informatievlaanderen/streetname-registry/commit/1939af1bc58e3f808d375998ea639873b4d2fc84))
+* change snapshot verifier folder name ([6123584](https://github.com/informatievlaanderen/streetname-registry/commit/612358455108049a2358a2ec29e67955ad01115a))
+
 # [3.33.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.32.0...v3.33.0) (2023-09-26)
 
 
