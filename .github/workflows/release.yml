@@ -248,6 +248,21 @@ jobs:
       semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
 
+  build-consumer-read-postal:
+    name: Build Snapshot Verifier
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
+    needs: [ set-release-version ]
+    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
+    with:
+      registry: streetname-registry
+      build-target: Containerize_ConsumerReadPostal
+      image-file: sr-consumer-read-postal-image.tar
+      image-name: consumer-read-postal
+      test-project: StreetNameRegistry.Tests
+      build-project: StreetNameRegistry.Snapshot.Verifier
+      semver: ${{ needs.set-release-version.outputs.version }}
+    secrets: inherit
+
   pack-api-backoffice:
     name: Pack Api BackOffice
     uses: Informatievlaanderen/build-pipeline/.github/workflows/pack.yml@main
@@ -356,7 +371,8 @@ jobs:
       , build-producer-snapshot-oslo
       , build-migrator-streetname
       , build-lambda-backoffice
-      , build-snapshot-verifier]
+      , build-snapshot-verifier
+      , build-consumer-read-postal]
     outputs:
       version: ${{ steps.set-version.outputs.version }}
     steps:
@@ -714,6 +730,7 @@ jobs:
           , 'producer-snapshot-oslo'
           , 'migrator-streetname'
           , 'snapshot-verifier'
+          , 'consumer-read-postal'
         ]
     steps:
       - name: Configure AWS credentials (Test)
@@ -775,6 +792,7 @@ jobs:
           , 'producer-snapshot-oslo'
           , 'migrator-streetname'
           , 'snapshot-verifier'
+          , 'consumer-read-postal'
         ]
     steps:
       - name: Configure AWS credentials (Staging)
@@ -838,6 +856,7 @@ jobs:
           , 'producer-snapshot-oslo'
           , 'migrator-streetname'
           , 'snapshot-verifier'
+          , 'consumer-read-postal'
         ]
     steps:
       - name: Configure AWS credentials (New Production)
@@ -900,6 +919,7 @@ jobs:
           , 'producer'
           , 'producer-snapshot-oslo'
           , 'migrator-streetname'
+          , 'consumer-read-postal'
         ]
     steps:
       - name: Configure AWS credentials (Production)
@@ -979,6 +999,7 @@ jobs:
           , 'streetname-registry-producer-snapshot-oslo'
           , 'streetname-registry-projections-backoffice'
           , 'streetname-registry-snapshot-verifier'
+          , 'streetname-registry-consumer-read-postal'
         ]
 
     steps:
@@ -1098,7 +1119,9 @@ jobs:
           , 'streetname-registry-migrator-streetname'
           , 'streetname-registry-producer-snapshot-oslo'
           , 'streetname-registry-projections-backoffice'
-          , 'streetname-registry-snapshot-verifier']
+          , 'streetname-registry-snapshot-verifier'
+          , 'streetname-registry-consumer-read-postal'
+          ]
 
     steps:
     - name: CD services
@@ -1217,7 +1240,9 @@ jobs:
           , 'streetname-registry-migrator-streetname'
           , 'streetname-registry-producer-snapshot-oslo'
           , 'streetname-registry-projections-backoffice'
-          , 'streetname-registry-snapshot-verifier']
+          , 'streetname-registry-snapshot-verifier'
+          , 'streetname-registry-consumer-read-postal'
+          ]
 
     steps:
     - name: CD services

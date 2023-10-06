@@ -87,6 +87,7 @@ nuget Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm 19.0.0
 nuget Be.Vlaanderen.Basisregisters.GrAr.Extracts 19.0.0
 
 nuget Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple 4.8.3
+nuget Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer 4.8.3
 nuget Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer 4.8.3
 nuget Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer 4.8.3
 nuget Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple 4.8.3

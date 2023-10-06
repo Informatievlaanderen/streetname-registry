@@ -39,15 +39,17 @@ jobs:
     strategy:
       matrix:
         services: [
-        'streetname-registry-api',
-        'streetname-registry-projections',
-        'streetname-registry-backoffice-api',
-        'streetname-registry-consumer',
-        'streetname-registry-producer',
-        'streetname-registry-migrator-streetname',
-        'streetname-registry-producer-snapshot-oslo',
-        'streetname-registry-projections-backoffice',
-        'streetname-registry-snapshot-verifier']
+          'streetname-registry-api',
+          'streetname-registry-projections',
+          'streetname-registry-backoffice-api',
+          'streetname-registry-consumer',
+          'streetname-registry-producer',
+          'streetname-registry-migrator-streetname',
+          'streetname-registry-producer-snapshot-oslo',
+          'streetname-registry-projections-backoffice',
+          'streetname-registry-snapshot-verifier',
+          'streetname-registry-consumer-read-postal'
+        ]
 
     steps:
     - name: CD services
