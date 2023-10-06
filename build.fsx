@@ -68,6 +68,7 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Projections.BackOffice"
     "StreetNameRegistry.Projections.Syndication"
     "StreetNameRegistry.Snapshot.Verifier"
+    "StreetNameRegistry.Consumer.Read.Postal"
   |] |> Array.Parallel.iter publishSource)
 
 Target.create "Pack_Solution" (fun _ ->
@@ -95,6 +96,7 @@ Target.create "Containerize" (fun _ ->
     { Project = "StreetNameRegistry.Projections.Syndication"; Container = "projections-syndication" }
     { Project = "StreetNameRegistry.Projections.BackOffice"; Container = "projections-backoffice" }
     { Project = "StreetNameRegistry.Snapshot.Verifier"; Container = "snapshot-verifier" }
+    { Project = "StreetNameRegistry.Consumer.Read.Postal"; Container = "consumer-read-postal" }
   |] |> Array.Parallel.iter (fun o -> containerize o.Project o.Container))
 
 Target.create "SetAssemblyVersions" (fun _ -> setVersions "SolutionInfo.cs")
@@ -112,6 +114,7 @@ Target.create "Containerize_MigratorStreetName" (fun _ -> containerize "StreetNa
 Target.create "Containerize_ProjectionsSyndication" (fun _ -> containerize "StreetNameRegistry.Projections.Syndication" "projections-syndication")
 Target.create "Containerize_ProjectionsBackOffice" (fun _ -> containerize "StreetNameRegistry.Projections.BackOffice" "projections-backoffice")
 Target.create "Containerize_SnapshotVerifier" (fun _ -> containerize "StreetNameRegistry.Snapshot.Verifier" "snapshot-verifier")
+Target.create "Containerize_ConsumerReadPostal" (fun _ -> containerize "StreetNameRegistry.Consumer.Read.Postal" "consumer-read-postal")
 // --------------------------------------------------------------------------------
 
 Target.create "Build" ignore

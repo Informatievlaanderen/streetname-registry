@@ -79,6 +79,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Api.Back
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreetNameRegistry.Snapshot.Verifier", "src\StreetNameRegistry.Snapshot.Verifier\StreetNameRegistry.Snapshot.Verifier.csproj", "{06F8F677-2696-4996-B4AE-B8E3B747A696}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreetNameRegistry.Consumer.Read.Postal", "src\StreetNameRegistry.Consumer.Read.Postal\StreetNameRegistry.Consumer.Read.Postal.csproj", "{83C7D129-ACEA-4FC6-A55C-748D8D31135A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -185,6 +187,10 @@ Global
 		{06F8F677-2696-4996-B4AE-B8E3B747A696}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06F8F677-2696-4996-B4AE-B8E3B747A696}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06F8F677-2696-4996-B4AE-B8E3B747A696}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83C7D129-ACEA-4FC6-A55C-748D8D31135A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83C7D129-ACEA-4FC6-A55C-748D8D31135A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83C7D129-ACEA-4FC6-A55C-748D8D31135A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83C7D129-ACEA-4FC6-A55C-748D8D31135A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -215,6 +221,7 @@ Global
 		{C1C797C7-4A24-4E9C-B7D0-7E097562342E} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{EFDF165C-DCFE-4577-A00F-04691197FB1B} = {81641B0B-BEFB-476D-8519-3774313E944B}
 		{06F8F677-2696-4996-B4AE-B8E3B747A696} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
+		{83C7D129-ACEA-4FC6-A55C-748D8D31135A} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3B44FE80-30FE-47B7-A0DE-8610218FFF63}
