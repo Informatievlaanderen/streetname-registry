@@ -999,7 +999,6 @@ jobs:
           , 'streetname-registry-producer-snapshot-oslo'
           , 'streetname-registry-projections-backoffice'
           , 'streetname-registry-snapshot-verifier'
-          , 'streetname-registry-consumer-read-postal'
         ]
 
     steps:

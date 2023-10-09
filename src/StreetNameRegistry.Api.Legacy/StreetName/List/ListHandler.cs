@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.List
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
-        private readonly ConsumerPostalContext _PostalContext;
+        private readonly ConsumerPostalContext _postalContext;
         private readonly IOptions<ResponseOptions> _responseOptions;
 
         public ListHandler(
@@ -31,13 +31,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.List
         {
             _legacyContext = legacyContext;
             _syndicationContext = syndicationContext;
-            _PostalContext = postalContext;
+            _postalContext = postalContext;
             _responseOptions = responseOptions;
         }
 
         public override async Task<StreetNameListResponse> Handle(ListRequest request, CancellationToken cancellationToken)
         {
-            var streetNameQuery = new StreetNameListQuery(_legacyContext, _syndicationContext, _PostalContext)
+            var streetNameQuery = new StreetNameListQuery(_legacyContext, _syndicationContext, _postalContext)
                 .Fetch<StreetNameListItem, StreetNameListItem>(request.Filtering, request.Sorting, request.Pagination);
 
             var pagedStreetNames = await streetNameQuery
