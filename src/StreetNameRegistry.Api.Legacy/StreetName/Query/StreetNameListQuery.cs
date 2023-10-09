@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using Consumer.Read.Postal;
     using Convertors;
     using Microsoft.EntityFrameworkCore;
     using Projections.Legacy;
@@ -18,13 +19,15 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
+        private readonly ConsumerPostalContext _postalContext;
 
         protected override ISorting Sorting => new StreetNameSorting();
 
-        public StreetNameListQuery(LegacyContext legacyContext, SyndicationContext syndicationContext)
+        public StreetNameListQuery(LegacyContext legacyContext, SyndicationContext syndicationContext, ConsumerPostalContext postalContext)
         {
             _legacyContext = legacyContext;
             _syndicationContext = syndicationContext;
+            _postalContext = postalContext;
         }
 
         protected override IQueryable<StreetNameListItem> Filter(FilteringHeader<StreetNameFilter> filtering)
@@ -89,6 +92,15 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 }
             }
 
+            if (!string.IsNullOrWhiteSpace(filtering.Filter.PostalCode))
+            {
+                var postalConsumerItem = _postalContext.PostalConsumerItems.Find(filtering.Filter.PostalCode);
+                if (postalConsumerItem?.NisCode != null)
+                {
+                    streetNames = streetNames.Where(m => m.NisCode == postalConsumerItem.NisCode);
+                }
+            }
+
             return streetNames;
         }
 
@@ -138,5 +150,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public string NameEnglish { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public string? NisCode { get; set; } = string.Empty;
+        public string? PostalCode { get; set; } = string.Empty;
     }
 }

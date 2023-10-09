@@ -249,7 +249,7 @@ jobs:
     secrets: inherit
 
   build-consumer-read-postal:
-    name: Build Snapshot Verifier
+    name: Build Consumer Read Postal
     uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
@@ -259,7 +259,7 @@ jobs:
       image-file: sr-consumer-read-postal-image.tar
       image-name: consumer-read-postal
       test-project: StreetNameRegistry.Tests
-      build-project: StreetNameRegistry.Snapshot.Verifier
+      build-project: StreetNameRegistry.Consumer.Read.Postal
       semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
 

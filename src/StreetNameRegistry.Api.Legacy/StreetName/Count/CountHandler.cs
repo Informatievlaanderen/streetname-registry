@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Count
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Consumer.Read.Postal;
     using Microsoft.EntityFrameworkCore;
     using Projections.Legacy;
     using Projections.Legacy.StreetNameList;
@@ -15,11 +16,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Count
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
+        private readonly ConsumerPostalContext _postalContext;
 
-        public CountHandler(LegacyContext legacyContext, SyndicationContext syndicationContext)
+        public CountHandler(LegacyContext legacyContext, SyndicationContext syndicationContext, ConsumerPostalContext postalContext)
         {
             _legacyContext = legacyContext;
             _syndicationContext = syndicationContext;
+            _postalContext = postalContext;
         }
 
         public override async Task<TotaalAantalResponse> Handle(CountRequest request, CancellationToken cancellationToken)
@@ -29,7 +32,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Count
             return new TotaalAantalResponse
                 {
                     Aantal = request.Filtering.ShouldFilter
-                        ? await new StreetNameListQuery(_legacyContext, _syndicationContext)
+                        ? await new StreetNameListQuery(_legacyContext, _syndicationContext, _postalContext)
                             .Fetch<StreetNameListItem, StreetNameListItem>(request.Filtering, request.Sorting, pagination)
                             .Items
                             .CountAsync(cancellationToken)

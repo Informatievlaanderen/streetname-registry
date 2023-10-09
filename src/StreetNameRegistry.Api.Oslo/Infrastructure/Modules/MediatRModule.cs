@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
     using Abstractions.Infrastructure.Options;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Consumer.Read.Postal;
     using FeatureToggles;
     using MediatR;
     using Microsoft.Extensions.Options;
@@ -33,6 +34,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                         new OsloListHandlerV2(
                             c.Resolve<LegacyContext>(),
                             c.Resolve<SyndicationContext>(),
+                            c.Resolve<ConsumerPostalContext>(),
                             c.Resolve<IOptions<ResponseOptions>>());
                 }
 
@@ -40,6 +42,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                     new OsloListHandler(
                         c.Resolve<LegacyContext>(),
                         c.Resolve<SyndicationContext>(),
+                        c.Resolve<ConsumerPostalContext>(),
                         c.Resolve<IOptions<ResponseOptions>>());
             }).InstancePerLifetimeScope();
 
@@ -69,13 +72,15 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                     return (IRequestHandler<OsloCountRequest, TotaalAantalResponse>)
                         new OsloCountHandlerV2(
                             c.Resolve<LegacyContext>(),
-                            c.Resolve<SyndicationContext>());
+                            c.Resolve<SyndicationContext>(),
+                            c.Resolve<ConsumerPostalContext>());
                 }
 
                 return (IRequestHandler<OsloCountRequest, TotaalAantalResponse>)
                     new OsloCountHandler(
                         c.Resolve<LegacyContext>(),
-                        c.Resolve<SyndicationContext>());
+                        c.Resolve<SyndicationContext>(),
+                        c.Resolve<ConsumerPostalContext>());
             }).InstancePerLifetimeScope();
         }
     }

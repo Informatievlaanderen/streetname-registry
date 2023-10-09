@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.List
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Consumer.Read.Postal;
     using Convertors;
     using Infrastructure.Options;
     using Microsoft.EntityFrameworkCore;
@@ -19,21 +20,24 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.List
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
+        private readonly ConsumerPostalContext _PostalContext;
         private readonly IOptions<ResponseOptions> _responseOptions;
 
         public ListHandler(
             LegacyContext legacyContext,
             SyndicationContext syndicationContext,
+            ConsumerPostalContext postalContext,
             IOptions<ResponseOptions> responseOptions)
         {
             _legacyContext = legacyContext;
             _syndicationContext = syndicationContext;
+            _PostalContext = postalContext;
             _responseOptions = responseOptions;
         }
 
         public override async Task<StreetNameListResponse> Handle(ListRequest request, CancellationToken cancellationToken)
         {
-            var streetNameQuery = new StreetNameListQuery(_legacyContext, _syndicationContext)
+            var streetNameQuery = new StreetNameListQuery(_legacyContext, _syndicationContext, _PostalContext)
                 .Fetch<StreetNameListItem, StreetNameListItem>(request.Filtering, request.Sorting, request.Pagination);
 
             var pagedStreetNames = await streetNameQuery
