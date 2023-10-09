@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StreetNameRegistry.Consumer.Read.Postal.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,11 +19,7 @@ namespace StreetNameRegistry.Consumer.Read.Postal.Migrations
                 {
                     PostalCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     NisCode = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NameDutch = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NameFrench = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NameGerman = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NameEnglish = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

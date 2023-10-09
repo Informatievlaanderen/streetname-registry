@@ -10,10 +10,6 @@ namespace StreetNameRegistry.Consumer.Read.Postal
         public string PostalCode { get; set; }
         public string? NisCode { get; set; }
         public PostalStatus Status { get; set; }
-        public string? NameDutch { get; set; }
-        public string? NameFrench { get; set; }
-        public string? NameGerman { get; set; }
-        public string? NameEnglish { get; set; }
 
         private PostalConsumerItem() { }
 
@@ -58,10 +54,6 @@ namespace StreetNameRegistry.Consumer.Read.Postal
                 .IsClustered();
 
             builder.Property(x => x.NisCode);
-            builder.Property(x => x.NameDutch);
-            builder.Property(x => x.NameFrench);
-            builder.Property(x => x.NameGerman);
-            builder.Property(x => x.NameEnglish);
 
             builder
                 .Property(x => x.Status)

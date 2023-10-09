@@ -51,18 +51,6 @@ namespace StreetNameRegistry.Consumer.Read.Postal.Migrations
                     b.Property<string>("PostalCode")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("NameDutch")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameEnglish")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameFrench")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameGerman")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NisCode")
                         .HasColumnType("nvarchar(450)");
 
