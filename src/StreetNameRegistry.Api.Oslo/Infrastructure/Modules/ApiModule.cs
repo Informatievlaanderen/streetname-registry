@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Be.Vlaanderen.Basisregisters.DependencyInjection;
+    using Consumer.Read.Postal.Infrastructure.Modules;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -33,7 +34,8 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
 
             builder
                 .RegisterModule(new LegacyModule(_configuration, _services, _loggerFactory))
-                .RegisterModule(new SyndicationModule(_configuration, _services, _loggerFactory));
+                .RegisterModule(new SyndicationModule(_configuration, _services, _loggerFactory))
+                .RegisterModule(new ConsumerPostalModule(_configuration, _services, _loggerFactory));
 
             builder
                 .RegisterType<ProblemDetailsHelper>()

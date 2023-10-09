@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using Consumer.Read.Postal;
     using Convertors;
     using Microsoft.EntityFrameworkCore;
     using Projections.Legacy;
@@ -17,13 +18,15 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
+        private readonly ConsumerPostalContext _postalContext;
 
         protected override ISorting Sorting => new StreetNameSorting();
 
-        public StreetNameListQueryV2(LegacyContext legacyContext, SyndicationContext syndicationContext)
+        public StreetNameListQueryV2(LegacyContext legacyContext, SyndicationContext syndicationContext, ConsumerPostalContext postalContext)
         {
             _legacyContext = legacyContext;
             _syndicationContext = syndicationContext;
+            _postalContext = postalContext;
         }
 
         protected override IQueryable<StreetNameListItemV2> Filter(FilteringHeader<StreetNameFilter> filtering)
@@ -77,7 +80,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     .ToList();
 
 
-                if ((streetNames is IQueryable<StreetNameListItemV2> streetNamesV2))
+                if (streetNames is IQueryable<StreetNameListItemV2>)
                 {
                     streetNames = streetNames.Where(m => municipalityNisCodes.Contains(m.NisCode));
                 }
@@ -104,6 +107,16 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 {
                     //have to filter on EF cannot return new List<>().AsQueryable() cause non-EF provider does not support .CountAsync()
                     streetNames = streetNames.Where(m => m.Status.HasValue && (int) m.Status.Value == -1);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(filtering.Filter.PostalCode))
+            {
+                var postalConsumerItem = _postalContext.PostalConsumerItems.Find(filtering.Filter.PostalCode);
+
+                if (postalConsumerItem?.NisCode != null)
+                {
+                    streetNames = streetNames.Where(m => m.NisCode == postalConsumerItem.NisCode);
                 }
             }
 

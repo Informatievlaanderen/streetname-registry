@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure.Modules
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.DependencyInjection;
+    using Consumer.Read.Postal.Infrastructure.Modules;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -35,7 +36,8 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure.Modules
                 .RegisterModule(new LegacyModule(_configuration, _services, _loggerFactory));
 
             builder
-                .RegisterModule(new SyndicationModule(_configuration, _services, _loggerFactory));
+                .RegisterModule(new SyndicationModule(_configuration, _services, _loggerFactory))
+                .RegisterModule(new ConsumerPostalModule(_configuration, _services, _loggerFactory));
 
             builder
                 .RegisterType<ProblemDetailsHelper>()
