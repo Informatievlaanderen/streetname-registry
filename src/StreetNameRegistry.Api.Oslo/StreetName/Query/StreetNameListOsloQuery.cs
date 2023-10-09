@@ -107,6 +107,10 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
                 {
                     streetNames = streetNames.Where(m => m.NisCode == postalConsumerItem.NisCode);
                 }
+                else
+                {
+                    streetNames = streetNames.Where(m => m.NisCode == "-1");
+                }
             }
 
             return streetNames;
