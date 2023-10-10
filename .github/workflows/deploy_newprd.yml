@@ -47,8 +47,7 @@ jobs:
           'streetname-registry-migrator-streetname',
           'streetname-registry-producer-snapshot-oslo',
           'streetname-registry-projections-backoffice',
-          'streetname-registry-snapshot-verifier',
-          'streetname-registry-consumer-read-postal'
+          'streetname-registry-snapshot-verifier'
         ]
 
     steps:

@@ -730,7 +730,6 @@ jobs:
           , 'producer-snapshot-oslo'
           , 'migrator-streetname'
           , 'snapshot-verifier'
-          , 'consumer-read-postal'
         ]
     steps:
       - name: Configure AWS credentials (Test)
@@ -792,7 +791,6 @@ jobs:
           , 'producer-snapshot-oslo'
           , 'migrator-streetname'
           , 'snapshot-verifier'
-          , 'consumer-read-postal'
         ]
     steps:
       - name: Configure AWS credentials (Staging)
@@ -856,7 +854,6 @@ jobs:
           , 'producer-snapshot-oslo'
           , 'migrator-streetname'
           , 'snapshot-verifier'
-          , 'consumer-read-postal'
         ]
     steps:
       - name: Configure AWS credentials (New Production)
@@ -919,7 +916,6 @@ jobs:
           , 'producer'
           , 'producer-snapshot-oslo'
           , 'migrator-streetname'
-          , 'consumer-read-postal'
         ]
     steps:
       - name: Configure AWS credentials (Production)
@@ -1119,7 +1115,6 @@ jobs:
           , 'streetname-registry-producer-snapshot-oslo'
           , 'streetname-registry-projections-backoffice'
           , 'streetname-registry-snapshot-verifier'
-          , 'streetname-registry-consumer-read-postal'
           ]
 
     steps:
@@ -1240,7 +1235,6 @@ jobs:
           , 'streetname-registry-producer-snapshot-oslo'
           , 'streetname-registry-projections-backoffice'
           , 'streetname-registry-snapshot-verifier'
-          , 'streetname-registry-consumer-read-postal'
           ]
 
     steps:
