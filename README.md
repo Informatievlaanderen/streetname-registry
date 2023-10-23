@@ -129,6 +129,12 @@ The new version 1.2 of the European Union Public Licence (EUPL) is published in 
 * [FluentAssertions](https://github.com/fluentassertions/fluentassertions/blob/master/LICENSE) - _Fluent API for asserting the results of unit tests._ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
 * [.NET Topology Suite](https://github.com/NetTopologySuite/NetTopologySuite/blob/develop/License.md) - _A .NET GIS solution that is fast and reliable for the .NET platform._ - [BSD](https://choosealicense.com/licenses/bsd-3-clause/)
 * [Serilog](https://github.com/serilog/serilog/blob/dev/LICENSE) - _Simple .NET logging with fully-structured events._ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
+* [MediatR](https://github.com/jbogard/MediatR) - _Simple, unambitious mediator implementation in .NET_ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Dapper](https://github.com/DapperLib/Dapper) - _A simple object mapper for .Net_ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
+* [Destructurama.JsonNet](https://github.com/destructurama/json-net) - _A destructuring formatter for Serilog that supports JSON.NET types._ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
+* [Fastenshtein](https://github.com/DanHarltey/Fastenshtein) - _Fastenshtein is a fast, memory efficient library which determines the distance between two strings._ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Moq](https://github.com/devlooped/moq) - _The most popular and friendly mocking framework for .NET_ - [BSD](https://choosealicense.com/licenses/bsd-3-clause/)
+* [AWSSDK](https://github.com/aws/aws-sdk-net) - _The official AWS SDK for .NET. For more information on the AWS SDK for .NET, see our web site:_ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
 
 ### Tooling
 
@@ -144,7 +150,6 @@ The new version 1.2 of the European Union Public Licence (EUPL) is published in 
 * [commitlint](https://github.com/marionebl/commitlint/blob/master/license.md) - _Lint commit messages._ - [MIT](https://choosealicense.com/licenses/mit/)
 * [commitizen/cz-cli](https://github.com/commitizen/cz-cli/blob/master/LICENSE) - _The commitizen command line utility._ - [MIT](https://choosealicense.com/licenses/mit/)
 * [commitizen/cz-conventional-changelog](https://github.com/commitizen/cz-conventional-changelog/blob/master/LICENSE) _A commitizen adapter for the angular preset of conventional-changelog._ - [MIT](https://choosealicense.com/licenses/mit/)
-* [Be.Vlaanderen.Basisregisters.ProjectionHandling](https://github.com/informatievlaanderen/projection-handling/blob/master/LICENSE) - _Lightweight projection handling infrastructure._ - [MIT](https://choosealicense.com/licenses/mit/)
 
 ### Flemish Government Frameworks
 
@@ -152,6 +157,9 @@ The new version 1.2 of the European Union Public Licence (EUPL) is published in 
 * [Be.Vlaanderen.Basisregisters.Api](https://github.com/informatievlaanderen/api/blob/master/LICENSE) - _Common API infrastructure and helpers._ - [MIT](https://choosealicense.com/licenses/mit/)
 * [Be.Vlaanderen.Basisregisters.CommandHandling](https://github.com/informatievlaanderen/command-handling/blob/master/LICENSE) - _Lightweight infrastructure for doing command handling and eventsourcing using aggregates._ - [MIT](https://choosealicense.com/licenses/mit/)
 * [Be.Vlaanderen.Basisregisters.EventHandling](https://github.com/informatievlaanderen/event-handling/blob/master/LICENSE) - _Lightweight event handling infrastructure._ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Be.Vlaanderen.Basisregisters.ProjectionHandling](https://github.com/informatievlaanderen/projection-handling/blob/master/LICENSE) - _Lightweight projection handling infrastructure._ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Be.Vlaanderen.Basisregisters.Projector](https://github.com/Informatievlaanderen/projector) - _Generic projection runner infrastructure._ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Be.Vlaanderen.Basisregisters.SnapshotVerifier](https://github.com/informatievlaanderen/command-handling) - _Lightweight infrastructure for doing command handling and eventsourcing using aggregates._ - [MIT](https://choosealicense.com/licenses/mit/)
 
 ### Flemish Government Libraries
 
@@ -161,3 +169,10 @@ The new version 1.2 of the European Union Public Licence (EUPL) is published in 
 * [Be.Vlaanderen.Basisregisters.Shaperon](https://github.com/informatievlaanderen/shaperon/blob/master/LICENSE) - _Lightweight dbase and shape record handling._ - [MIT](https://choosealicense.com/licenses/mit/)
 * [Be.Vlaanderen.Basisregisters.Crab](https://github.com/informatievlaanderen/crab/blob/master/LICENSE) - _Common Crab functionality._ - [EUPL-1.2](https://choosealicense.com/licenses/eupl-1.2/)
 * [Be.Vlaanderen.Basisregisters.GrAr](https://github.com/informatievlaanderen/grar-common/blob/master/LICENSE) - _Common code for all GR/AR base registries._ - [EUPL-1.2](https://choosealicense.com/licenses/eupl-1.2/)
+* [Be.Vlaanderen.Basisregisters.DockerUtilities](https://github.com/Informatievlaanderen/basisregisters-docker-utilities) - _Docker utilities for C#._ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Be.Vlaanderen.Basisregisters.MessageHandling](https://github.com/Informatievlaanderen/message-handling) - _Lightweight message handling infrastructure._ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Be.Vlaanderen.Basisregisters.Sqs](https://github.com/Informatievlaanderen/basisregisters-sqs) - _AWS SQS utilities for C#._ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Be.Vlaanderen.Basisregisters.TicketingService](https://github.com/Informatievlaanderen/ticketing-system) - _A ticketing system that provides Locations to all registries._ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Be.Vlaanderen.Basisregisters.Aws.Lambda](https://github.com/Informatievlaanderen/basisregisters-aws-lambda) - _AWS Lambda utilities for C#._ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Be.Vlaanderen.Basisregisters.Aws.DistributedMutex](https://github.com/Informatievlaanderen/aws-distributed-mutex) - _A distributed lock (mutex) implementation for AWS using DynamoDB._ - [MIT](https://choosealicense.com/licenses/mit/)
+* [Be.Vlaanderen.Basisregisters.Auth.AcmIdm](https://github.com/Informatievlaanderen/basisregisters-acmidm) - _ACM/IDM utilities for C#._ - [MIT](https://choosealicense.com/licenses/mit/)
