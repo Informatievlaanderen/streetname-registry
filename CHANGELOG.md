@@ -1,3 +1,19 @@
+# [3.34.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.33.1...v3.34.0) (2023-11-01)
+
+
+### Bug Fixes
+
+* mark removed migrated streetname instead of false ([17a6bb3](https://github.com/informatievlaanderen/streetname-registry/commit/17a6bb3a39c9d6ccd874d494010340a8aa40a665))
+* migrations postal consumer ([8cad687](https://github.com/informatievlaanderen/streetname-registry/commit/8cad6876740748719090fe0a5c47c59c7fc2f1be))
+* remove consumer read postal from deploy ([0508f83](https://github.com/informatievlaanderen/streetname-registry/commit/0508f834127d425143fd33391375a10332e7c56e))
+* return empty list when no niscode found for postal code on streetname list ([29a766a](https://github.com/informatievlaanderen/streetname-registry/commit/29a766a001f8383cab8ec65c810e5d96fd9231d2))
+
+
+### Features
+
+* add postal read consumer ([eb8051c](https://github.com/informatievlaanderen/streetname-registry/commit/eb8051c05e1e42687a815dd37c3da7ac43dcafd4))
+* implement postalcode filter on list streetname ([18cbbc8](https://github.com/informatievlaanderen/streetname-registry/commit/18cbbc8515536a52f07f273d829d94255307d47a))
+
 ## [3.33.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.33.0...v3.33.1) (2023-10-03)
 
 
