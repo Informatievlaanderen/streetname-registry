@@ -36,19 +36,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingNameMunicipality
             var municipalityWasNamed =
                 new MunicipalityWasNamed(_municipalityId, new MunicipalityName("GreatName", language));
 
-            ((ISetProvenance)municipalityWasNamed).SetProvenance(Fixture.Create<Provenance>());
+            municipalityWasNamed.SetProvenance(Fixture.Create<Provenance>());
 
             Assert(new Scenario()
-                .Given(_streamId, new object[]
-                {
-                    Fixture.Create<MunicipalityWasImported>(),
-                    municipalityWasNamed
-                })
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>(), municipalityWasNamed)
                 .When(commandNameMunicipality)
-                .Then(new[]
-                {
-                    new Fact(_streamId, new MunicipalityWasNamed(_municipalityId, new MunicipalityName("GreatName", language)))
-                }));
+                .Then(
+                    new Fact(_streamId, new MunicipalityWasNamed(_municipalityId, new MunicipalityName("GreatName", language)))));
         }
     }
 
