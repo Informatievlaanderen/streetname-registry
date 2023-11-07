@@ -24,7 +24,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingNameToClearedMun
             _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
-
         [Theory]
         [InlineData(Language.Dutch)]
         [InlineData(Language.French)]

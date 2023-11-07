@@ -11,12 +11,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToRe
     using Xunit;
     using Xunit.Abstractions;
 
-    public sealed class GivenMunicipalityWasAlreadyRetired : StreetNameRegistryTest
+    public sealed class GivenMunicipality : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
         private readonly MunicipalityStreamId _streamId;
 
-        public GivenMunicipalityWasAlreadyRetired(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public GivenMunicipality(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
@@ -25,34 +25,27 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToRe
         }
 
         [Fact]
-        public void ThenNone()
+        public void ThenMunicipalityWasCorrectedToRetired()
         {
             var commandCorrectMunicipality = Fixture.Create<CorrectToRetiredMunicipality>();
             Assert(new Scenario()
-                .Given(_streamId, new object[]
-                {
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>(),
-                    Fixture.Create<MunicipalityWasRetired>()
-                })
+                    Fixture.Create<MunicipalityBecameCurrent>())
                 .When(commandCorrectMunicipality)
-                .ThenNone());
+                .Then(new Fact(_streamId, new MunicipalityWasCorrectedToRetired(_municipalityId))));
         }
 
         [Fact]
-        public void AndChangedToCurrent_ThenItIsChangedToRetired()
+        public void WithRetiredMunicipality_ThenNone()
         {
             var commandCorrectMunicipality = Fixture.Create<CorrectToRetiredMunicipality>();
             Assert(new Scenario()
-                .Given(_streamId, new object[]
-                {
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>(),
-                    Fixture.Create<MunicipalityBecameCurrent>()
-                })
+                    Fixture.Create<MunicipalityWasRetired>())
                 .When(commandCorrectMunicipality)
-                .Then(new[]
-                {
-                    new Fact(_streamId, new MunicipalityWasCorrectedToRetired(_municipalityId))
-                }));
+                .ThenNone());
         }
     }
 }

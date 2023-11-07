@@ -11,12 +11,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenNamingMunicipality
     using Xunit;
     using Xunit.Abstractions;
 
-    public sealed class GivenMunicipalityWasAlreadyNamed : StreetNameRegistryTest
+    public sealed class GivenMunicipality : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
         private readonly MunicipalityStreamId _streamId;
 
-        public GivenMunicipalityWasAlreadyNamed(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public GivenMunicipality(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
@@ -29,20 +29,27 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenNamingMunicipality
         [InlineData(Language.French)]
         [InlineData(Language.English)]
         [InlineData(Language.German)]
-        public void ThenNamedAgain(Language language)
+        public void ThenMunicipalityGetsNamed(Language language)
         {
             var commandNameMunicipality = Fixture.Create<NameMunicipality>().WithName("GreatName", language);
             Assert(new Scenario()
-                .Given(_streamId, new object[]
-                {
-                    Fixture.Create<MunicipalityWasImported>(),
-                    Fixture.Create<MunicipalityWasNamed>()
-                })
+                .Given(_streamId, Fixture.Create<MunicipalityWasImported>())
                 .When(commandNameMunicipality)
-                .Then(new[]
-                {
-                    new Fact(_streamId, new MunicipalityWasNamed(_municipalityId, new MunicipalityName("GreatName", language)))
-                }));
+                .Then(new Fact(_streamId, new MunicipalityWasNamed(_municipalityId, new MunicipalityName("GreatName", language)))));
+        }
+
+        [Theory]
+        [InlineData(Language.Dutch)]
+        [InlineData(Language.French)]
+        [InlineData(Language.English)]
+        [InlineData(Language.German)]
+        public void WithTheSameMunicipalityName_ThenMunicipalityWasNamed(Language language)
+        {
+            var commandNameMunicipality = Fixture.Create<NameMunicipality>().WithName("GreatName", language);
+            Assert(new Scenario()
+                .Given(_streamId, Fixture.Create<MunicipalityWasImported>(), Fixture.Create<MunicipalityWasNamed>())
+                .When(commandNameMunicipality)
+                .Then(new Fact(_streamId, new MunicipalityWasNamed(_municipalityId, new MunicipalityName("GreatName", language)))));
         }
 
     }

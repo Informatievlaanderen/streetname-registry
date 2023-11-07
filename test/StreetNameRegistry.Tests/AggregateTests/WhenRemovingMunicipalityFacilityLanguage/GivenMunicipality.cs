@@ -12,12 +12,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacili
     using Xunit;
     using Xunit.Abstractions;
 
-    public sealed class GivenMunicipalityHasAFacilityLanguage : StreetNameRegistryTest
+    public sealed class GivenMunicipality : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
         private readonly MunicipalityStreamId _streamId;
 
-        public GivenMunicipalityHasAFacilityLanguage(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public GivenMunicipality(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
@@ -45,12 +45,27 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacili
         [InlineData(Language.French)]
         [InlineData(Language.English)]
         [InlineData(Language.German)]
-        public void AndWasRemoved_ThenNone(Language language)
+        public void WithAlreadyRemovedLanguage_ThenNone(Language language)
         {
             Fixture.Register(() => language);
             var commandLanguageRemoved = Fixture.Create<RemoveFacilityLanguageFromMunicipality>();
             Assert(new Scenario()
                 .Given(_streamId, Fixture.Create<MunicipalityWasImported>(), Fixture.Create<MunicipalityFacilityLanguageWasAdded>(), Fixture.Create<MunicipalityFacilityLanguageWasRemoved>())
+                .When(commandLanguageRemoved)
+                .ThenNone());
+        }
+
+        [Theory]
+        [InlineData(Language.Dutch)]
+        [InlineData(Language.French)]
+        [InlineData(Language.English)]
+        [InlineData(Language.German)]
+        public void WithNonExistingLanguage_ThenNone(Language language)
+        {
+            Fixture.Register(() => language);
+            var commandLanguageRemoved = Fixture.Create<RemoveFacilityLanguageFromMunicipality>();
+            Assert(new Scenario()
+                .Given(_streamId, Fixture.Create<MunicipalityWasImported>())
                 .When(commandLanguageRemoved)
                 .ThenNone());
         }

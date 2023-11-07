@@ -38,7 +38,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
 
             var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
                 .WithStatus(status)
-                .WithPrimaryLanguage(Language.Dutch)
                 .WithNames(
                     new Names
                     {

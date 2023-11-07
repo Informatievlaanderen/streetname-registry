@@ -1,13 +1,10 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
 {
-    using System.Collections.Generic;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Builders;
     using global::AutoFixture;
     using Municipality;
-    using Municipality.Commands;
     using Municipality.Events;
     using Municipality.Exceptions;
     using Testing;
@@ -39,7 +36,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
 
             var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
                 .WithStatus(StreetNameStatus.Current)
-                .WithPrimaryLanguage(Language.Dutch)
                 .WithNames(new Names
                 {
                     new("Bergstraat", Language.Dutch),

@@ -5,6 +5,10 @@
     using Municipality;
     using Municipality.Events;
 
+    /// <summary>
+    /// Builder for creating instances of StreetNameWasMigratedToMunicipality.
+    /// By default, the primary language is Dutch, IsCompleted is true, and IsRemoved is false.
+    /// </summary>
     public class StreetNameWasMigratedToMunicipalityBuilder
     {
         private readonly Fixture _fixture;
@@ -91,6 +95,10 @@
             return this;
         }
 
+        /// <summary>
+        /// Constructs a StreetNameWasMigratedToMunicipality object with optional parameters.
+        /// </summary>
+        /// <returns>A new instance of StreetNameWasMigratedToMunicipality.</returns>
         public StreetNameWasMigratedToMunicipality Build()
         {
             var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
@@ -99,7 +107,7 @@
                 _streetNameId ?? _fixture.Create<StreetNameId>(),
                 _persistentLocalId ?? _fixture.Create<PersistentLocalId>(),
                 _status ?? _fixture.Create<StreetNameStatus>(),
-                _primaryLanguage ?? _fixture.Create<Language>(),
+                _primaryLanguage ?? Language.Dutch,
                 _secondaryLanguage ?? _fixture.Create<Language>(),
                 _names ?? _fixture.Create<Names>(),
                 _homonymAdditions ?? _fixture.Create<HomonymAdditions>(),

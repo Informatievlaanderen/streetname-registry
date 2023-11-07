@@ -24,9 +24,9 @@
             return this;
         }
 
-        public StreetNameWasProposedV2Builder WithNisCode(NisCode nisCode)
+        public StreetNameWasProposedV2Builder WithNisCode(string nisCode)
         {
-            _nisCode = nisCode;
+            _nisCode = new NisCode(nisCode);
             return this;
         }
 

@@ -6,6 +6,10 @@
     using Municipality;
     using Municipality.Commands;
 
+    /// <summary>
+    /// Builder for creating instances of StreetNameHomonymAdditionsWereRemoved.
+    /// By default, the homonym additions to remove is an empty list.
+    /// </summary>
     public class CorrectStreetNameHomonymAdditionsBuilder
     {
         private readonly Fixture _fixture;
@@ -43,6 +47,10 @@
             return this;
         }
 
+        /// <summary>
+        /// Constructs a SCorrectStreetNameHomonymAdditions object with optional parameters.
+        /// </summary>
+        /// <returns>A new instance of CorrectStreetNameHomonymAdditions.</returns>
         public CorrectStreetNameHomonymAdditions Build()
         {
             return new CorrectStreetNameHomonymAdditions(

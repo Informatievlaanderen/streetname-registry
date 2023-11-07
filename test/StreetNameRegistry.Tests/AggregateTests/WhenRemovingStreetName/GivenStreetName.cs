@@ -34,5 +34,20 @@
                 .Then(new Fact(municipalityStreamId, new StreetNameWasRemovedV2(command.MunicipalityId,
                    command.PersistentLocalId))));
         }
+
+        [Fact]
+        public void WithRemovedStreetName_ThenNone()
+        {
+            var command = Fixture.Create<RemoveStreetName>();
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(new MunicipalityStreamId(Fixture.Create<MunicipalityId>()),
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<StreetNameWasProposedV2>(),
+                    Fixture.Create<StreetNameWasRemovedV2>())
+                .When(command)
+                .ThenNone());
+        }
     }
 }

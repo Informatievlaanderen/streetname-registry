@@ -11,12 +11,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToCu
     using Xunit;
     using Xunit.Abstractions;
 
-    public sealed class GivenMunicipalityWasNotCurrent : StreetNameRegistryTest
+    public sealed class GivenMunicipality : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
         private readonly MunicipalityStreamId _streamId;
 
-        public GivenMunicipalityWasNotCurrent(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public GivenMunicipality(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
@@ -25,31 +25,26 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToCu
         }
 
         [Fact]
-        public void ThenMunicipalityGetsCorrectedToCurrent()
+        public void ThenMunicipalityWasCorrectedToCurrent()
         {
             var commandCorrectMunicipality = Fixture.Create<CorrectToCurrentMunicipality>();
+
             Assert(new Scenario()
-                .Given(_streamId, new object[]
-                {
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>(),
-                })
+                    Fixture.Create<MunicipalityWasRetired>())
                 .When(commandCorrectMunicipality)
-                .Then(new[]
-                {
-                    new Fact(_streamId, new MunicipalityWasCorrectedToCurrent(_municipalityId))
-                }));
+                .Then(new Fact(_streamId, new MunicipalityWasCorrectedToCurrent(_municipalityId))));
         }
 
         [Fact]
-        public void AndCorrectedToCurrent_ThenNone()
+        public void WithCurrentMunicipality_ThenNone()
         {
             var commandCorrectMunicipality = Fixture.Create<CorrectToCurrentMunicipality>();
             Assert(new Scenario()
-                .Given(_streamId, new object[]
-                {
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>(),
-                    Fixture.Create<MunicipalityWasCorrectedToCurrent>(),
-                })
+                    Fixture.Create<MunicipalityBecameCurrent>())
                 .When(commandCorrectMunicipality)
                 .ThenNone());
         }

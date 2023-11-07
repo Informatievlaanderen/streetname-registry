@@ -48,14 +48,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingRetirementStreet
         }
 
         [Fact]
-        public void WithExistingStreetName_ThenStreetNameNameAlreadyExistsExceptionWasThrown()
+        public void WithExistingStreetName_ThenThrowsStreetNameNameAlreadyExistsException()
         {
             var streetNameName = Fixture.Create<StreetNameName>();
             Fixture.Register(() => new Names { streetNameName });
             Fixture.Register(() => new PersistentLocalId(2));
 
-            var command = Fixture.Create<CorrectStreetNameRetirement>()
-                .WithMunicipalityId(_municipalityId);
+            var command = Fixture.Create<CorrectStreetNameRetirement>();
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -68,10 +67,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingRetirementStreet
         }
 
         [Fact]
-        public void ThenStreetNameNotFoundExceptionWasThrown()
+        public void WithStreetNameNotFound_ThenThrowsStreetNameNotFoundException()
         {
-            var command = Fixture.Create<CorrectStreetNameRetirement>()
-                .WithMunicipalityId(_municipalityId);
+            var command = Fixture.Create<CorrectStreetNameRetirement>();
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
 
@@ -83,17 +81,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingRetirementStreet
         }
 
         [Fact]
-        public void ThenStreetNameIsRemovedExceptionWasThrown()
+        public void WithRemovedStreetName_ThenThrowsStreetNameIsRemovedException()
         {
-            var command = Fixture.Create<CorrectStreetNameRetirement>()
-                .WithMunicipalityId(_municipalityId);
+            var command = Fixture.Create<CorrectStreetNameRetirement>();
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var municipalityBecameCurrent = Fixture.Create<MunicipalityBecameCurrent>();
             var removedStreetNameMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
-                .WithMunicipalityId(_municipalityId)
                 .WithStatus(StreetNameStatus.Current)
-                .WithPrimaryLanguage(Language.Dutch)
                 .WithIsRemoved()
                 .Build();
 

@@ -2,7 +2,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
 {
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Builders;
     using global::AutoFixture;
     using Municipality;
@@ -42,7 +41,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
             var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
                 .WithPersistentLocalId(123)
                 .WithStatus(StreetNameStatus.Current)
-                .WithPrimaryLanguage(Language.Dutch)
                 .WithNames(new Names
                 {
                     new("Bremt", Language.Dutch),
@@ -56,7 +54,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
             var streetNameWasMigratedToMunicipality2 = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
                 .WithPersistentLocalId(456)
                 .WithStatus(StreetNameStatus.Current)
-                .WithPrimaryLanguage(Language.Dutch)
                 .WithNames(new Names
                 {
                     new ("Bremt", Language.Dutch),

@@ -4,10 +4,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingHomonymAdditions
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Builders;
     using global::AutoFixture;
     using Municipality;
-    using Municipality.Commands;
     using Municipality.Events;
     using Municipality.Exceptions;
     using Testing;
@@ -28,51 +27,34 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingHomonymAdditions
         }
 
         [Fact]
-        public void ThenStreetNameNameAlreadyExistsException()
+        public void ThenThrowsStreetNameNameAlreadyExistsException()
         {
-            var command = new CorrectStreetNameHomonymAdditions(
-                Fixture.Create<MunicipalityId>(),
-                new PersistentLocalId(123),
-                new HomonymAdditions(),
-                new List<Language>() { Language.Dutch },
-                Fixture.Create<Provenance>());
+            var command = new CorrectStreetNameHomonymAdditionsBuilder(Fixture)
+                .WithPersistentLocalId(123)
+                .WithHomonymAdditionsToRemove(new List<Language> { Language.Dutch })
+                .Build();
 
-            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
-                Fixture.Create<MunicipalityId>(),
-                Fixture.Create<NisCode>(),
-                Fixture.Create<StreetNameId>(),
-                new PersistentLocalId(123),
-                StreetNameStatus.Current,
-                Language.Dutch,
-                null,
-                new Names
+            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithPersistentLocalId(123)
+                .WithStatus(StreetNameStatus.Current)
+                .WithNames(new Names
                 {
-                    new StreetNameName("Bergstraat", Language.Dutch),
-                },
-                new HomonymAdditions(new[]
+                    new("Bergstraat", Language.Dutch),
+                })
+                .WithHomonymAdditions(new HomonymAdditions(new[]
                 {
                     new StreetNameHomonymAddition("ABC", Language.Dutch),
-                }),
-                true,
-                false);
-            ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                }))
+                .Build();
 
-            var secondStreetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
-                Fixture.Create<MunicipalityId>(),
-                Fixture.Create<NisCode>(),
-                Fixture.Create<StreetNameId>(),
-                new PersistentLocalId(456),
-                StreetNameStatus.Current,
-                Language.Dutch,
-                null,
-                new Names
+            var secondStreetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithPersistentLocalId(456)
+                .WithStatus(StreetNameStatus.Current)
+                .WithNames(new Names
                 {
-                    new StreetNameName("Bergstraat", Language.Dutch),
-                },
-                new HomonymAdditions(),
-                true,
-                false);
-            ((ISetProvenance)secondStreetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    new("Bergstraat", Language.Dutch),
+                })
+                .Build();
 
             // Act, assert
             Assert(new Scenario()
@@ -88,32 +70,20 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingHomonymAdditions
         [Fact]
         public void WithNoMatchingLanguage_ThenNone()
         {
-            var command = new CorrectStreetNameHomonymAdditions(
-                Fixture.Create<MunicipalityId>(),
-                Fixture.Create<PersistentLocalId>(),
-                new HomonymAdditions(),
-                new List<Language>() { Language.Dutch },
-                Fixture.Create<Provenance>());
+            var command = new CorrectStreetNameHomonymAdditionsBuilder(Fixture)
+                .Build();
 
-            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
-                Fixture.Create<MunicipalityId>(),
-                Fixture.Create<NisCode>(),
-                Fixture.Create<StreetNameId>(),
-                Fixture.Create<PersistentLocalId>(),
-                StreetNameStatus.Current,
-                Language.Dutch,
-                null,
-                new Names
+            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithStatus(StreetNameStatus.Current)
+                .WithNames(new Names
                 {
-                    new StreetNameName("Rue De Montaigne", Language.French),
-                },
-                new HomonymAdditions(new[]
+                    new("Rue De Montaigne", Language.French),
+                })
+                .WithHomonymAdditions(new HomonymAdditions(new[]
                 {
                     new StreetNameHomonymAddition("QRS", Language.French),
-                }),
-                true,
-                false);
-            ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                }))
+                .Build();
 
             // Act, assert
             Assert(new Scenario()
@@ -128,38 +98,25 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingHomonymAdditions
         [Fact]
         public void WithOneDifferentAndOneSameAddition_ThenOnlyOneAdditionWasCorrected()
         {
-            var command = new CorrectStreetNameHomonymAdditions(
-                Fixture.Create<MunicipalityId>(),
-                Fixture.Create<PersistentLocalId>(),
-                new HomonymAdditions
+            var command = new CorrectStreetNameHomonymAdditionsBuilder(Fixture)
+                .WithHomonymAdditions(new HomonymAdditions
                 {
-                    new StreetNameHomonymAddition("DEF", Language.Dutch),
-                    new StreetNameHomonymAddition("SameFrenchAddition", Language.French),
-                },
-                new List<Language>(),
-                Fixture.Create<Provenance>());
+                    new("DEF", Language.Dutch),
+                    new("SameFrenchAddition", Language.French),
+                }).Build();
 
-            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
-                Fixture.Create<MunicipalityId>(),
-                Fixture.Create<NisCode>(),
-                Fixture.Create<StreetNameId>(),
-                Fixture.Create<PersistentLocalId>(),
-                StreetNameStatus.Current,
-                Language.Dutch,
-                null,
-                new Names
+            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithStatus(StreetNameStatus.Current)
+                .WithNames(new Names
                 {
-                    new StreetNameName("Bergstraat", Language.Dutch),
-                    new StreetNameName("Rue De Montaigne", Language.French),
-                },
-                new HomonymAdditions(new[]
+                    new("Bergstraat", Language.Dutch),
+                    new("Rue De Montaigne", Language.French),
+                }).WithHomonymAdditions(new HomonymAdditions(new[]
                 {
                     new StreetNameHomonymAddition("ABC", Language.Dutch),
                     new StreetNameHomonymAddition("SameFrenchAddition", Language.French),
-                }),
-                true,
-                false);
-            ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                }))
+                .Build();
 
             // Act, assert
             Assert(new Scenario()
@@ -173,45 +130,34 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingHomonymAdditions
                     command.PersistentLocalId,
                     new HomonymAdditions
                     {
-                        new StreetNameHomonymAddition("DEF", Language.Dutch)
+                        new("DEF", Language.Dutch)
                     }))));
         }
 
         [Fact]
         public void WithNoCorrections_ThenNone()
         {
-            var command = new CorrectStreetNameHomonymAdditions(
-                Fixture.Create<MunicipalityId>(),
-                Fixture.Create<PersistentLocalId>(),
-                new HomonymAdditions
+            var command = new CorrectStreetNameHomonymAdditionsBuilder(Fixture)
+                .WithHomonymAdditions(new HomonymAdditions
                 {
-                    new StreetNameHomonymAddition("ABC", Language.Dutch),
-                    new StreetNameHomonymAddition("DEF", Language.French),
-                },
-                new List<Language>(),
-                Fixture.Create<Provenance>());
+                    new("ABC", Language.Dutch),
+                    new("DEF", Language.French),
+                })
+                .Build();
 
-            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
-                Fixture.Create<MunicipalityId>(),
-                Fixture.Create<NisCode>(),
-                Fixture.Create<StreetNameId>(),
-                Fixture.Create<PersistentLocalId>(),
-                StreetNameStatus.Current,
-                Language.Dutch,
-                null,
-                new Names
+            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithStatus(StreetNameStatus.Current)
+                .WithNames(new Names
                 {
-                    new StreetNameName("Bergstraat", Language.Dutch),
-                    new StreetNameName("Rue De Montaigne", Language.French),
-                },
-                new HomonymAdditions(new[]
+                    new("Bergstraat", Language.Dutch),
+                    new("Rue De Montaigne", Language.French),
+                })
+                .WithHomonymAdditions(new HomonymAdditions(new[]
                 {
                     new StreetNameHomonymAddition("ABC", Language.Dutch),
                     new StreetNameHomonymAddition("DEF", Language.French),
-                }),
-                true,
-                false);
-            ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                }))
+                .Build();
 
             // Act, assert
             Assert(new Scenario()

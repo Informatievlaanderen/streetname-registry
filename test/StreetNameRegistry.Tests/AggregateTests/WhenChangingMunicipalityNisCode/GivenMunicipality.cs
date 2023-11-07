@@ -14,32 +14,26 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
 
     public sealed class GivenMunicipality : StreetNameRegistryTest
     {
-        private readonly MunicipalityId _municipalityId;
         private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipality(ITestOutputHelper output) : base(output)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
-            _municipalityId = Fixture.Create<MunicipalityId>();
             _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
         [Fact]
         public void ThenNisCodeChanged()
         {
-            var command = Fixture.Create<ChangeMunicipalityNisCode>()
-                .WithMunicipalityId(_municipalityId);
+            var command = Fixture.Create<ChangeMunicipalityNisCode>();
 
             Assert(new Scenario()
                 .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>())
                 .When(command)
-                .Then(new[]
-                {
-                    new Fact(_streamId,
-                        new MunicipalityNisCodeWasChanged(command.MunicipalityId, command.NisCode))
-                }));
+                .Then(new Fact(_streamId,
+                    new MunicipalityNisCodeWasChanged(command.MunicipalityId, command.NisCode))));
         }
 
         [Fact]
@@ -47,7 +41,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
         {
             var nisCode = new NisCode("45041");
             var command = Fixture.Create<ChangeMunicipalityNisCode>()
-                .WithMunicipalityId(_municipalityId)
                 .WithNisCode(nisCode);
 
             Assert(new Scenario()
@@ -61,11 +54,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
         }
 
         [Fact]
-        public void ThenNisCodeChangedToNull()
+        public void WithNoNisCode_ThenThrowsNoNisCodeHasNoValueException()
         {
             var command = Fixture.Create<ChangeMunicipalityNisCode>()
-                .WithMunicipalityId(_municipalityId)
-                .WithNisCode(null);
+                .WithNisCode(null!);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -75,11 +67,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
         }
 
         [Fact]
-        public void WithSameNisCodeThenNothingHappens()
+        public void WithTheSameNisCode_ThenNone()
         {
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var command = Fixture.Create<ChangeMunicipalityNisCode>()
-                .WithMunicipalityId(_municipalityId)
                 .WithNisCode(new NisCode(municipalityWasImported.NisCode));
 
             Assert(new Scenario()
@@ -91,13 +82,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
 
     public static class MunicipalityNisCodeWasChangedExtensions
     {
-        public static ChangeMunicipalityNisCode WithMunicipalityId(
-            this ChangeMunicipalityNisCode command,
-            MunicipalityId municipalityId)
-        {
-            return new ChangeMunicipalityNisCode(municipalityId, new NisCode(command.NisCode), command.Provenance);
-        }
-
         public static ChangeMunicipalityNisCode WithNisCode(
             this ChangeMunicipalityNisCode command,
             NisCode nisCode)

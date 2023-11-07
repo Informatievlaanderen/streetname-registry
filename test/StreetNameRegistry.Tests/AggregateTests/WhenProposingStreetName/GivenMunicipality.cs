@@ -5,13 +5,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Builders;
+    using Extensions;
     using global::AutoFixture;
     using Municipality;
     using Municipality.Commands;
     using Municipality.Events;
     using Municipality.Exceptions;
-    using Extensions;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -47,27 +47,25 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
             Assert(new Scenario()
                 .Given(_streamId, municipalityWasImported, municipalityOfficialLanguageWasAdded)
                 .When(command)
-                .Then(new[]
-                {
-                    new Fact(_streamId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))
-                }));
+                .Then(new Fact(_streamId,
+                    new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames,
+                        command.PersistentLocalId))));
         }
 
         [Theory]
         [InlineData("Bremstraat", "Bremstraat")]
         [InlineData("Bremstraat", "bremstraat")]
-        public void WithExistingStreetName_ThenStreetNameNameAlreadyExistsExceptionWasThrown(string name, string newName)
+        public void WithExistingStreetNameName_ThenThrowsStreetNameNameAlreadyExistsException(string name, string newName)
         {
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
-            var municipalityOfficialLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(Fixture.Create<MunicipalityId>(), Language.Dutch);
-            municipalityOfficialLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
+            var municipalityOfficialLanguageWasAdded = new MunicipalityOfficialLanguageWasAddedBuilder(Fixture)
+                .Build();
 
             var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>()
-                .WithNames(new Names(new List<StreetNameName>{ new StreetNameName(name, Language.Dutch) }));
+                .WithNames(new Names(new List<StreetNameName> { new(name, Language.Dutch) }));
 
             var command = Fixture.Create<ProposeStreetName>()
-                .WithStreetNameNames(new Names(new List<StreetNameName>{ new StreetNameName(newName, Language.Dutch) }))
-                .WithMunicipalityId(_municipalityId);
+                .WithStreetNameNames(new Names(new List<StreetNameName> { new(newName, Language.Dutch) }));
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -85,7 +83,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
             var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>();
 
             var command = Fixture.Create<ProposeStreetName>()
-                .WithMunicipalityId(_municipalityId)
                 .WithPersistentLocalId(new PersistentLocalId(streetNameWasProposed.PersistentLocalId));
 
             Assert(new Scenario()
@@ -109,8 +106,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
             var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
             var streetNameWasMigrated = Fixture.Create<StreetNameWasMigratedToMunicipality>();
 
-            var command = Fixture.Create<ProposeStreetName>()
-                .WithMunicipalityId(_municipalityId);
+            var command = Fixture.Create<ProposeStreetName>();
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -118,7 +114,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityOfficialLanguageWasAdded,
                     streetNameWasMigrated)
                 .When(command)
-                .Then(new Fact(_streamId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))));
+                .Then(new Fact(_streamId,
+                    new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames,
+                        command.PersistentLocalId))));
         }
 
         [Fact]
@@ -134,8 +132,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
             var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
             var streetNameWasMigrated = Fixture.Create<StreetNameWasMigratedToMunicipality>();
 
-            var command = Fixture.Create<ProposeStreetName>()
-                .WithMunicipalityId(_municipalityId);
+            var command = Fixture.Create<ProposeStreetName>();
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -143,7 +140,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityOfficialLanguageWasAdded,
                     streetNameWasMigrated)
                 .When(command)
-                .Then(new Fact(_streamId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))));
+                .Then(new Fact(_streamId,
+                    new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames,
+                        command.PersistentLocalId))));
         }
 
         [Fact]
@@ -156,26 +155,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
-            var streetNameWasMigrated = Fixture.Build<StreetNameWasMigratedToMunicipality>()
-                .FromFactory(() =>
-                {
-                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
-                        _municipalityId,
-                        Fixture.Create<NisCode>(),
-                        Fixture.Create<StreetNameId>(),
-                        Fixture.Create<PersistentLocalId>(),
-                        StreetNameStatus.Current,
-                        Language.Dutch,
-                        null,
-                        Fixture.Create<Names>(),
-                        new HomonymAdditions(),
-                        true,
-                        true);
-
-                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
-                    return streetNameWasMigratedToMunicipality;
-                })
-                .Create();
+            var streetNameWasMigrated = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithStatus(StreetNameStatus.Current)
+                .WithIsRemoved()
+                .Build();
 
             var command = Fixture.Create<ProposeStreetName>()
                 .WithMunicipalityId(_municipalityId);
@@ -186,11 +169,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityOfficialLanguageWasAdded,
                     streetNameWasMigrated)
                 .When(command)
-                .Then(new Fact(_streamId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))));
+                .Then(new Fact(_streamId,
+                    new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames,
+                        command.PersistentLocalId))));
         }
 
         [Fact]
-        public void WithOneExistingStreetNameAndOneNew_ThenStreetNameNameAlreadyExistsExceptionWasThrown()
+        public void WithOneExistingStreetNameAndOneNew_ThenThrowsStreetNameNameAlreadyExistsException()
         {
             var existingStreetNameName = Fixture.Create<StreetNameName>();
             var newStreetNameName = Fixture.Create<StreetNameName>();
@@ -200,7 +185,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
             var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>();
 
             var command = Fixture.Create<ProposeStreetName>()
-                .WithMunicipalityId(_municipalityId)
                 .WithStreetNameNames(new Names { existingStreetNameName, newStreetNameName });
 
             Assert(new Scenario()
@@ -226,7 +210,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
             var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
 
             var command = Fixture.Create<ProposeStreetName>()
-                .WithMunicipalityId(_municipalityId)
                 .WithStreetNameNames(new Names { newStreetNameName });
 
             Assert(new Scenario()
@@ -235,20 +218,21 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityOfficialLanguageWasAdded,
                     streetNameWasProposed)
                 .When(command)
-                .Then(new[]
-                {
-                    new Fact(_streamId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))
-                }));
+                .Then(new Fact(_streamId,
+                    new StreetNameWasProposedV2(
+                        _municipalityId,
+                        new NisCode(municipalityWasImported.NisCode),
+                        command.StreetNameNames,
+                        command.PersistentLocalId))));
         }
 
         [Fact]
-        public void WithMunicipalityRetired_ThenMunicipalityHasInvalidStatusExceptionWasThrown()
+        public void WithMunicipalityRetired_ThenThrowsMunicipalityHasInvalidStatusException()
         {
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var municipalityWasRetired = Fixture.Create<MunicipalityWasRetired>();
 
             var command = Fixture.Create<ProposeStreetName>()
-                .WithMunicipalityId(_municipalityId)
                 .WithRandomStreetName(Fixture);
 
             Assert(new Scenario()
@@ -260,7 +244,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
         }
 
         [Fact]
-        public void WithOfficialLanguageDutchAndProposedLanguageIsFrench_ThenStreetNameNameLanguageNotSupportedExceptionWasThrown()
+        public void WithOfficialLanguageDutchAndProposedLanguageIsFrench_ThenThrowsStreetNameNameLanguageNotSupportedException()
         {
             Fixture.Register(() => Language.Dutch);
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
@@ -268,11 +252,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 
             var names = new Names
             {
-                new StreetNameName(Fixture.Create<string>(), Language.French)
+                new(Fixture.Create<string>(), Language.French)
             };
 
             var command = Fixture.Create<ProposeStreetName>()
-                .WithMunicipalityId(_municipalityId)
                 .WithStreetNameNames(names);
 
             Assert(new Scenario()
@@ -280,11 +263,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityWasImported,
                     municipalityOfficialLanguageWasAdded)
                 .When(command)
-                .Throws(new StreetNameNameLanguageIsNotSupportedException($"The language '{Language.French}' is not an official or facility language of municipality '{_municipalityId}'.")));
+                .Throws(new StreetNameNameLanguageIsNotSupportedException(
+                    $"The language '{Language.French}' is not an official or facility language of municipality '{_municipalityId}'.")));
         }
 
         [Fact]
-        public void WithFacilityLanguageFrenchAndProposedLanguageIsDutch_ThenStreetNameNameLanguageNotSupportedExceptionWasThrown()
+        public void WithFacilityLanguageFrenchAndProposedLanguageIsDutch_ThenThrowsStreetNameNameLanguageNotSupportedException()
         {
             Fixture.Register(() => Language.French);
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
@@ -292,11 +276,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 
             var names = new Names
             {
-                new StreetNameName(Fixture.Create<string>(), Language.Dutch)
+                new(Fixture.Create<string>(), Language.Dutch)
             };
 
             var command = Fixture.Create<ProposeStreetName>()
-                .WithMunicipalityId(_municipalityId)
                 .WithStreetNameNames(names);
 
             Assert(new Scenario()
@@ -304,11 +287,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityWasImported,
                     municipalityFacilityLanguageWasAdded)
                 .When(command)
-                .Throws(new StreetNameNameLanguageIsNotSupportedException($"The language '{Language.Dutch}' is not an official or facility language of municipality '{_municipalityId}'.")));
+                .Throws(new StreetNameNameLanguageIsNotSupportedException(
+                    $"The language '{Language.Dutch}' is not an official or facility language of municipality '{_municipalityId}'.")));
         }
 
         [Fact]
-        public void WithOfficialLanguageDutchAndFacilityLanguageFrenchAndProposedLanguageIsFrench_ThenStreetNameNameLanguageNotSupportedExceptionWasThrown()
+        public void
+            WithOfficialLanguageDutchAndFacilityLanguageFrenchAndProposedLanguageIsFrench_ThenThrowsStreetNameNameLanguageNotSupportedException()
         {
             Fixture.Register(() => Language.Dutch);
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
@@ -318,11 +303,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 
             var names = new Names
             {
-                new StreetNameName(Fixture.Create<string>(), Language.French)
+                new(Fixture.Create<string>(), Language.French)
             };
 
             var command = Fixture.Create<ProposeStreetName>()
-                .WithMunicipalityId(_municipalityId)
                 .WithStreetNameNames(names);
 
             Assert(new Scenario()
@@ -335,7 +319,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
         }
 
         [Fact]
-        public void WithExistingStreetNameAndNoHomonymAdditions_ThenStreetNameNameAlreadyExistsExceptionWasThrown()
+        public void WithExistingStreetNameAndNoHomonymAdditions_ThenThrowsStreetNameNameAlreadyExistsException()
         {
             var streetNameName = Fixture.Create<StreetNameName>();
             Fixture.Register(() => new Names { streetNameName });
@@ -344,26 +328,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
-            var streetNameWasMigrated = Fixture.Build<StreetNameWasMigratedToMunicipality>()
-                .FromFactory(() =>
-                {
-                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
-                        _municipalityId,
-                        Fixture.Create<NisCode>(),
-                        Fixture.Create<StreetNameId>(),
-                        Fixture.Create<PersistentLocalId>(),
-                        StreetNameStatus.Current,
-                        Language.Dutch,
-                        null,
-                        Fixture.Create<Names>(),
-                        new HomonymAdditions(),
-                        true,
-                        false);
-
-                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
-                    return streetNameWasMigratedToMunicipality;
-                })
-                .Create();
+            var streetNameWasMigrated = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithStatus(StreetNameStatus.Current)
+                .Build();
 
             var command = Fixture.Create<ProposeStreetName>()
                 .WithMunicipalityId(_municipalityId);
@@ -387,29 +354,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
-            var streetNameWasMigrated = Fixture.Build<StreetNameWasMigratedToMunicipality>()
-                .FromFactory(() =>
-                {
-                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
-                        _municipalityId,
-                        Fixture.Create<NisCode>(),
-                        Fixture.Create<StreetNameId>(),
-                        Fixture.Create<PersistentLocalId>(),
-                        StreetNameStatus.Current,
-                        Language.Dutch,
-                        null,
-                        Fixture.Create<Names>(),
-                        new HomonymAdditions(){new StreetNameHomonymAddition("test", Language.Dutch)},
-                        true,
-                        false);
+            var streetNameWasMigrated = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithStatus(StreetNameStatus.Current)
+                .WithHomonymAdditions(new HomonymAdditions() { new("test", Language.Dutch) })
+                .Build();
 
-                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
-                    return streetNameWasMigratedToMunicipality;
-                })
-                .Create();
-
-            var command = Fixture.Create<ProposeStreetName>()
-                .WithMunicipalityId(_municipalityId);
+            var command = Fixture.Create<ProposeStreetName>();
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -417,7 +367,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityOfficialLanguageWasAdded,
                     streetNameWasMigrated)
                 .When(command)
-                .Then(new Fact(_streamId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))));
+                .Then(new Fact(_streamId,
+                    new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames,
+                        command.PersistentLocalId))));
         }
     }
 }

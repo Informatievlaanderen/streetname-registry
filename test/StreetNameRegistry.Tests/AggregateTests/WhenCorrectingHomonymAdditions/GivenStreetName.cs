@@ -6,7 +6,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Builders;
     using FluentAssertions;
     using global::AutoFixture;
@@ -30,7 +29,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
         }
 
         [Fact]
-        public void WithDifferentAdditions_ThenStreetNameHomonymAdditionsCorrectedEvent()
+        public void WithDifferentAdditions_ThenStreetNameHomonymAdditionsCorrected()
         {
             var homonymAdditions = new HomonymAdditions { new("DEF", Language.Dutch) };
             var command = new CorrectStreetNameHomonymAdditionsBuilder(Fixture)
@@ -39,7 +38,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
 
             var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
                 .WithStatus(StreetNameStatus.Current)
-                .WithPrimaryLanguage(Language.Dutch)
                 .WithNames(new Names
                 {
                     new("Bergstraat", Language.Dutch),
@@ -77,7 +75,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
 
             var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
                 .WithStatus(StreetNameStatus.Current)
-                .WithPrimaryLanguage(Language.Dutch)
                 .WithNames(new Names
                 {
                     new("Bergstraat", Language.Dutch),
@@ -119,7 +116,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
 
             var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
                 .WithStatus(StreetNameStatus.Current)
-                .WithPrimaryLanguage(Language.Dutch)
                 .WithNames(new Names
                 {
                     new("Bergstraat", Language.Dutch),
@@ -145,7 +141,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
         [Theory]
         [InlineData(StreetNameStatus.Current)]
         [InlineData(StreetNameStatus.Proposed)]
-        public void WithValidStatus_ThenStreetNameHomonymAdditionsCorrectedEvent(StreetNameStatus status)
+        public void WithValidStatus_ThenStreetNameHomonymAdditionsCorrected(StreetNameStatus status)
         {
             var command = new CorrectStreetNameHomonymAdditionsBuilder(Fixture)
                 .WithHomonymAdditions(new HomonymAdditions
@@ -156,7 +152,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
 
             var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
                 .WithStatus(status)
-                .WithPrimaryLanguage(Language.Dutch)
                 .WithNames(new Names
                 {
                     new("Bergstraat", Language.Dutch),
@@ -188,12 +183,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
         {
             var aggregate = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
 
-            var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAdded(Fixture.Create<MunicipalityId>(), Language.Dutch);
-            dutchLanguageWasAdded.SetProvenance(Fixture.Create<Provenance>());
-
+            var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAddedBuilder(Fixture)
+                .Build();
             var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
                 .WithStatus(StreetNameStatus.Current)
-                .WithPrimaryLanguage(Language.Dutch)
                 .WithNames(new Names { new("Bergstraat", Language.Dutch) })
                 .WithHomonymAdditions(new HomonymAdditions(new[] { new StreetNameHomonymAddition("ABC", Language.Dutch) }))
                 .Build();
