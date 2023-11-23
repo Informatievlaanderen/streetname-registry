@@ -28,10 +28,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenImportingMunicipality
             var command = Fixture.Create<ImportMunicipality>();
 
             Assert(new Scenario()
-                .Given(_streamId, new object[]
-                {
-                    Fixture.Create<MunicipalityWasImported>()
-                })
+                .Given(_streamId, Fixture.Create<MunicipalityWasImported>())
                 .When(command)
                 .Throws(new AggregateSourceException($"Municipality with id {command.MunicipalityId} already exists")));
         }

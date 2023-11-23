@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringMunicipality
         }
 
         [Fact]
-        public void WhenMunicipalityAlreadyRetiredThenNothingHappens()
+        public void WithRetiredMunicipality_ThenNone()
         {
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var municipalityWasRetired = Fixture.Create<MunicipalityWasRetired>();

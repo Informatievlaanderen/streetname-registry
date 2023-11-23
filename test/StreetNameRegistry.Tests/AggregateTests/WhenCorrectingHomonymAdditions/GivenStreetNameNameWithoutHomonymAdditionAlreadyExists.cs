@@ -1,12 +1,10 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
 {
-    using System.Collections.Generic;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Builders;
     using global::AutoFixture;
     using Municipality;
-    using Municipality.Commands;
     using Municipality.Events;
     using Municipality.Exceptions;
     using Testing;
@@ -31,55 +29,39 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingHomonymAdditions
         [InlineData("HO", "ho")]
         public void ThenThrowsStreetNameNameAlreadyExistsException(string homonymAddition, string newHomonymAddition)
         {
-            var command = new CorrectStreetNameHomonymAdditions(
-                Fixture.Create<MunicipalityId>(),
-                new PersistentLocalId(123),
-                new HomonymAdditions
-                {
-                    new StreetNameHomonymAddition(newHomonymAddition, Language.Dutch)
-                },
-                new List<Language>(),
-                Fixture.Create<Provenance>());
+            var command = new CorrectStreetNameHomonymAdditionsBuilder(Fixture)
+                .WithPersistentLocalId(123)
+                .WithHomonymAdditions(
+                    new HomonymAdditions
+                    {
+                        new(newHomonymAddition, Language.Dutch)
+                    })
+                .Build();
 
-            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
-                Fixture.Create<MunicipalityId>(),
-                Fixture.Create<NisCode>(),
-                Fixture.Create<StreetNameId>(),
-                new PersistentLocalId(123),
-                StreetNameStatus.Current,
-                Language.Dutch,
-                null,
-                new Names
+            var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithPersistentLocalId(123)
+                .WithStatus(StreetNameStatus.Current)
+                .WithNames(new Names
                 {
-                    new StreetNameName("Bremt", Language.Dutch),
-                },
-                new HomonymAdditions(new[]
+                    new("Bremt", Language.Dutch),
+                })
+                .WithHomonymAdditions(new HomonymAdditions(new[]
                 {
                     new StreetNameHomonymAddition("A", Language.Dutch),
-                }),
-                true,
-                false);
-            ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                }))
+                .Build();
 
-            var streetNameWasMigratedToMunicipality2 = new StreetNameWasMigratedToMunicipality(
-                Fixture.Create<MunicipalityId>(),
-                Fixture.Create<NisCode>(),
-                Fixture.Create<StreetNameId>(),
-                new PersistentLocalId(456),
-                StreetNameStatus.Current,
-                Language.Dutch,
-                null,
-                new Names
+            var streetNameWasMigratedToMunicipality2 = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithPersistentLocalId(456)
+                .WithStatus(StreetNameStatus.Current)
+                .WithNames(new Names
                 {
-                    new StreetNameName("Bremt", Language.Dutch),
-                },
-                new HomonymAdditions(new[]
+                    new ("Bremt", Language.Dutch),
+                }).WithHomonymAdditions(new HomonymAdditions(new[]
                 {
                     new StreetNameHomonymAddition(homonymAddition, Language.Dutch),
-                }),
-                true,
-                false);
-            ((ISetProvenance)streetNameWasMigratedToMunicipality2).SetProvenance(Fixture.Create<Provenance>());
+                }))
+                .Build();
 
             // Act, assert
             Assert(new Scenario()

@@ -26,34 +26,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenImportingMunicipality
             Assert(new Scenario()
                 .GivenNone()
                 .When(command)
-                .Then(new[]
-                {
-                    new Fact(new MunicipalityStreamId(command.MunicipalityId),
-                        new MunicipalityWasImported(command.MunicipalityId, command.NisCode))
-                }));
-        }
-    }
-
-    public static class ImportMunicipalityExtensions
-    {
-        public static ImportMunicipality WithMunicipalityId(
-            this ImportMunicipality command,
-            MunicipalityId municipalityId)
-        {
-            return new ImportMunicipality(
-                municipalityId,
-                new NisCode(command.NisCode),
-                command.Provenance);
-        }
-
-        public static ImportMunicipality WithNisCode(
-            this ImportMunicipality command,
-            NisCode nisCode)
-        {
-            return new ImportMunicipality(
-                new MunicipalityId(command.MunicipalityId),
-                nisCode,
-                command.Provenance);
+                .Then(new Fact(new MunicipalityStreamId(command.MunicipalityId),
+                    new MunicipalityWasImported(command.MunicipalityId, command.NisCode))));
         }
     }
 }

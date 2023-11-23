@@ -12,12 +12,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityOfficial
     using Xunit;
     using Xunit.Abstractions;
 
-    public sealed class GivenMunicipalityHasAOfficialLanguage : StreetNameRegistryTest
+    public sealed class GivenMunicipality : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
         private readonly MunicipalityStreamId _streamId;
 
-        public GivenMunicipalityHasAOfficialLanguage(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public GivenMunicipality(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
@@ -30,17 +30,31 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityOfficial
         [InlineData(Language.French)]
         [InlineData(Language.English)]
         [InlineData(Language.German)]
-        public void ThenNone(Language language)
+        public void ThenMunicipalityOfficialLanguageWasAdded(Language language)
+        {
+            Fixture.Register(() => language);
+            var commandLanguageAdded = Fixture.Create<AddOfficialLanguageToMunicipality>();
+            Assert(new Scenario()
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>())
+                .When(commandLanguageAdded)
+                .Then(new Fact(_streamId, new MunicipalityOfficialLanguageWasAdded(_municipalityId, language))));
+        }
+
+        [Theory]
+        [InlineData(Language.Dutch)]
+        [InlineData(Language.French)]
+        [InlineData(Language.English)]
+        [InlineData(Language.German)]
+        public void WithAlreadyExistingOfficialLanguage_ThenNone(Language language)
         {
             Fixture.Register(() => language);
             var commandLanguageAdded = Fixture.Create<AddOfficialLanguageToMunicipality>();
 
             Assert(new Scenario()
-                .Given(_streamId, new object[]
-                {
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>(),
-                    Fixture.Create<MunicipalityOfficialLanguageWasAdded>()
-                })
+                    Fixture.Create<MunicipalityOfficialLanguageWasAdded>())
                 .When(commandLanguageAdded)
                 .ThenNone());
         }
@@ -50,43 +64,33 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityOfficial
         [InlineData(Language.French)]
         [InlineData(Language.English)]
         [InlineData(Language.German)]
-        public void AndWasRemoved_OfficialLanguageWasAdded(Language language)
+        public void WithRemovedOfficialLanguage_ThenOfficialLanguageWasAdded(Language language)
         {
             Fixture.Register(() => language);
             var commandLanguageAdded = Fixture.Create<AddOfficialLanguageToMunicipality>();
 
             Assert(new Scenario()
-                .Given(_streamId, new object[]
-                {
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>(),
                     Fixture.Create<MunicipalityOfficialLanguageWasAdded>(),
-                    Fixture.Create<MunicipalityOfficialLanguageWasRemoved>()
-                })
+                    Fixture.Create<MunicipalityOfficialLanguageWasRemoved>())
                 .When(commandLanguageAdded)
-                .Then(new[]
-                {
-                    new Fact(_streamId, new MunicipalityOfficialLanguageWasAdded(_municipalityId, language))
-                }));
+                .Then(new Fact(_streamId, new MunicipalityOfficialLanguageWasAdded(_municipalityId, language))));
         }
 
         [Fact]
-        public void AndHasMultipleLanguages_TheCorrectOneWasAdded()
+        public void WithOtherExistingLanguages_ThenAddTheNonExistingLanguage()
         {
             var languageAddGerman = Fixture.Create<AddOfficialLanguageToMunicipality>().WithLanguage(Language.German);
             var commandAddedEnglish = Fixture.Create<AddOfficialLanguageToMunicipality>().WithLanguage(Language.English);
             var commandAddedDutch = Fixture.Create<AddOfficialLanguageToMunicipality>().WithLanguage(Language.Dutch);
             Assert(new Scenario()
-                .Given(_streamId, new object[]
-                {
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>(),
                     commandAddedEnglish.ToEvent(),
-                    commandAddedDutch.ToEvent()
-                })
+                    commandAddedDutch.ToEvent())
                 .When(languageAddGerman)
-                .Then(new[]
-                {
-                    new Fact(_streamId, new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.German))
-                }));
+                .Then(new Fact(_streamId, new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.German))));
         }
     }
 }
