@@ -178,6 +178,30 @@ namespace StreetNameRegistry.Municipality
             ApplyChange(new StreetNameWasRemovedV2(_municipalityId, streetName.PersistentLocalId));
         }
 
+        public void RenameStreetName(PersistentLocalId sourcePersistentLocalId, PersistentLocalId destinationPersistentLocalId)
+        {
+            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(sourcePersistentLocalId);
+            var destinationStreetName = StreetNames.GetNotRemovedByPersistentLocalId(destinationPersistentLocalId);
+
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                throw new MunicipalityHasInvalidStatusException();
+            }
+
+            if (streetName.Status != StreetNameStatus.Current)
+            {
+                throw new StreetNameHasInvalidStatusException();
+            }
+
+            if (destinationStreetName.Status is not (StreetNameStatus.Proposed or StreetNameStatus.Current))
+            {
+                throw new StreetNameHasInvalidStatusException();
+            }
+
+            destinationStreetName.Approve();
+            ApplyChange(new StreetNameWasRenamed(_municipalityId, streetName.PersistentLocalId, destinationPersistentLocalId));
+        }
+
         private void GuardUniqueActiveStreetNameNames(Names streetNameNames, HomonymAdditions homonymAdditions, PersistentLocalId persistentLocalId)
         {
             var namesWithActiveStreetNameName = streetNameNames
