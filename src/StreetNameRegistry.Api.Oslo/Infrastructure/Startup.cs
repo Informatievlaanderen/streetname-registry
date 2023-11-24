@@ -9,8 +9,6 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
     using Configuration;
-
-    using FeatureToggles;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -101,10 +99,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
                         }
                     }
                 })
-                .Configure<ResponseOptions>(_configuration)
-                .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
-                .AddSingleton(c =>
-                    new UseProjectionsV2Toggle(c.GetRequiredService<IOptions<FeatureToggleOptions>>().Value.UseProjectionsV2));
+                .Configure<ResponseOptions>(_configuration);
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder

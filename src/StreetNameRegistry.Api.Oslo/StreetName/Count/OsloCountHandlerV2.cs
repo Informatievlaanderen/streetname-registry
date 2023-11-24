@@ -2,16 +2,21 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Count
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Consumer.Read.Postal;
+    using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Projections.Legacy;
     using Projections.Legacy.StreetNameListV2;
     using Projections.Syndication;
     using Query;
 
-    public sealed class OsloCountHandlerV2 : OsloCountHandlerBase
+    public sealed record OsloCountRequest(FilteringHeader<StreetNameFilter> Filtering, SortingHeader Sorting) : IRequest<TotaalAantalResponse>;
+
+    public sealed class OsloCountHandlerV2 : IRequestHandler<OsloCountRequest, TotaalAantalResponse>
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
@@ -24,7 +29,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Count
             _postalContext = postalContext;
         }
 
-        public override async Task<TotaalAantalResponse> Handle(OsloCountRequest request, CancellationToken cancellationToken)
+        public async Task<TotaalAantalResponse> Handle(OsloCountRequest request, CancellationToken cancellationToken)
         {
             var pagination = new NoPaginationRequest();
 

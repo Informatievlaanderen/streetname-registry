@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Api.Oslo.StreetName.Query
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
@@ -10,6 +11,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
     using Converters;
     using Microsoft.EntityFrameworkCore;
     using Projections.Legacy;
+    using Projections.Legacy.StreetNameList;
     using Projections.Legacy.StreetNameListV2;
     using Projections.Syndication;
 
@@ -135,5 +137,33 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
 
             return streetNames;
         }
+    }
+
+    public class StreetNameSorting : ISorting
+    {
+        public IEnumerable<string> SortableFields { get; } = new[]
+        {
+            nameof(StreetNameListItem.NameDutch),
+            nameof(StreetNameListItem.NameEnglish),
+            nameof(StreetNameListItem.NameFrench),
+            nameof(StreetNameListItem.NameGerman),
+            nameof(StreetNameListItem.PersistentLocalId)
+        };
+
+        public SortingHeader DefaultSortingHeader { get; } =
+            new SortingHeader(nameof(StreetNameListItem.PersistentLocalId), SortOrder.Ascending);
+    }
+
+    public class StreetNameFilter
+    {
+        public string StreetNameName { get; set; }
+        public string MunicipalityName { get; set; }
+        public string NameDutch { get; set; }
+        public string NameFrench { get; set; }
+        public string NameGerman { get; set; }
+        public string NameEnglish { get; set; }
+        public string Status { get; set; }
+        public string? NisCode { get; set; }
+        public string? PostalCode { get; set; }
     }
 }
