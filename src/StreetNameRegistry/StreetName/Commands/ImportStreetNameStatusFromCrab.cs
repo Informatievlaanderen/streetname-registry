@@ -7,6 +7,7 @@ namespace StreetNameRegistry.StreetName.Commands
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Utilities;
 
+    [Obsolete("This is a legacy command and should not be used anymore.")]
     public sealed class ImportStreetNameStatusFromCrab : IHasCrabProvenance
     {
         private static readonly Guid Namespace = new Guid("59313d3d-269b-4e55-9345-672b69536d51");

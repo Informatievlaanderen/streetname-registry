@@ -4,6 +4,7 @@ namespace StreetNameRegistry.StreetName
     using System.Collections.Generic;
     using System.Linq;
 
+    [Obsolete("This is a legacy class and should not be used anymore.")]
     public sealed class Names : List<StreetNameName>
     {
         public Names()
@@ -39,7 +40,7 @@ namespace StreetNameRegistry.StreetName
             this.ToDictionary(
                 x => x.Language ?? throw new ArgumentNullException(nameof(StreetNameName.Language)),
                 x => x.Name);
-        
+
         private void Update(Language? language, string name)
         {
             if (!HasLanguage(language))

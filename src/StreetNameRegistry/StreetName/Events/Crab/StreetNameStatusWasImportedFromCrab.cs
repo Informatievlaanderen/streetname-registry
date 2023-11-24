@@ -1,38 +1,40 @@
 namespace StreetNameRegistry.StreetName.Events.Crab
 {
+    using System;
     using Be.Vlaanderen.Basisregisters.Crab;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Newtonsoft.Json;
     using NodaTime;
 
+    [Obsolete("CRAB events are obsolete.")]
     [EventName("StreetNameStatusWasImportedFromCrab")]
     [EventDescription("Legacy event om tblStraatnaamstatus en tblStraatnaamstatus_hist te importeren.")]
     public sealed class StreetNameStatusWasImportedFromCrab : ICrabEvent, IHasCrabKey<int>, IMessage
     {
         [EventPropertyDescription("CRAB-identificator van de straatnaamstatus.")]
         public int StreetNameStatusId { get; }
-        
+
         [EventPropertyDescription("CRAB-identificator van de straatnaam.")]
         public int StreetNameId { get; }
-        
+
         [EventPropertyDescription("CRAB-straatnaamstatus.")]
         public CrabStreetNameStatus StreetNameStatus { get; }
-        
+
         [EventPropertyDescription("Datum waarop het object is ontstaan in werkelijkheid.")]
         public LocalDateTime? BeginDateTime { get; }
-        
+
         [EventPropertyDescription("Datum waarop het object in werkelijkheid ophoudt te bestaan.")]
         public LocalDateTime? EndDateTime { get; }
-        
+
         [EventPropertyDescription("Tijdstip waarop het object werd ingevoerd in de databank.")]
         public Instant Timestamp { get; }
-        
+
         [EventPropertyDescription("Operator door wie het object werd ingevoerd in de databank.")]
         public string Operator { get; }
-        
+
         [EventPropertyDescription("Bewerking waarmee het object werd ingevoerd in de databank.")]
         public CrabModification? Modification { get; }
-        
+
         [EventPropertyDescription("Organisatie die het object heeft ingevoerd in de databank.")]
         public CrabOrganisation? Organisation { get; }
 

@@ -5,6 +5,7 @@ namespace StreetNameRegistry.StreetName.Events
     using Newtonsoft.Json;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
 
+    [Obsolete("This is a legacy event and should not be used anymore.")]
     [EventTags(EventTag.For.Crab)]
     [EventName("StreetNameSecondaryLanguageWasCorrectedToCleared")]
     [EventDescription("De secundaire taalcode waarin de straatnaam beschikbaar is, werd gewist (via correctie).")]

@@ -3,6 +3,7 @@ namespace StreetNameRegistry.StreetName
     using System;
     using Be.Vlaanderen.Basisregisters.Crab;
 
+    [Obsolete("This is a legacy valueobject and should not be used anymore.")]
     public enum Language
     {
         Dutch = 0,

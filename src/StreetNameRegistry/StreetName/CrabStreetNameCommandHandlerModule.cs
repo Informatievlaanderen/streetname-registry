@@ -11,6 +11,7 @@ namespace StreetNameRegistry.StreetName
     using Commands;
     using SqlStreamStore;
 
+    [Obsolete("This is a legacy commandhandler and should not be used anymore.")]
     public sealed class CrabStreetNameCommandHandlerModule : CommandHandlerModule
     {
         public CrabStreetNameCommandHandlerModule(

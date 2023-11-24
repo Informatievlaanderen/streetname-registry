@@ -4,6 +4,7 @@ namespace StreetNameRegistry.StreetName
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
 
+    [Obsolete("This is a legacy valueobject and should not be used anymore.")]
     internal class StreetNameStatusLifetime : ValueObject<StreetNameStatusLifetime>, IComparable<StreetNameStatusLifetime>
     {
         public int? StatusId { get; }
