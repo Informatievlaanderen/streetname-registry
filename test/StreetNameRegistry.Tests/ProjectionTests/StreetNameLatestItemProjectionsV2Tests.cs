@@ -281,6 +281,50 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         }
 
         [Fact]
+        public async Task WhenStreetNameWasRenamed_ThenStreetNameStatusWasChangedToRetired()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+            var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasProposedV2Metadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, streetNameWasProposedV2.GetHash() }
+            };
+
+            var streetNameWasApproved = new StreetNameWasApproved(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId));
+            ((ISetProvenance)streetNameWasApproved).SetProvenance(_fixture.Create<Provenance>());
+            var streetNameWasApprovedMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, streetNameWasApproved.GetHash() }
+            };
+
+            var streetNameWasRenamed = new StreetNameWasRenamed(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId),
+                _fixture.Create<PersistentLocalId>());
+            ((ISetProvenance)streetNameWasRenamed).SetProvenance(_fixture.Create<Provenance>());
+            var streetNameWasRenamedMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, streetNameWasRenamed.GetHash() }
+            };
+
+            await Sut
+                .Given(
+                    new Envelope<StreetNameWasProposedV2>(new Envelope(streetNameWasProposedV2, streetNameWasProposedV2Metadata)),
+                    new Envelope<StreetNameWasApproved>(new Envelope(streetNameWasApproved, streetNameWasApprovedMetadata)),
+                    new Envelope<StreetNameWasRenamed>(new Envelope(streetNameWasRenamed, streetNameWasRenamedMetadata)))
+                .Then(async ct =>
+                {
+                    var expectedStreetName = (await ct.FindAsync<StreetNameDetailV2>(streetNameWasProposedV2.PersistentLocalId));
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName!.Status.Should().Be(StreetNameStatus.Retired);
+                    expectedStreetName.VersionTimestamp.Should().Be(streetNameWasRenamed.Provenance.Timestamp);
+                    expectedStreetName.LastEventHash.Should().Be(streetNameWasRenamed.GetHash());
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameWasCorrectedFromRetiredToCurrent_ThenStreetNameStatusWasChangedBackToCurrent()
         {
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));

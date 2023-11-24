@@ -340,6 +340,37 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         }
 
         [Fact]
+        public async Task WhenStreetNameWasRenamed_ThenStreetNameStatusWasChangedToRetired()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+            var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasApproved = new StreetNameWasApproved(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId));
+            ((ISetProvenance)streetNameWasApproved).SetProvenance(_fixture.Create<Provenance>());
+            var streetNameWasRenamed = new StreetNameWasRenamed(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId),
+                _fixture.Create<PersistentLocalId>());
+            ((ISetProvenance)streetNameWasRenamed).SetProvenance(_fixture.Create<Provenance>());
+
+            await Sut
+                .Given(
+                    _fixture.Create<MunicipalityWasImported>(),
+                    streetNameWasProposedV2,
+                    streetNameWasApproved,
+                    streetNameWasRenamed)
+                .Then(async ct =>
+                {
+                    var expectedStreetName = (await ct.FindAsync<StreetNameListItemV2>(streetNameWasProposedV2.PersistentLocalId));
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName!.Status.Should().Be(StreetNameStatus.Retired);
+                    expectedStreetName.VersionTimestamp.Should().Be(streetNameWasRenamed.Provenance.Timestamp);
+                    expectedStreetName.PrimaryLanguage.Should().Be(null);
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameWasCorrectedFromRetiredToCurrent_ThenStreetNameStatusWasChangedBackToCurrent()
         {
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
