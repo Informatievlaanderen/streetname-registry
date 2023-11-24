@@ -84,7 +84,7 @@ namespace StreetNameRegistry.Projector.Infrastructure
                                 Url = new Uri("https://legacy.basisregisters.vlaanderen")
                             }
                         },
-                        XmlCommentPaths = new[] {typeof(Startup).GetTypeInfo().Assembly.GetName().Name}
+                        XmlCommentPaths = new[] { typeof(Startup).GetTypeInfo().Assembly.GetName().Name }
                     },
                     MiddlewareHooks =
                     {
@@ -100,33 +100,31 @@ namespace StreetNameRegistry.Projector.Infrastructure
                                 health.AddSqlServer(
                                     connectionString.Value,
                                     name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
-                                    tags: new[] {DatabaseTag, "sql", "sqlserver"});
+                                    tags: new[] { DatabaseTag, "sql", "sqlserver" });
 
                             health.AddDbContextCheck<ExtractContext>(
                                 $"dbcontext-{nameof(ExtractContext).ToLowerInvariant()}",
-                                tags: new[] {DatabaseTag, "sql", "sqlserver"});
+                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
 
                             health.AddDbContextCheck<LegacyContext>(
                                 $"dbcontext-{nameof(LegacyContext).ToLowerInvariant()}",
-                                tags: new[] {DatabaseTag, "sql", "sqlserver"});
+                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
 
                             health.AddDbContextCheck<LastChangedListContext>(
                                 $"dbcontext-{nameof(LastChangedListContext).ToLowerInvariant()}",
-                                tags: new[] {DatabaseTag, "sql", "sqlserver"});
+                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
 
                             health.AddDbContextCheck<WfsContext>(
                                 $"dbcontext-{nameof(WfsContext).ToLowerInvariant()}",
-                                tags: new[] {DatabaseTag, "sql", "sqlserver"});
+                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
 
                             health.AddDbContextCheck<WmsContext>(
                                 $"dbcontext-{nameof(WmsContext).ToLowerInvariant()}",
-                                tags: new[] {DatabaseTag, "sql", "sqlserver"});
+                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
                         }
                     }
                 })
-                .Configure<ExtractConfig>(_configuration.GetSection("Extract"))
-                .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
-                .AddSingleton(c => new UseProjectionsV2Toggle(c.GetService<IOptions<FeatureToggleOptions>>().Value.UseProjectionsV2));
+                .Configure<ExtractConfig>(_configuration.GetSection("Extract"));
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new LoggingModule(_configuration, services));
