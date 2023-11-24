@@ -4,9 +4,6 @@ namespace StreetNameRegistry.Api.Legacy.Convertors
 
     public static class StraatnaamStatusExtensions
     {
-        public static StreetNameRegistry.StreetName.StreetNameStatus ConvertToStreetNameStatus(this StraatnaamStatus? status)
-            => ConvertToStreetNameStatus(status ?? StraatnaamStatus.InGebruik);
-
         public static StreetNameRegistry.StreetName.StreetNameStatus ConvertToStreetNameStatus(this StraatnaamStatus status)
         {
             switch (status)
@@ -22,9 +19,6 @@ namespace StreetNameRegistry.Api.Legacy.Convertors
                     return StreetNameRegistry.StreetName.StreetNameStatus.Proposed;
             }
         }
-
-        public static Municipality.StreetNameStatus ConvertToMunicipalityStreetNameStatus(this StraatnaamStatus? status)
-            => ConvertToMunicipalityStreetNameStatus(status ?? StraatnaamStatus.InGebruik);
 
         public static Municipality.StreetNameStatus ConvertToMunicipalityStreetNameStatus(this StraatnaamStatus status)
         {

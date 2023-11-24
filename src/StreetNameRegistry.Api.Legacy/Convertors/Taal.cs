@@ -4,47 +4,22 @@ namespace StreetNameRegistry.Api.Legacy.Convertors
 
     public static class TaalExtensions
     {
-        public static StreetNameRegistry.StreetName.Language ConvertToStreetNameLanguage(this Taal? taal)
-            => ConvertToStreetNameLanguage(taal ?? Taal.NL);
-
-        public static StreetNameRegistry.StreetName.Language ConvertToStreetNameLanguage(this Taal taal)
+        public static Municipality.Language ConvertToMunicipalityLanguage(this Taal taal)
         {
             switch (taal)
             {
                 default:
                 case Taal.NL:
-                    return StreetNameRegistry.StreetName.Language.Dutch;
+                    return Municipality.Language.Dutch;
 
                 case Taal.FR:
-                    return StreetNameRegistry.StreetName.Language.French;
+                    return Municipality.Language.French;
 
                 case Taal.DE:
-                    return StreetNameRegistry.StreetName.Language.German;
+                    return Municipality.Language.German;
 
                 case Taal.EN:
-                    return StreetNameRegistry.StreetName.Language.English;
-            }
-        }
-
-        public static StreetNameRegistry.Municipality.Language ConvertToMunicipalityLanguage(this Taal? taal)
-            => ConvertToMunicipalityLanguage(taal ?? Taal.NL);
-
-        public static StreetNameRegistry.Municipality.Language ConvertToMunicipalityLanguage(this Taal taal)
-        {
-            switch (taal)
-            {
-                default:
-                case Taal.NL:
-                    return StreetNameRegistry.Municipality.Language.Dutch;
-
-                case Taal.FR:
-                    return StreetNameRegistry.Municipality.Language.French;
-
-                case Taal.DE:
-                    return StreetNameRegistry.Municipality.Language.German;
-
-                case Taal.EN:
-                    return StreetNameRegistry.Municipality.Language.English;
+                    return Municipality.Language.English;
             }
         }
     }

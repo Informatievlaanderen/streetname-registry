@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.Api.Search;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
@@ -11,6 +12,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Convertors;
     using Microsoft.EntityFrameworkCore;
     using Projections.Legacy;
+    using Projections.Legacy.StreetNameList;
     using Projections.Legacy.StreetNameListV2;
     using Projections.Syndication;
 
@@ -126,5 +128,33 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
             return streetNames;
         }
+    }
+
+    public sealed class StreetNameSorting : ISorting
+    {
+        public IEnumerable<string> SortableFields { get; } = new[]
+        {
+            nameof(StreetNameListItem.NameDutch),
+            nameof(StreetNameListItem.NameEnglish),
+            nameof(StreetNameListItem.NameFrench),
+            nameof(StreetNameListItem.NameGerman),
+            nameof(StreetNameListItem.PersistentLocalId)
+        };
+
+        public SortingHeader DefaultSortingHeader { get; } =
+            new SortingHeader(nameof(StreetNameListItem.PersistentLocalId), SortOrder.Ascending);
+    }
+
+    public sealed class StreetNameFilter
+    {
+        public string StreetNameName { get; set; } = string.Empty;
+        public string MunicipalityName { get; set; } = string.Empty;
+        public string NameDutch { get; set; } = string.Empty;
+        public string NameFrench { get; set; } = string.Empty;
+        public string NameGerman { get; set; } = string.Empty;
+        public string NameEnglish { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public string? NisCode { get; set; } = string.Empty;
+        public string? PostalCode { get; set; } = string.Empty;
     }
 }
