@@ -40,7 +40,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
         private readonly IConfiguration _configuration;
         private readonly IServiceCollection _services;
         private readonly ILoggerFactory _loggerFactory;
-        private readonly bool _useProjectionsV2;
 
         public ApiModule(
             IConfiguration configuration,
@@ -50,7 +49,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             _configuration = configuration;
             _services = services;
             _loggerFactory = loggerFactory;
-            _useProjectionsV2 = Convert.ToBoolean(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey)[nameof(FeatureToggleOptions.UseProjectionsV2)]);
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -81,37 +79,10 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
 
             RegisterLastChangedProjections(builder);
 
-            if (_useProjectionsV2)
-            {
-                RegisterExtractProjectionsV2(builder);
-                RegisterLegacyProjectionsV2(builder);
-                RegisterWfsProjectionsV2(builder);
-                RegisterWmsProjectionsV2(builder);
-            }
-            else
-            {
-                RegisterExtractProjections(builder);
-                RegisterLegacyProjections(builder);
-                RegisterWfsProjections(builder);
-                RegisterWmsProjections(builder);
-            }
-        }
-
-        private void RegisterExtractProjections(ContainerBuilder builder)
-        {
-            builder.RegisterModule(
-                new ExtractModule(
-                    _configuration,
-                    _services,
-                    _loggerFactory));
-
-            builder
-                .RegisterProjectionMigrator<ExtractContextMigrationFactory>(
-                    _configuration,
-                    _loggerFactory)
-                .RegisterProjections<StreetNameExtractProjections, ExtractContext>(
-                    context => new StreetNameExtractProjections(context.Resolve<IOptions<ExtractConfig>>(), DbaseCodePage.Western_European_ANSI.ToEncoding()),
-                    ConnectedProjectionSettings.Default);
+            RegisterExtractProjectionsV2(builder);
+            RegisterLegacyProjectionsV2(builder);
+            RegisterWfsProjectionsV2(builder);
+            RegisterWmsProjectionsV2(builder);
         }
 
         private void RegisterExtractProjectionsV2(ContainerBuilder builder)
@@ -154,24 +125,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjections<LastChangedProjections, LastChangedListContext>(ConnectedProjectionSettings.Default);
         }
 
-        private void RegisterLegacyProjections(ContainerBuilder builder)
-        {
-            builder
-                .RegisterModule(
-                    new LegacyModule(
-                        _configuration,
-                        _services,
-                        _loggerFactory));
-            builder
-                .RegisterProjectionMigrator<LegacyContextMigrationFactory>(
-                    _configuration,
-                    _loggerFactory)
-                .RegisterProjections<StreetNameDetailProjections, LegacyContext>(ConnectedProjectionSettings.Default)
-                .RegisterProjections<StreetNameListProjections, LegacyContext>(ConnectedProjectionSettings.Default)
-                .RegisterProjections<StreetNameNameProjections, LegacyContext>(ConnectedProjectionSettings.Default)
-                .RegisterProjections<StreetNameSyndicationProjections, LegacyContext>(ConnectedProjectionSettings.Default);
-        }
-
         private void RegisterLegacyProjectionsV2(ContainerBuilder builder)
         {
             builder
@@ -188,29 +141,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjections<StreetNameListProjectionsV2, LegacyContext>(ConnectedProjectionSettings.Default)
                 .RegisterProjections<StreetNameNameProjectionsV2, LegacyContext>(ConnectedProjectionSettings.Default)
                 .RegisterProjections<StreetNameSyndicationProjections, LegacyContext>(ConnectedProjectionSettings.Default);
-        }
-
-        private void RegisterWfsProjections(ContainerBuilder builder)
-        {
-            builder
-                .RegisterModule(
-                    new WfsModule(
-                        _configuration,
-                        _services,
-                        _loggerFactory));
-
-            var wfsProjectionSettings = ConnectedProjectionSettings
-                .Configure(settings =>
-                    settings.ConfigureLinearBackoff<SqlException>(_configuration, "Wfs"));
-
-            builder
-                .RegisterProjectionMigrator<WfsContextMigrationFactory>(
-                    _configuration,
-                    _loggerFactory)
-
-                .RegisterProjections<StreetNameRegistry.Projections.Wfs.StreetName.StreetNameHelperProjections, WfsContext>(() =>
-                        new StreetNameRegistry.Projections.Wfs.StreetName.StreetNameHelperProjections(),
-                    wfsProjectionSettings);
         }
 
         private void RegisterWfsProjectionsV2(ContainerBuilder builder)
@@ -230,33 +160,9 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjectionMigrator<WfsContextMigrationFactory>(
                     _configuration,
                     _loggerFactory)
-
                 .RegisterProjections<StreetNameRegistry.Projections.Wfs.StreetNameHelperV2.StreetNameHelperV2Projections, WfsContext>(() =>
                         new StreetNameRegistry.Projections.Wfs.StreetNameHelperV2.StreetNameHelperV2Projections(),
                     wfsProjectionSettings);
-        }
-
-        private void RegisterWmsProjections(ContainerBuilder builder)
-        {
-            builder
-                .RegisterModule(
-                    new WmsModule(
-                        _configuration,
-                        _services,
-                        _loggerFactory));
-
-            var wmsProjectionSettings = ConnectedProjectionSettings
-                .Configure(settings =>
-                    settings.ConfigureLinearBackoff<SqlException>(_configuration, "Wms"));
-
-            builder
-                .RegisterProjectionMigrator<WmsContextMigrationFactory>(
-                    _configuration,
-                    _loggerFactory)
-
-                .RegisterProjections<StreetNameRegistry.Projections.Wms.StreetName.StreetNameHelperProjections, WmsContext>(() =>
-                        new StreetNameRegistry.Projections.Wms.StreetName.StreetNameHelperProjections(),
-                    wmsProjectionSettings);
         }
 
         private void RegisterWmsProjectionsV2(ContainerBuilder builder)
@@ -276,7 +182,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjectionMigrator<WmsContextMigrationFactory>(
                     _configuration,
                     _loggerFactory)
-
                 .RegisterProjections<StreetNameRegistry.Projections.Wms.StreetNameHelperV2.StreetNameHelperV2Projections, WmsContext>(() =>
                         new StreetNameRegistry.Projections.Wms.StreetNameHelperV2.StreetNameHelperV2Projections(),
                     wmsProjectionSettings);
