@@ -1,13 +1,18 @@
 namespace StreetNameRegistry.Api.Oslo.StreetName.List
 {
+    using System;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions.Infrastructure.Options;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Consumer.Read.Postal;
     using Converters;
+    using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
     using Municipality;
@@ -16,7 +21,9 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
     using Projections.Syndication;
     using Query;
 
-    public sealed class OsloListHandlerV2 : OsloListHandlerBase
+    public sealed record OsloListRequest(FilteringHeader<StreetNameFilter> Filtering, SortingHeader Sorting, IPaginationRequest PaginationRequest) : IRequest<StreetNameListOsloResponse>;
+
+    public sealed class OsloListHandlerV2 : IRequestHandler<OsloListRequest, StreetNameListOsloResponse>
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
@@ -35,7 +42,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
             _responseOptions = responseOptions;
         }
 
-        public override async Task<StreetNameListOsloResponse> Handle(OsloListRequest request, CancellationToken cancellationToken)
+        public async Task<StreetNameListOsloResponse> Handle(OsloListRequest request, CancellationToken cancellationToken)
         {
             var streetNameQuery = new StreetNameListOsloQueryV2(_legacyContext, _syndicationContext, _postalContext)
                     .Fetch<StreetNameListItemV2, StreetNameListItemV2>(request.Filtering, request.Sorting, request.PaginationRequest);
@@ -121,6 +128,16 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
                 default:
                     return null;
             }
+        }
+
+        protected static Uri? BuildNextUri(PaginationInfo paginationInfo, int itemsInCollection, string nextUrlBase)
+        {
+            var offset = paginationInfo.Offset;
+            var limit = paginationInfo.Limit;
+
+            return paginationInfo.HasNextPage(itemsInCollection)
+                ? new Uri(string.Format(nextUrlBase, offset + limit, limit))
+                : null;
         }
     }
 }
