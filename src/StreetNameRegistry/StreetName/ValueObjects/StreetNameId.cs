@@ -5,6 +5,7 @@ namespace StreetNameRegistry.StreetName
     using Be.Vlaanderen.Basisregisters.Crab;
     using Newtonsoft.Json;
 
+    [Obsolete("This is a legacy valueobject and should not be used anymore.")]
     public sealed class StreetNameId : GuidValueObject<StreetNameId>
     {
         public static StreetNameId CreateFor(CrabStreetNameId crabStreetNameId)

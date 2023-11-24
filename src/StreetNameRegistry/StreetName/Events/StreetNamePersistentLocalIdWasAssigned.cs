@@ -7,6 +7,7 @@ namespace StreetNameRegistry.StreetName.Events
     using NodaTime;
     using StreetNameId = StreetNameRegistry.StreetName.StreetNameId;
 
+    [Obsolete("This is a legacy event and should not be used anymore.")]
     [EventTags(EventTag.For.Sync)]
     [EventName("StreetNamePersistentLocalIdentifierWasAssigned")]
     [EventDescription("De straatnaam kreeg een persistente lokale identificator toegekend.")]

@@ -5,6 +5,7 @@ namespace StreetNameRegistry.StreetName.Events
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
 
+    [Obsolete("This is a legacy event and should not be used anymore.")]
     [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameWasRegistered")]
     [EventDescription("De straatnaam werd aangemaakt in het register.")]

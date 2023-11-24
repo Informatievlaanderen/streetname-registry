@@ -10,6 +10,7 @@ namespace StreetNameRegistry.StreetName
     using Municipality.Commands;
     using NodaTime;
 
+    [Obsolete("This is a legacy class and should not be used anymore.")]
     public sealed partial class StreetName : AggregateRootEntity
     {
         public static readonly Func<StreetName> Factory = () => new StreetName();

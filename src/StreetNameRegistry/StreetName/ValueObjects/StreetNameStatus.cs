@@ -2,6 +2,7 @@ namespace StreetNameRegistry.StreetName
 {
     using System;
 
+    [Obsolete("This is a legacy valueobject and should not be used anymore.")]
     public enum StreetNameStatus
     {
         Proposed = 0,
