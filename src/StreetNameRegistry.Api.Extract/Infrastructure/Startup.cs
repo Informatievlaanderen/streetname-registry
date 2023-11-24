@@ -17,7 +17,6 @@ namespace StreetNameRegistry.Api.Extract.Infrastructure
     using System;
     using System.Linq;
     using System.Reflection;
-    using FeatureToggles;
     using Microsoft.Extensions.Options;
     using Microsoft.OpenApi.Models;
 
@@ -77,7 +76,7 @@ namespace StreetNameRegistry.Api.Extract.Infrastructure
                                 Url = new Uri("https://legacy.basisregisters.vlaanderen")
                             }
                         },
-                        XmlCommentPaths = new[] {typeof(Startup).GetTypeInfo().Assembly.GetName().Name}
+                        XmlCommentPaths = new[] { typeof(Startup).GetTypeInfo().Assembly.GetName().Name }
                     },
                     MiddlewareHooks =
                     {
@@ -93,13 +92,10 @@ namespace StreetNameRegistry.Api.Extract.Infrastructure
                                 health.AddSqlServer(
                                     connectionString.Value,
                                     name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
-                                    tags: new[] {DatabaseTag, "sql", "sqlserver"});
+                                    tags: new[] { DatabaseTag, "sql", "sqlserver" });
                         }
                     }
-                })
-                .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
-                .AddSingleton(c =>
-                    new UseExtractV2Toggle(c.GetService<IOptions<FeatureToggleOptions>>().Value.UseExtractV2));
+                });
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new ApiModule(_configuration, services, _loggerFactory));

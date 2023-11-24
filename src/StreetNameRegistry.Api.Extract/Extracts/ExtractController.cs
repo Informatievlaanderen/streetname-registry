@@ -10,7 +10,6 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     using System;
     using System.Threading;
     using Be.Vlaanderen.Basisregisters.Api.Extract;
-    using Infrastructure.FeatureToggles;
     using Projections.Syndication;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
 
@@ -26,7 +25,6 @@ namespace StreetNameRegistry.Api.Extract.Extracts
         /// Vraag een dump van het volledige register op.
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="useExtractV2Toggle"></param>
         /// <param name="syndicationContext"></param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Als straatnaamregister kan gedownload worden.</response>
@@ -38,16 +36,11 @@ namespace StreetNameRegistry.Api.Extract.Extracts
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         public IActionResult Get(
             [FromServices] ExtractContext context,
-            [FromServices] UseExtractV2Toggle useExtractV2Toggle,
             [FromServices] SyndicationContext syndicationContext,
             CancellationToken cancellationToken = default)
         {
-            if (useExtractV2Toggle.FeatureEnabled)
-            {
-                return new IsolationExtractArchive ($"{ZipName}-{DateTime.Now:yyyy-MM-dd}", context) { StreetNameRegistryExtractBuilder.CreateStreetNameFilesV2(context, syndicationContext) }
-                    .CreateFileCallbackResult(cancellationToken);
-            }
-            return new IsolationExtractArchive ($"{ZipName}-{DateTime.Now:yyyy-MM-dd}", context) { StreetNameRegistryExtractBuilder.CreateStreetNameFiles(context, syndicationContext) }
+            return new IsolationExtractArchive($"{ZipName}-{DateTime.Now:yyyy-MM-dd}", context)
+                    { StreetNameRegistryExtractBuilder.CreateStreetNameFilesV2(context, syndicationContext) }
                 .CreateFileCallbackResult(cancellationToken);
         }
     }
