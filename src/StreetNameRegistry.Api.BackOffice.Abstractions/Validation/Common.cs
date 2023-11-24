@@ -22,6 +22,12 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Validation
                 public static TicketError ToTicketError() => new TicketError(Message, Code);
             }
 
+            public static class StreetNameInvalid
+            {
+                public const string Code = "StraatnaamNietGekendValidatie";
+                public static string Message(string streetNamePuri) => $"De straatnaam '{streetNamePuri}' is niet gekend in het straatnaamregister.";
+            }
+
             public static class StreetNameNotFound
             {
                 public const string Code = "OnbestaandeStraatnaam";
