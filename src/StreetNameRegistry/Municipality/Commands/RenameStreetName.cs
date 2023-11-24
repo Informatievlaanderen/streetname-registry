@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Municipality.Commands
             yield return MunicipalityId;
 
             yield return PersistentLocalId;
-            
+
             yield return DestinationPersistentLocalId;
 
             foreach (var field in Provenance.GetIdentityFields())

@@ -42,6 +42,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameHomonymAdditionsWereCorrected>(When);
             Register<StreetNameHomonymAdditionsWereRemoved>(When);
             Register<StreetNameWasRemovedV2>(When);
+            Register<StreetNameWasRenamed>(When);
         }
 
         private void When(StreetNameWasMigratedToMunicipality @event)
@@ -143,6 +144,13 @@ namespace StreetNameRegistry.Municipality
         private void When(StreetNameWasRemovedV2 @event)
         {
             IsRemoved = true;
+
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameWasRenamed @event)
+        {
+            Status = StreetNameStatus.Retired;
 
             _lastEvent = @event;
         }
