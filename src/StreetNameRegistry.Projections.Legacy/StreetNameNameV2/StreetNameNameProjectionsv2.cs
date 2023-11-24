@@ -103,6 +103,15 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRenamed>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameName(message.Message.PersistentLocalId, streetNameNameV2 =>
+                {
+                    UpdateStatus(streetNameNameV2, StreetNameStatus.Retired);
+                    UpdateVersionTimestamp(streetNameNameV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasCorrectedFromRetiredToCurrent>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameName(message.Message.PersistentLocalId, streetNameNameV2 =>
