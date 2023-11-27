@@ -98,21 +98,6 @@ jobs:
       semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
 
-  build-api-crab-import:
-    name: Build Api CrabImport
-    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
-    needs: [ set-release-version ]
-    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
-    with:
-      registry: streetname-registry
-      build-target: Containerize_ApiCrabImport
-      image-file: sr-api-crab-import-image.tar
-      image-name: api-crab-import
-      test-project: StreetNameRegistry.Tests
-      build-project: StreetNameRegistry.Api.CrabImport
-      semver: ${{ needs.set-release-version.outputs.version }}
-    secrets: inherit
-
   build-api-extract:
     name: Build Api Extract
     uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
@@ -323,18 +308,6 @@ jobs:
       semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
 
-  pack-api-crab-import:
-    name: Pack Api CrabImport
-    uses: Informatievlaanderen/build-pipeline/.github/workflows/pack.yml@main
-    needs: [ set-release-version ]
-    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
-    with:
-      pack-file: Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport
-      test-project: StreetNameRegistry.Tests
-      build-project: StreetNameRegistry.Api.CrabImport
-      semver: ${{ needs.set-release-version.outputs.version }}
-    secrets: inherit
-
   build-lambda-backoffice:
     name: Build Lambda
     uses: Informatievlaanderen/build-pipeline/.github/workflows/build-lambda.yml@main
@@ -357,12 +330,10 @@ jobs:
       , pack-api-legacy
       , pack-api-oslo
       , pack-api-extract
-      , pack-api-crab-import
       , build-api-backoffice
       , build-api-legacy
       , build-api-oslo
       , build-api-extract
-      , build-api-crab-import
       , build-projector
       , build-projections-backoffice
       , build-projections-syndication
@@ -459,13 +430,6 @@ jobs:
       with:
         name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract-${{ needs.set-release-version.outputs.version }}
         path: dist/nuget/
-
-    - name: Download NuGet Api CrabImport
-      uses: actions/download-artifact@v3
-      continue-on-error: false
-      with:
-        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport-${{ needs.set-release-version.outputs.version }}
-        path: dist/nuget/   
 
     - name: Run Semantic Release
       shell: bash
@@ -628,12 +592,6 @@ jobs:
         name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract-${{ needs.release.outputs.version }}
         path: ~/
 
-    - name: Download NuGet package api-crab-import
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport-${{ needs.release.outputs.version }}
-        path: ~/   
-
     - name: Publish packages to NuGet
       shell: bash
       run: |
@@ -642,7 +600,6 @@ jobs:
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
         dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY
-        dotnet nuget push ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg --source nuget.org --api-key $NUGET_API_KEY        
       env:
         SEMVER: ${{  needs.release.outputs.version }}
         WORKSPACE: ${{ github.workspace }}
@@ -720,7 +677,6 @@ jobs:
           'api-backoffice'
           , 'api-legacy'
           , 'api-oslo'
-          , 'api-crab-import'
           , 'api-extract'
           , 'projector'
           , 'projections-syndication'
@@ -781,7 +737,6 @@ jobs:
           'api-backoffice'
           , 'api-legacy'
           , 'api-oslo'
-          , 'api-crab-import'
           , 'api-extract'
           , 'projector'
           , 'projections-syndication'
@@ -844,7 +799,6 @@ jobs:
           'api-backoffice'
           , 'api-legacy'
           , 'api-oslo'
-          , 'api-crab-import'
           , 'api-extract'
           , 'projector'
           , 'projections-syndication'
@@ -907,7 +861,6 @@ jobs:
           'api-backoffice'
           , 'api-legacy'
           , 'api-oslo'
-          , 'api-crab-import'
           , 'api-extract'
           , 'projector'
           , 'projections-syndication'
@@ -989,7 +942,6 @@ jobs:
       matrix:
         services: [
           'streetname-registry-api'
-          , 'streetname-registry-import-api'
           , 'streetname-registry-projections'
           , 'streetname-registry-producer'
           , 'streetname-registry-producer-snapshot-oslo'
