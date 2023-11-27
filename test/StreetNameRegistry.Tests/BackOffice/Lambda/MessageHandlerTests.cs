@@ -329,6 +329,39 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
         }
 
         [Fact]
+        public async Task WhenProcessingSqsStreetNameRenameRequest_ThenSqsLambdaStreetNameRenameRequestIsSent()
+        {
+            // Arrange
+            var mediator = new Mock<IMediator>();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Register(_ => mediator.Object);
+            var container = containerBuilder.Build();
+
+            var messageData = Fixture.Create<RenameStreetNameSqsRequest>();
+            var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
+
+            var sut = new MessageHandler(container);
+
+            // Act
+            await sut.HandleMessage(
+                messageData,
+                messageMetadata,
+                It.IsAny<CancellationToken>());
+
+            // Assert
+            mediator
+                .Verify(x => x.Send(It.Is<RenameStreetNameLambdaRequest>(request =>
+                    request.TicketId == messageData.TicketId &&
+                    request.MessageGroupId == messageMetadata.MessageGroupId &&
+                    request.Request == messageData.Request &&
+                    request.StreetNamePersistentLocalId == messageData.PersistentLocalId &&
+                    request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
+                    request.Provenance == messageData.ProvenanceData.ToProvenance() &&
+                    request.Metadata == messageData.Metadata
+                ), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact]
         public async Task WhenProcessingSqsStreetNameCorrectRetirementRequest_ThenSqsLambdaStreetNameCorrectRetirementRequestIsSent()
         {
             // Arrange

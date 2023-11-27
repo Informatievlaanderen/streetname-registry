@@ -190,12 +190,12 @@ namespace StreetNameRegistry.Municipality
 
             if (streetName.Status != StreetNameStatus.Current)
             {
-                throw new StreetNameHasInvalidStatusException();
+                throw new StreetNameHasInvalidStatusException(sourcePersistentLocalId);
             }
 
             if (destinationStreetName.Status is not (StreetNameStatus.Proposed or StreetNameStatus.Current))
             {
-                throw new StreetNameHasInvalidStatusException();
+                throw new StreetNameHasInvalidStatusException(destinationPersistentLocalId);
             }
 
             destinationStreetName.Approve();
