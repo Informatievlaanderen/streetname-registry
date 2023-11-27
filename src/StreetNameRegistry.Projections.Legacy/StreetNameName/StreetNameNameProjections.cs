@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
     using StreetName;
     using StreetName.Events;
     using StreetName.Events.Crab;
+    using RegionFilter = Be.Vlaanderen.Basisregisters.GrAr.Common.RegionFilter;
 
     [ConnectedProjectionName("API endpoint straatnamen ifv BOSA DT")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor straatnamen ifv BOSA DT voorziet.")]

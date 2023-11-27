@@ -11,6 +11,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
     using Municipality.Events;
     using NodaTime;
     using StreetName.Events;
+    using RegionFilter = Be.Vlaanderen.Basisregisters.GrAr.Common.RegionFilter;
 
     [ConnectedProjectionName("API endpoint straatnamen ifv BOSA DT")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor straatnamen ifv BOSA DT voorziet.")]
