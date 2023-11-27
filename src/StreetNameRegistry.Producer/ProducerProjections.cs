@@ -214,6 +214,11 @@ namespace StreetNameRegistry.Producer
                 await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position, ct);
             });
 
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameWasRenamed>>(async (_, message, ct) =>
+            {
+                await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position, ct);
+            });
+
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameWasCorrectedFromRetiredToCurrent>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position, ct);
