@@ -1,3 +1,17 @@
+# [3.35.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.34.0...v3.35.0) (2023-11-29)
+
+
+### Features
+
+* add rename streetname command ([19444af](https://github.com/informatievlaanderen/streetname-registry/commit/19444af4b8a6dad76293470a79f445d543327052))
+* add rename streetname producers ([7da4376](https://github.com/informatievlaanderen/streetname-registry/commit/7da4376506f2159409560fb3fbc9f4e11fc63e72))
+* add StreetNameWasRenamed event ([9415b78](https://github.com/informatievlaanderen/streetname-registry/commit/9415b78c794009595456f33018e245be521d767a))
+* add StreetNameWasRenamed event ([7a1b2ba](https://github.com/informatievlaanderen/streetname-registry/commit/7a1b2bae1c1f10ee2f8389c99abf2fa0b5b5b2d9))
+* rename streetname backoffice api ([d9e3425](https://github.com/informatievlaanderen/streetname-registry/commit/d9e3425bd13c5ba43e10518189e00d67f45790c8))
+* rename streetname domain ([1a97b20](https://github.com/informatievlaanderen/streetname-registry/commit/1a97b2080ad502070516d6947bbaa757238b256f))
+* rename streetname lambda ([1c8d9d4](https://github.com/informatievlaanderen/streetname-registry/commit/1c8d9d4e34847da6b61da431f317727a241ab6ee))
+* rename streetname projections ([3b0a27e](https://github.com/informatievlaanderen/streetname-registry/commit/3b0a27e96bb0168ce9165d50545ba25200bbf96b))
+
 # [3.34.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.33.1...v3.34.0) (2023-11-01)
 
 
