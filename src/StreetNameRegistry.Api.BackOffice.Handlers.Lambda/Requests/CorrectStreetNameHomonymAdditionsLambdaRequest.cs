@@ -4,12 +4,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
     using Abstractions.Convertors;
     using Abstractions.Requests;
     using Abstractions.SqsRequests;
-    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Requests;
     using Municipality;
     using Municipality.Commands;
 
     public sealed record CorrectStreetNameHomonymAdditionsLambdaRequest :
-        SqsLambdaRequest,
+        StreetNameLambdaRequest,
         IHasBackOfficeRequest<CorrectStreetNameHomonymAdditionsRequest>,
         IHasStreetNamePersistentLocalId
     {
@@ -50,7 +49,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
                 new PersistentLocalId(StreetNamePersistentLocalId),
                 homonymAdditionsToCorrect,
                 homonymsToRemove,
-                Provenance);
+                CommandProvenance);
         }
     }
 }
