@@ -4,12 +4,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
     using Abstractions.Requests;
     using Abstractions.SqsRequests;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
-    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Requests;
     using Municipality;
     using Municipality.Commands;
 
     public sealed record RenameStreetNameLambdaRequest :
-        SqsLambdaRequest,
+        StreetNameLambdaRequest,
         IHasBackOfficeRequest<RenameStreetNameRequest>,
         IHasStreetNamePersistentLocalId
     {
@@ -43,7 +42,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
                 this.MunicipalityPersistentLocalId(),
                 new PersistentLocalId(StreetNamePersistentLocalId),
                 new PersistentLocalId(identifier.Value),
-                Provenance);
+                CommandProvenance);
         }
     }
 }

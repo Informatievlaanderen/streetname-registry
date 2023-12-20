@@ -3,12 +3,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
     using Abstractions.Convertors;
     using Abstractions.Requests;
     using Abstractions.SqsRequests;
-    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Requests;
     using Municipality;
     using Municipality.Commands;
 
     public sealed record ProposeStreetNameLambdaRequest :
-        SqsLambdaRequest,
+        StreetNameLambdaRequest,
         IHasBackOfficeRequest<ProposeStreetNameRequest>
     {
         public ProposeStreetNameLambdaRequest(string groupId, ProposeStreetNameSqsRequest sqsRequest)
@@ -39,8 +38,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
             return new ProposeStreetName(
                 this.MunicipalityPersistentLocalId(),
                 names,
-                this.PersistentLocalId,
-                Provenance);
+                PersistentLocalId,
+                CommandProvenance);
         }
     }
 }

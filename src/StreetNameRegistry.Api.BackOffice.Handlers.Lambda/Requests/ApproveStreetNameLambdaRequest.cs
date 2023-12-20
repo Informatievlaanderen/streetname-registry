@@ -3,12 +3,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
     using Abstractions;
     using Abstractions.Requests;
     using Abstractions.SqsRequests;
-    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Requests;
     using Municipality;
     using Municipality.Commands;
 
     public sealed record ApproveStreetNameLambdaRequest :
-        SqsLambdaRequest,
+        StreetNameLambdaRequest,
         IHasBackOfficeRequest<ApproveStreetNameRequest>,
         IHasStreetNamePersistentLocalId
     {
@@ -33,7 +32,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
         /// <returns>ApproveStreetName.</returns>
         public ApproveStreetName ToCommand()
         {
-            return new ApproveStreetName(this.MunicipalityPersistentLocalId(), new PersistentLocalId(StreetNamePersistentLocalId), Provenance);
+            return new ApproveStreetName(
+                this.MunicipalityPersistentLocalId(),
+                new PersistentLocalId(StreetNamePersistentLocalId),
+                CommandProvenance);
         }
     }
 }
