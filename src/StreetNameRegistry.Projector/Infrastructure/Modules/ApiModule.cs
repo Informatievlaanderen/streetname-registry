@@ -23,6 +23,8 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Projections.Extract;
     using StreetNameRegistry.Projections.Extract.StreetNameExtract;
+    using StreetNameRegistry.Projections.Integration;
+    using StreetNameRegistry.Projections.Integration.Infrastructure;
     using StreetNameRegistry.Projections.LastChangedList;
     using StreetNameRegistry.Projections.Legacy;
     using StreetNameRegistry.Projections.Legacy.StreetNameDetail;
@@ -83,6 +85,26 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             RegisterLegacyProjectionsV2(builder);
             RegisterWfsProjectionsV2(builder);
             RegisterWmsProjectionsV2(builder);
+        }
+
+        private void RegisterIntegrationProjections(ContainerBuilder builder)
+        {
+            builder.RegisterModule(
+                new IntegrationModule(
+                    _configuration,
+                    _services,
+                    _loggerFactory));
+
+            builder
+                .RegisterProjectionMigrator<IntegrationContextMigrationFactory>(
+                    _configuration,
+                    _loggerFactory)
+                .RegisterProjections<StreetNameLatestItemProjections, IntegrationContext>(
+                    context => new StreetNameLatestItemProjections(context.Resolve<IOptions<IntegrationOptions>>()),
+                    ConnectedProjectionSettings.Default)
+                .RegisterProjections<StreetNameVersionProjections, IntegrationContext>(
+                    context => new StreetNameVersionProjections(context.Resolve<IOptions<IntegrationOptions>>()),
+                    ConnectedProjectionSettings.Default);
         }
 
         private void RegisterExtractProjectionsV2(ContainerBuilder builder)
