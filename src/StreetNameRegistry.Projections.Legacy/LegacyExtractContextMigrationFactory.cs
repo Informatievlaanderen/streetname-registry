@@ -1,10 +1,11 @@
 namespace StreetNameRegistry.Projections.Legacy
 {
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer;
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
 
-    public sealed class LegacyContextMigrationFactory : RunnerDbContextMigrationFactory<LegacyContext>
+    public sealed class LegacyContextMigrationFactory : SqlServerRunnerDbContextMigrationFactory<LegacyContext>
     {
         public LegacyContextMigrationFactory()
             : base("LegacyProjectionsAdmin", HistoryConfiguration)

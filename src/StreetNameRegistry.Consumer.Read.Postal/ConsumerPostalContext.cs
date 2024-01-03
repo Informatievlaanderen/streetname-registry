@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Consumer.Read.Postal
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer.MigrationExtensions;
     using StreetNameRegistry.Infrastructure;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;

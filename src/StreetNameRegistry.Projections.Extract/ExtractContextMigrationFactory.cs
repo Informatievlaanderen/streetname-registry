@@ -1,10 +1,11 @@
 namespace StreetNameRegistry.Projections.Extract
 {
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer;
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
 
-    public sealed class ExtractContextMigrationFactory : RunnerDbContextMigrationFactory<ExtractContext>
+    public sealed class ExtractContextMigrationFactory : SqlServerRunnerDbContextMigrationFactory<ExtractContext>
     {
         public ExtractContextMigrationFactory() :
             base("ExtractProjectionsAdmin", HistoryConfiguration)

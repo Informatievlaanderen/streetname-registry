@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Projections.BackOffice
 {
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer;
     using Microsoft.EntityFrameworkCore;
     using StreetNameRegistry.Infrastructure;
 
@@ -16,7 +17,7 @@ namespace StreetNameRegistry.Projections.BackOffice
             : base(options) { }
     }
 
-    public sealed class BackOfficeProjectionsContextMigrationFactory : RunnerDbContextMigrationFactory<BackOfficeProjectionsContext>
+    public sealed class BackOfficeProjectionsContextMigrationFactory : SqlServerRunnerDbContextMigrationFactory<BackOfficeProjectionsContext>
     {
         public BackOfficeProjectionsContextMigrationFactory()
             : base("BackOfficeProjectionsAdmin", HistoryConfiguration) { }

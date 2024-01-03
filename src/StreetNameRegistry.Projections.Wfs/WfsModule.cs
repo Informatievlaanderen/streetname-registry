@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Projections.Wfs
     using Microsoft.Data.SqlClient;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer.MigrationExtensions;
 
     public sealed class WfsModule : Module
     {
