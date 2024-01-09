@@ -1,3 +1,10 @@
+## [3.36.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.36.0...v3.36.1) (2024-01-09)
+
+
+### Bug Fixes
+
+* command provenance should be set after idempotency check ([3f0003e](https://github.com/informatievlaanderen/streetname-registry/commit/3f0003ef02f4c69a8af26addf4057003c350af4d))
+
 # [3.36.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.35.0...v3.36.0) (2024-01-09)
 
 
