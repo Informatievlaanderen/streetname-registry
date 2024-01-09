@@ -35,7 +35,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
             return new RetireStreetName(
                 this.MunicipalityPersistentLocalId(),
                 streetNamePersistentLocalId,
-                CommandProvenance);
+                Provenance);
         }
     }
 }

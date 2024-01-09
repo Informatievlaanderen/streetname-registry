@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Municipality
 {
     using System;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using NodaTime;
 
     public sealed class StreetNameProvenanceFactory : IProvenanceFactory<Municipality>
     {
@@ -14,7 +15,13 @@ namespace StreetNameRegistry.Municipality
                 throw new InvalidOperationException($"Cannot create provenance from {provenanceHolder.GetType().Name}");
             }
 
-            return provenance.Provenance;
+            return new Provenance(
+                SystemClock.Instance.GetCurrentInstant(),
+                provenance.Provenance.Application,
+                provenance.Provenance.Reason,
+                provenance.Provenance.Operator,
+                provenance.Provenance.Modification,
+                provenance.Provenance.Organisation);
         }
     }
 }
