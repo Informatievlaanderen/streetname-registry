@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
                 new PersistentLocalId(StreetNamePersistentLocalId),
                 homonymAdditionsToCorrect,
                 homonymsToRemove,
-                CommandProvenance);
+                Provenance);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
                 this.MunicipalityPersistentLocalId(),
                 new PersistentLocalId(StreetNamePersistentLocalId),
                 new PersistentLocalId(identifier.Value),
-                CommandProvenance);
+                Provenance);
         }
     }
 }

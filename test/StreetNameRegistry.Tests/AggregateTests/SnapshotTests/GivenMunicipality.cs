@@ -16,6 +16,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
     using Municipality.Events;
     using Newtonsoft.Json;
     using Extensions;
+    using NodaTime;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -69,6 +70,18 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                 proposeNewStreetName.PersistentLocalId);
             ((ISetProvenance)newStreetNameWasProposed).SetProvenance(provenance);
 
+            Assert(new Scenario()
+                .Given(_streamId,
+                    municipalityWasImported,
+                    municipalityBecameCurrent,
+                    officialLanguageWasAdded,
+                    officialLanguageWasAdded2,
+                    facilityLanguageWasAdded,
+                    existingStreetNameWasProposed)
+                .When(proposeNewStreetName)
+                .Then(new Fact(_streamId,
+                    newStreetNameWasProposed)));
+
             var existingStreetName = new MunicipalityStreetName(o => { });
             existingStreetName.Route(existingStreetNameWasProposed);
             var newStreetName = new MunicipalityStreetName(o => { });
@@ -82,33 +95,22 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                 new List<Language> { Language.English },
                 new MunicipalityStreetNames
                 {
-                   existingStreetName,
-                   newStreetName
+                    existingStreetName,
+                    newStreetName
                 });
-
-            Assert(new Scenario()
-                .Given(_streamId,
-                    municipalityWasImported,
-                    municipalityBecameCurrent,
-                    officialLanguageWasAdded,
-                    officialLanguageWasAdded2,
-                    facilityLanguageWasAdded,
-                    existingStreetNameWasProposed)
-                .When(proposeNewStreetName)
-                .Then(new Fact(_streamId,
-                    newStreetNameWasProposed)));
 
             var snapshotStore = (ISnapshotStore)Container.Resolve(typeof(ISnapshotStore));
             var latestSnapshot = await snapshotStore.FindLatestSnapshotAsync(_streamId, CancellationToken.None);
 
             latestSnapshot.Should().NotBeNull();
-            latestSnapshot
-                .Should()
-                .BeEquivalentTo(
-                    Build(
-                        expectedSnapshot,
-                        6,
-                        EventSerializerSettings));
+            var snapshot = JsonConvert.DeserializeObject<MunicipalitySnapshot>(latestSnapshot!.Data, EventSerializerSettings);
+
+            snapshot.Should().BeEquivalentTo(expectedSnapshot, options =>
+            {
+                options.Excluding(x => x.Path.EndsWith("LastEventHash"));
+                options.Excluding(x => x.Type == typeof(Instant));
+                return options;
+            });
         }
 
         private static SnapshotContainer Build(

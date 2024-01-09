@@ -39,7 +39,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
                 this.MunicipalityPersistentLocalId(),
                 names,
                 PersistentLocalId,
-                CommandProvenance);
+                Provenance);
         }
     }
 }
