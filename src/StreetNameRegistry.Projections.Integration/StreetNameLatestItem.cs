@@ -45,15 +45,13 @@ namespace StreetNameRegistry.Projections.Integration
             }
         }
 
-        public long IdempotenceKey { get; set; }
-
         public StreetNameLatestItem()
         {  }
     }
 
     public sealed class StreetNameLatestItemConfiguration : IEntityTypeConfiguration<StreetNameLatestItem>
     {
-        internal const string TableName = "StreetNameLatestItems";
+        internal const string TableName = "streetname_latest_items";
 
         public void Configure(EntityTypeBuilder<StreetNameLatestItem> builder)
         {
@@ -81,7 +79,6 @@ namespace StreetNameRegistry.Projections.Integration
             builder.Property(x => x.Namespace).HasColumnName("namespace");
             builder.Property(x => x.VersionAsString).HasColumnName("version_as_string");
             builder.Property(StreetNameLatestItem.VersionTimestampBackingPropertyName).HasColumnName("version_timestamp");
-            builder.Property(x => x.IdempotenceKey).HasColumnName("idempotence_key");
 
             builder.Ignore(x => x.VersionTimestamp);
 

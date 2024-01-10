@@ -11,11 +11,11 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "integration");
+                name: "integration_streetname");
 
             migrationBuilder.CreateTable(
                 name: "ProjectionStates",
-                schema: "integration",
+                schema: "integration_streetname",
                 columns: table => new
                 {
                     Name = table.Column<string>(type: "text", nullable: false),
@@ -30,8 +30,8 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StreetNameLatestItems",
-                schema: "integration",
+                name: "streetname_latest_items",
+                schema: "integration_streetname",
                 columns: table => new
                 {
                     persistent_local_id = table.Column<int>(type: "integer", nullable: false)
@@ -55,17 +55,18 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StreetNameLatestItems", x => x.persistent_local_id);
+                    table.PrimaryKey("PK_streetname_latest_items", x => x.persistent_local_id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "StreetNameVersions",
-                schema: "integration",
+                name: "streetname_versions",
+                schema: "integration_streetname",
                 columns: table => new
                 {
-                    Position = table.Column<long>(type: "bigint", nullable: false)
+                    position = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     persistent_local_id = table.Column<int>(type: "integer", nullable: false),
+                    streetname_id = table.Column<Guid>(type: "uuid", nullable: false),
                     status = table.Column<string>(type: "text", nullable: true),
                     nis_code = table.Column<string>(type: "text", nullable: true),
                     name_dutch = table.Column<string>(type: "text", nullable: true),
@@ -80,82 +81,75 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
                     puri_id = table.Column<string>(type: "text", nullable: false),
                     @namespace = table.Column<string>(name: "namespace", type: "text", nullable: false),
                     version_as_string = table.Column<string>(type: "text", nullable: false),
-                    version_timestamp = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    idempotence_key = table.Column<long>(type: "bigint", nullable: false)
+                    version_timestamp = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StreetNameVersions", x => x.Position);
+                    table.PrimaryKey("PK_streetname_versions", x => x.position);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_StreetNameLatestItems_is_removed",
-                schema: "integration",
-                table: "StreetNameLatestItems",
+                name: "IX_streetname_latest_items_is_removed",
+                schema: "integration_streetname",
+                table: "streetname_latest_items",
                 column: "is_removed");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StreetNameLatestItems_name_dutch",
-                schema: "integration",
-                table: "StreetNameLatestItems",
+                name: "IX_streetname_latest_items_name_dutch",
+                schema: "integration_streetname",
+                table: "streetname_latest_items",
                 column: "name_dutch");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StreetNameLatestItems_persistent_local_id",
-                schema: "integration",
-                table: "StreetNameLatestItems",
+                name: "IX_streetname_latest_items_persistent_local_id",
+                schema: "integration_streetname",
+                table: "streetname_latest_items",
                 column: "persistent_local_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StreetNameLatestItems_status",
-                schema: "integration",
-                table: "StreetNameLatestItems",
+                name: "IX_streetname_latest_items_status",
+                schema: "integration_streetname",
+                table: "streetname_latest_items",
                 column: "status");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StreetNameVersions_is_removed",
-                schema: "integration",
-                table: "StreetNameVersions",
+                name: "IX_streetname_versions_is_removed",
+                schema: "integration_streetname",
+                table: "streetname_versions",
                 column: "is_removed");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StreetNameVersions_name_dutch",
-                schema: "integration",
-                table: "StreetNameVersions",
-                column: "name_dutch");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StreetNameVersions_persistent_local_id",
-                schema: "integration",
-                table: "StreetNameVersions",
+                name: "IX_streetname_versions_persistent_local_id",
+                schema: "integration_streetname",
+                table: "streetname_versions",
                 column: "persistent_local_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StreetNameVersions_Position",
-                schema: "integration",
-                table: "StreetNameVersions",
-                column: "Position");
+                name: "IX_streetname_versions_status",
+                schema: "integration_streetname",
+                table: "streetname_versions",
+                column: "status");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StreetNameVersions_status",
-                schema: "integration",
-                table: "StreetNameVersions",
-                column: "status");
+                name: "IX_streetname_versions_streetname_id",
+                schema: "integration_streetname",
+                table: "streetname_versions",
+                column: "streetname_id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "ProjectionStates",
-                schema: "integration");
+                schema: "integration_streetname");
 
             migrationBuilder.DropTable(
-                name: "StreetNameLatestItems",
-                schema: "integration");
+                name: "streetname_latest_items",
+                schema: "integration_streetname");
 
             migrationBuilder.DropTable(
-                name: "StreetNameVersions",
-                schema: "integration");
+                name: "streetname_versions",
+                schema: "integration_streetname");
         }
     }
 }

@@ -1,6 +1,5 @@
 namespace StreetNameRegistry.Projector.Infrastructure.Modules
 {
-    using System;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
@@ -27,15 +26,14 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using StreetNameRegistry.Projections.Integration.Infrastructure;
     using StreetNameRegistry.Projections.LastChangedList;
     using StreetNameRegistry.Projections.Legacy;
-    using StreetNameRegistry.Projections.Legacy.StreetNameDetail;
     using StreetNameRegistry.Projections.Legacy.StreetNameDetailV2;
-    using StreetNameRegistry.Projections.Legacy.StreetNameList;
     using StreetNameRegistry.Projections.Legacy.StreetNameListV2;
-    using StreetNameRegistry.Projections.Legacy.StreetNameName;
     using StreetNameRegistry.Projections.Legacy.StreetNameNameV2;
-    using StreetNameRegistry.Projections.Wfs;
-    using StreetNameRegistry.Projections.Wms;
     using StreetNameRegistry.Projections.Legacy.StreetNameSyndication;
+    using StreetNameRegistry.Projections.Wfs;
+    using StreetNameRegistry.Projections.Wfs.StreetNameHelperV2;
+    using StreetNameRegistry.Projections.Wms;
+    using LastChangedListContextMigrationFactory = StreetNameRegistry.Projections.LastChangedList.LastChangedListContextMigrationFactory;
 
     public sealed class ApiModule : Module
     {
@@ -79,12 +77,14 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             builder.RegisterEventstreamModule(_configuration);
             builder.RegisterModule(new ProjectorModule(_configuration));
 
-            RegisterLastChangedProjections(builder);
+            // RegisterLastChangedProjections(builder);
+            //
+            // RegisterExtractProjectionsV2(builder);
+            // RegisterLegacyProjectionsV2(builder);
+            // RegisterWfsProjectionsV2(builder);
+            // RegisterWmsProjectionsV2(builder);
 
-            RegisterExtractProjectionsV2(builder);
-            RegisterLegacyProjectionsV2(builder);
-            RegisterWfsProjectionsV2(builder);
-            RegisterWmsProjectionsV2(builder);
+            RegisterIntegrationProjections(builder);
         }
 
         private void RegisterIntegrationProjections(ContainerBuilder builder)
@@ -102,9 +102,9 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjections<StreetNameLatestItemProjections, IntegrationContext>(
                     context => new StreetNameLatestItemProjections(context.Resolve<IOptions<IntegrationOptions>>()),
                     ConnectedProjectionSettings.Default)
-                .RegisterProjections<StreetNameVersionProjections, IntegrationContext>(
-                    context => new StreetNameVersionProjections(context.Resolve<IOptions<IntegrationOptions>>()),
-                    ConnectedProjectionSettings.Default);
+            .RegisterProjections<StreetNameVersionProjections, IntegrationContext>(
+                context => new StreetNameVersionProjections(context.Resolve<IOptions<IntegrationOptions>>(), _configuration.GetConnectionString("Events")),
+                ConnectedProjectionSettings.Default);
         }
 
         private void RegisterExtractProjectionsV2(ContainerBuilder builder)
@@ -138,7 +138,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                     _loggerFactory));
 
             builder
-                .RegisterProjectionMigrator<StreetNameRegistry.Projections.LastChangedList.LastChangedListContextMigrationFactory>(
+                .RegisterProjectionMigrator<LastChangedListContextMigrationFactory>(
                     _configuration,
                     _loggerFactory)
                 .RegisterProjectionMigrator<DataMigrationContextMigrationFactory>(
@@ -182,8 +182,8 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjectionMigrator<WfsContextMigrationFactory>(
                     _configuration,
                     _loggerFactory)
-                .RegisterProjections<StreetNameRegistry.Projections.Wfs.StreetNameHelperV2.StreetNameHelperV2Projections, WfsContext>(() =>
-                        new StreetNameRegistry.Projections.Wfs.StreetNameHelperV2.StreetNameHelperV2Projections(),
+                .RegisterProjections<StreetNameHelperV2Projections, WfsContext>(() =>
+                        new StreetNameHelperV2Projections(),
                     wfsProjectionSettings);
         }
 

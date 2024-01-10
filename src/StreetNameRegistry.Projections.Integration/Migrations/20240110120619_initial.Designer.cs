@@ -12,7 +12,7 @@ using StreetNameRegistry.Projections.Integration;
 namespace StreetNameRegistry.Projections.Integration.Migrations
 {
     [DbContext(typeof(IntegrationContext))]
-    [Migration("20240103123831_initial")]
+    [Migration("20240110120619_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,7 +43,7 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("ProjectionStates", "integration");
+                    b.ToTable("ProjectionStates", "integration_streetname");
                 });
 
             modelBuilder.Entity("StreetNameRegistry.Projections.Integration.StreetNameLatestItem", b =>
@@ -133,14 +133,15 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("StreetNameLatestItems", "integration");
+                    b.ToTable("streetname_latest_items", "integration_streetname");
                 });
 
             modelBuilder.Entity("StreetNameRegistry.Projections.Integration.StreetNameVersion", b =>
                 {
                     b.Property<long>("Position")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("position");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Position"));
 
@@ -159,10 +160,6 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
                     b.Property<string>("HomonymAdditionGerman")
                         .HasColumnType("text")
                         .HasColumnName("homonym_addition_german");
-
-                    b.Property<long>("IdempotenceKey")
-                        .HasColumnType("bigint")
-                        .HasColumnName("idempotence_key");
 
                     b.Property<bool>("IsRemoved")
                         .HasColumnType("boolean")
@@ -206,6 +203,10 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
                         .HasColumnType("text")
                         .HasColumnName("status");
 
+                    b.Property<Guid>("StreetNameId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("streetname_id");
+
                     b.Property<string>("VersionAsString")
                         .IsRequired()
                         .HasColumnType("text")
@@ -220,15 +221,13 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
 
                     b.HasIndex("IsRemoved");
 
-                    b.HasIndex("NameDutch");
-
                     b.HasIndex("PersistentLocalId");
-
-                    b.HasIndex("Position");
 
                     b.HasIndex("Status");
 
-                    b.ToTable("StreetNameVersions", "integration");
+                    b.HasIndex("StreetNameId");
+
+                    b.ToTable("streetname_versions", "integration_streetname");
                 });
 #pragma warning restore 612, 618
         }

@@ -14,6 +14,7 @@ namespace StreetNameRegistry.Projections.Integration
 
         public long Position { get; set; }
         public int PersistentLocalId { get; set; }
+        public Guid StreetNameId { get; set; }
         public string? Status { get; set; }
         public string? NisCode { get; set; }
 
@@ -44,23 +45,58 @@ namespace StreetNameRegistry.Projections.Integration
             }
         }
 
-        public long IdempotenceKey { get; set; }
-
         public StreetNameVersion()
         {  }
+
+        public StreetNameVersion CloneAndApplyEventInfo(
+            long newPosition,
+            Instant lastChangedOn,
+            Action<StreetNameVersion> editFunc)
+        {
+            var newItem = new StreetNameVersion
+            {
+                Position = newPosition,
+                NisCode = NisCode,
+                Status = Status,
+
+                NameDutch = NameDutch,
+                NameFrench = NameFrench,
+                NameGerman = NameGerman,
+                NameEnglish = NameEnglish,
+
+                HomonymAdditionDutch = HomonymAdditionDutch,
+                HomonymAdditionFrench = HomonymAdditionFrench,
+                HomonymAdditionGerman = HomonymAdditionGerman,
+                HomonymAdditionEnglish = HomonymAdditionEnglish,
+
+                IsRemoved = IsRemoved,
+
+                PuriId = PuriId,
+                Namespace = Namespace,
+                VersionTimestamp = lastChangedOn
+            };
+
+            editFunc(newItem);
+
+            return newItem;
+        }
     }
+
+
 
     public sealed class StreetNameVersionConfiguration : IEntityTypeConfiguration<StreetNameVersion>
     {
-        internal const string TableName = "StreetNameVersions";
+        internal const string TableName = "streetname_versions";
 
         public void Configure(EntityTypeBuilder<StreetNameVersion> builder)
         {
+            builder.Property(x => x.Position).HasColumnName("position");
             builder.ToTable(TableName, Schema.Integration)
                 .HasKey(x => x.Position)
                 .IsClustered();
-            builder.Property(x => x.PersistentLocalId).HasColumnName("position");
+
             builder.Property(x => x.PersistentLocalId).HasColumnName("persistent_local_id");
+            builder.Property(x => x.StreetNameId).HasColumnName("streetname_id");
             builder.Property(x => x.NisCode).HasColumnName("nis_code");
             builder.Property(x => x.Status).HasColumnName("status");
 
@@ -80,14 +116,12 @@ namespace StreetNameRegistry.Projections.Integration
             builder.Property(x => x.Namespace).HasColumnName("namespace");
             builder.Property(x => x.VersionAsString).HasColumnName("version_as_string");
             builder.Property(StreetNameVersion.VersionTimestampBackingPropertyName).HasColumnName("version_timestamp");
-            builder.Property(x => x.IdempotenceKey).HasColumnName("idempotence_key");
 
             builder.Ignore(x => x.VersionTimestamp);
 
-            builder.HasIndex(x => x.Position);
             builder.HasIndex(x => x.PersistentLocalId);
+            builder.HasIndex(x => x.StreetNameId);
             builder.HasIndex(x => x.Status);
-            builder.HasIndex(x => x.NameDutch);
             builder.HasIndex(x => x.IsRemoved);
         }
     }

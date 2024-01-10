@@ -7,7 +7,8 @@ namespace StreetNameRegistry.Projections.Integration
     public class IntegrationContextMigrationFactory : NpgsqlRunnerDbContextMigrationFactory<IntegrationContext>
     {
         public IntegrationContextMigrationFactory()
-            : base("IntegrationProjectionsAdmin", HistoryConfiguration) { }
+            : base("IntegrationProjectionsAdmin", HistoryConfiguration)
+        { }
 
         private static MigrationHistoryConfiguration HistoryConfiguration =>
             new MigrationHistoryConfiguration

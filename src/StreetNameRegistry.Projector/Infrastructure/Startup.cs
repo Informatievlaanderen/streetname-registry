@@ -26,6 +26,7 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using StreetNameRegistry.Projections.Wfs;
     using StreetNameRegistry.Projections.Wms;
     using Microsoft.OpenApi.Models;
+    using StreetNameRegistry.Projections.Integration.Infrastructure;
 
     /// <summary>Represents the startup process for the application.</summary>
     public class Startup
@@ -96,35 +97,42 @@ namespace StreetNameRegistry.Projector.Infrastructure
                                 .GetSection("ConnectionStrings")
                                 .GetChildren();
 
-                            foreach (var connectionString in connectionStrings)
+                            foreach (var connectionString in connectionStrings.Where(x => !x.Value.Contains("host", StringComparison.OrdinalIgnoreCase)))
                                 health.AddSqlServer(
                                     connectionString.Value,
                                     name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
                                     tags: new[] { DatabaseTag, "sql", "sqlserver" });
 
-                            health.AddDbContextCheck<ExtractContext>(
-                                $"dbcontext-{nameof(ExtractContext).ToLowerInvariant()}",
-                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                            foreach (var connectionString in connectionStrings.Where(x => x.Value.Contains("host", StringComparison.OrdinalIgnoreCase)))
+                                health.AddNpgSql(
+                                    connectionString.Value,
+                                    name: $"npgsql-{connectionString.Key.ToLowerInvariant()}",
+                                    tags: new[] {DatabaseTag, "sql", "npgsql"});
 
-                            health.AddDbContextCheck<LegacyContext>(
-                                $"dbcontext-{nameof(LegacyContext).ToLowerInvariant()}",
-                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
-
-                            health.AddDbContextCheck<LastChangedListContext>(
-                                $"dbcontext-{nameof(LastChangedListContext).ToLowerInvariant()}",
-                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
-
-                            health.AddDbContextCheck<WfsContext>(
-                                $"dbcontext-{nameof(WfsContext).ToLowerInvariant()}",
-                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
-
-                            health.AddDbContextCheck<WmsContext>(
-                                $"dbcontext-{nameof(WmsContext).ToLowerInvariant()}",
-                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                            // health.AddDbContextCheck<ExtractContext>(
+                            //     $"dbcontext-{nameof(ExtractContext).ToLowerInvariant()}",
+                            //     tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                            //
+                            // health.AddDbContextCheck<LegacyContext>(
+                            //     $"dbcontext-{nameof(LegacyContext).ToLowerInvariant()}",
+                            //     tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                            //
+                            // health.AddDbContextCheck<LastChangedListContext>(
+                            //     $"dbcontext-{nameof(LastChangedListContext).ToLowerInvariant()}",
+                            //     tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                            //
+                            // health.AddDbContextCheck<WfsContext>(
+                            //     $"dbcontext-{nameof(WfsContext).ToLowerInvariant()}",
+                            //     tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                            //
+                            // health.AddDbContextCheck<WmsContext>(
+                            //     $"dbcontext-{nameof(WmsContext).ToLowerInvariant()}",
+                            //     tags: new[] { DatabaseTag, "sql", "sqlserver" });
                         }
                     }
                 })
-                .Configure<ExtractConfig>(_configuration.GetSection("Extract"));
+                .Configure<ExtractConfig>(_configuration.GetSection("Extract"))
+                .Configure<IntegrationOptions>(_configuration.GetSection("Integration"));
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new LoggingModule(_configuration, services));

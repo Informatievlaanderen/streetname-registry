@@ -2,13 +2,11 @@ namespace StreetNameRegistry.Projections.Integration.Infrastructure
 {
     using System;
     using Autofac;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
-    using Npgsql;
 
     public class IntegrationModule : Module
     {
@@ -22,7 +20,7 @@ namespace StreetNameRegistry.Projections.Integration.Infrastructure
 
             var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
             if (hasConnectionString)
-                RunOnNpgSqlServer(configuration, services, loggerFactory, connectionString);
+                RunOnNpgSqlServer(services, connectionString);
             else
                 RunInMemoryDb(services, loggerFactory, logger);
 
@@ -36,23 +34,15 @@ namespace StreetNameRegistry.Projections.Integration.Infrastructure
         }
 
         private static void RunOnNpgSqlServer(
-            IConfiguration configuration,
             IServiceCollection services,
-            ILoggerFactory loggerFactory,
-            string backofficeProjectionsConnectionString)
+            string connectionString)
         {
             services
-                .AddNpgsql<IntegrationContext>(backofficeProjectionsConnectionString)
-                .AddScoped(_ => new TraceDbConnection<IntegrationContext>(
-                    new NpgsqlConnection(backofficeProjectionsConnectionString),
-                    configuration["DataDog:ServiceName"]))
-                .AddDbContext<IntegrationContext>((provider, options) => options
-                    .UseLoggerFactory(loggerFactory)
-                    .UseNpgsql(provider.GetRequiredService<TraceDbConnection<IntegrationContext>>(), sqlServerOptions =>
-                    {
-                        sqlServerOptions.EnableRetryOnFailure();
-                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.Integration, Schema.Integration);
-                    }));
+                .AddNpgsql<IntegrationContext>(connectionString, sqlServerOptions =>
+                {
+                    sqlServerOptions.EnableRetryOnFailure();
+                    sqlServerOptions.MigrationsHistoryTable(MigrationTables.Integration, Schema.Integration);
+                });
         }
 
         private static void RunInMemoryDb(
