@@ -380,7 +380,6 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 });
         }
 
-
         [Fact]
         public async Task WhenStreetNameNamesWereCorrected_ThenStreetNameNamesWereCorrected()
         {

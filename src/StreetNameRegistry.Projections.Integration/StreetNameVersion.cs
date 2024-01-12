@@ -14,7 +14,7 @@ namespace StreetNameRegistry.Projections.Integration
 
         public long Position { get; set; }
         public int PersistentLocalId { get; set; }
-        public Guid StreetNameId { get; set; }
+        public Guid? StreetNameId { get; set; }
         public string? Status { get; set; }
         public string? NisCode { get; set; }
 
@@ -81,8 +81,6 @@ namespace StreetNameRegistry.Projections.Integration
             return newItem;
         }
     }
-
-
 
     public sealed class StreetNameVersionConfiguration : IEntityTypeConfiguration<StreetNameVersion>
     {

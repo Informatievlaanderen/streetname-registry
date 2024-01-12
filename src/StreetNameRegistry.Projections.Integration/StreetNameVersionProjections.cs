@@ -25,28 +25,12 @@
     {
         public StreetNameVersionProjections(
             IOptions<IntegrationOptions> options,
-            string eventConnectionString)
+            ILegacyIdToPersistentLocalIdMapper legacyIdToPersistentLocalIdMapper)
         {
-            int LegacyIdToPersistentLocalId(Guid streetNameId)
-            {
-                using var connection = new SqlConnection(eventConnectionString);
-                connection.Open();
-                var result = connection.QueryFirstOrDefault(@$"
-                        SELECT Json_Value(JsonData, '$.persistentLocalId') AS ""PersistentLocalId""
-                        FROM [streetname-registry-events].[StreetNameRegistry].[Streams] as s
-                        INNER JOIN [streetname-registry-events].[StreetNameRegistry].[Messages] as m
-                        ON s.IdInternal = m.StreamIdInternal AND m.[Type] = 'StreetNamePersistentLocalIdentifierWasAssigned'
-                        where IdOriginal = '{streetNameId:D}'");
-
-                return result is not null
-                    ? int.Parse(result.PersistentLocalId)
-                    : throw new InvalidOperationException($"Could not find corresponding persistentLocalId for streetNameId '{streetNameId:D}'");
-            };
-
             #region Legacy
              When<Envelope<StreetNameWasRegistered>>(async (context, message, ct) =>
              {
-                 var persistentLocalId = LegacyIdToPersistentLocalId(message.Message.StreetNameId);
+                 var persistentLocalId = legacyIdToPersistentLocalIdMapper.Find(message.Message.StreetNameId);
 
                 await context
                     .StreetNameVersions
@@ -326,7 +310,9 @@
                     PersistentLocalId = message.Message.PersistentLocalId,
                     NisCode = message.Message.NisCode,
                     VersionTimestamp = message.Message.Provenance.Timestamp,
-                    IsRemoved = false
+                    IsRemoved = false,
+                    Namespace = options.Value.Namespace,
+                    PuriId =  $"{options.Value.Namespace}/{message.Message.PersistentLocalId}"
                 };
 
                 item.Position = message.Position;

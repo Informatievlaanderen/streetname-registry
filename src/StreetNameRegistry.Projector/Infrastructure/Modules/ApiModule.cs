@@ -103,7 +103,9 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                     context => new StreetNameLatestItemProjections(context.Resolve<IOptions<IntegrationOptions>>()),
                     ConnectedProjectionSettings.Default)
             .RegisterProjections<StreetNameVersionProjections, IntegrationContext>(
-                context => new StreetNameVersionProjections(context.Resolve<IOptions<IntegrationOptions>>(), _configuration.GetConnectionString("Events")),
+                context => new StreetNameVersionProjections(
+                    context.Resolve<IOptions<IntegrationOptions>>(),
+                    new LegacyIdToPersistentLocalIdMapper(_configuration.GetConnectionString("Events"))),
                 ConnectedProjectionSettings.Default);
         }
 
