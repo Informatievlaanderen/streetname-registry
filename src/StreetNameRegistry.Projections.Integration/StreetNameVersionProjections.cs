@@ -1,23 +1,16 @@
 ﻿namespace StreetNameRegistry.Projections.Integration
 {
     using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.EventHandling;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
+    using Converters;
     using Infrastructure;
-    using Microsoft.Data.SqlClient;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
-    using Municipality;
     using Municipality.Events;
-    using Dapper;
+    using Municipality;
     using StreetName.Events;
+    using System.Linq;
+    using Microsoft.EntityFrameworkCore;
 
     [ConnectedProjectionName("Integratie straatnaam versie")]
     [ConnectedProjectionDescription("Projectie die de laatste straatnaam data voor de integratie database bijhoudt.")]
@@ -25,25 +18,33 @@
     {
         public StreetNameVersionProjections(
             IOptions<IntegrationOptions> options,
-            ILegacyIdToPersistentLocalIdMapper legacyIdToPersistentLocalIdMapper)
+            IEventsRepository eventsRepository)
         {
             #region Legacy
-             When<Envelope<StreetNameWasRegistered>>(async (context, message, ct) =>
-             {
-                 var persistentLocalId = legacyIdToPersistentLocalIdMapper.Find(message.Message.StreetNameId);
+
+            When<Envelope<StreetNameWasRegistered>>(async (context, message, ct) =>
+            {
+                var persistentLocalId = await eventsRepository.GetPersistentLocalId(message.Message.StreetNameId);
+
+                if (!persistentLocalId.HasValue)
+                {
+                    throw new InvalidOperationException($"No persistent local id found for {message.Message.StreetNameId}");
+                }
 
                 await context
                     .StreetNameVersions
                     .AddAsync(
                         new StreetNameVersion
                         {
-                            PersistentLocalId = persistentLocalId,
+                            PersistentLocalId = persistentLocalId.Value,
                             StreetNameId = message.Message.StreetNameId,
+                            MunicipalityId = message.Message.MunicipalityId,
                             NisCode = message.Message.NisCode,
                             Position = message.Position,
                             VersionTimestamp = message.Message.Provenance.Timestamp,
+                            CreatedOnTimestamp = message.Message.Provenance.Timestamp,
                             Namespace = options.Value.Namespace,
-                            PuriId =  $"{options.Value.Namespace}/{persistentLocalId}"
+                            Puri = $"{options.Value.Namespace}/{persistentLocalId}"
                         }, ct);
             });
 
@@ -52,10 +53,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity =>
-                    {
-                        entity.UpdateNameByLanguage(message.Message.Language.ToString(), message.Message.Name);
-                    },
+                    entity => { entity.UpdateNameByLanguage(message.Message.Language, message.Message.Name); },
                     ct);
             });
 
@@ -64,10 +62,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity =>
-                    {
-                        entity.UpdateNameByLanguage(message.Message.Language.ToString(), message.Message.Name);
-                    },
+                    entity => { entity.UpdateNameByLanguage(message.Message.Language, message.Message.Name); },
                     ct);
             });
 
@@ -76,10 +71,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity =>
-                    {
-                        entity.UpdateNameByLanguage(message.Message.Language.ToString(), string.Empty);
-                    },
+                    entity => { entity.UpdateNameByLanguage(message.Message.Language, string.Empty); },
                     ct);
             });
 
@@ -88,10 +80,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity =>
-                    {
-                        entity.UpdateNameByLanguage(message.Message.Language.ToString(), string.Empty);
-                    },
+                    entity => { entity.UpdateNameByLanguage(message.Message.Language, string.Empty); },
                     ct);
             });
 
@@ -100,10 +89,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity =>
-                    {
-                        entity.UpdateHomonymAdditionByLanguage(message.Message.Language.ToString(), message.Message.HomonymAddition);
-                    },
+                    entity => { entity.UpdateHomonymAdditionByLanguage(message.Message.Language, message.Message.HomonymAddition); },
                     ct);
             });
 
@@ -112,10 +98,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity =>
-                    {
-                        entity.UpdateHomonymAdditionByLanguage(message.Message.Language.ToString(), message.Message.HomonymAddition);
-                    },
+                    entity => { entity.UpdateHomonymAdditionByLanguage(message.Message.Language, message.Message.HomonymAddition); },
                     ct);
             });
 
@@ -124,10 +107,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity =>
-                    {
-                        entity.UpdateHomonymAdditionByLanguage(message.Message.Language.ToString(), string.Empty);
-                    },
+                    entity => { entity.UpdateHomonymAdditionByLanguage(message.Message.Language, string.Empty); },
                     ct);
             });
 
@@ -136,10 +116,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity =>
-                    {
-                        entity.UpdateHomonymAdditionByLanguage(message.Message.Language.ToString(), string.Empty);
-                    },
+                    entity => { entity.UpdateHomonymAdditionByLanguage(message.Message.Language, string.Empty); },
                     ct);
             });
 
@@ -148,7 +125,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    _ => {},
+                    _ => { },
                     ct);
             });
 
@@ -157,7 +134,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    _ => {},
+                    _ => { },
                     ct);
             });
 
@@ -166,7 +143,10 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    _ => {},
+                    item =>
+                    {
+                        item.IsRemoved = true;
+                    },
                     ct);
             });
 
@@ -175,10 +155,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity =>
-                    {
-                        entity.PersistentLocalId = message.Message.PersistentLocalId;
-                    },
+                    entity => { entity.PersistentLocalId = message.Message.PersistentLocalId; },
                     ct);
             });
 
@@ -189,7 +166,8 @@
                     message,
                     entity =>
                     {
-                        entity.UpdateStatus(StreetName.StreetNameStatus.Current.ToString());
+                        entity.Status = StreetNameStatus.Current;
+                        entity.OsloStatus = StreetNameStatus.Current.Map();
                     },
                     ct);
             });
@@ -201,7 +179,8 @@
                     message,
                     entity =>
                     {
-                        entity.UpdateStatus(StreetName.StreetNameStatus.Proposed.ToString());
+                        entity.Status = StreetNameStatus.Proposed;
+                        entity.OsloStatus = StreetNameStatus.Proposed.Map();
                     },
                     ct);
             });
@@ -213,7 +192,8 @@
                     message,
                     entity =>
                     {
-                        entity.UpdateStatus(StreetName.StreetNameStatus.Retired.ToString());
+                        entity.Status = StreetNameStatus.Retired;
+                        entity.OsloStatus = StreetNameStatus.Retired.Map();
                     },
                     ct);
             });
@@ -225,7 +205,8 @@
                     message,
                     entity =>
                     {
-                        entity.UpdateStatus(StreetName.StreetNameStatus.Current.ToString());
+                        entity.Status = StreetNameStatus.Current;
+                        entity.OsloStatus = StreetNameStatus.Current.Map();
                     },
                     ct);
             });
@@ -237,7 +218,8 @@
                     message,
                     entity =>
                     {
-                        entity.UpdateStatus(StreetName.StreetNameStatus.Proposed.ToString());
+                        entity.Status = StreetNameStatus.Proposed;
+                        entity.OsloStatus = StreetNameStatus.Proposed.Map();
                     },
                     ct);
             });
@@ -249,7 +231,8 @@
                     message,
                     entity =>
                     {
-                        entity.UpdateStatus(StreetNameStatus.Retired.ToString());
+                        entity.Status = StreetNameStatus.Retired;
+                        entity.OsloStatus = StreetNameStatus.Retired.Map();
                     },
                     ct);
             });
@@ -262,6 +245,7 @@
                     entity =>
                     {
                         entity.Status = null;
+                        entity.OsloStatus = null;
                     },
                     ct);
             });
@@ -274,29 +258,51 @@
                     entity =>
                     {
                         entity.Status = null;
+                        entity.OsloStatus = null;
                     },
                     ct);
             });
 
             #endregion
 
+            When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
+            {
+                var streetNamePersistentLocalIds = await context.StreetNameVersions.Where(x => x.MunicipalityId == message.Message.MunicipalityId)
+                    .Select(x => x.PersistentLocalId)
+                    .ToListAsync(ct);
+
+                foreach (var persistentLocalId in streetNamePersistentLocalIds)
+                {
+                    await context.NewStreetNameVersion(persistentLocalId, message, item =>
+                    {
+                        item.NisCode = message.Message.NisCode;
+                        item.VersionTimestamp = message.Message.Provenance.Timestamp;
+                    }, ct);
+                }
+            });
+
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
             {
                 var item = new StreetNameVersion
                 {
+                    MunicipalityId = message.Message.MunicipalityId,
                     PersistentLocalId = message.Message.PersistentLocalId,
                     NisCode = message.Message.NisCode,
                     VersionTimestamp = message.Message.Provenance.Timestamp,
-                    IsRemoved = message.Message.IsRemoved
+                    IsRemoved = message.Message.IsRemoved,
+                    CreatedOnTimestamp = message.Message.Provenance.Timestamp,
+                    Namespace = options.Value.Namespace,
+                    Puri = $"{options.Value.Namespace}/{message.Message.PersistentLocalId}"
                 };
 
                 item.Position = message.Position;
-                item.UpdateStatus(message.Message.Status.ToString());
+                item.Status = message.Message.Status;
+                item.OsloStatus = message.Message.Status.Map();
 
-                foreach(var (language, value) in message.Message.Names)
-                    item.UpdateNameByLanguage(language.ToString(), value);
-                foreach(var (language, value) in message.Message.HomonymAdditions)
-                    item.UpdateHomonymAdditionByLanguage(language.ToString(), value);
+                foreach (var (language, value) in message.Message.Names)
+                    item.UpdateNameByLanguage(language, value);
+                foreach (var (language, value) in message.Message.HomonymAdditions)
+                    item.UpdateHomonymAdditionByLanguage(language, value);
 
                 await context
                     .StreetNameVersions
@@ -307,19 +313,22 @@
             {
                 var item = new StreetNameVersion
                 {
+                    MunicipalityId = message.Message.MunicipalityId,
                     PersistentLocalId = message.Message.PersistentLocalId,
                     NisCode = message.Message.NisCode,
                     VersionTimestamp = message.Message.Provenance.Timestamp,
                     IsRemoved = false,
+                    CreatedOnTimestamp = message.Message.Provenance.Timestamp,
                     Namespace = options.Value.Namespace,
-                    PuriId =  $"{options.Value.Namespace}/{message.Message.PersistentLocalId}"
+                    Puri = $"{options.Value.Namespace}/{message.Message.PersistentLocalId}"
                 };
 
                 item.Position = message.Position;
-                item.UpdateStatus(StreetNameStatus.Proposed.ToString());
+                item.Status = StreetNameStatus.Proposed;
+                item.OsloStatus = StreetNameStatus.Proposed.Map();
 
-                foreach(var (language, value) in message.Message.StreetNameNames)
-                    item.UpdateNameByLanguage(language.ToString(), value);
+                foreach (var (language, value) in message.Message.StreetNameNames)
+                    item.UpdateNameByLanguage(language, value);
 
                 await context
                     .StreetNameVersions
@@ -330,7 +339,8 @@
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
-                    item.UpdateStatus(StreetNameStatus.Current.ToString());
+                    item.Status = StreetNameStatus.Current;
+                    item.OsloStatus = StreetNameStatus.Current.Map();
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
@@ -339,7 +349,8 @@
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
-                    item.UpdateStatus(StreetNameStatus.Proposed.ToString());
+                    item.Status = StreetNameStatus.Proposed;
+                    item.OsloStatus = StreetNameStatus.Proposed.Map();
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
@@ -348,7 +359,8 @@
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
-                    item.UpdateStatus(StreetNameStatus.Rejected.ToString());
+                    item.Status = StreetNameStatus.Rejected;
+                    item.OsloStatus = StreetNameStatus.Rejected.Map();
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
@@ -357,7 +369,8 @@
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
-                    item.UpdateStatus(StreetNameStatus.Proposed.ToString());
+                    item.Status = StreetNameStatus.Proposed;
+                    item.OsloStatus = StreetNameStatus.Proposed.Map();
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
@@ -366,7 +379,8 @@
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
-                    item.UpdateStatus(StreetNameStatus.Retired.ToString());
+                    item.Status = StreetNameStatus.Retired;
+                    item.OsloStatus = StreetNameStatus.Retired.Map();
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
@@ -375,7 +389,8 @@
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
-                    item.UpdateStatus(StreetNameStatus.Retired.ToString());
+                    item.Status = StreetNameStatus.Retired;
+                    item.OsloStatus = StreetNameStatus.Retired.Map();
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
@@ -384,7 +399,8 @@
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
-                    item.UpdateStatus(StreetNameStatus.Current.ToString());
+                    item.Status = StreetNameStatus.Current;
+                    item.OsloStatus = StreetNameStatus.Current.Map();
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
@@ -393,8 +409,8 @@
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
-                    foreach(var (language, value) in message.Message.StreetNameNames)
-                        item.UpdateNameByLanguage(language.ToString(), value);
+                    foreach (var (language, value) in message.Message.StreetNameNames)
+                        item.UpdateNameByLanguage(language, value);
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
@@ -403,8 +419,8 @@
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
-                    foreach(var (language, value) in message.Message.StreetNameNames)
-                        item.UpdateNameByLanguage(language.ToString(), value);
+                    foreach (var (language, value) in message.Message.StreetNameNames)
+                        item.UpdateNameByLanguage(language, value);
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
@@ -413,8 +429,8 @@
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
-                    foreach(var (language, value) in message.Message.HomonymAdditions)
-                        item.UpdateHomonymAdditionByLanguage(language.ToString(), value);
+                    foreach (var (language, value) in message.Message.HomonymAdditions)
+                        item.UpdateHomonymAdditionByLanguage(language, value);
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
@@ -458,140 +474,5 @@
                 }, ct);
             });
         }
-    }
-
-    public static class StreetNameVersionExtensions
-    {
-        public static async Task NewStreetNameVersion<T>(
-            this IntegrationContext context,
-            Guid streetNameId,
-            Envelope<T> message,
-            Action<StreetNameVersion> applyEventInfoOn,
-            CancellationToken ct) where T : IHasProvenance, IMessage
-        {
-            var r = context.StreetNameVersions.Local.FirstOrDefault(x => x.StreetNameId == streetNameId)
-                ?? context.StreetNameVersions.FirstOrDefault(x => x.StreetNameId == streetNameId);
-
-            if (r is null)
-                throw DatabaseItemNotFound(streetNameId);
-
-            var item = await context.LatestPosition(r.PersistentLocalId, ct);
-
-            if (item == null)
-                throw DatabaseItemNotFound(r.PersistentLocalId);
-
-            var version = item.CloneAndApplyEventInfo(
-                message.Position,
-                message.Message.Provenance.Timestamp,
-                applyEventInfoOn);
-
-            await context
-                .StreetNameVersions
-                .AddAsync(version, ct);
-        }
-
-        public static async Task NewStreetNameVersion<T>(
-            this IntegrationContext context,
-            int persistentLocalId,
-            Envelope<T> message,
-            Action<StreetNameVersion> applyEventInfoOn,
-            CancellationToken ct) where T : IHasProvenance, IMessage
-        {
-            var item = await context.LatestPosition(persistentLocalId, ct);
-
-            if (item == null)
-                throw DatabaseItemNotFound(persistentLocalId);
-
-            var version = item.CloneAndApplyEventInfo(
-                message.Position,
-                message.Message.Provenance.Timestamp,
-                applyEventInfoOn);
-
-            await context
-                .StreetNameVersions
-                .AddAsync(version, ct);
-        }
-
-        private static async Task<StreetNameVersion> LatestPosition(
-            this IntegrationContext context,
-            int persistentLocalId,
-            CancellationToken ct)
-            => context
-                   .StreetNameVersions
-                   .Local
-                   .Where(x => x.PersistentLocalId == persistentLocalId)
-                   .OrderByDescending(x => x.Position)
-                   .FirstOrDefault()
-               ?? await context
-                   .StreetNameVersions
-                   .Where(x => x.PersistentLocalId == persistentLocalId)
-                   .OrderByDescending(x => x.Position)
-                   .FirstOrDefaultAsync(ct);
-
-
-        public static void UpdateStatus(this StreetNameVersion item, string status)
-        {
-            string? destinationStatus = null;
-
-            switch (status)
-            {
-                case "Current": item.Status = "ingebruik";
-                    break;
-                case "Proposed": item.Status = "voorgesteld";
-                    break;
-                case "Rejected": item.Status = "afgekeurd";
-                    break;
-                case "Retired": item.Status = "gehistoreerd";
-                    break;
-                default:
-                    throw new InvalidOperationException($"StreetNameStatus {status} has no mapping.");
-            }
-        }
-
-        public static void UpdateNameByLanguage(this StreetNameVersion item, string language, string value)
-        {
-            switch (language)
-            {
-                case "Dutch":
-                    item.NameDutch = value;
-                    break;
-                case "French":
-                    item.NameFrench = value;
-                    break;
-                case "German":
-                    item.NameGerman = value;
-                    break;
-                case "English":
-                    item.NameEnglish = value;
-                    break;
-                default: throw new InvalidOperationException($"Name language '{language}' has no mapping.");
-            }
-        }
-
-        public static void UpdateHomonymAdditionByLanguage(this StreetNameVersion item, string language, string value)
-        {
-            switch (language)
-            {
-                case "Dutch":
-                    item.HomonymAdditionDutch = value;
-                    break;
-                case "French":
-                    item.HomonymAdditionFrench = value;
-                    break;
-                case "German":
-                    item.HomonymAdditionGerman = value;
-                    break;
-                case "English":
-                    item.HomonymAdditionEnglish = value;
-                    break;
-                default: throw new InvalidOperationException($"HomonymAddition language '{language}' has no mapping.");
-            }
-        }
-
-        private static ProjectionItemNotFoundException<StreetNameVersionProjections> DatabaseItemNotFound(int persistentLocalId)
-            => new ProjectionItemNotFoundException<StreetNameVersionProjections>(persistentLocalId.ToString(CultureInfo.InvariantCulture));
-
-        private static ProjectionItemNotFoundException<StreetNameVersionProjections> DatabaseItemNotFound(Guid streetNameId)
-            => new ProjectionItemNotFoundException<StreetNameVersionProjections>(streetNameId.ToString("D"));
     }
 }

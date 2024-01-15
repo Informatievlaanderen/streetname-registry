@@ -97,6 +97,11 @@ namespace StreetNameRegistry.Projector.Infrastructure
                                 .GetSection("ConnectionStrings")
                                 .GetChildren();
 
+                            if (!_configuration.GetSection("Integration").GetValue("Enabled", false))
+                                connectionStrings = connectionStrings
+                                    .Where(x => !x.Key.StartsWith("Integration", StringComparison.OrdinalIgnoreCase))
+                                    .ToList();
+
                             foreach (var connectionString in connectionStrings.Where(x => !x.Value.Contains("host", StringComparison.OrdinalIgnoreCase)))
                                 health.AddSqlServer(
                                     connectionString.Value,
@@ -109,25 +114,25 @@ namespace StreetNameRegistry.Projector.Infrastructure
                                     name: $"npgsql-{connectionString.Key.ToLowerInvariant()}",
                                     tags: new[] {DatabaseTag, "sql", "npgsql"});
 
-                            // health.AddDbContextCheck<ExtractContext>(
-                            //     $"dbcontext-{nameof(ExtractContext).ToLowerInvariant()}",
-                            //     tags: new[] { DatabaseTag, "sql", "sqlserver" });
-                            //
-                            // health.AddDbContextCheck<LegacyContext>(
-                            //     $"dbcontext-{nameof(LegacyContext).ToLowerInvariant()}",
-                            //     tags: new[] { DatabaseTag, "sql", "sqlserver" });
-                            //
-                            // health.AddDbContextCheck<LastChangedListContext>(
-                            //     $"dbcontext-{nameof(LastChangedListContext).ToLowerInvariant()}",
-                            //     tags: new[] { DatabaseTag, "sql", "sqlserver" });
-                            //
-                            // health.AddDbContextCheck<WfsContext>(
-                            //     $"dbcontext-{nameof(WfsContext).ToLowerInvariant()}",
-                            //     tags: new[] { DatabaseTag, "sql", "sqlserver" });
-                            //
-                            // health.AddDbContextCheck<WmsContext>(
-                            //     $"dbcontext-{nameof(WmsContext).ToLowerInvariant()}",
-                            //     tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                            health.AddDbContextCheck<ExtractContext>(
+                                $"dbcontext-{nameof(ExtractContext).ToLowerInvariant()}",
+                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+
+                            health.AddDbContextCheck<LegacyContext>(
+                                $"dbcontext-{nameof(LegacyContext).ToLowerInvariant()}",
+                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+
+                            health.AddDbContextCheck<LastChangedListContext>(
+                                $"dbcontext-{nameof(LastChangedListContext).ToLowerInvariant()}",
+                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+
+                            health.AddDbContextCheck<WfsContext>(
+                                $"dbcontext-{nameof(WfsContext).ToLowerInvariant()}",
+                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+
+                            health.AddDbContextCheck<WmsContext>(
+                                $"dbcontext-{nameof(WmsContext).ToLowerInvariant()}",
+                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
                         }
                     }
                 })

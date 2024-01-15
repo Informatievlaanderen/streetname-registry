@@ -77,14 +77,14 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             builder.RegisterEventstreamModule(_configuration);
             builder.RegisterModule(new ProjectorModule(_configuration));
 
-            // RegisterLastChangedProjections(builder);
-            //
-            // RegisterExtractProjectionsV2(builder);
-            // RegisterLegacyProjectionsV2(builder);
-            // RegisterWfsProjectionsV2(builder);
-            // RegisterWmsProjectionsV2(builder);
+            RegisterLastChangedProjections(builder);
 
-            RegisterIntegrationProjections(builder);
+            RegisterExtractProjectionsV2(builder);
+            RegisterLegacyProjectionsV2(builder);
+            RegisterWfsProjectionsV2(builder);
+            RegisterWmsProjectionsV2(builder);
+            if(_configuration.GetSection("Integration").GetValue("Enabled", false))
+                RegisterIntegrationProjections(builder);
         }
 
         private void RegisterIntegrationProjections(ContainerBuilder builder)
@@ -105,7 +105,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             .RegisterProjections<StreetNameVersionProjections, IntegrationContext>(
                 context => new StreetNameVersionProjections(
                     context.Resolve<IOptions<IntegrationOptions>>(),
-                    new LegacyIdToPersistentLocalIdMapper(_configuration.GetConnectionString("Events"))),
+                    context.Resolve<IEventsRepository>()),
                 ConnectedProjectionSettings.Default);
         }
 

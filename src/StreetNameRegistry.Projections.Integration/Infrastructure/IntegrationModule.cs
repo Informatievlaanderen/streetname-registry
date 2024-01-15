@@ -17,6 +17,7 @@ namespace StreetNameRegistry.Projections.Integration.Infrastructure
         {
             var logger = loggerFactory.CreateLogger<IntegrationModule>();
             var connectionString = configuration.GetConnectionString("IntegrationProjections");
+            services.AddScoped<IEventsRepository>(_ => new EventsRepository(configuration.GetConnectionString("events")));
 
             var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
             if (hasConnectionString)

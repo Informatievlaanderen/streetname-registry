@@ -12,8 +12,8 @@ using StreetNameRegistry.Projections.Integration;
 namespace StreetNameRegistry.Projections.Integration.Migrations
 {
     [DbContext(typeof(IntegrationContext))]
-    [Migration("20240110120619_initial")]
-    partial class initial
+    [Migration("20240116145354_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,13 +71,13 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
                         .HasColumnType("text")
                         .HasColumnName("homonym_addition_german");
 
-                    b.Property<long>("IdempotenceKey")
-                        .HasColumnType("bigint")
-                        .HasColumnName("idempotence_key");
-
                     b.Property<bool>("IsRemoved")
                         .HasColumnType("boolean")
                         .HasColumnName("is_removed");
+
+                    b.Property<Guid>("MunicipalityId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("municipality_id");
 
                     b.Property<string>("NameDutch")
                         .HasColumnType("text")
@@ -104,13 +104,18 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
                         .HasColumnType("text")
                         .HasColumnName("nis_code");
 
-                    b.Property<string>("PuriId")
+                    b.Property<string>("OsloStatus")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("puri_id");
+                        .HasColumnName("oslo_status");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("Puri")
+                        .IsRequired()
                         .HasColumnType("text")
+                        .HasColumnName("puri");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
                         .HasColumnName("status");
 
                     b.Property<string>("VersionAsString")
@@ -127,7 +132,19 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
 
                     b.HasIndex("IsRemoved");
 
+                    b.HasIndex("MunicipalityId");
+
                     b.HasIndex("NameDutch");
+
+                    b.HasIndex("NameEnglish");
+
+                    b.HasIndex("NameFrench");
+
+                    b.HasIndex("NameGerman");
+
+                    b.HasIndex("NisCode");
+
+                    b.HasIndex("OsloStatus");
 
                     b.HasIndex("PersistentLocalId");
 
@@ -139,11 +156,20 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
             modelBuilder.Entity("StreetNameRegistry.Projections.Integration.StreetNameVersion", b =>
                 {
                     b.Property<long>("Position")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasColumnName("position");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Position"));
+                    b.Property<int>("PersistentLocalId")
+                        .HasColumnType("integer")
+                        .HasColumnName("persistent_local_id");
+
+                    b.Property<string>("CreatedOnAsString")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedOnTimestampAsDateTimeOffset")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on_timestamp");
 
                     b.Property<string>("HomonymAdditionDutch")
                         .HasColumnType("text")
@@ -165,6 +191,10 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_removed");
 
+                    b.Property<Guid>("MunicipalityId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("municipality_id");
+
                     b.Property<string>("NameDutch")
                         .HasColumnType("text")
                         .HasColumnName("name_dutch");
@@ -190,20 +220,20 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
                         .HasColumnType("text")
                         .HasColumnName("nis_code");
 
-                    b.Property<int>("PersistentLocalId")
-                        .HasColumnType("integer")
-                        .HasColumnName("persistent_local_id");
+                    b.Property<string>("OsloStatus")
+                        .HasColumnType("text")
+                        .HasColumnName("oslo_status");
 
-                    b.Property<string>("PuriId")
+                    b.Property<string>("Puri")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("puri_id");
+                        .HasColumnName("puri");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("text")
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer")
                         .HasColumnName("status");
 
-                    b.Property<Guid>("StreetNameId")
+                    b.Property<Guid?>("StreetNameId")
                         .HasColumnType("uuid")
                         .HasColumnName("streetname_id");
 
@@ -216,16 +246,23 @@ namespace StreetNameRegistry.Projections.Integration.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("version_timestamp");
 
-                    b.HasKey("Position")
-                        .HasAnnotation("SqlServer:Clustered", true);
+                    b.HasKey("Position", "PersistentLocalId");
 
                     b.HasIndex("IsRemoved");
+
+                    b.HasIndex("MunicipalityId");
+
+                    b.HasIndex("NisCode");
+
+                    b.HasIndex("OsloStatus");
 
                     b.HasIndex("PersistentLocalId");
 
                     b.HasIndex("Status");
 
                     b.HasIndex("StreetNameId");
+
+                    b.HasIndex("VersionTimestampAsDateTimeOffset");
 
                     b.ToTable("streetname_versions", "integration_streetname");
                 });
