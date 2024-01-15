@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Municipality.Events
         [EventPropertyDescription("Objectidentificator van de straatnaam.")]
         public int PersistentLocalId { get; }
 
-        [EventPropertyDescription("Objectidentificator van de straatnaam.")]
+        [EventPropertyDescription("Objectidentificator van de doelStraatnaam.")]
         public int DestinationPersistentLocalId { get; }
 
         [EventPropertyDescription("Metadata bij het event.")]
