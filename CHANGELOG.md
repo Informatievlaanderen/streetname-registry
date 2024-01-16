@@ -1,3 +1,10 @@
+# [3.38.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.37.0...v3.38.0) (2024-01-16)
+
+
+### Features
+
+* add integration projections GAWR-4534 ([0fcfc06](https://github.com/informatievlaanderen/streetname-registry/commit/0fcfc06f6e52a7e0ff9a8d44531feb9e7faad8e6))
+
 # [3.37.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.36.1...v3.37.0) (2024-01-16)
 
 
