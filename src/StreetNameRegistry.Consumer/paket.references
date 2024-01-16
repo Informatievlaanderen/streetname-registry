@@ -8,7 +8,7 @@ Be.Vlaanderen.Basisregisters.EventHandling.Autofac
 Be.Vlaanderen.Basisregisters.GrAr.Contracts
 Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple
 Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector
-Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.Microsoft
+Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer
 Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac
 Be.Vlaanderen.Basisregisters.Projector
 

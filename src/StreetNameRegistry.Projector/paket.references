@@ -1,9 +1,17 @@
 
+Be.Vlaanderen.Basisregisters.AggregateSource
 Be.Vlaanderen.Basisregisters.Api
 Be.Vlaanderen.Basisregisters.EventHandling.Autofac
 Be.Vlaanderen.Basisregisters.Projector
 
+NodaTime
+
+Npgsql
+Npgsql.EntityFrameworkCore.PostgreSQL
+
 AspNetCore.HealthChecks.SqlServer
+AspNetCore.HealthChecks.NpgSql
+
 Dapper
 
 SourceLink.Embed.AllSourceFiles

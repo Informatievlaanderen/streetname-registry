@@ -219,7 +219,7 @@ namespace StreetNameRegistry.Tests.Generate
             return new Generator<string>(r =>
                 StreetNameString.Select(s => s + "_" + homonymAddition).Generate(r));
         }
-        
+
         public static Generator<T> This<T>(T t) => new Generator<T>(r => t);
 
         public static class EventsFor
@@ -310,6 +310,24 @@ namespace StreetNameRegistry.Tests.Generate
             return newEvent;
         }
 
+        public static StreetNameNameWasCorrected WithName(this StreetNameNameWasCorrected e, string name)
+        {
+            return new StreetNameNameWasCorrected(new StreetNameId(e.StreetNameId), new StreetNameName(name, e.Language));
+        }
+
+        public static StreetNameNameWasCorrected WithLanguage(this StreetNameNameWasCorrected e, Language? language)
+        {
+            return new StreetNameNameWasCorrected(new StreetNameId(e.StreetNameId), new StreetNameName(e.Name, language));
+        }
+
+        public static StreetNameNameWasCorrected WithProvenance(this StreetNameNameWasCorrected e, Provenance provenance)
+        {
+            var newEvent = new StreetNameNameWasCorrected(new StreetNameId(e.StreetNameId), new StreetNameName(e.Name, e.Language));
+            ((ISetProvenance)newEvent).SetProvenance(provenance);
+
+            return newEvent;
+        }
+
         public static StreetNameNameWasCleared WithId(this StreetNameNameWasCleared e, Guid id)
         {
             return new StreetNameNameWasCleared(new StreetNameId(id), e.Language);
@@ -325,6 +343,51 @@ namespace StreetNameRegistry.Tests.Generate
             var newEvent = new StreetNameNameWasCleared(new StreetNameId(e.StreetNameId), e.Language);
             ((ISetProvenance)newEvent).SetProvenance(provenance);
 
+            return newEvent;
+        }
+public static StreetNameNameWasCorrectedToCleared WithId(this StreetNameNameWasCorrectedToCleared e, Guid id)
+        {
+            return new StreetNameNameWasCorrectedToCleared(new StreetNameId(id), e.Language);
+        }
+
+        public static StreetNameNameWasCorrectedToCleared WithLanguage(this StreetNameNameWasCorrectedToCleared e, Language? language)
+        {
+            return new StreetNameNameWasCorrectedToCleared(new StreetNameId(e.StreetNameId), language);
+        }
+
+        public static StreetNameNameWasCorrectedToCleared WithProvenance(this StreetNameNameWasCorrectedToCleared e, Provenance provenance)
+        {
+            var newEvent = new StreetNameNameWasCorrectedToCleared(new StreetNameId(e.StreetNameId), e.Language);
+            ((ISetProvenance)newEvent).SetProvenance(provenance);
+
+            return newEvent;
+        }
+
+        public static StreetNameHomonymAdditionWasDefined WithHomonymAddition(this StreetNameHomonymAdditionWasDefined e, StreetNameHomonymAddition homonymAddition, Provenance provenance)
+        {
+            var newEvent =  new StreetNameHomonymAdditionWasDefined(new StreetNameId(e.StreetNameId), homonymAddition);
+            ((ISetProvenance)newEvent).SetProvenance(provenance);
+            return newEvent;
+        }
+
+        public static StreetNameHomonymAdditionWasCleared WithLanguage(this StreetNameHomonymAdditionWasCleared e, Language language, Provenance provenance)
+        {
+            var newEvent =  new StreetNameHomonymAdditionWasCleared(new StreetNameId(e.StreetNameId), language);
+            ((ISetProvenance)newEvent).SetProvenance(provenance);
+            return newEvent;
+        }
+
+        public static StreetNameHomonymAdditionWasCorrectedToCleared WithLanguage(this StreetNameHomonymAdditionWasCorrectedToCleared e, Language language, Provenance provenance)
+        {
+            var newEvent =  new StreetNameHomonymAdditionWasCorrectedToCleared(new StreetNameId(e.StreetNameId), language);
+            ((ISetProvenance)newEvent).SetProvenance(provenance);
+            return newEvent;
+        }
+
+        public static StreetNameHomonymAdditionWasCorrected WithHomonymAddition(this StreetNameHomonymAdditionWasCorrected e, StreetNameHomonymAddition homonymAddition, Provenance provenance)
+        {
+            var newEvent =  new StreetNameHomonymAdditionWasCorrected(new StreetNameId(e.StreetNameId), homonymAddition);
+            ((ISetProvenance)newEvent).SetProvenance(provenance);
             return newEvent;
         }
 

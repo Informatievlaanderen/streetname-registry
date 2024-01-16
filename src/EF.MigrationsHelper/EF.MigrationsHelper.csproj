@@ -37,6 +37,7 @@
     <ProjectReference Include="..\StreetNameRegistry.Consumer.Read.Postal\StreetNameRegistry.Consumer.Read.Postal.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.BackOffice\StreetNameRegistry.Projections.BackOffice.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Integration\StreetNameRegistry.Projections.Integration.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\.paket\Paket.Restore.targets" />

@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice\StreetNameRegistry.Api.BackOffice.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.BackOffice\StreetNameRegistry.Projections.BackOffice.csproj" />
+    <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Integration\StreetNameRegistry.Projections.Integration.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry\StreetNameRegistry.csproj" />
