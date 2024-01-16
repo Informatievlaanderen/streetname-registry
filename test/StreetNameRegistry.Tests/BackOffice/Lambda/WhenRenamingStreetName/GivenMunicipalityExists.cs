@@ -166,7 +166,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRenamingStreetName
                     It.IsAny<Guid>(),
                     new TicketError(
                         "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'.",
-                        "StraatnaamAfgekeurdOfGehistoreerd"),
+                        "StraatnaamGehistoreerdOfAfgekeurd"),
                     CancellationToken.None));
         }
 

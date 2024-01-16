@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Validation
 
             public static class DestinationStreetNameHasInvalidStatus
             {
-                public const string Code = "StraatnaamAfgekeurdOfGehistoreerd";
+                public const string Code = "StraatnaamGehistoreerdOfAfgekeurd";
                 public const string Message = "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'.";
 
                 public static TicketError ToTicketError() => new TicketError(Message, Code);
