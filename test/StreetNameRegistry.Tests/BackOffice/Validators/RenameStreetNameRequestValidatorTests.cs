@@ -21,16 +21,25 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         [Fact]
         public void GivenValidRequest_NoErrorsAreReturned()
         {
+            var municipalityId = Guid.NewGuid();
             var persistentLocalId = 10000;
             _backOfficeContext.MunicipalityIdByPersistentLocalId.Add(new MunicipalityIdByPersistentLocalId(
                 persistentLocalId,
-                Guid.NewGuid(),
+                municipalityId,
+                "NISCODE"));
+            _backOfficeContext.SaveChanges();
+
+            var persistentLocalId2 = 10001;
+            _backOfficeContext.MunicipalityIdByPersistentLocalId.Add(new MunicipalityIdByPersistentLocalId(
+                persistentLocalId2,
+                municipalityId,
                 "NISCODE"));
             _backOfficeContext.SaveChanges();
 
             var result = _validator.TestValidate(new RenameStreetNameRequest
             {
-                DoelStraatnaamId = $"https://data.vlaanderen.be/id/straatnaam/{persistentLocalId}"
+                DoelStraatnaamId = $"https://data.vlaanderen.be/id/straatnaam/{persistentLocalId}",
+                StreetNamePersistentLocalId = persistentLocalId2
             });
 
             result.ShouldNotHaveAnyValidationErrors();
@@ -52,7 +61,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         }
 
         [Fact]
-        public void WithUnknownStreetName_ReturnsExpectedError()
+        public void GivenUnknownStreetName_ReturnsExpectedError()
         {
             var puri = "https://data.vlaanderen.be/id/straatnaam/123";
             var result = _validator.TestValidate(new RenameStreetNameRequest
@@ -65,5 +74,31 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 .WithErrorCode("StraatnaamNietGekendValidatie");
         }
 
+        [Fact]
+        public void GivenStreetNamesInDifferentMunicipalities_ReturnsExpectedError()
+        {
+            var persistentLocalId = 10000;
+            var persistentLocalId2 = 10001;
+            _backOfficeContext.MunicipalityIdByPersistentLocalId.Add(new MunicipalityIdByPersistentLocalId(
+                persistentLocalId,
+                Guid.NewGuid(),
+                "NISCODE"));
+
+            _backOfficeContext.MunicipalityIdByPersistentLocalId.Add(new MunicipalityIdByPersistentLocalId(
+                persistentLocalId2,
+                Guid.NewGuid(),
+                "NISCODE2"));
+            _backOfficeContext.SaveChanges();
+
+            var result = _validator.TestValidate(new RenameStreetNameRequest
+            {
+                DoelStraatnaamId = $"https://data.vlaanderen.be/id/straatnaam/{persistentLocalId}",
+                StreetNamePersistentLocalId = persistentLocalId2
+            });
+
+            result.ShouldHaveValidationErrorFor(nameof(RenameStreetNameRequest.DoelStraatnaamId))
+                .WithErrorMessage("De meegegeven straatnamen liggen in verschillende gemeenten.")
+                .WithErrorCode("StraatnamenAndereGemeenten");
+        }
     }
 }

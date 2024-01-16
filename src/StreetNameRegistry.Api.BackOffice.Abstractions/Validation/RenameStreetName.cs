@@ -21,6 +21,14 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Validation
 
                 public static TicketError ToTicketError() => new TicketError(Message, Code);
             }
+
+            public static class SourceAndDestinationStreetNameAreNotInSameMunicipality
+            {
+                public const string Code = "StraatnamenAndereGemeenten";
+                public const string Message = "De meegegeven straatnamen liggen in verschillende gemeenten.";
+
+                public static TicketError ToTicketError() => new TicketError(Message, Code);
+            }
         }
     }
 }

@@ -50,6 +50,7 @@ namespace StreetNameRegistry.Api.BackOffice
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
             CancellationToken cancellationToken = default)
         {
+            request.StreetNamePersistentLocalId = persistentLocalId;
             await validator.ValidateAndThrowAsync(request, cancellationToken);
 
             try
