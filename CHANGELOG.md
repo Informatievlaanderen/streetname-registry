@@ -1,3 +1,16 @@
+# [3.37.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.36.1...v3.37.0) (2024-01-16)
+
+
+### Bug Fixes
+
+* correct errorcode renamestreename GAWR-5382 ([5adad7c](https://github.com/informatievlaanderen/streetname-registry/commit/5adad7c9c567a279bc30f474802399c31be8e2e6))
+* StreetNameWasRenamed docs ([2c9b5da](https://github.com/informatievlaanderen/streetname-registry/commit/2c9b5da42039fdc33c527ab9a7bc2640c22e19b0))
+
+
+### Features
+
+* add rename validation different municipalities GAWR-5383 ([4cac530](https://github.com/informatievlaanderen/streetname-registry/commit/4cac5300baf9e469c929d3eedfac2b1e74c82310))
+
 ## [3.36.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.36.0...v3.36.1) (2024-01-09)
 
 
