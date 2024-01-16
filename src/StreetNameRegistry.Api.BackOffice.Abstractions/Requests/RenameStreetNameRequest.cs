@@ -12,5 +12,9 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
         [DataMember(Name = "DoelStraatnaamId", Order = 0)]
         [JsonProperty(Required = Required.Always)]
         public string DoelStraatnaamId { get; set; }
+
+        [IgnoreDataMember]
+        [JsonIgnore]
+        public int StreetNamePersistentLocalId { get; set; }
     }
 }
