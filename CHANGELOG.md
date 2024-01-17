@@ -1,3 +1,11 @@
+## [3.38.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.38.0...v3.38.1) (2024-01-17)
+
+
+### Bug Fixes
+
+* dont do rename municipality check on nulls ([77711a1](https://github.com/informatievlaanderen/streetname-registry/commit/77711a13578200cae119696c9811414cff7ed443))
+* mapping integration projections ([59aa7e3](https://github.com/informatievlaanderen/streetname-registry/commit/59aa7e328b11a28fa6cbbebfe95b9c924cbb8685))
+
 # [3.38.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.37.0...v3.38.0) (2024-01-16)
 
 
