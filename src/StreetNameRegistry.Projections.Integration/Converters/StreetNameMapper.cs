@@ -40,6 +40,8 @@
                 case Language.English:
                     item.NameEnglish = value;
                     break;
+                case null:
+                    break;
                 default: throw new InvalidOperationException($"Name language '{language}' has no mapping.");
             }
         }
@@ -59,6 +61,8 @@
                     break;
                 case Language.English:
                     item.HomonymAdditionEnglish = value;
+                    break;
+                case null:
                     break;
                 default: throw new InvalidOperationException($"HomonymAddition language '{language}' has no mapping.");
             }
