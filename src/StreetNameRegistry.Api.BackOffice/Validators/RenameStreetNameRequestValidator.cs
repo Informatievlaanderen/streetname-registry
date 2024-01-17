@@ -44,10 +44,12 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
                                         .MunicipalityIdByPersistentLocalId
                                         .FindAsync(new object?[] { request.StreetNamePersistentLocalId }, cancellationToken: ct);
 
+                                    // Allow nulls to go through, because otherwise the error message would be incorrect
+                                    // It will fail in the next rule / domain anyway
                                     return
-                                        municipalityIdBySourcePersistentLocalId != null
-                                        && municipalityIdByDestinationPersistentLocalId != null
-                                        && municipalityIdByDestinationPersistentLocalId.MunicipalityId == municipalityIdBySourcePersistentLocalId.MunicipalityId;
+                                        municipalityIdBySourcePersistentLocalId is null
+                                        || municipalityIdByDestinationPersistentLocalId is null
+                                        || municipalityIdByDestinationPersistentLocalId.MunicipalityId == municipalityIdBySourcePersistentLocalId.MunicipalityId;
                                 })
                                 .WithMessage(ValidationErrors.RenameStreetName.SourceAndDestinationStreetNameAreNotInSameMunicipality.Message)
                                 .WithErrorCode(ValidationErrors.RenameStreetName.SourceAndDestinationStreetNameAreNotInSameMunicipality.Code)
