@@ -206,7 +206,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
 
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameWasRemovedV2>>(async (_, message, ct) =>
             {
-                await Produce($"{osloNamespace}/{message.Message.PersistentLocalId}", "{}", message.Position, ct);
+                await Produce($"{osloNamespace}/{message.Message.PersistentLocalId}", message.Message.PersistentLocalId.ToString(),"{}", message.Position, ct);
             });
         }
 
@@ -219,25 +219,26 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
 
             if (result != null)
             {
-                await Produce(result.Identificator.Id, result.JsonContent, storePosition, ct);
+                await Produce(result.Identificator.Id, result.Identificator.ObjectId, result.JsonContent, storePosition, ct);
             }
         }
 
         private async Task Produce(
+            string puri,
             string objectId,
             string jsonContent,
             long storePosition,
             CancellationToken cancellationToken = default)
         {
             var result = await _producer.Produce(
-                new MessageKey(objectId),
+                new MessageKey(puri),
                 jsonContent,
-                new List<MessageHeader> { new MessageHeader(MessageHeader.IdempotenceKey, storePosition.ToString()) },
+                new List<MessageHeader> { new MessageHeader(MessageHeader.IdempotenceKey, $"{objectId}-{storePosition.ToString()}") },
                 cancellationToken);
 
             if (!result.IsSuccess)
             {
-                throw new InvalidOperationException(result.Error + Environment.NewLine + result.ErrorReason); //TODO: create custom exception
+                throw new InvalidOperationException(result.Error + Environment.NewLine + result.ErrorReason);
             }
         }
     }
