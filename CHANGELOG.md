@@ -1,3 +1,15 @@
+# [3.39.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.38.1...v3.39.0) (2024-01-29)
+
+
+### Bug Fixes
+
+* add objectid to idempotencekey snapshot oslo ([94e3109](https://github.com/informatievlaanderen/streetname-registry/commit/94e3109a1130b2dc820c6a3c9f1030a8a5e0eb57))
+
+
+### Features
+
+* add flemish region filter for list api GAWR-5205 ([8e6edb0](https://github.com/informatievlaanderen/streetname-registry/commit/8e6edb005f12b2cf3ce78dceeb80c184bb697260))
+
 ## [3.38.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.38.0...v3.38.1) (2024-01-17)
 
 
