@@ -61,6 +61,13 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterType<ProblemDetailsHelper>()
                 .AsSelf();
 
+            builder.Register(c =>
+                    new LastChangedListCacheValidator(
+                        c.Resolve<LegacyContext>(),
+                        typeof(StreetNameDetailProjectionsV2).FullName))
+                .AsSelf()
+                .AsImplementedInterfaces();
+
             builder.Populate(_services);
         }
 
@@ -146,7 +153,9 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjectionMigrator<DataMigrationContextMigrationFactory>(
                     _configuration,
                     _loggerFactory)
-                .RegisterProjections<LastChangedProjections, LastChangedListContext>(ConnectedProjectionSettings.Default);
+                .RegisterProjections<LastChangedProjections, LastChangedListContext>(
+                    context => new LastChangedProjections(context.Resolve<LastChangedListCacheValidator>()),
+                    ConnectedProjectionSettings.Default);
         }
 
         private void RegisterLegacyProjectionsV2(ContainerBuilder builder)
