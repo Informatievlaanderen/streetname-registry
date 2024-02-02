@@ -1,3 +1,10 @@
+# [3.40.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.39.0...v3.40.0) (2024-02-02)
+
+
+### Features
+
+* add cachevalidator lastchangedlist GAWR-5407 ([139ca2b](https://github.com/informatievlaanderen/streetname-registry/commit/139ca2b80b9f98b0c657c3ff4fb676cde935d069))
+
 # [3.39.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.38.1...v3.39.0) (2024-01-29)
 
 
