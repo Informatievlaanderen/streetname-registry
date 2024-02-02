@@ -17,8 +17,8 @@ namespace StreetNameRegistry.Projections.LastChangedList
     {
         private static readonly AcceptType[] SupportedAcceptTypes = { AcceptType.JsonLd };
 
-        public LastChangedProjections()
-            : base(SupportedAcceptTypes)
+        public LastChangedProjections(ICacheValidator cacheValidator)
+            : base(SupportedAcceptTypes, cacheValidator)
         {
             #region Legacy Events
             When<Envelope<StreetNamePersistentLocalIdWasAssigned>>(async (context, message, ct) =>
