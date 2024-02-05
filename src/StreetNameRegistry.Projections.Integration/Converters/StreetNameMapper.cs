@@ -24,7 +24,7 @@
             }
         }
 
-        public static void UpdateNameByLanguage(this StreetNameVersion item, Language? language, string value)
+        public static void UpdateNameByLanguage(this StreetNameVersion item, Language? language, string? value)
         {
             switch (language)
             {
@@ -46,7 +46,7 @@
             }
         }
 
-        public static void UpdateHomonymAdditionByLanguage(this StreetNameVersion item, Language? language, string value)
+        public static void UpdateHomonymAdditionByLanguage(this StreetNameVersion item, Language? language, string? value)
         {
             switch (language)
             {

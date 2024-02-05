@@ -882,7 +882,7 @@
                     expectedLatestItem.PersistentLocalId.Should().Be(persistentLocalId);
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
-                    expectedLatestItem.NameDutch.Should().BeEmpty();
+                    expectedLatestItem.NameDutch.Should().BeNull();
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -930,7 +930,7 @@
                     expectedLatestItem.PersistentLocalId.Should().Be(persistentLocalId);
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
-                    expectedLatestItem.NameDutch.Should().BeEmpty();
+                    expectedLatestItem.NameDutch.Should().BeNull();
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -1080,7 +1080,7 @@
                     expectedLatestItem.PersistentLocalId.Should().Be(persistentLocalId);
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
-                    expectedLatestItem.HomonymAdditionDutch.Should().BeEmpty();
+                    expectedLatestItem.HomonymAdditionDutch.Should().BeNull();
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -1137,7 +1137,7 @@
                     expectedLatestItem.PersistentLocalId.Should().Be(persistentLocalId);
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
-                    expectedLatestItem.HomonymAdditionDutch.Should().BeEmpty();
+                    expectedLatestItem.HomonymAdditionDutch.Should().BeNull();
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
