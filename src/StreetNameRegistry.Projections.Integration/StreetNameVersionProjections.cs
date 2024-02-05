@@ -71,7 +71,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity => { entity.UpdateNameByLanguage(message.Message.Language, string.Empty); },
+                    entity => { entity.UpdateNameByLanguage(message.Message.Language, null); },
                     ct);
             });
 
@@ -80,7 +80,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity => { entity.UpdateNameByLanguage(message.Message.Language, string.Empty); },
+                    entity => { entity.UpdateNameByLanguage(message.Message.Language, null); },
                     ct);
             });
 
@@ -107,7 +107,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity => { entity.UpdateHomonymAdditionByLanguage(message.Message.Language, string.Empty); },
+                    entity => { entity.UpdateHomonymAdditionByLanguage(message.Message.Language, null); },
                     ct);
             });
 
@@ -116,7 +116,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    entity => { entity.UpdateHomonymAdditionByLanguage(message.Message.Language, string.Empty); },
+                    entity => { entity.UpdateHomonymAdditionByLanguage(message.Message.Language, null); },
                     ct);
             });
 
@@ -143,10 +143,7 @@
                 await context.NewStreetNameVersion(
                     message.Message.StreetNameId,
                     message,
-                    item =>
-                    {
-                        item.IsRemoved = true;
-                    },
+                    item => { item.IsRemoved = true; },
                     ct);
             });
 
@@ -267,16 +264,20 @@
 
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {
-                var streetNamePersistentLocalIds = await context.StreetNameVersions.Where(x => x.MunicipalityId == message.Message.MunicipalityId)
-                    .Select(x => x.PersistentLocalId)
-                    .ToListAsync(ct);
+                var persistentLocalIds = context
+                    .StreetNameVersions
+                    .Local
+                    .Where(s =>
+                        s.MunicipalityId == message.Message.MunicipalityId)
+                    .Union(context.StreetNameVersions.Where(s =>
+                        s.MunicipalityId == message.Message.MunicipalityId))
+                    .Select(s => s.PersistentLocalId);
 
-                foreach (var persistentLocalId in streetNamePersistentLocalIds)
+                foreach (var persistentLocalId in persistentLocalIds)
                 {
                     await context.NewStreetNameVersion(persistentLocalId, message, item =>
                     {
                         item.NisCode = message.Message.NisCode;
-                        item.VersionTimestamp = message.Message.Provenance.Timestamp;
                     }, ct);
                 }
             });
@@ -341,7 +342,6 @@
                 {
                     item.Status = StreetNameStatus.Current;
                     item.OsloStatus = StreetNameStatus.Current.Map();
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -351,7 +351,6 @@
                 {
                     item.Status = StreetNameStatus.Proposed;
                     item.OsloStatus = StreetNameStatus.Proposed.Map();
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -361,7 +360,6 @@
                 {
                     item.Status = StreetNameStatus.Rejected;
                     item.OsloStatus = StreetNameStatus.Rejected.Map();
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -371,7 +369,6 @@
                 {
                     item.Status = StreetNameStatus.Proposed;
                     item.OsloStatus = StreetNameStatus.Proposed.Map();
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -381,7 +378,6 @@
                 {
                     item.Status = StreetNameStatus.Retired;
                     item.OsloStatus = StreetNameStatus.Retired.Map();
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -391,7 +387,6 @@
                 {
                     item.Status = StreetNameStatus.Retired;
                     item.OsloStatus = StreetNameStatus.Retired.Map();
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -401,7 +396,6 @@
                 {
                     item.Status = StreetNameStatus.Current;
                     item.OsloStatus = StreetNameStatus.Current.Map();
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -411,7 +405,6 @@
                 {
                     foreach (var (language, value) in message.Message.StreetNameNames)
                         item.UpdateNameByLanguage(language, value);
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -421,7 +414,6 @@
                 {
                     foreach (var (language, value) in message.Message.StreetNameNames)
                         item.UpdateNameByLanguage(language, value);
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -431,7 +423,6 @@
                 {
                     foreach (var (language, value) in message.Message.HomonymAdditions)
                         item.UpdateHomonymAdditionByLanguage(language, value);
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -460,8 +451,6 @@
                                 throw new ArgumentOutOfRangeException();
                         }
                     }
-
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
 
@@ -470,7 +459,6 @@
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
                 {
                     item.IsRemoved = true;
-                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
         }
