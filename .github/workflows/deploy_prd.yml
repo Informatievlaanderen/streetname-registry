@@ -39,13 +39,13 @@ jobs:
     strategy:
       matrix:
         services: [
-          'streetname-registry-api',
-          'streetname-registry-projections',
-          'streetname-registry-backoffice-api',
-          'streetname-registry-consumer',
-          'streetname-registry-producer',
-          'streetname-registry-producer-snapshot-oslo',
-          'streetname-registry-projections-backoffice'
+          'streetname-api',
+          'streetname-projections',
+          'streetname-backoffice-api',
+          'streetname-consumer',
+          'streetname-producer',
+          'streetname-producer-snapshot-oslo',
+          'streetname-projections-backoffice'
         ]
 
     steps:
@@ -81,8 +81,8 @@ jobs:
     strategy:
       matrix:
         services: [
-          #'streetname-registry-migrator-streetname',
-          'streetname-registry-snapshot-verifier'
+          #'streetname-migrator-streetname',
+          'streetname-snapshot-verifier'
         ]
 
     steps:
