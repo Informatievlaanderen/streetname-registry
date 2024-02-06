@@ -1,3 +1,12 @@
+## [3.40.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.40.0...v3.40.1) (2024-02-06)
+
+
+### Bug Fixes
+
+* bump projection handling ([f66a8d6](https://github.com/informatievlaanderen/streetname-registry/commit/f66a8d6f83b09e92ced3e94be760f15f6b268841))
+* correct streetnamenames capitalize ([24af8b2](https://github.com/informatievlaanderen/streetname-registry/commit/24af8b294b324c42db8de9ddfc8df925ebd6c34c))
+* integration projections ([f30afeb](https://github.com/informatievlaanderen/streetname-registry/commit/f30afeb71f34dae52cbec0153fc7e1e0ce3923a9))
+
 # [3.40.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.39.0...v3.40.0) (2024-02-02)
 
 
