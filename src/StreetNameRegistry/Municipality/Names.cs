@@ -25,6 +25,11 @@ namespace StreetNameRegistry.Municipality
             return this.Any(x => x == nameToMatch);
         }
 
+        public bool HasExactMatch(Language language, string name)
+        {
+            return this.Any(x => x.Name == name && x.Language == language);
+        }
+
         public bool HasLanguage(Language language)
             => this.Any(name => name.Language == language);
 
