@@ -76,6 +76,40 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
         }
 
         [Fact]
+        public void WithCapitalizationChange_ThenStreetNameNameWasCorrected()
+        {
+            var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAddedBuilder(Fixture)
+                .Build();
+
+            var streetNameName = "Kapelstraat";
+
+            var streetNameWasProposed = new StreetNameWasProposedV2(
+                _municipalityId,
+                new NisCode("1011"),
+                new Names(new List<StreetNameName>
+                {
+                    new(streetNameName.ToLower(), Language.Dutch),
+                }),
+                Fixture.Create<PersistentLocalId>());
+            streetNameWasProposed.SetProvenance(Fixture.Create<Provenance>());
+
+            var command = Fixture.Create<CorrectStreetNameNames>()
+                .WithStreetNameNames(new Names())
+                .WithStreetNameName(new StreetNameName(streetNameName, Language.Dutch));
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    dutchLanguageWasAdded,
+                    streetNameWasProposed)
+                .When(command)
+                .Then(new Fact(_streamId, new StreetNameNamesWereCorrected(_municipalityId,
+                    command.PersistentLocalId, command.StreetNameNames))
+                ));
+        }
+
+        [Fact]
         public void WithACorrectionThatExceedsLevenshteinThreshold_ThenThrowsStreetNameNameCorrectionExceededCharacterChangeLimitException()
         {
             var originalName = "0123546789";

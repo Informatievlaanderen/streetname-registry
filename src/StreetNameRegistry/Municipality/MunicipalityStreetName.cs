@@ -53,7 +53,7 @@ namespace StreetNameRegistry.Municipality
             GuardStreetNameStatus(StreetNameStatus.Proposed, StreetNameStatus.Current);
             guardStreetNameNames(namesToCorrect, HomonymAdditions, PersistentLocalId);
 
-            var correctedNames = new Names(namesToCorrect.Where(name => !Names.HasMatch(name.Language, name.Name)));
+            var correctedNames = new Names(namesToCorrect.Where(name => !Names.HasExactMatch(name.Language, name.Name)));
             if (!correctedNames.Any())
             {
                 return;
