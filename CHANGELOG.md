@@ -1,3 +1,15 @@
+# [3.41.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.40.1...v3.41.0) (2024-02-08)
+
+
+### Bug Fixes
+
+* push images to new ECR ([14fce7e](https://github.com/informatievlaanderen/streetname-registry/commit/14fce7e1269bfacea8b01414ae3e519d9e885cbe))
+
+
+### Features
+
+* add backoffice projections status ([4854a84](https://github.com/informatievlaanderen/streetname-registry/commit/4854a84db8d2f55171a35941bd1662823f4aec11))
+
 ## [3.40.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.40.0...v3.40.1) (2024-02-06)
 
 
