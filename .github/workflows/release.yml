@@ -711,7 +711,7 @@ jobs:
         shell: bash
         run: |
           echo mr-$IMAGE-image.tar
-          docker image load -i ~/mr-$IMAGE-image.tar
+          docker image load -i ~/sr-$IMAGE-image.tar
         env:
           IMAGE: ${{ matrix.image }}
 
