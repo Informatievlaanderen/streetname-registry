@@ -1,3 +1,10 @@
+## [3.41.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.41.1...v3.41.2) (2024-02-13)
+
+
+### Bug Fixes
+
+* **bump:** ci ([1941f38](https://github.com/informatievlaanderen/streetname-registry/commit/1941f38c2c874bd09aba0c246a6147f0dbf7baeb))
+
 ## [3.41.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.41.0...v3.41.1) (2024-02-13)
 
 
