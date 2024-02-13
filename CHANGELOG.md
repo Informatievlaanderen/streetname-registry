@@ -1,3 +1,10 @@
+## [3.41.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.41.0...v3.41.1) (2024-02-13)
+
+
+### Bug Fixes
+
+* **bump:** change cd test pipeline ([cc1f3f2](https://github.com/informatievlaanderen/streetname-registry/commit/cc1f3f229e29948bd45932c776f09cbb879c96f0))
+
 # [3.41.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.40.1...v3.41.0) (2024-02-08)
 
 
