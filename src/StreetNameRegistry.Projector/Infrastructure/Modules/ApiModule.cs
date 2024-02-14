@@ -7,7 +7,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Be.Vlaanderen.Basisregisters.Projector;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
@@ -33,7 +32,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using StreetNameRegistry.Projections.Wfs;
     using StreetNameRegistry.Projections.Wfs.StreetNameHelperV2;
     using StreetNameRegistry.Projections.Wms;
-    using LastChangedListContextMigrationFactory = StreetNameRegistry.Projections.LastChangedList.LastChangedListContextMigrationFactory;
 
     public sealed class ApiModule : Module
     {
@@ -145,17 +143,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                     _configuration["DataDog:ServiceName"],
                     _services,
                     _loggerFactory));
-
-            builder
-                .RegisterProjectionMigrator<LastChangedListContextMigrationFactory>(
-                    _configuration,
-                    _loggerFactory)
-                .RegisterProjectionMigrator<DataMigrationContextMigrationFactory>(
-                    _configuration,
-                    _loggerFactory)
-                .RegisterProjections<LastChangedProjections, LastChangedListContext>(
-                    context => new LastChangedProjections(context.Resolve<LastChangedListCacheValidator>()),
-                    ConnectedProjectionSettings.Default);
         }
 
         private void RegisterLegacyProjectionsV2(ContainerBuilder builder)

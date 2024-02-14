@@ -113,6 +113,7 @@ Target.create "Containerize_ProducerSnapshotOslo" (fun _ -> containerize "Street
 Target.create "Containerize_MigratorStreetName" (fun _ -> containerize "StreetNameRegistry.Migrator.StreetName" "migrator-streetname")
 Target.create "Containerize_ProjectionsSyndication" (fun _ -> containerize "StreetNameRegistry.Projections.Syndication" "projections-syndication")
 Target.create "Containerize_ProjectionsBackOffice" (fun _ -> containerize "StreetNameRegistry.Projections.BackOffice" "projections-backoffice")
+Target.create "Containerize_ProjectionsLastChangedList" (fun _ -> containerize "StreetNameRegistry.Projections.LastChangedList.Console" "projections-last-changed-list-console")
 Target.create "Containerize_SnapshotVerifier" (fun _ -> containerize "StreetNameRegistry.Snapshot.Verifier" "snapshot-verifier")
 Target.create "Containerize_ConsumerReadPostal" (fun _ -> containerize "StreetNameRegistry.Consumer.Read.Postal" "consumer-read-postal")
 // --------------------------------------------------------------------------------

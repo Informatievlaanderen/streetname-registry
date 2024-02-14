@@ -22,7 +22,6 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using System.Reflection;
     using System.Threading;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
-    using Microsoft.Extensions.Options;
     using StreetNameRegistry.Projections.Wfs;
     using StreetNameRegistry.Projections.Wms;
     using Microsoft.OpenApi.Models;
