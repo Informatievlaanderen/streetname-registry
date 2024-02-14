@@ -1,3 +1,10 @@
+# [3.42.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.41.2...v3.42.0) (2024-02-14)
+
+
+### Features
+
+* add lastchangedlist console ([c98b052](https://github.com/informatievlaanderen/streetname-registry/commit/c98b052b5a92c76a762fa64c1ad5ccf40ae61441))
+
 ## [3.41.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.41.1...v3.41.2) (2024-02-13)
 
 
