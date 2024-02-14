@@ -11,10 +11,11 @@ namespace StreetNameRegistry.Projections.LastChangedList
     using StreetName.Events;
     using StreetName.Events.Crab;
 
-    [ConnectedProjectionName("Cache markering straatnamen")]
+    [ConnectedProjectionName(ProjectionName)]
     [ConnectedProjectionDescription("Projectie die markeert voor hoeveel straatnamen de gecachte data nog geüpdated moeten worden.")]
     public sealed class LastChangedProjections : LastChangedListConnectedProjection
     {
+        public const string ProjectionName = "Cache markering straatnamen";
         private static readonly AcceptType[] SupportedAcceptTypes = { AcceptType.JsonLd };
 
         public LastChangedProjections(ICacheValidator cacheValidator)

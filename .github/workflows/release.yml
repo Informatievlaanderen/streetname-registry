@@ -128,6 +128,21 @@ jobs:
       semver: ${{ needs.set-release-version.outputs.version }}
     secrets: inherit
 
+  build-projections-last-changed-list:
+    name: Build projections last changed list
+    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
+    needs: [ set-release-version ]
+    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
+    with:
+      registry: streetname-registry
+      build-target: Containerize_ProjectionsLastChangedList
+      image-file: sr-projections-last-changed-list-console-image.tar
+      image-name: projections-last-changed-list-console
+      test-project: StreetNameRegistry.Tests
+      build-project: StreetNameRegistry.Projections.LastChangedList.Console
+      semver: ${{ needs.set-release-version.outputs.version }}
+    secrets: inherit
+
   build-projections-backoffice:
     name: Build Projections BackOffice
     uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image.yml@main
@@ -337,6 +352,7 @@ jobs:
       , build-projector
       , build-projections-backoffice
       , build-projections-syndication
+      , build-projections-last-changed-list
       , build-consumer
       , build-producer
       , build-producer-snapshot-oslo
@@ -681,6 +697,7 @@ jobs:
           , 'projector'
           , 'projections-syndication'
           , 'projections-backoffice'
+          ; 'projections-last-changed-list-console'
           , 'consumer'
           , 'producer'
           , 'producer-snapshot-oslo'
@@ -803,6 +820,7 @@ jobs:
           , 'projector'
           , 'projections-syndication'
           , 'projections-backoffice'
+          , 'projections-last-changed-list-console'
           , 'consumer'
           , 'producer'
           , 'producer-snapshot-oslo'
@@ -865,6 +883,7 @@ jobs:
           , 'projector'
           , 'projections-syndication'
           , 'projections-backoffice'
+          , 'projections-last-changed-list-console'
           , 'consumer'
           , 'producer'
           , 'producer-snapshot-oslo'
