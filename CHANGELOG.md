@@ -1,3 +1,10 @@
+## [3.42.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.42.0...v3.42.1) (2024-02-15)
+
+
+### Bug Fixes
+
+* **ci:** new lambda pipeline test ([09f7d6c](https://github.com/informatievlaanderen/streetname-registry/commit/09f7d6c20c611ff458290cdf8f6336fd76d0d984))
+
 # [3.42.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.41.2...v3.42.0) (2024-02-14)
 
 
