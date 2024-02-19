@@ -1,3 +1,10 @@
+## [3.42.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.42.1...v3.42.2) (2024-02-19)
+
+
+### Bug Fixes
+
+* add offset setting to consumer ([1f3c8a3](https://github.com/informatievlaanderen/streetname-registry/commit/1f3c8a33adaa5d79451098dbf61aab8fc863a1b2))
+
 ## [3.42.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.42.0...v3.42.1) (2024-02-15)
 
 
