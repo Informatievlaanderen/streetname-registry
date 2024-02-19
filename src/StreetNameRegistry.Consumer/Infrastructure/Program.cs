@@ -121,6 +121,11 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                             hostContext.Configuration["Kafka:SaslUserName"],
                             hostContext.Configuration["Kafka:SaslPassword"]));
 
+                        var offset = hostContext.Configuration["MunicipalityOffset"];
+
+                        if (!string.IsNullOrWhiteSpace(offset) && long.TryParse(offset, out var result))
+                            consumerOptions.ConfigureOffset(new Offset(result));
+
                         return consumerOptions;
                     });
 
