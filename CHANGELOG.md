@@ -1,3 +1,10 @@
+# [3.43.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.42.2...v3.43.0) (2024-02-20)
+
+
+### Features
+
+* shutdown backoffice projections service when projection is stopped ([715cc68](https://github.com/informatievlaanderen/streetname-registry/commit/715cc68ff2e8e624a6d23173e5ebb0d543f622cd))
+
 ## [3.42.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.42.1...v3.42.2) (2024-02-19)
 
 
