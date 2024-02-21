@@ -490,7 +490,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_DEVOPS }}
         aws-region: ${{ secrets.VBR_AWS_REGION_PRD }}
 
-    - name: Login to Amazon ECR (Test)
+    - name: Login to Amazon ECR (New Test)
       uses: aws-actions/amazon-ecr-login@v1.5.3
 
     - name: Push Lambda functions to S3 Test
@@ -499,25 +499,6 @@ jobs:
         echo Push Lambda functions to S3 Test
         echo aws s3 cp ~/lambda.zip s3://s3-vbr-tst-basisregisters-lam-sr-sqsbackofficefunction/$SEMVER/lambda.zip
         aws s3 cp ~/lambda.zip s3://s3-vbr-tst-basisregisters-lam-sr-sqsbackofficefunction/$SEMVER/lambda.zip
-      env:
-        SEMVER: ${{ needs.release.outputs.version }}
-
-    - name: Configure AWS credentials (Test)
-      uses: aws-actions/configure-aws-credentials@v1-node16
-      with:
-        aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
-        aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
-        aws-region: ${{ secrets.VBR_AWS_REGION_PRD }}
-
-    - name: Login to Amazon ECR (Test)
-      uses: aws-actions/amazon-ecr-login@v1.5.3
-
-    - name: Push Lambda functions to S3 Test
-      shell: bash
-      run: |
-        echo Push Lambda functions to S3 Test
-        echo aws s3 cp ~/lambda.zip s3://196194905350-vbr-test-lam-sr-sqsbackoffice/$SEMVER/lambda.zip
-        aws s3 cp ~/lambda.zip s3://196194905350-vbr-test-lam-sr-sqsbackoffice/$SEMVER/lambda.zip
       env:
         SEMVER: ${{ needs.release.outputs.version }}
 
@@ -556,25 +537,6 @@ jobs:
         echo Push Lambda functions to S3 New Production
         echo aws s3 cp ~/lambda.zip s3://077849980894-vbr-prd-lam-sr-sqsbackoffice/$SEMVER/lambda.zip
         aws s3 cp ~/lambda.zip s3://077849980894-vbr-prd-lam-sr-sqsbackoffice/$SEMVER/lambda.zip
-      env:
-       SEMVER: ${{ needs.release.outputs.version }}
-
-    - name: Configure AWS credentials (Production)
-      uses: aws-actions/configure-aws-credentials@v1-node16
-      with:
-        aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_PRD }}
-        aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_PRD }}
-        aws-region: ${{ secrets.VBR_AWS_REGION_PRD }}
-
-    - name: Login to Amazon ECR (Production)
-      uses: aws-actions/amazon-ecr-login@v1.5.3
-
-    - name: Push Lambda functions to S3 Production
-      shell: bash
-      run: |
-        echo Push Lambda functions to S3 Production
-        echo aws s3 cp ~/lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-        aws s3 cp ~/lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
       env:
        SEMVER: ${{ needs.release.outputs.version }}
 
