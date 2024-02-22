@@ -27,6 +27,7 @@
 
             var version = item.CloneAndApplyEventInfo(
                 message.Position,
+                message.EventName,
                 message.Message.Provenance.Timestamp,
                 applyEventInfoOn);
 
@@ -49,6 +50,7 @@
 
             var version = item.CloneAndApplyEventInfo(
                 message.Position,
+                message.EventName,
                 message.Message.Provenance.Timestamp,
                 applyEventInfoOn);
 
