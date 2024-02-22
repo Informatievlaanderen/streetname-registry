@@ -44,7 +44,8 @@
                             VersionTimestamp = message.Message.Provenance.Timestamp,
                             CreatedOnTimestamp = message.Message.Provenance.Timestamp,
                             Namespace = options.Value.Namespace,
-                            Puri = $"{options.Value.Namespace}/{persistentLocalId}"
+                            Puri = $"{options.Value.Namespace}/{persistentLocalId}",
+                            Type = message.EventName
                         }, ct);
             });
 
@@ -293,7 +294,8 @@
                     IsRemoved = message.Message.IsRemoved,
                     CreatedOnTimestamp = message.Message.Provenance.Timestamp,
                     Namespace = options.Value.Namespace,
-                    Puri = $"{options.Value.Namespace}/{message.Message.PersistentLocalId}"
+                    Puri = $"{options.Value.Namespace}/{message.Message.PersistentLocalId}",
+                    Type = message.EventName
                 };
 
                 item.Position = message.Position;
@@ -321,7 +323,8 @@
                     IsRemoved = false,
                     CreatedOnTimestamp = message.Message.Provenance.Timestamp,
                     Namespace = options.Value.Namespace,
-                    Puri = $"{options.Value.Namespace}/{message.Message.PersistentLocalId}"
+                    Puri = $"{options.Value.Namespace}/{message.Message.PersistentLocalId}",
+                    Type = message.EventName
                 };
 
                 item.Position = message.Position;

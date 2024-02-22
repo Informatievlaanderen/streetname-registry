@@ -1,6 +1,5 @@
 ﻿namespace StreetNameRegistry.Tests.Integration
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using AutoFixture;
@@ -53,12 +52,14 @@
             var metadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
             var secondMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1}
+                { Envelope.PositionMetadataKey, position + 1},
+                { Envelope.EventNameMetadataKey, nameof(municipalityNisCodeWasChanged)}
             };
 
             await Sut
@@ -73,6 +74,7 @@
                     streetNameVersion!.Status.Should().Be(streetNameWasMigratedToMunicipality.Status);
                     streetNameVersion.NisCode.Should().Be(municipalityNisCodeWasChanged.NisCode);
                     streetNameVersion.MunicipalityId.Should().Be(streetNameWasMigratedToMunicipality.MunicipalityId);
+                    streetNameVersion.Type.Should().Be(nameof(municipalityNisCodeWasChanged));
 
                     streetNameVersion.Namespace.Should().Be(Namespace);
                     streetNameVersion.Puri.Should().Be($"{Namespace}/{streetNameWasMigratedToMunicipality.PersistentLocalId}");
@@ -105,7 +107,8 @@
             var metadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasMigratedToMunicipality)}
             };
 
             await Sut
@@ -120,6 +123,7 @@
                     expectedLatestItem.NisCode.Should().Be(streetNameWasMigratedToMunicipality.NisCode);
                     expectedLatestItem.IsRemoved.Should().Be(streetNameWasMigratedToMunicipality.IsRemoved);
                     expectedLatestItem.MunicipalityId.Should().Be(streetNameWasMigratedToMunicipality.MunicipalityId);
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasMigratedToMunicipality));
 
                     expectedLatestItem.NameDutch.Should().Be("Bergstraat");
                     expectedLatestItem.NameFrench.Should().Be("Rue De Montaigne");
@@ -156,7 +160,8 @@
             var metadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasProposedV2)}
             };
 
             await Sut
@@ -170,6 +175,7 @@
                     expectedLatestItem.OsloStatus.Should().Be("Voorgesteld");
                     expectedLatestItem.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
                     expectedLatestItem.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasProposedV2));
 
                     expectedLatestItem.NameDutch.Should().Be("Bergstraat");
                     expectedLatestItem.NameFrench.Should().Be("Rue De Montaigne");
@@ -197,13 +203,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasApproved)}
             };
 
             await Sut
@@ -217,6 +225,7 @@
                     expectedLatestItem.Should().NotBeNull();
                     expectedLatestItem!.Status.Should().Be(StreetNameStatus.Current);
                     expectedLatestItem.OsloStatus.Should().Be("InGebruik");
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasApproved));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
@@ -237,13 +246,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasCorrectedFromApprovedToProposed)}
             };
 
             await Sut
@@ -278,13 +289,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasRejected)}
             };
 
             await Sut
@@ -298,6 +311,7 @@
                     expectedLatestItem.Should().NotBeNull();
                     expectedLatestItem!.Status.Should().Be(StreetNameStatus.Rejected);
                     expectedLatestItem.OsloStatus.Should().Be("Afgekeurd");
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasRejected));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
@@ -318,13 +332,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasCorrectedFromRejectedToProposed)}
             };
 
             await Sut
@@ -339,6 +355,7 @@
                     expectedLatestItem.Should().NotBeNull();
                     expectedLatestItem!.Status.Should().Be(StreetNameStatus.Proposed);
                     expectedLatestItem.OsloStatus.Should().Be("Voorgesteld");
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasCorrectedFromRejectedToProposed));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
@@ -359,13 +376,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasRetiredV2)}
             };
 
             await Sut
@@ -379,6 +398,7 @@
                     expectedLatestItem.Should().NotBeNull();
                     expectedLatestItem!.Status.Should().Be(StreetNameStatus.Retired);
                     expectedLatestItem.OsloStatus.Should().Be("Gehistoreerd");
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasRetiredV2));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
@@ -399,13 +419,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasRenamed)}
             };
 
             await Sut
@@ -419,6 +441,7 @@
                     expectedLatestItem.Should().NotBeNull();
                     expectedLatestItem!.Status.Should().Be(StreetNameStatus.Retired);
                     expectedLatestItem.OsloStatus.Should().Be("Gehistoreerd");
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasRenamed));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
@@ -439,13 +462,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasCorrectedFromRetiredToCurrent)}
             };
 
             await Sut
@@ -460,6 +485,7 @@
                     expectedLatestItem.Should().NotBeNull();
                     expectedLatestItem!.Status.Should().Be(StreetNameStatus.Current);
                     expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.InGebruik.ToString());
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasCorrectedFromRetiredToCurrent));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
@@ -488,13 +514,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameNamesWereCorrected)}
             };
 
             await Sut
@@ -512,6 +540,7 @@
                     expectedLatestItem.NameEnglish.Should().Be("Mountain street");
                     expectedLatestItem.NameGerman.Should().Be("Bergstraat de");
 
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameNamesWereCorrected));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameNamesWereCorrected.Provenance.Timestamp);
@@ -538,13 +567,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameNamesWereChanged)}
             };
 
             await Sut
@@ -562,6 +593,7 @@
                     expectedLatestItem.NameEnglish.Should().Be("Mountain street");
                     expectedLatestItem.NameGerman.Should().Be("Bergstraat de");
 
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameNamesWereChanged));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameNamesWereChanged.Provenance.Timestamp);
@@ -588,13 +620,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameHomonymAdditionsWereCorrected)}
             };
 
             await Sut
@@ -612,6 +646,7 @@
                     expectedLatestItem.HomonymAdditionEnglish.Should().Be("AZE");
                     expectedLatestItem.HomonymAdditionGerman.Should().Be("QSD");
 
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameHomonymAdditionsWereCorrected));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameHomonymAdditionsWereCorrected.Provenance.Timestamp);
@@ -638,13 +673,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameHomonymAdditionsWereCorrected)}
             };
 
             await Sut
@@ -662,6 +699,7 @@
                     expectedLatestItem.HomonymAdditionEnglish.Should().BeNull();
                     expectedLatestItem.HomonymAdditionGerman.Should().BeNull();
 
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameHomonymAdditionsWereCorrected));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameHomonymAdditionsWereCorrected.Provenance.Timestamp);
@@ -681,13 +719,15 @@
             var firstEvenMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasRemovedV2)}
             };
 
             await Sut
@@ -702,6 +742,7 @@
 
                     expectedLatestItem!.IsRemoved.Should().BeTrue();
 
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasRemovedV2));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasRemovedV2.Provenance.Timestamp);
@@ -723,7 +764,8 @@
             var metadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasRegistered)}
             };
 
             await Sut
@@ -737,6 +779,7 @@
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
                     expectedLatestItem.Position.Should().Be(position);
                     expectedLatestItem.MunicipalityId.Should().Be(streetNameWasRegistered.MunicipalityId);
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasRegistered));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -763,13 +806,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasNamed)}
             };
 
             await Sut
@@ -784,7 +829,7 @@
                     expectedLatestItem.Should().NotBeNull();
                     expectedLatestItem.PersistentLocalId.Should().Be(persistentLocalId);
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
-
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasNamed));
                     expectedLatestItem.NameDutch.Should().Be("straat");
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
@@ -811,13 +856,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameNameWasCorrected)}
             };
 
             await Sut
@@ -835,6 +882,7 @@
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
                     expectedLatestItem.NameDutch.Should().Be("straat");
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameNameWasCorrected));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -859,13 +907,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameNameWasCleared)}
             };
 
             await Sut
@@ -883,6 +933,7 @@
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
                     expectedLatestItem.NameDutch.Should().BeNull();
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameNameWasCleared));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -907,13 +958,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameNameWasCorrectedToCleared)}
             };
 
             await Sut
@@ -931,6 +984,7 @@
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
                     expectedLatestItem.NameDutch.Should().BeNull();
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameNameWasCorrectedToCleared));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -954,13 +1008,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameHomonymAdditionWasDefined)}
             };
 
             await Sut
@@ -978,7 +1034,7 @@
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
                     expectedLatestItem.HomonymAdditionDutch.Should().Be("ABC");
-
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameHomonymAdditionWasDefined));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameHomonymAdditionWasDefined.Provenance.Timestamp);
@@ -1001,13 +1057,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameHomonymAdditionWasCorrected)}
             };
 
             await Sut
@@ -1025,6 +1083,7 @@
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
                     expectedLatestItem.HomonymAdditionDutch.Should().Be("ABC");
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameHomonymAdditionWasCorrected));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -1050,19 +1109,22 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var thirdEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 2 }
+                { Envelope.PositionMetadataKey, position + 2 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameHomonymAdditionWasCleared)}
             };
 
             await Sut
@@ -1081,6 +1143,7 @@
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
                     expectedLatestItem.HomonymAdditionDutch.Should().BeNull();
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameHomonymAdditionWasCleared));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -1106,19 +1169,22 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var thirdEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 2 }
+                { Envelope.PositionMetadataKey, position + 2 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameHomonymAdditionWasCorrectedToCleared)}
             };
 
             await Sut
@@ -1138,6 +1204,7 @@
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
                     expectedLatestItem.HomonymAdditionDutch.Should().BeNull();
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameHomonymAdditionWasCorrectedToCleared));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -1160,13 +1227,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameBecameComplete)}
             };
 
             await Sut
@@ -1182,6 +1251,7 @@
                     expectedLatestItem.Should().NotBeNull();
                     expectedLatestItem.PersistentLocalId.Should().Be(persistentLocalId);
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameBecameComplete));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -1204,13 +1274,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameBecameIncomplete)}
             };
 
             await Sut
@@ -1227,6 +1299,7 @@
                     expectedLatestItem.PersistentLocalId.Should().Be(persistentLocalId);
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameBecameIncomplete));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameBecameIncomplete.Provenance.Timestamp);
@@ -1248,13 +1321,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasRemoved)}
             };
 
             await Sut
@@ -1270,6 +1345,7 @@
                     expectedLatestItem.Should().NotBeNull();
                     expectedLatestItem.PersistentLocalId.Should().Be(persistentLocalId);
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasRemoved));
                     expectedLatestItem.IsRemoved.Should().BeTrue();
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -1292,13 +1368,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNamePersistentLocalIdWasAssigned)}
             };
 
             await Sut
@@ -1315,6 +1393,7 @@
                     expectedLatestItem.PersistentLocalId.Should().Be(persistentLocalId);
                     expectedLatestItem.NisCode.Should().Be(streetNameWasRegistered.NisCode);
 
+                    expectedLatestItem.Type.Should().Be(nameof(streetNamePersistentLocalIdWasAssigned));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNamePersistentLocalIdWasAssigned.Provenance.Timestamp);
@@ -1336,13 +1415,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameBecameCurrent)}
             };
 
             await Sut
@@ -1362,6 +1443,7 @@
                     expectedLatestItem.Status.Should().Be(StreetNameStatus.Current);
                     expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.InGebruik.ToString());
 
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameBecameCurrent));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameBecameCurrent.Provenance.Timestamp);
@@ -1384,13 +1466,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasProposed)}
             };
 
             await Sut
@@ -1409,6 +1493,7 @@
 
                     expectedLatestItem.Status.Should().Be(StreetNameStatus.Proposed);
                     expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.Voorgesteld.ToString());
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasProposed));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -1432,13 +1517,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasRetired)}
             };
 
             await Sut
@@ -1458,6 +1545,7 @@
                     expectedLatestItem.Status.Should().Be(StreetNameStatus.Retired);
                     expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.Gehistoreerd.ToString());
 
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasRetired));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasRetired.Provenance.Timestamp);
@@ -1480,13 +1568,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasCorrectedToCurrent)}
             };
 
             await Sut
@@ -1505,6 +1595,7 @@
 
                     expectedLatestItem.Status.Should().Be(StreetNameStatus.Current);
                     expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.InGebruik.ToString());
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasCorrectedToCurrent));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
@@ -1527,13 +1618,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasCorrectedToProposed)}
             };
 
             await Sut
@@ -1552,7 +1645,7 @@
 
                     expectedLatestItem.Status.Should().Be(StreetNameStatus.Proposed);
                     expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.Voorgesteld.ToString());
-
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasCorrectedToProposed));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasCorrectedToProposed.Provenance.Timestamp);
@@ -1574,13 +1667,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasCorrectedToRetired)}
             };
 
             await Sut
@@ -1600,6 +1695,7 @@
                     expectedLatestItem.Status.Should().Be(StreetNameStatus.Retired);
                     expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.Gehistoreerd.ToString());
 
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasCorrectedToRetired));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasCorrectedToRetired.Provenance.Timestamp);
@@ -1621,13 +1717,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameStatusWasRemoved)}
             };
 
             await Sut
@@ -1646,7 +1744,7 @@
 
                     expectedLatestItem.Status.Should().BeNull();
                     expectedLatestItem.OsloStatus.Should().BeNull();
-
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameStatusWasRemoved));
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameStatusWasRemoved.Provenance.Timestamp);
@@ -1668,13 +1766,15 @@
             var firstEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position }
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
             };
 
             var secondEventMetadata = new Dictionary<string, object>
             {
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
-                { Envelope.PositionMetadataKey, position + 1 }
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameStatusWasCorrectedToRemoved)}
             };
 
             await Sut
@@ -1693,6 +1793,7 @@
 
                     expectedLatestItem.Status.Should().BeNull();
                     expectedLatestItem.OsloStatus.Should().BeNull();
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameStatusWasCorrectedToRemoved));
 
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{persistentLocalId}");

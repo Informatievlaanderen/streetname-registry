@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Projections.Integration
         public StreetNameStatus? Status { get; set; }
         public string? OsloStatus { get; set; }
         public string? NisCode { get; set; }
-
+        public string Type { get; set; }
         public string? NameDutch { get; set; }
         public string? NameFrench { get; set; }
         public string? NameGerman { get; set; }
@@ -65,8 +65,8 @@ namespace StreetNameRegistry.Projections.Integration
         public StreetNameVersion()
         {  }
 
-        public StreetNameVersion CloneAndApplyEventInfo(
-            long newPosition,
+        public StreetNameVersion CloneAndApplyEventInfo(long newPosition,
+            string eventName,
             Instant lastChangedOn,
             Action<StreetNameVersion> editFunc)
         {
@@ -79,6 +79,7 @@ namespace StreetNameRegistry.Projections.Integration
                 NisCode = NisCode,
                 Status = Status,
                 OsloStatus = OsloStatus,
+                Type = eventName,
 
                 NameDutch = NameDutch,
                 NameFrench = NameFrench,
@@ -120,6 +121,7 @@ namespace StreetNameRegistry.Projections.Integration
             builder.Property(x => x.NisCode).HasColumnName("nis_code");
             builder.Property(x => x.Status).HasColumnName("status");
             builder.Property(x => x.OsloStatus).HasColumnName("oslo_status");
+            builder.Property(x => x.Type).HasColumnName("type");
 
             builder.Property(x => x.NameDutch).HasColumnName("name_dutch");
             builder.Property(x => x.NameFrench).HasColumnName("name_french");
@@ -150,6 +152,7 @@ namespace StreetNameRegistry.Projections.Integration
             builder.HasIndex(x => x.MunicipalityId);
             builder.HasIndex(x => x.NisCode);
             builder.HasIndex(x => x.Status);
+            builder.HasIndex(x => x.Type);
             builder.HasIndex(x => x.OsloStatus);
             builder.HasIndex(x => x.IsRemoved);
             builder.HasIndex(StreetNameVersion.VersionTimestampBackingPropertyName);
