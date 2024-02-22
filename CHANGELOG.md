@@ -1,3 +1,10 @@
+# [3.44.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.43.0...v3.44.0) (2024-02-22)
+
+
+### Features
+
+* add type to latest versions integration ([73e8496](https://github.com/informatievlaanderen/streetname-registry/commit/73e8496e1976ff6b2043cc6d4c544303b071da2f))
+
 # [3.43.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.42.2...v3.43.0) (2024-02-20)
 
 
