@@ -18,8 +18,6 @@ namespace StreetNameRegistry.Projections.Legacy
         public DbSet<StreetNameListMunicipality> StreetNameListMunicipality { get; set; }
         public DbSet<StreetNameDetail.StreetNameDetail> StreetNameDetail { get; set; }
         public DbSet<StreetNameDetailV2.StreetNameDetailV2> StreetNameDetailV2 { get; set; }
-        public DbSet<StreetNameName.StreetNameName> StreetNameNames { get; set; }
-        public DbSet<StreetNameNameV2.StreetNameNameV2> StreetNameNamesV2 { get; set; }
         public DbSet<StreetNameSyndicationItem> StreetNameSyndication { get; set; }
 
         public DbSet<StreetNameListViewCount> StreetNameListViewCount { get; set; }
@@ -40,12 +38,6 @@ namespace StreetNameRegistry.Projections.Legacy
 
             if (typeof(T) == typeof(StreetNameDetailV2.StreetNameDetailV2))
                 return (StreetNameDetailV2 as DbSet<T>)!;
-
-            if (typeof(T) == typeof(StreetNameName.StreetNameName))
-                return (StreetNameNames as DbSet<T>)!;
-
-            if (typeof(T) == typeof(StreetNameNameV2.StreetNameNameV2))
-                return (StreetNameNamesV2 as DbSet<T>)!;
 
             if (typeof(T) == typeof(StreetNameSyndicationItem))
                 return (StreetNameSyndication as DbSet<T>)!;

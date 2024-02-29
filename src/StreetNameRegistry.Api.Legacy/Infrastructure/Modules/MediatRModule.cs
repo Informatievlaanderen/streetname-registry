@@ -8,7 +8,6 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure.Modules
     using Options;
     using Projections.Legacy;
     using Projections.Syndication;
-    using StreetName.Bosa;
     using StreetName.Count;
     using StreetName.Detail;
     using StreetName.List;
@@ -45,12 +44,6 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure.Modules
                     c.Resolve<LegacyContext>(),
                     c.Resolve<SyndicationContext>(),
                     c.Resolve<ConsumerPostalContext>())).InstancePerLifetimeScope();
-
-            builder.Register(c => (IRequestHandler<BosaStreetNameRequest, StreetNameBosaResponse>)
-                new BosaHandlerV2(
-                    c.Resolve<LegacyContext>(),
-                    c.Resolve<SyndicationContext>(),
-                    c.Resolve<IOptions<ResponseOptions>>())).InstancePerLifetimeScope();
         }
     }
 }
