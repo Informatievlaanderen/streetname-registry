@@ -10,7 +10,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Bosa;
     using Count;
     using Detail;
     using List;
@@ -137,34 +136,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                 ContentType = MediaTypeNames.Text.Xml,
                 StatusCode = StatusCodes.Status200OK
             };
-        }
-
-        /// <summary>
-        /// Zoek naar straatnamen in het Vlaams Gewest in het BOSA formaat.
-        /// </summary>
-        /// <param name="request">De request in BOSA formaat.</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpPost("bosa")]
-        [ProducesResponseType(typeof(StreetNameBosaResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerRequestExample(typeof(BosaStreetNameRequest), typeof(StreetNameBosaRequestExamples))]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameBosaResponseExamples))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
-        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
-        public async Task<IActionResult> Post(
-            [FromBody] BosaStreetNameRequest request,
-            CancellationToken cancellationToken = default)
-        {
-            if (Request.ContentLength.HasValue && Request.ContentLength > 0 && request is null)
-            {
-                return Ok(new StreetNameBosaResponse());
-            }
-
-            var result = await _mediator.Send(request, cancellationToken);
-
-            return Ok(result);
         }
     }
 }
