@@ -1,3 +1,10 @@
+# [3.45.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.44.0...v3.45.0) (2024-03-01)
+
+
+### Features
+
+* remove bosa functionality GAWR-5457 ([d9bde12](https://github.com/informatievlaanderen/streetname-registry/commit/d9bde12534a8c0bfe8249d7f9de2bb23df07130e))
+
 # [3.44.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.43.0...v3.44.0) (2024-02-22)
 
 
