@@ -90,8 +90,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                         },
                         MiddlewareHooks =
                         {
-                            FluentValidation = fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>(),
-
+                            EnableFluentValidation = false,
                             AfterHealthChecks = health =>
                             {
                                 var connectionStrings = _configuration
