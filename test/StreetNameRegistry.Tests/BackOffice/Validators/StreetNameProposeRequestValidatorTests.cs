@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Tests.BackOffice.Validators
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentValidation.TestHelper;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
@@ -19,9 +20,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         }
 
         [Fact]
-        public void GivenEmptyStreetName_ThenReturnsExpectedMessage()
+        public async Task GivenEmptyStreetName_ThenReturnsExpectedMessage()
         {
-            var result = _validator.TestValidate(new ProposeStreetNameRequest
+            var result = await _validator.TestValidateAsync(new ProposeStreetNameRequest
             {
                 GemeenteId = "bla",
                 Straatnamen = new Dictionary<Taal, string>
@@ -36,9 +37,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         }
 
         [Fact]
-        public void GivenOneEmptyStreetName_ThenReturnsExpectedMessage()
+        public async Task GivenOneEmptyStreetName_ThenReturnsExpectedMessage()
         {
-            var result = _validator.TestValidate(new ProposeStreetNameRequest
+            var result = await _validator.TestValidateAsync(new ProposeStreetNameRequest
             {
                 GemeenteId = "bla",
                 Straatnamen = new Dictionary<Taal, string>
@@ -54,11 +55,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         }
 
         [Fact]
-        public void GivenStreetNameExceededMaxLength_ThenReturnsExpectedMessage()
+        public async Task GivenStreetNameExceededMaxLength_ThenReturnsExpectedMessage()
         {
             const string streetName = "Boulevard Louis Edelhart Lodewijk van Groothertogdom Luxemburg";
 
-            var result = _validator.TestValidate(new ProposeStreetNameRequest
+            var result = await _validator.TestValidateAsync(new ProposeStreetNameRequest
             {
                 GemeenteId = "bla",
                 Straatnamen = new Dictionary<Taal, string>
@@ -73,11 +74,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         }
 
         [Fact]
-        public void GivenNisCodeIsInvalidPuri_ThenReturnsExpectedMessage()
+        public async Task GivenNisCodeIsInvalidPuri_ThenReturnsExpectedMessage()
         {
             const string gemeenteId = "bla";
 
-            var result = _validator.TestValidate(new ProposeStreetNameRequest
+            var result = await _validator.TestValidateAsync(new ProposeStreetNameRequest
             {
                 GemeenteId = gemeenteId,
                 Straatnamen = new Dictionary<Taal, string>
@@ -92,11 +93,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         }
 
         [Fact]
-        public void GivenNonExistentNisCode_ThenReturnsExpectedMessage()
+        public async Task GivenNonExistentNisCode_ThenReturnsExpectedMessage()
         {
             const string gemeenteId = "https://data.vlaanderen.be/id/gemeente/bla";
 
-            var result = _validator.TestValidate(new ProposeStreetNameRequest
+            var result = await _validator.TestValidateAsync(new ProposeStreetNameRequest
             {
                 GemeenteId = gemeenteId,
                 Straatnamen = new Dictionary<Taal, string>
@@ -111,13 +112,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         }
 
         [Fact]
-        public void GivenNonFlemishNisCode_ThenReturnsExpectedMessage()
+        public async Task GivenNonFlemishNisCode_ThenReturnsExpectedMessage()
         {
             const string nisCode = "55001";
             const string gemeenteId = $"https://data.vlaanderen.be/id/gemeente/{nisCode}";
 
             _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode(nisCode);
-            var result = _validator.TestValidate(new ProposeStreetNameRequest
+            var result = await _validator.TestValidateAsync(new ProposeStreetNameRequest
             {
                 GemeenteId = gemeenteId,
                 Straatnamen = new Dictionary<Taal, string>

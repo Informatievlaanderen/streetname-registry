@@ -23,7 +23,6 @@ To fill up the database for the first time:
 
 * Run `StreetNameRegistry.Api.CrabImport` (`StreetNameRegistry.sln`) (schema: Import / Idempotency / EventStore)
 * Run `StreetNameRegistry.Api.BackOffice` (`StreetNameRegistry.sln`) (schema: BackOffice / EventStore / Idempotency / Sequence)
-* Run `StreetNameRegistry.Importer` (`StreetNameRegistryImporter.sln`) with `init -c -l Trace` as flags.
 
 #### Projections
 

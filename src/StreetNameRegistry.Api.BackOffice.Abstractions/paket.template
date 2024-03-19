@@ -15,15 +15,15 @@ licenseUrl https://opensource.org/licenses/EUPL-1.2
 description StreetName Registry Api BackOffice Abstractions.
 
 dependencies
-  framework: net6.0
+  framework: net8.0
     Be.Vlaanderen.Basisregisters.Api >= LOCKEDVERSION
     MediatR.Contracts >= LOCKEDVERSION
 
 files
-  StreetNameRegistry.Api.BackOffice.Abstractions.dll => lib\net6.0
-  StreetNameRegistry.Api.BackOffice.Abstractions.pdb => lib\net6.0
-  StreetNameRegistry.Api.BackOffice.Abstractions.xml => lib\net6.0
+  StreetNameRegistry.Api.BackOffice.Abstractions.dll => lib\net8.0
+  StreetNameRegistry.Api.BackOffice.Abstractions.pdb => lib\net8.0
+  StreetNameRegistry.Api.BackOffice.Abstractions.xml => lib\net8.0
   StreetNameRegistry.Api.BackOffice.Abstractions.xml => content
 
-  StreetNameRegistry.dll => lib\net6.0
-  StreetNameRegistry.pdb => lib\net6.0
+  StreetNameRegistry.dll => lib\net8.0
+  StreetNameRegistry.pdb => lib\net8.0

@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Tests.BackOffice.Validators
 {
     using System;
+    using System.Threading.Tasks;
     using FluentValidation.TestHelper;
     using StreetNameRegistry.Api.BackOffice.Abstractions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
@@ -19,7 +20,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         }
 
         [Fact]
-        public void GivenValidRequest_NoErrorsAreReturned()
+        public async Task GivenValidRequest_NoErrorsAreReturned()
         {
             var municipalityId = Guid.NewGuid();
             var persistentLocalId = 10000;
@@ -36,7 +37,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 "NISCODE"));
             _backOfficeContext.SaveChanges();
 
-            var result = _validator.TestValidate(new RenameStreetNameRequest
+            var result = await _validator.TestValidateAsync(new RenameStreetNameRequest
             {
                 DoelStraatnaamId = $"https://data.vlaanderen.be/id/straatnaam/{persistentLocalId}",
                 StreetNamePersistentLocalId = persistentLocalId2
@@ -61,10 +62,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         }
 
         [Fact]
-        public void GivenUnknownStreetName_ReturnsExpectedError()
+        public async Task GivenUnknownStreetName_ReturnsExpectedError()
         {
             var puri = "https://data.vlaanderen.be/id/straatnaam/123";
-            var result = _validator.TestValidate(new RenameStreetNameRequest
+            var result = await _validator.TestValidateAsync(new RenameStreetNameRequest
             {
                 DoelStraatnaamId = puri
             });
@@ -75,7 +76,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
         }
 
         [Fact]
-        public void GivenStreetNamesInDifferentMunicipalities_ReturnsExpectedError()
+        public async Task GivenStreetNamesInDifferentMunicipalities_ReturnsExpectedError()
         {
             var persistentLocalId = 10000;
             var persistentLocalId2 = 10001;
@@ -90,7 +91,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 "NISCODE2"));
             _backOfficeContext.SaveChanges();
 
-            var result = _validator.TestValidate(new RenameStreetNameRequest
+            var result = await _validator.TestValidateAsync(new RenameStreetNameRequest
             {
                 DoelStraatnaamId = $"https://data.vlaanderen.be/id/straatnaam/{persistentLocalId}",
                 StreetNamePersistentLocalId = persistentLocalId2

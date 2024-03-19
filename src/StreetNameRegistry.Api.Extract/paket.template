@@ -15,14 +15,14 @@ licenseUrl https://opensource.org/licenses/EUPL-1.2
 description StreetName Registry.
 
 dependencies
-  framework: net6.0
-    Be.Vlaanderen.Basisregisters.Shaperon >= LOCKEDVERSION
+  framework: net8.0
+    Be.Vlaanderen.Basisregisters.GrAr.Extracts >= LOCKEDVERSION
 
 files
-  StreetNameRegistry.Api.Extract.dll => lib\net6.0
-  StreetNameRegistry.Api.Extract.pdb => lib\net6.0
-  StreetNameRegistry.Api.Extract.xml => lib\net6.0
+  StreetNameRegistry.Api.Extract.dll => lib\net8.0
+  StreetNameRegistry.Api.Extract.pdb => lib\net8.0
+  StreetNameRegistry.Api.Extract.xml => lib\net8.0
   StreetNameRegistry.Api.Extract.xml => content
 
-  StreetNameRegistry.Projections.Extract.dll => lib\net6.0
-  StreetNameRegistry.Projections.Extract.pdb => lib\net6.0
+  StreetNameRegistry.Projections.Extract.dll => lib\net8.0
+  StreetNameRegistry.Projections.Extract.pdb => lib\net8.0

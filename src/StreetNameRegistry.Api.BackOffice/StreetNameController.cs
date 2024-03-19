@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
     using System.Collections.Generic;
+    using Asp.Versioning;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;

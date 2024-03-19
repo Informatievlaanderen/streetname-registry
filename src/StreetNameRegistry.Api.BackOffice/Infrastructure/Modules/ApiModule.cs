@@ -1,23 +1,22 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 {
     using Abstractions;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
+    using Abstractions.SqsRequests;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
-    using Be.Vlaanderen.Basisregisters.DependencyInjection;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
-    using StreetNameRegistry.Infrastructure;
     using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
     using Consumer.Infrastructure.Modules;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+    using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
 
     public sealed class ApiModule : Module
     {
@@ -39,7 +38,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 
         protected override void Load(ContainerBuilder builder)
         {
-            _services.RegisterModule(new DataDogModule(_configuration));
+            builder.RegisterModule(new DataDogModule(_configuration));
 
             builder
                 .RegisterType<ProblemDetailsHelper>()
