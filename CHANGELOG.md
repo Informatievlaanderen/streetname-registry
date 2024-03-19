@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.45.0...v4.0.0) (2024-03-19)
+
+
+### Features
+
+* move to dotnet 8.0.2 ([073c741](https://github.com/informatievlaanderen/streetname-registry/commit/073c741cfe3be7a5dfa466c1032ed9ed2bb876fa))
+
+
+### BREAKING CHANGES
+
+* move to dotnet 8.0.2
+
 # [3.45.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.44.0...v3.45.0) (2024-03-01)
 
 
