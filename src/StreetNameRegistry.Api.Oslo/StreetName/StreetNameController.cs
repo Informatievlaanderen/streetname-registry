@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Asp.Versioning;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
@@ -82,7 +83,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
             var pagination = Request.ExtractPaginationRequest();
 
             var result = await _mediator.Send(new OsloListRequest(filtering, sorting, pagination), cancellationToken);
-            
+
             Response.AddPaginationResponse(result.Pagination);
             Response.AddSortingResponse(result.Sorting);
 

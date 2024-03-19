@@ -15,21 +15,21 @@ licenseUrl https://opensource.org/licenses/EUPL-1.2
 description StreetName Registry.
 
 dependencies
-  framework: net6.0
+  framework: net8.0
     Be.Vlaanderen.Basisregisters.GrAr.Legacy >= LOCKEDVERSION
     MediatR.Contracts >= LOCKEDVERSION
 
 files
-  StreetNameRegistry.Api.Legacy.dll => lib\net6.0
-  StreetNameRegistry.Api.Legacy.pdb => lib\net6.0
-  StreetNameRegistry.Api.Legacy.xml => lib\net6.0
+  StreetNameRegistry.Api.Legacy.dll => lib\net8.0
+  StreetNameRegistry.Api.Legacy.pdb => lib\net8.0
+  StreetNameRegistry.Api.Legacy.xml => lib\net8.0
   StreetNameRegistry.Api.Legacy.xml => content
 
-  StreetNameRegistry.Projections.Legacy.dll => lib\net6.0
-  StreetNameRegistry.Projections.Legacy.pdb => lib\net6.0
+  StreetNameRegistry.Projections.Legacy.dll => lib\net8.0
+  StreetNameRegistry.Projections.Legacy.pdb => lib\net8.0
 
-  StreetNameRegistry.Projections.Syndication.dll => lib\net6.0
-  StreetNameRegistry.Projections.Syndication.pdb => lib\net6.0
+  StreetNameRegistry.Projections.Syndication.dll => lib\net8.0
+  StreetNameRegistry.Projections.Syndication.pdb => lib\net8.0
   
-  StreetNameRegistry.dll => lib\net6.0
-  StreetNameRegistry.pdb => lib\net6.0
+  StreetNameRegistry.dll => lib\net8.0
+  StreetNameRegistry.pdb => lib\net8.0

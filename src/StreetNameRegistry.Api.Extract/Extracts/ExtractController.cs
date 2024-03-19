@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     using Swashbuckle.AspNetCore.Filters;
     using System;
     using System.Threading;
+    using Asp.Versioning;
     using Be.Vlaanderen.Basisregisters.Api.Extract;
     using Projections.Syndication;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;

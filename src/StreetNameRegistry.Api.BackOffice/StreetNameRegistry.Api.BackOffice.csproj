@@ -8,14 +8,14 @@
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\net6.0\StreetNameRegistry.Api.BackOffice.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\net8.0\StreetNameRegistry.Api.BackOffice.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
-    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NET6_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\net6.0\StreetNameRegistry.Api.BackOffice.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\net8.0\StreetNameRegistry.Api.BackOffice.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
 
@@ -39,10 +39,6 @@
     <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
     <ProjectReference Include="..\StreetNameRegistry\StreetNameRegistry.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\..\SolutionInfo.cs" Link="Properties\SolutionInfo.cs" />
   </ItemGroup>
 
   <Import Project="..\..\.paket\Paket.Restore.targets" />

@@ -1,12 +1,10 @@
 namespace StreetNameRegistry.Projections.LastChangedList.Console.Infrastructure.Modules
 {
     using System;
-    using StreetNameRegistry.Infrastructure;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Microsoft;
-    using Be.Vlaanderen.Basisregisters.DependencyInjection;
+    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
@@ -17,7 +15,8 @@ namespace StreetNameRegistry.Projections.LastChangedList.Console.Infrastructure.
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using LastChangedListContextMigrationFactory = LastChangedList.LastChangedListContextMigrationFactory;
+    using StreetNameRegistry.Infrastructure;
+    using LastChangedListContextMigrationFactory = LastChangedListContextMigrationFactory;
 
     public class LastChangedListConsoleModule : Module
     {
@@ -37,7 +36,7 @@ namespace StreetNameRegistry.Projections.LastChangedList.Console.Infrastructure.
 
         protected override void Load(ContainerBuilder builder)
         {
-            _services.RegisterModule(new DataDogModule(_configuration));
+            builder.RegisterModule(new DataDogModule(_configuration));
 
             RegisterProjectionSetup(builder);
 

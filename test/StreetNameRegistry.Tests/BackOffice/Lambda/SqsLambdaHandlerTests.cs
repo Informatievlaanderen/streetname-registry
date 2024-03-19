@@ -6,9 +6,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using System.Threading.Tasks;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
-    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using global::AutoFixture;
@@ -210,7 +209,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                 idempotentCommandHandler)
         { }
 
-        protected override Task<ETagResponse> InnerHandle(ApproveStreetNameLambdaRequest request, CancellationToken cancellationToken)
+        protected override Task<object> InnerHandle(ApproveStreetNameLambdaRequest request, CancellationToken cancellationToken)
         {
             IdempotentCommandHandler.Dispatch(
                 Guid.NewGuid(),
@@ -218,7 +217,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                 new Dictionary<string, object>(),
                 cancellationToken);
 
-            return Task.FromResult(new ETagResponse("bla", "etag"));
+            return Task.FromResult((object) new ETagResponse("bla", "etag"));
         }
 
         protected override TicketError? InnerMapDomainException(DomainException exception, ApproveStreetNameLambdaRequest request)

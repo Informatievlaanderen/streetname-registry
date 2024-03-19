@@ -1,16 +1,11 @@
 namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
-    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
+    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using Microsoft.Extensions.Configuration;
     using Municipality;
-    using Municipality.Exceptions;
     using Requests;
     using TicketingService.Abstractions;
 
@@ -30,7 +25,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 idempotentCommandHandler)
         { }
 
-        protected override async Task<ETagResponse> InnerHandle(RemoveStreetNameLambdaRequest request, CancellationToken cancellationToken)
+        protected override async Task<object> InnerHandle(RemoveStreetNameLambdaRequest request, CancellationToken cancellationToken)
         {
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
             var cmd = request.ToCommand();
