@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.0...v4.0.1) (2024-03-20)
+
+
+### Bug Fixes
+
+* disable automatic fluentvalidation ([ae78384](https://github.com/informatievlaanderen/streetname-registry/commit/ae78384560fe50eb3172bbe204daefa2108f6ab9))
+
 # [4.0.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.45.0...v4.0.0) (2024-03-19)
 
 
