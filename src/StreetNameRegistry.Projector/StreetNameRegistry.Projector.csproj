@@ -7,9 +7,6 @@
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
     <LangVersion>latest</LangVersion>
-    <PackageProjectUrl>https://github.com/informatievlaanderen/streetname-registry.git</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/informatievlaanderen/streetname-registry.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
