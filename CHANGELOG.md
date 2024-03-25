@@ -1,3 +1,10 @@
+## [4.0.3](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.2...v4.0.3) (2024-03-25)
+
+
+### Bug Fixes
+
+* style to trigger build ([85dde5d](https://github.com/informatievlaanderen/streetname-registry/commit/85dde5d88baf07326dd0985f9527efea5919d3cf))
+
 ## [4.0.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.1...v4.0.2) (2024-03-25)
 
 
