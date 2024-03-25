@@ -1,3 +1,10 @@
+## [4.0.4](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.3...v4.0.4) (2024-03-25)
+
+
+### Bug Fixes
+
+* style to bump ([f73caa1](https://github.com/informatievlaanderen/streetname-registry/commit/f73caa1e78f850ae10e7d762a6b073f1b7805b4d))
+
 ## [4.0.3](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.2...v4.0.3) (2024-03-25)
 
 
