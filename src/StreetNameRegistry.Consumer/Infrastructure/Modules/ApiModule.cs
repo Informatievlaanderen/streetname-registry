@@ -2,7 +2,6 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Modules
 {
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Be.Vlaanderen.Basisregisters.Projector;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
@@ -33,7 +32,6 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Modules
         protected override void Load(ContainerBuilder builder)
         {
             builder
-                .RegisterModule(new DataDogModule(_configuration))
                 .RegisterModule<EnvelopeModule>()
                 .RegisterModule(new CommandHandlingModule(_configuration))
                 .RegisterModule(new ProjectorModule(_configuration))

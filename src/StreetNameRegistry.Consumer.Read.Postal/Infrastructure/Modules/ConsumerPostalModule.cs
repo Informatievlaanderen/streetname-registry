@@ -2,13 +2,11 @@ namespace StreetNameRegistry.Consumer.Read.Postal.Infrastructure.Modules
 {
     using System;
     using Autofac;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
-    using StreetNameRegistry.Infrastructure;
-    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using StreetNameRegistry.Infrastructure;
 
     public class ConsumerPostalModule : Module
     {
@@ -24,7 +22,7 @@ namespace StreetNameRegistry.Consumer.Read.Postal.Infrastructure.Modules
             var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
             if (hasConnectionString)
             {
-                RunOnSqlServer(configuration, services, serviceLifetime, loggerFactory, connectionString);
+                RunOnSqlServer(services, serviceLifetime, loggerFactory, connectionString);
             }
             else
             {
@@ -33,19 +31,15 @@ namespace StreetNameRegistry.Consumer.Read.Postal.Infrastructure.Modules
         }
 
         private static void RunOnSqlServer(
-            IConfiguration configuration,
             IServiceCollection services,
             ServiceLifetime serviceLifetime,
             ILoggerFactory loggerFactory,
             string consumerProjectionsConnectionString)
         {
             services
-                .AddScoped(s => new TraceDbConnection<ConsumerPostalContext>(
-                    new SqlConnection(consumerProjectionsConnectionString),
-                    configuration["DataDog:ServiceName"]))
-                .AddDbContext<ConsumerPostalContext>((provider, options) => options
+                .AddDbContext<ConsumerPostalContext>((_, options) => options
                     .UseLoggerFactory(loggerFactory)
-                    .UseSqlServer(provider.GetRequiredService<TraceDbConnection<ConsumerPostalContext>>(), sqlServerOptions =>
+                    .UseSqlServer(consumerProjectionsConnectionString, sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
                         sqlServerOptions.MigrationsHistoryTable(MigrationTables.ConsumerReadPostal, Schema.ConsumerReadPostal);

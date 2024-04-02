@@ -7,12 +7,10 @@ namespace StreetNameRegistry.Consumer.Infrastructure
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer;
     using Destructurama;
-    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +21,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
     using Serilog.Debugging;
     using Serilog.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
+    using Consumer = StreetNameRegistry.Consumer.Consumer;
 
     public sealed class Program
     {
@@ -74,12 +73,9 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                     var loggerFactory = new SerilogLoggerFactory(Log.Logger); //NOSONAR logging configuration is safe
 
                     services
-                        .AddScoped(s => new TraceDbConnection<IdempotentConsumerContext>(
-                            new SqlConnection(hostContext.Configuration.GetConnectionString("Consumer")),
-                            hostContext.Configuration["DataDog:ServiceName"]))
-                        .AddDbContextFactory<IdempotentConsumerContext>((provider, options) => options
+                        .AddDbContextFactory<IdempotentConsumerContext>((_, options) => options
                             .UseLoggerFactory(loggerFactory)
-                            .UseSqlServer(provider.GetRequiredService<TraceDbConnection<IdempotentConsumerContext>>(),
+                            .UseSqlServer(hostContext.Configuration.GetConnectionString("Consumer"),
                                 sqlServerOptions =>
                                 {
                                     sqlServerOptions.EnableRetryOnFailure();
@@ -87,12 +83,9 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                                 }));
 
                     services
-                        .AddScoped(s => new TraceDbConnection<ConsumerContext>(
-                            new SqlConnection(hostContext.Configuration.GetConnectionString("Consumer")),
-                            hostContext.Configuration["DataDog:ServiceName"]))
-                        .AddDbContext<ConsumerContext>((provider, options) => options
+                        .AddDbContext<ConsumerContext>((_, options) => options
                             .UseLoggerFactory(loggerFactory)
-                            .UseSqlServer(provider.GetRequiredService<TraceDbConnection<ConsumerContext>>(), sqlServerOptions =>
+                            .UseSqlServer(hostContext.Configuration.GetConnectionString("Consumer"), sqlServerOptions =>
                             {
                                 sqlServerOptions.EnableRetryOnFailure();
                                 sqlServerOptions.MigrationsHistoryTable(MigrationTables.ConsumerProjections, Schema.ConsumerProjections);
@@ -135,7 +128,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                         .SingleInstance();
 
                     containerBuilder
-                        .RegisterType<StreetNameRegistry.Consumer.Consumer>()
+                        .RegisterType<Consumer>()
                         .As<IHostedService>()
                         .SingleInstance();
 

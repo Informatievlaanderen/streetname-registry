@@ -1,10 +1,7 @@
 namespace StreetNameRegistry.Projections.BackOffice.Infrastructure
 {
     using System;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer.MigrationExtensions;
-    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +21,7 @@ namespace StreetNameRegistry.Projections.BackOffice.Infrastructure
             var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
             if (hasConnectionString)
             {
-                RunOnSqlServer(configuration, services, loggerFactory, connectionString);
+                RunOnSqlServer(services, loggerFactory, connectionString);
             }
             else
             {
@@ -43,18 +40,14 @@ namespace StreetNameRegistry.Projections.BackOffice.Infrastructure
         }
 
         private static void RunOnSqlServer(
-            IConfiguration configuration,
             IServiceCollection services,
             ILoggerFactory loggerFactory,
             string backOfficeProjectionsConnectionString)
         {
             services
-                .AddScoped(s => new TraceDbConnection<BackOfficeProjectionsContext>(
-                    new SqlConnection(backOfficeProjectionsConnectionString),
-                    configuration["DataDog:ServiceName"]))
-                .AddDbContext<BackOfficeProjectionsContext>((provider, options) => options
+                .AddDbContext<BackOfficeProjectionsContext>((_, options) => options
                     .UseLoggerFactory(loggerFactory)
-                    .UseSqlServer(provider.GetRequiredService<TraceDbConnection<BackOfficeProjectionsContext>>(), sqlServerOptions =>
+                    .UseSqlServer(backOfficeProjectionsConnectionString, sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
                         sqlServerOptions.MigrationsHistoryTable(MigrationTables.BackOfficeProjections, Schema.BackOfficeProjections);
