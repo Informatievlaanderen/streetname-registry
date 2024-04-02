@@ -8,8 +8,6 @@ namespace StreetNameRegistry.Consumer.Read.Postal.Infrastructure
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer;
@@ -75,12 +73,9 @@ namespace StreetNameRegistry.Consumer.Read.Postal.Infrastructure
                     var loggerFactory = new SerilogLoggerFactory(Log.Logger);
 
                     services
-                        .AddScoped(_ => new TraceDbConnection<ConsumerPostalContext>(
-                            new SqlConnection(hostContext.Configuration.GetConnectionString("ConsumerPostal")),
-                            hostContext.Configuration["DataDog:ServiceName"]))
-                        .AddDbContextFactory<ConsumerPostalContext>((provider, options) => options
+                        .AddDbContextFactory<ConsumerPostalContext>((_, options) => options
                             .UseLoggerFactory(loggerFactory)
-                            .UseSqlServer(provider.GetRequiredService<TraceDbConnection<ConsumerPostalContext>>(), sqlServerOptions =>
+                            .UseSqlServer(hostContext.Configuration.GetConnectionString("ConsumerPostal"), sqlServerOptions =>
                             {
                                 sqlServerOptions.EnableRetryOnFailure();
                                 sqlServerOptions.MigrationsHistoryTable(MigrationTables.ConsumerReadPostal, Schema.ConsumerReadPostal);
@@ -126,9 +121,6 @@ namespace StreetNameRegistry.Consumer.Read.Postal.Infrastructure
                         })
                         .As<IConsumer>()
                         .SingleInstance();
-
-                    builder
-                        .RegisterModule(new DataDogModule(hostContext.Configuration));
 
                     builder
                         .RegisterType<ConsumerPostal>()

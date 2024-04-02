@@ -10,9 +10,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.Lambda;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Be.Vlaanderen.Basisregisters.EventHandling;
-    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Consumer.Infrastructure.Modules;
     using Infrastructure;
@@ -72,7 +70,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
             JsonConvert.DefaultSettings = () => eventSerializerSettings;
 
             builder
-                .RegisterModule(new DataDogModule(configuration))
                 .RegisterModule(new CommandHandlingModule(configuration))
                 .RegisterModule(new SequenceModule(configuration, services, loggerFactory))
                 .RegisterModule(new BackOfficeModule(configuration, services, loggerFactory))

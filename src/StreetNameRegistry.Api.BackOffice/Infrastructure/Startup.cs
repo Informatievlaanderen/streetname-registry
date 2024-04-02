@@ -10,7 +10,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Configuration;
     using IdentityModel.AspNetCore.OAuth2Introspection;
     using Microsoft.AspNetCore.Builder;
@@ -128,8 +127,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
             IHostApplicationLifetime appLifetime,
             ILoggerFactory loggerFactory,
             IApiVersionDescriptionProvider apiVersionProvider,
-            ApiDataDogToggle datadogToggle,
-            ApiDebugDataDogToggle debugDataDogToggle,
             MsSqlStreamStore streamStore,
             MsSqlSnapshotStore snapshotStore,
             HealthCheckService healthCheckService)
@@ -138,24 +135,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
             StartupHelpers.EnsureSqlSnapshotStoreSchema<Startup>(snapshotStore, loggerFactory);
 
             app
-                .UseDataDog<Startup>(new DataDogOptions
-                {
-                    Common =
-                    {
-                        ServiceProvider = serviceProvider,
-                        LoggerFactory = loggerFactory
-                    },
-                    Toggles =
-                    {
-                        Enable = datadogToggle,
-                        Debug = debugDataDogToggle
-                    },
-                    Tracing =
-                    {
-                        ServiceName = _configuration["DataDog:ServiceName"],
-                    }
-                })
-
                 .UseDefaultForApi(new StartupUseOptions
                 {
                     Common =

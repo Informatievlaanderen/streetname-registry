@@ -2,12 +2,13 @@ AspNetCore.HealthChecks.SqlServer
 
 Be.Vlaanderen.Basisregisters.Api
 
+Datadog.Trace
+Datadog.Trace.Bundle
+
 Microsoft.SyndicationFeed.ReaderWriter
 
 MediatR
 MediatR.Contracts
-
-
 
 SourceLink.Embed.AllSourceFiles
 SourceLink.Copy.PdbFiles
