@@ -3,7 +3,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
@@ -49,8 +48,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterModule(new DataDogModule(_configuration));
-
             RegisterProjectionSetup(builder);
 
             builder
@@ -138,7 +135,6 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             builder.RegisterModule(
                 new StreetNameLastChangedListModule(
                     _configuration.GetConnectionString("LastChangedList"),
-                    _configuration["DataDog:ServiceName"],
                     _services,
                     _loggerFactory));
         }

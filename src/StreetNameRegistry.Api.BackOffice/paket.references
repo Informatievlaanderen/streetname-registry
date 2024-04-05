@@ -1,6 +1,5 @@
 AspNetCore.HealthChecks.SqlServer
 
-Datadog.Trace
 Datadog.Trace.Bundle
 
 Be.Vlaanderen.Basisregisters.Auth.AcmIdm

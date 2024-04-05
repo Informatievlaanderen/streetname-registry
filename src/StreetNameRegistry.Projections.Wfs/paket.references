@@ -4,8 +4,6 @@ Be.Vlaanderen.Basisregisters.GrAr.Legacy
 Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer
 Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac
 
-Datadog.Trace
-
 SourceLink.Embed.AllSourceFiles
 SourceLink.Copy.PdbFiles
 

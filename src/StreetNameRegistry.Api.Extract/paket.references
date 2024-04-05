@@ -3,7 +3,6 @@ AspNetCore.HealthChecks.SqlServer
 Be.Vlaanderen.Basisregisters.Api
 Be.Vlaanderen.Basisregisters.GrAr.Extracts
 
-Datadog.Trace
 Datadog.Trace.Bundle
 
 SourceLink.Embed.AllSourceFiles

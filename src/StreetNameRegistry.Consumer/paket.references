@@ -9,7 +9,6 @@ Be.Vlaanderen.Basisregisters.Projector
 
 Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer
 
-Datadog.Trace
 Datadog.Trace.Bundle
 
 Serilog
