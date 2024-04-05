@@ -8,7 +8,6 @@ Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer
 Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector
 Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer
 
-Datadog.Trace
 Datadog.Trace.Bundle
 Destructurama.JsonNet
 

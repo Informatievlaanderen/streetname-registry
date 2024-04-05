@@ -1,14 +1,9 @@
 namespace StreetNameRegistry.Projections.Syndication
 {
     using System;
-    using Microsoft.Data.SqlClient;
-    using System.Net.Http;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Http;
-    using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer.MigrationExtensions;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -28,26 +23,22 @@ namespace StreetNameRegistry.Projections.Syndication
 
             var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
             if (hasConnectionString)
-                RunOnSqlServer(configuration, services, loggerFactory, connectionString);
+                RunOnSqlServer(services, loggerFactory, connectionString);
             else
                 RunInMemoryDb(services, loggerFactory, logger);
 
-            RegisterHttpClient(configuration, services);
+            RegisterHttpClient(services);
         }
 
         private static void RunOnSqlServer(
-            IConfiguration configuration,
             IServiceCollection services,
             ILoggerFactory loggerFactory,
             string backofficeProjectionsConnectionString)
         {
             services
-                .AddScoped(s => new TraceDbConnection<SyndicationContext>(
-                    new SqlConnection(backofficeProjectionsConnectionString),
-                    configuration["DataDog:ServiceName"]))
-                .AddDbContext<SyndicationContext>((provider, options) => options
+                .AddDbContext<SyndicationContext>((_, options) => options
                     .UseLoggerFactory(loggerFactory)
-                    .UseSqlServer(provider.GetRequiredService<TraceDbConnection<SyndicationContext>>(), sqlServerOptions =>
+                    .UseSqlServer(backofficeProjectionsConnectionString, sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
                         sqlServerOptions.MigrationsHistoryTable(MigrationTables.Syndication, Schema.Syndication);
@@ -69,16 +60,12 @@ namespace StreetNameRegistry.Projections.Syndication
         }
 
         private static void RegisterHttpClient(
-            IConfiguration configuration,
             IServiceCollection services)
         {
             services
                 .AddHttpClient(
                     RegistryAtomFeedReader.HttpClientName,
                     client => { client.DefaultRequestHeaders.Add("Accept", "application/atom+xml"); })
-                .ConfigurePrimaryHttpMessageHandler(c => new TraceHttpMessageHandler(
-                    new HttpClientHandler(),
-                    configuration["DataDog:ServiceName"]))
                 .AddTransientHttpErrorPolicy(policyBuilder => policyBuilder
                     .WaitAndRetryAsync(
                         5,

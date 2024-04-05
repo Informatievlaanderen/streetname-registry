@@ -3,7 +3,6 @@ Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer
 Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac
 Be.Vlaanderen.Basisregisters.Projector
 
-Datadog.Trace
 Datadog.Trace.Bundle
 
 SourceLink.Embed.AllSourceFiles
