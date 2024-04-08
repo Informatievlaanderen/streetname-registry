@@ -1,3 +1,10 @@
+## [4.0.7](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.6...v4.0.7) (2024-04-08)
+
+
+### Bug Fixes
+
+* enable authorization ([5ff1bd3](https://github.com/informatievlaanderen/streetname-registry/commit/5ff1bd32f0caadabfd834b4ed6157d4cf96b2a3a))
+
 ## [4.0.6](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.5...v4.0.6) (2024-04-05)
 
 ## [4.0.5](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.4...v4.0.5) (2024-04-02)
