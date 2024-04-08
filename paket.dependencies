@@ -45,7 +45,7 @@ nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing.SqlStreamStore.Autofa
 nuget Be.Vlaanderen.Basisregisters.AggregateSource.Testing.Xunit 9.0.1
 nuget Be.Vlaanderen.Basisregisters.SnapshotVerifier 9.0.1
 
-nuget Be.Vlaanderen.Basisregisters.Api 23.0.0
+nuget Be.Vlaanderen.Basisregisters.Api 23.1.0
 
 nuget Be.Vlaanderen.Basisregisters.Aws.DistributedMutex 4.0.1
 nuget Be.Vlaanderen.Basisregisters.Aws.Lambda 4.0.0
