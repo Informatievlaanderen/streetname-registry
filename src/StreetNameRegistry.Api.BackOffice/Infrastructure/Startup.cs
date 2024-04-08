@@ -167,6 +167,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                     MiddlewareHooks =
                     {
                         AfterMiddleware = x => x.UseMiddleware<AddNoCacheHeadersMiddleware>(),
+                        EnableAuthorization = true
                     }
                 });
 

@@ -1,9 +1,12 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
-    using Abstractions;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Abstractions.Requests;
-    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
+    using Abstractions.SqsRequests;
+    using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using FluentValidation;
@@ -12,10 +15,6 @@ namespace StreetNameRegistry.Api.BackOffice
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Swashbuckle.AspNetCore.Filters;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Abstractions.SqsRequests;
-    using Abstractions.Validation;
 
     public partial class StreetNameController
     {
