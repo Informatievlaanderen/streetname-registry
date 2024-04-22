@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.7...v4.1.0) (2024-04-22)
+
+
+### Features
+
+* prevent correcting retirement when streetname was renamed ([8f717d8](https://github.com/informatievlaanderen/streetname-registry/commit/8f717d89adad6746c16708b6c507bb098829e870))
+
 ## [4.0.7](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.6...v4.0.7) (2024-04-08)
 
 
