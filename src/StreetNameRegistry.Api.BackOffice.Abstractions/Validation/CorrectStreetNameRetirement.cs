@@ -13,6 +13,14 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Validation
 
                 public static TicketError ToTicketError() => new TicketError(Message, Code);
             }
+
+            public static class RenamedStreetName
+            {
+                public const string Code = "StraatnaamHernoemd";
+                public const string Message = "Deze actie is niet toegestaan op hernoemde straatnamen.";
+
+                public static TicketError ToTicketError() => new TicketError(Message, Code);
+            }
         }
     }
 }

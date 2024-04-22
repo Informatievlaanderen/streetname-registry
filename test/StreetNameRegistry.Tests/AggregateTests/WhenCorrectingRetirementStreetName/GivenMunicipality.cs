@@ -103,6 +103,29 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingRetirementStreet
         }
 
         [Fact]
+        public void WithRenamedStreetName_ThenThrowsStreetNameIsRenamedException()
+        {
+            var command = Fixture.Create<CorrectStreetNameRetirement>();
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var municipalityBecameCurrent = Fixture.Create<MunicipalityBecameCurrent>();
+            var streetNameWasMigrated = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
+                .WithStatus(StreetNameStatus.Current)
+                .Build();
+            var streetNameWasRenamed = Fixture.Create<StreetNameWasRenamed>();
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId,
+                    municipalityWasImported,
+                    municipalityBecameCurrent,
+                    streetNameWasMigrated,
+                    streetNameWasRenamed)
+                .When(command)
+                .Throws(new StreetNameIsRenamedException(command.PersistentLocalId)));
+        }
+
+        [Fact]
         public void WithMunicipalityStatusRetired_ThenMunicipalityHasInvalidStatusExceptionWasThrown()
         {
             var command = Fixture.Create<CorrectStreetNameRetirement>()

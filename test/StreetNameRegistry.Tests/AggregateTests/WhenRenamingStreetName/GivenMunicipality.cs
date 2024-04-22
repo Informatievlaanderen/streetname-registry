@@ -285,6 +285,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRenamingStreetName
 
             var result = aggregate.StreetNames.GetByPersistentLocalId(persistentLocalId);
             result.Status.Should().Be(StreetNameStatus.Retired);
+            result.IsRenamed.Should().BeTrue();
         }
     }
 }

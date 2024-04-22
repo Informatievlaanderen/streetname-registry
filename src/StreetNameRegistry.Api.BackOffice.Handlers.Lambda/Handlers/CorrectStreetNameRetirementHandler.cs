@@ -59,6 +59,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                     ValidationErrors.CorrectStreetNameRetirement.InvalidStatus.ToTicketError(),
                 StreetNameNameAlreadyExistsException streetNameNameAlreadyExistsException =>
                     ValidationErrors.Common.StreetNameAlreadyExists.ToTicketError(streetNameNameAlreadyExistsException.Name),
+                StreetNameIsRenamedException =>
+                    ValidationErrors.CorrectStreetNameRetirement.RenamedStreetName.ToTicketError(),
                 _ => null
             };
         }

@@ -9,22 +9,20 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
-    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using FluentAssertions;
     using global::AutoFixture;
     using Microsoft.Extensions.Configuration;
     using Moq;
+    using Municipality;
+    using Municipality.Exceptions;
     using SqlStreamStore;
     using SqlStreamStore.Streams;
     using StreetNameRegistry.Api.BackOffice.Abstractions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers;
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
-    using Municipality;
-    using Municipality.Exceptions;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.SqsRequests;
     using TicketingService.Abstractions;
     using Xunit;
     using Xunit.Abstractions;
@@ -120,6 +118,38 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectStreetNameRetire
                     new TicketError(
                         "Deze actie is enkel toegestaan op straatnamen met status 'gehistoreerd'.",
                         "StraatnaamAfgekeurdOfVoorgesteld"),
+                    CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task WhenStreetNameWasRenamed_ThenTicketingErrorIsExpected()
+        {
+            // Arrange
+            var ticketing = new Mock<ITicketing>();
+
+            var sut = new CorrectStreetNameRetirementHandler(
+                Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
+                ticketing.Object,
+                Mock.Of<IMunicipalities>(),
+                MockExceptionIdempotentCommandHandler<StreetNameIsRenamedException>().Object);
+
+            // Act
+            await sut.Handle(new CorrectStreetNameRetirementLambdaRequest(Guid.NewGuid().ToString(), new CorrectStreetNameRetirementSqsRequest
+            {
+                Request = new CorrectStreetNameRetirementRequest(),
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object?>(),
+                ProvenanceData = Fixture.Create<ProvenanceData>()
+            }), CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError(
+                        "Deze actie is niet toegestaan op hernoemde straatnamen.",
+                        "StraatnaamHernoemd"),
                     CancellationToken.None));
         }
 
