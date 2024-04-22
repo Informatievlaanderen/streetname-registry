@@ -45,6 +45,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                         new Names(fixture.Create<IDictionary<Language, string>>()),
                         new HomonymAdditions(fixture.Create<List<StreetNameHomonymAddition>>()),
                         fixture.Create<bool>(),
+                        fixture.Create<bool>(),
                         fixture.Create<StreetNameId?>(),
                         fixture.Create<string>(),
                         fixture.Create<ProvenanceData>()))
@@ -119,6 +120,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
 
                 streetName.Status.Should().Be(snapshotStreetName!.Status);
                 streetName.IsRemoved.Should().Be(snapshotStreetName.IsRemoved);
+                streetName.IsRenamed.Should().Be(snapshotStreetName.IsRenamed);
                 streetName.Names.Should().BeEquivalentTo(new Names(snapshotStreetName.Names));
                 streetName.HomonymAdditions.Should().BeEquivalentTo(new HomonymAdditions(snapshotStreetName.HomonymAdditions));
 

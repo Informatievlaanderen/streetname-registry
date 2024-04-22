@@ -17,6 +17,7 @@ namespace StreetNameRegistry.Municipality
         public Names Names { get; private set; } = new Names();
         public PersistentLocalId PersistentLocalId { get; private set; }
         public bool IsRemoved { get; private set; }
+        public bool IsRenamed { get; private set; }
         public bool IsRetired => Status == StreetNameStatus.Retired;
         public bool IsRejected => Status == StreetNameStatus.Rejected;
 
@@ -151,6 +152,7 @@ namespace StreetNameRegistry.Municipality
         private void When(StreetNameWasRenamed @event)
         {
             Status = StreetNameStatus.Retired;
+            IsRenamed = true;
 
             _lastEvent = @event;
         }

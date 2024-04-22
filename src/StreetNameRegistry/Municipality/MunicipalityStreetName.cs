@@ -120,6 +120,12 @@ namespace StreetNameRegistry.Municipality
             }
 
             GuardStreetNameStatus(StreetNameStatus.Retired);
+
+            if (IsRenamed)
+            {
+                throw new StreetNameIsRenamedException(PersistentLocalId);
+            }
+
             guardUniqueActiveStreetNameNames(Names, HomonymAdditions, PersistentLocalId);
 
             Apply(new StreetNameWasCorrectedFromRetiredToCurrent(_municipalityId, PersistentLocalId));

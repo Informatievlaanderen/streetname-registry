@@ -14,6 +14,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
         public IDictionary<Language, string> HomonymAdditions { get; }
 
         public bool IsRemoved { get; }
+        public bool IsRenamed { get; }
 
         public Guid? LegacyStreetNameId { get; }
         public string LastEventHash { get; }
@@ -25,6 +26,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
                 streetName.Names,
                 streetName.HomonymAdditions,
                 streetName.IsRemoved,
+                streetName.IsRenamed,
                 streetName.LegacyStreetNameId,
                 streetName.LastEventHash,
                 streetName.LastProvenanceData)
@@ -36,6 +38,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
             Names names,
             HomonymAdditions homonymAdditions,
             bool isRemoved,
+            bool isRenamed,
             StreetNameId? legacyStreetNameId,
             string lastEventHash,
             ProvenanceData lastProvenanceData)
@@ -45,6 +48,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
             Names = names.ToDictionary();
             HomonymAdditions = homonymAdditions.ToDictionary();
             IsRemoved = isRemoved;
+            IsRenamed = isRenamed;
             LegacyStreetNameId = legacyStreetNameId is null ? (Guid?)null : legacyStreetNameId;
             LastEventHash = lastEventHash;
             LastProvenanceData = lastProvenanceData;
@@ -57,6 +61,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
             IDictionary<Language, string> names,
             IDictionary<Language, string> homonymAdditions,
             bool isRemoved,
+            bool? isRenamed,
             Guid? legacyStreetNameId,
             string lastEventHash,
             ProvenanceData lastProvenanceData)
@@ -66,6 +71,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
             Names = names;
             HomonymAdditions = homonymAdditions;
             IsRemoved = isRemoved;
+            IsRenamed = isRenamed ?? false;
             LegacyStreetNameId = legacyStreetNameId;
             LastEventHash = lastEventHash;
             LastProvenanceData = lastProvenanceData;
