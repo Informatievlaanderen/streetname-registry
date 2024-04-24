@@ -179,6 +179,7 @@ namespace StreetNameRegistry.Municipality
             PersistentLocalId = new PersistentLocalId(streetNameData.StreetNamePersistentLocalId);
             Status = streetNameData.Status;
             IsRemoved = streetNameData.IsRemoved;
+            IsRenamed = streetNameData.IsRenamed;
 
             Names = new Names(streetNameData.Names);
             HomonymAdditions = new HomonymAdditions(streetNameData.HomonymAdditions);
