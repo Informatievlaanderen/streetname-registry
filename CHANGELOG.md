@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.1.0...v4.1.1) (2024-04-25)
+
+
+### Bug Fixes
+
+* restore snapshot streetname isrenamed ([aac4dcc](https://github.com/informatievlaanderen/streetname-registry/commit/aac4dcc027604833cd4b272cddd42656efb4b8a6))
+
 # [4.1.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.0.7...v4.1.0) (2024-04-22)
 
 
