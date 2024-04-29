@@ -1,3 +1,10 @@
+# [4.2.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.1.1...v4.2.0) (2024-04-29)
+
+
+### Features
+
+* add combined index isremoved and status on integration projections ([3bda9f9](https://github.com/informatievlaanderen/streetname-registry/commit/3bda9f98e8949f70bb8ab36d5275743398e852ea))
+
 ## [4.1.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.1.0...v4.1.1) (2024-04-25)
 
 
