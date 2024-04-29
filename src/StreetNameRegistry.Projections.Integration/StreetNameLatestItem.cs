@@ -96,6 +96,7 @@ namespace StreetNameRegistry.Projections.Integration
             builder.HasIndex(x => x.NameFrench);
             builder.HasIndex(x => x.NameGerman);
             builder.HasIndex(x => x.IsRemoved);
+            builder.HasIndex(x => new { x.IsRemoved, x.Status });
         }
     }
 }
