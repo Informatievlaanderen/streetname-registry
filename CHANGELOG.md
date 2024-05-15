@@ -1,3 +1,10 @@
+## [4.2.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.2.0...v4.2.1) (2024-05-15)
+
+
+### Bug Fixes
+
+* **ci:** add newstg pipeline + add version to prd ([48e41bc](https://github.com/informatievlaanderen/streetname-registry/commit/48e41bcea4b417c2707f8eba942516b428257fbb))
+
 # [4.2.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.1.1...v4.2.0) (2024-04-29)
 
 
