@@ -1,5 +1,5 @@
 name: Manual Production Deploy
-
+run-name: 'Manual Production Deploy: ${{ github.event.inputs.version }}'
 on:
   workflow_dispatch:
     inputs:
