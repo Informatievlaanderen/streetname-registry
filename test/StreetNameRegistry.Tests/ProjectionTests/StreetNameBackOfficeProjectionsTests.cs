@@ -1,16 +1,20 @@
 namespace StreetNameRegistry.Tests.ProjectionTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Api.BackOffice.Abstractions;
     using AutoFixture;
     using BackOffice;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Testing;
     using FluentAssertions;
     using global::AutoFixture;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
     using Moq;
     using Municipality;
     using Municipality.Events;
@@ -27,7 +31,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             _fixture = new Fixture();
             _fixture.Customize(new InfrastructureCustomization());
 
-            _fakeBackOfficeContext = new FakeBackOfficeContextFactory(true).CreateDbContext(Array.Empty<string>());
+            _fakeBackOfficeContext = new FakeBackOfficeContextFactory(true).CreateDbContext([]);
             BackOfficeContextMock
                 .Setup(x => x.CreateDbContextAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_fakeBackOfficeContext);
@@ -40,7 +44,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
 
             await Sut
-                .Given(streetNameWasProposedV2)
+                .Given(BuildEnvelope(streetNameWasProposedV2))
                 .Then(async _ =>
                 {
                     var result = await _fakeBackOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(streetNameWasProposedV2
@@ -64,7 +68,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 CancellationToken.None);
 
             await Sut
-                .Given(streetNameWasProposedV2)
+                .Given(BuildEnvelope(streetNameWasProposedV2))
                 .Then(async _ =>
                 {
                     var result = await _fakeBackOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(streetNameWasProposedV2
@@ -78,15 +82,24 @@ namespace StreetNameRegistry.Tests.ProjectionTests
 
     public abstract class StreetNameBackOfficeProjectionsTest
     {
+        protected const int DelayInSeconds = 1;
         protected ConnectedProjectionTest<BackOfficeProjectionsContext, BackOfficeProjections> Sut { get; }
         protected Mock<IDbContextFactory<BackOfficeContext>> BackOfficeContextMock { get; }
 
         protected StreetNameBackOfficeProjectionsTest()
         {
+            var inMemorySettings = new Dictionary<string, string> {
+                {nameof(DelayInSeconds), DelayInSeconds.ToString()}
+            };
+
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+
             BackOfficeContextMock = new Mock<IDbContextFactory<BackOfficeContext>>();
             Sut = new ConnectedProjectionTest<BackOfficeProjectionsContext, BackOfficeProjections>(
                 CreateContext,
-                () => new BackOfficeProjections(BackOfficeContextMock.Object));
+                () => new BackOfficeProjections(BackOfficeContextMock.Object, configuration));
         }
 
         protected virtual BackOfficeProjectionsContext CreateContext()
@@ -96,6 +109,15 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 .Options;
 
             return new BackOfficeProjectionsContext(options);
+        }
+
+        protected Envelope<TMessage> BuildEnvelope<TMessage>(TMessage message)
+            where TMessage : IMessage
+        {
+            return new Envelope<TMessage>(new Envelope(message, new Dictionary<string, object>
+            {
+                { Envelope.CreatedUtcMetadataKey, DateTime.UtcNow }
+            }));
         }
     }
 }
