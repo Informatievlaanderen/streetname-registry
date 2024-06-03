@@ -5,7 +5,6 @@ namespace StreetNameRegistry.Consumer.Projections
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
-    using NodaTime;
     using NodaTime.Text;
     using StreetNameRegistry.Municipality;
     using StreetNameRegistry.Municipality.Commands;
@@ -237,7 +236,7 @@ namespace StreetNameRegistry.Consumer.Projections
 
         private static Provenance FromProvenance(Contracts.Provenance provenance, Modification modification = Modification.Update) =>
             new Provenance(
-                SystemClock.Instance.GetCurrentInstant(),
+                InstantPattern.General.Parse(provenance.Timestamp).Value,
                 Enum.Parse<Application>(provenance.Application),
                 new Reason(provenance.Reason),
                 new Operator(string.Empty),

@@ -115,7 +115,11 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             await Then(async _ =>
             {
                 _mockCommandHandler.Verify(
-                    x => x.Handle(It.Is<IHasCommandProvenance>(x => x is ImportMunicipality), CancellationToken.None),
+                    x => x.Handle(
+                        It.Is<IHasCommandProvenance>(y =>
+                            y is ImportMunicipality
+                            && y.Provenance.Timestamp.ToString() == @event.Provenance.Timestamp),
+                        CancellationToken.None),
                     Times.Once);
                 await Task.CompletedTask;
             });
