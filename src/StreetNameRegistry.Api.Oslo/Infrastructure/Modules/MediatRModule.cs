@@ -11,6 +11,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
     using StreetName.Count;
     using StreetName.Detail;
     using StreetName.List;
+    using StreetName.Sync;
 
     public sealed class MediatRModule : Module
     {
@@ -39,6 +40,10 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                     c.Resolve<LegacyContext>(),
                     c.Resolve<SyndicationContext>(),
                     c.Resolve<ConsumerPostalContext>())).InstancePerLifetimeScope();
+
+            builder.RegisterType<SyndicationHandler>()
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
         }
     }
 }
