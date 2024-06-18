@@ -1,3 +1,10 @@
+## [4.4.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.4.0...v4.4.1) (2024-06-18)
+
+
+### Bug Fixes
+
+* **ci:** use new lambda deploy test+stg ([e59da98](https://github.com/informatievlaanderen/streetname-registry/commit/e59da980cf5a005e09874fc69e71c27984747a56))
+
 # [4.4.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.3.0...v4.4.0) (2024-06-18)
 
 
