@@ -9,7 +9,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.List
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Consumer.Read.Postal;
     using Convertors;
     using Infrastructure.Options;
     using MediatR;
@@ -27,25 +26,22 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.List
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
-        private readonly ConsumerPostalContext _postalContext;
 
         private readonly IOptions<ResponseOptions> _responseOptions;
 
         public ListHandlerV2(
             LegacyContext legacyContext,
             SyndicationContext syndicationContext,
-            ConsumerPostalContext postalContext,
             IOptions<ResponseOptions> responseOptions)
         {
             _legacyContext = legacyContext;
             _syndicationContext = syndicationContext;
-            _postalContext = postalContext;
             _responseOptions = responseOptions;
         }
 
         public async Task<StreetNameListResponse> Handle(ListRequest request, CancellationToken cancellationToken)
         {
-            var streetNameQuery = new StreetNameListQueryV2(_legacyContext, _syndicationContext, _postalContext)
+            var streetNameQuery = new StreetNameListQueryV2(_legacyContext, _syndicationContext)
                     .Fetch<StreetNameListItemV2, StreetNameListItemV2>(request.Filtering, request.Sorting, request.Pagination);
 
             var pagedStreetNames = await streetNameQuery

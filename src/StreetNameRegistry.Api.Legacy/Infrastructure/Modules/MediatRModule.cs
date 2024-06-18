@@ -2,7 +2,6 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure.Modules
 {
     using Autofac;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Consumer.Read.Postal;
     using MediatR;
     using Microsoft.Extensions.Options;
     using Options;
@@ -30,7 +29,6 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure.Modules
                 new ListHandlerV2(
                     c.Resolve<LegacyContext>(),
                     c.Resolve<SyndicationContext>(),
-                    c.Resolve<ConsumerPostalContext>(),
                     c.Resolve<IOptions<ResponseOptions>>())).InstancePerLifetimeScope();
 
             builder.Register(c => (IRequestHandler<DetailRequest, StreetNameResponse>)
@@ -42,8 +40,7 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure.Modules
             builder.Register(c => (IRequestHandler<CountRequest, TotaalAantalResponse>)
                 new CountHandlerV2(
                     c.Resolve<LegacyContext>(),
-                    c.Resolve<SyndicationContext>(),
-                    c.Resolve<ConsumerPostalContext>())).InstancePerLifetimeScope();
+                    c.Resolve<SyndicationContext>())).InstancePerLifetimeScope();
         }
     }
 }
