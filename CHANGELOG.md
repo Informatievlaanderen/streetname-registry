@@ -1,3 +1,10 @@
+# [4.4.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.3.0...v4.4.0) (2024-06-18)
+
+
+### Features
+
+* remove postal consumer legacy ([fb5be96](https://github.com/informatievlaanderen/streetname-registry/commit/fb5be96e78e6ee39c446e40921b2fc5ede029343))
+
 # [4.3.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.2.1...v4.3.0) (2024-06-17)
 
 
