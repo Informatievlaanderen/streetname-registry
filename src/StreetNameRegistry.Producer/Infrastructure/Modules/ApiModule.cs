@@ -80,25 +80,6 @@ namespace StreetNameRegistry.Producer.Infrastructure.Modules
                 .RegisterProjectionMigrator<ProducerContextMigrationFactory>(
                     _configuration,
                     _loggerFactory)
-                .RegisterProjections<ProducerProjections, ProducerContext>(() =>
-                {
-                    var bootstrapServers = _configuration["Kafka:BootstrapServers"];
-                    var topic = $"{_configuration[ProducerProjections.StreetNameTopicKey]}" ?? throw new ArgumentException($"Configuration has no value for {ProducerProjections.StreetNameTopicKey}");
-                    var producerOptions = new ProducerOptions(
-                            new BootstrapServers(bootstrapServers),
-                            new Topic(topic),
-                            true,
-                            EventsJsonSerializerSettingsProvider.CreateSerializerSettings())
-                        .ConfigureEnableIdempotence();
-                    if (!string.IsNullOrEmpty(_configuration["Kafka:SaslUserName"])
-                        && !string.IsNullOrEmpty(_configuration["Kafka:SaslPassword"]))
-                    {
-                        producerOptions.ConfigureSaslAuthentication(new SaslAuthentication(
-                            _configuration["Kafka:SaslUserName"],
-                            _configuration["Kafka:SaslPassword"]));
-                    }
-                    return new ProducerProjections(new Producer(producerOptions));
-                }, connectedProjectionSettings)
                 .RegisterProjections<ProducerMigrateProjections, ProducerContext>(() =>
                 {
                     var bootstrapServers = _configuration["Kafka:BootstrapServers"];
