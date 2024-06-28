@@ -1,3 +1,10 @@
+# [4.5.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.4.1...v4.5.0) (2024-06-28)
+
+
+### Features
+
+* remove unneeded producer ([fd04566](https://github.com/informatievlaanderen/streetname-registry/commit/fd04566e50d40b627b3d245bbf943cc588969051))
+
 ## [4.4.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.4.0...v4.4.1) (2024-06-18)
 
 
