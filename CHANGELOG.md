@@ -1,3 +1,10 @@
+## [4.5.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.5.1...v4.5.2) (2024-07-02)
+
+
+### Bug Fixes
+
+* streetname sync controller ([a0a8fc5](https://github.com/informatievlaanderen/streetname-registry/commit/a0a8fc5bc38fb23b6456c5599dd0877cbabb435a))
+
 ## [4.5.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.5.0...v4.5.1) (2024-07-02)
 
 
