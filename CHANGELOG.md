@@ -1,3 +1,10 @@
+## [4.5.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.5.0...v4.5.1) (2024-07-02)
+
+
+### Bug Fixes
+
+* correct docs oslo sync ([fdea69e](https://github.com/informatievlaanderen/streetname-registry/commit/fdea69e32715c4639ec974ee1a8475b75564038e))
+
 # [4.5.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.4.1...v4.5.0) (2024-06-28)
 
 
