@@ -45,24 +45,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
                 item.AddLink(
                     new SyndicationLink(
                         new Uri($"{responseOptions.Value.Naamruimte}/{streetName.PersistentLocalId.Value}"),
-                        AtomLinkTypes.Related));
-
-                //item.AddLink(
-                //    new SyndicationLink(
-                //        new Uri(string.Format(responseOptions.Value.DetailUrl, streetName.PersistentLocalId.Value)),
-                //        AtomLinkTypes.Self));
-
-                //item.AddLink(
-                //    new SyndicationLink(
-                //            new Uri(string.Format($"{responseOptions.Value.DetailUrl}.xml", streetName.PersistentLocalId.Value)),
-                //            AtomLinkTypes.Alternate)
-                //    { MediaType = MediaTypeNames.Application.Xml });
-
-                //item.AddLink(
-                //    new SyndicationLink(
-                //            new Uri(string.Format($"{responseOptions.Value.DetailUrl}.json", streetName.PersistentLocalId.Value)),
-                //            AtomLinkTypes.Alternate)
-                //    { MediaType = MediaTypeNames.Application.Json });
+                        AtomLinkTypes.Related));              
             }
 
             item.AddCategory(
@@ -229,7 +212,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
     {
         private const string RawXml = @"<?xml version=""1.0"" encoding=""utf-8""?>
 <feed xmlns=""http://www.w3.org/2005/Atom"">
-    <id>https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen.atom</id>
+    <id>https://api.basisregisters.vlaanderen.be/v2/feeds/straatnamen.atom</id>
     <title>Basisregisters Vlaanderen - feed 'straatnamen'</title>
     <subtitle>Deze Atom feed geeft leestoegang tot events op de resource 'straatnamen'.</subtitle>
     <generator uri=""https://basisregisters.vlaanderen.be"" version=""2.2.15.0"">Basisregisters Vlaanderen</generator>
@@ -239,11 +222,11 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
         <name>Digitaal Vlaanderen</name>
         <email>digitaal.vlaanderen@vlaanderen.be</email>
     </author>
-    <link href=""https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen"" rel=""self"" />
-    <link href=""https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen.atom"" rel=""alternate"" type=""application/atom+xml"" />
-    <link href=""https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen.xml"" rel=""alternate"" type=""application/xml"" />
+    <link href=""https://api.basisregisters.vlaanderen.be/v2/feeds/straatnamen"" rel=""self"" />
+    <link href=""https://api.basisregisters.vlaanderen.be/v2/feeds/straatnamen.atom"" rel=""alternate"" type=""application/atom+xml"" />
+    <link href=""https://api.basisregisters.vlaanderen.be/v2/feeds/straatnamen.xml"" rel=""alternate"" type=""application/xml"" />
     <link href=""https://docs.basisregisters.vlaanderen.be/"" rel=""related"" />
-    <link href=""https://api.basisregisters.vlaanderen.be/v1/feeds/straatnamen?from=2&amp;limit=100&amp;embed=event,object"" rel=""next"" />
+    <link href=""https://api.basisregisters.vlaanderen.be/v2/feeds/straatnamen?from=2&amp;limit=100&amp;embed=event,object"" rel=""next"" />
     <entry>
         <id>0</id>
         <title>StreetNameWasRegistered-0</title>
