@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.Oslo.StreetName
 {
+    using System.Net.Mime;
     using System.Threading;
     using System.Threading.Tasks;
     using Asp.Versioning;
@@ -18,6 +19,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
     using Microsoft.AspNetCore.Mvc;
     using Query;
     using Swashbuckle.AspNetCore.Filters;
+    using Sync;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
 
     [ApiVersion("2.0")]
@@ -111,6 +113,35 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
             var result = await _mediator.Send(new OsloCountRequest(filtering, sorting), cancellationToken);
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Vraag een lijst met wijzigingen van straatnamen op.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("sync")]
+        [Produces("text/xml")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameSyndicationResponseExamples))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
+        public async Task<IActionResult> Sync(CancellationToken cancellationToken = default)
+        {
+            var filtering = Request.ExtractFilteringRequest<StreetNameSyndicationFilter>();
+            var sorting = Request.ExtractSortingRequest();
+            var pagination = Request.ExtractPaginationRequest();
+
+            var result = await _mediator.Send(new SyndicationRequest(filtering, sorting, pagination), cancellationToken);
+
+            return new ContentResult
+            {
+                Content = result.Content,
+                ContentType = MediaTypeNames.Text.Xml,
+                StatusCode = StatusCodes.Status200OK
+            };
         }
     }
 }
