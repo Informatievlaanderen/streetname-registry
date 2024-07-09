@@ -47,6 +47,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                         true,
                         true,
                         fixture.Create<StreetNameId?>(),
+                        fixture.CreateMany<Guid>(3).Select(x => new MunicipalityId(x)).ToList(),
+                        fixture.CreateMany<PersistentLocalId>(3).ToList(),
                         fixture.Create<string>(),
                         fixture.Create<ProvenanceData>()))
                     .CreateMany(random.Next(2, 10));

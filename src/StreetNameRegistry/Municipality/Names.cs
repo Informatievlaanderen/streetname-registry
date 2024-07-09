@@ -1,20 +1,24 @@
 namespace StreetNameRegistry.Municipality
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
-    public sealed class Names : List<StreetNameName>
+    public sealed class Names : ICollection<StreetNameName>
     {
+        private readonly List<StreetNameName> _names = [];
+
         public Names()
         { }
 
         public Names(IEnumerable<StreetNameName> streetNameNames)
-            : base(streetNameNames.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
-        { }
+        {
+            _names = streetNameNames.Where(x => !string.IsNullOrWhiteSpace(x.Name)).ToList();
+        }
 
         public Names(IDictionary<Language, string> streetNameNames)
-            : base(streetNameNames
+            : this(streetNameNames
                 .Where(x => !string.IsNullOrWhiteSpace(x.Value))
                 .Select(x => new StreetNameName(x.Value, x.Key)))
         { }
@@ -68,19 +72,45 @@ namespace StreetNameRegistry.Municipality
                 throw new InvalidOperationException($"Already name present with language {language}");
             }
 
-            Add(new StreetNameName(name, language));
+            _names.Add(new StreetNameName(name, language));
         }
 
-        public void Remove(Language language)
+        public bool Remove(Language language)
         {
             var index = GetIndexByLanguage(language);
             if (index != -1)
             {
-                RemoveAt(index);
+                _names.RemoveAt(index);
+                return true;
             }
+
+            return false;
         }
 
         private int GetIndexByLanguage(Language language)
-            => FindIndex(name => name.Language == language);
+            => _names.FindIndex(name => name.Language == language);
+
+        public IEnumerator<StreetNameName> GetEnumerator()
+        {
+            return _names.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Add(StreetNameName item) => Add(item.Language, item.Name);
+
+        public void Clear() => throw new NotImplementedException();
+
+        public bool Contains(StreetNameName item) => _names.Contains(item);
+
+        public void CopyTo(StreetNameName[] array, int arrayIndex) => _names.CopyTo(array, arrayIndex);
+
+        public bool Remove(StreetNameName item) => Remove(item.Language);
+
+        public int Count => _names.Count;
+        public bool IsReadOnly => false;
     }
 }

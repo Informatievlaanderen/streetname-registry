@@ -64,6 +64,52 @@ namespace StreetNameRegistry.Municipality
             ApplyChange(new StreetNameWasProposedV2(_municipalityId, _nisCode, streetNameNames, persistentLocalId));
         }
 
+        public void ProposeStreetNameForMunicipalityMerger(
+            Names streetNameNames,
+            HomonymAdditions homonymAdditions,
+            PersistentLocalId persistentLocalId,
+            List<MunicipalityId> mergedMunicipalityIds,
+            List<PersistentLocalId> mergedStreetNamePersistentLocalIds)
+        {
+            if (MunicipalityStatus == MunicipalityStatus.Retired)
+            {
+                throw new MunicipalityHasInvalidStatusException($"Municipality with id '{_municipalityId}' was retired");
+            }
+
+            if (StreetNames.HasPersistentLocalId(persistentLocalId))
+            {
+                throw new StreetNamePersistentLocalIdAlreadyExistsException();
+            }
+
+            GuardStreetNameNames(streetNameNames, homonymAdditions, persistentLocalId);
+
+            foreach (var language in _officialLanguages.Concat(_facilityLanguages))
+            {
+                if (!streetNameNames.HasLanguage(language))
+                {
+                    throw new StreetNameIsMissingALanguageException($"The language '{language}' is missing.");
+                }
+            }
+
+            if(!mergedMunicipalityIds.Any())
+                throw new MergedMunicipalityIdsAreMissingException();
+
+            if(!mergedStreetNamePersistentLocalIds.Any())
+                throw new MergedStreetNamePersistentLocalIdsAreMissingException();
+
+            if (mergedStreetNamePersistentLocalIds.Count != mergedStreetNamePersistentLocalIds.Distinct().Count())
+                throw new MergedStreetNamePersistentLocalIdsAreNotUniqueException();
+
+            ApplyChange(new StreetNameWasProposedForMunicipalityMerger(
+                _municipalityId,
+                _nisCode,
+                streetNameNames,
+                homonymAdditions,
+                persistentLocalId,
+                mergedMunicipalityIds.Distinct().ToList(),
+                mergedStreetNamePersistentLocalIds));
+        }
+
         public void ApproveStreetName(PersistentLocalId persistentLocalId)
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);

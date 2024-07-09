@@ -39,6 +39,7 @@ namespace StreetNameRegistry.Municipality
 
             Register<StreetNameWasMigratedToMunicipality>(When);
             Register<StreetNameWasProposedV2>(When);
+            Register<StreetNameWasProposedForMunicipalityMerger>(When);
             Register<StreetNameWasApproved>(When);
             Register<StreetNameWasRejected>(When);
             Register<StreetNameWasRetiredV2>(When);
@@ -54,6 +55,7 @@ namespace StreetNameRegistry.Municipality
 
             Register<MunicipalitySnapshot>(When);
         }
+
 
         #region Municipality
         private void When(MunicipalityWasImported @event)
@@ -118,6 +120,13 @@ namespace StreetNameRegistry.Municipality
         }
 
         private void When(StreetNameWasProposedV2 @event)
+        {
+            var streetName = new MunicipalityStreetName(ApplyChange);
+            streetName.Route(@event);
+            StreetNames.Add(streetName);
+        }
+
+        private void When(StreetNameWasProposedForMunicipalityMerger @event)
         {
             var streetName = new MunicipalityStreetName(ApplyChange);
             streetName.Route(@event);

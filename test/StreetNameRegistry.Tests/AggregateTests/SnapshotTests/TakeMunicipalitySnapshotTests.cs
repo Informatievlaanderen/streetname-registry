@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
 {
     using System.Collections.Generic;
+    using System.Linq;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
@@ -311,6 +312,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     streetNameWasMigratedToMunicipality.IsRemoved,
                     false,
                     new StreetNameId(streetNameWasMigratedToMunicipality.StreetNameId),
+                    [],
+                    [],
                     streetNameWasMigratedToMunicipality.GetHash(),
                     streetNameWasMigratedToMunicipality.Provenance)
             });
@@ -344,6 +347,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     false,
                     null,
+                    [],
+                    [],
                     streetNameWasProposedV2.GetHash(),
                     streetNameWasProposedV2.Provenance)
             });
@@ -380,6 +385,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     false,
                     null,
+                    [],
+                    [],
                     streetNameWasApproved.GetHash(),
                     streetNameWasApproved.Provenance)
             });
@@ -416,6 +423,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     false,
                     null,
+                    [],
+                    [],
                     streetNameWasRejected.GetHash(),
                     streetNameWasRejected.Provenance)
             });
@@ -454,6 +463,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     false,
                     null,
+                    [],
+                    [],
                     streetNameWasRetiredV2.GetHash(),
                     streetNameWasRetiredV2.Provenance)
             });
@@ -495,6 +506,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     false,
                     null,
+                    [],
+                    [],
                     streetNameNamesWereCorrected.GetHash(),
                     streetNameNamesWereCorrected.Provenance)
             });
@@ -536,6 +549,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     false,
                     null,
+                    [],
+                    [],
                     streetNameNamesWereChanged.GetHash(),
                     streetNameNamesWereChanged.Provenance)
             });
@@ -576,6 +591,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     false,
                     null,
+                    [],
+                    [],
                     nameWasCorrectedFromRetiredToCurrent.GetHash(),
                     nameWasCorrectedFromRetiredToCurrent.Provenance)
             });
@@ -614,6 +631,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     true,
                     false,
                     null,
+                    [],
+                    [],
                     streetNameWasRemovedV2.GetHash(),
                     streetNameWasRemovedV2.Provenance)
             });
@@ -652,8 +671,51 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     true,
                     null,
+                    [],
+                    [],
                     streetNameWasRenamed.GetHash(),
                     streetNameWasRenamed.Provenance)
+            });
+        }
+
+        [Fact]
+        public void StreetNameWasProposedForMunicipalityMergerIsSavedInSnapshot()
+        {
+            var streetNameName = Fixture.Create<StreetNameName>();
+            var homonym = new StreetNameHomonymAddition(new string(Fixture.CreateMany<char>(5).ToArray()), Language.Dutch);
+            Fixture.Register(() => new Names { streetNameName });
+            Fixture.Register(() => new HomonymAdditions { homonym });
+            Fixture.Register(() => Language.Dutch);
+
+            var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();
+
+            var streetNameWasProposedForMunicipalityMerger = Fixture.Create<StreetNameWasProposedForMunicipalityMerger>();
+            ((ISetProvenance)streetNameWasProposedForMunicipalityMerger).SetProvenance(Fixture.Create<Provenance>());
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>(),
+                streetNameWasProposedForMunicipalityMerger
+            });
+
+            var snapshot = aggregate.TakeSnapshot();
+
+            snapshot.Should().BeOfType<MunicipalitySnapshot>();
+            var municipalitySnapshot = (MunicipalitySnapshot)snapshot;
+
+            municipalitySnapshot.StreetNames.Should().BeEquivalentTo(new List<StreetNameData>
+            {
+                new StreetNameData(
+                    new PersistentLocalId(streetNameWasProposedForMunicipalityMerger.PersistentLocalId),
+                    StreetNameStatus.Proposed,
+                    new Names(streetNameWasProposedForMunicipalityMerger.StreetNameNames),
+                    new HomonymAdditions(streetNameWasProposedForMunicipalityMerger.HomonymAdditions),
+                    isRemoved:false,
+                    isRenamed:false,
+                    legacyStreetNameId:null,
+                    streetNameWasProposedForMunicipalityMerger.MergedMunicipalityIds.Select(x => new MunicipalityId(x)).ToList(),
+                    streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)).ToList(),
+                    streetNameWasProposedForMunicipalityMerger.GetHash(),
+                    streetNameWasProposedForMunicipalityMerger.Provenance)
             });
         }
     }
