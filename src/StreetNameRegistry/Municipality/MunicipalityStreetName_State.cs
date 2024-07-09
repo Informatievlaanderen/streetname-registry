@@ -1,6 +1,8 @@
 namespace StreetNameRegistry.Municipality
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Events;
 
@@ -21,6 +23,9 @@ namespace StreetNameRegistry.Municipality
         public bool IsRetired => Status == StreetNameStatus.Retired;
         public bool IsRejected => Status == StreetNameStatus.Rejected;
 
+        public IReadOnlyList<MunicipalityId> MergedMunicipalityIds { get; private set; } = [];
+        public IReadOnlyList<PersistentLocalId> MergedStreetNamePersistentLocalIds { get; private set; } = [];
+
         public StreetNameId? LegacyStreetNameId { get; private set; }
 
         public string LastEventHash => _lastEvent is null ? _lastSnapshotEventHash : _lastEvent.GetHash();
@@ -32,6 +37,7 @@ namespace StreetNameRegistry.Municipality
         {
             Register<StreetNameWasMigratedToMunicipality>(When);
             Register<StreetNameWasProposedV2>(When);
+            Register<StreetNameWasProposedForMunicipalityMerger>(When);
             Register<StreetNameWasApproved>(When);
             Register<StreetNameWasRejected>(When);
             Register<StreetNameWasRetiredV2>(When);
@@ -64,6 +70,19 @@ namespace StreetNameRegistry.Municipality
             Status = StreetNameStatus.Proposed;
             PersistentLocalId = new PersistentLocalId(@event.PersistentLocalId);
             Names = new Names(@event.StreetNameNames);
+            IsRemoved = false;
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameWasProposedForMunicipalityMerger @event)
+        {
+            _municipalityId = new MunicipalityId(@event.MunicipalityId);
+            Status = StreetNameStatus.Proposed;
+            PersistentLocalId = new PersistentLocalId(@event.PersistentLocalId);
+            Names = new Names(@event.StreetNameNames);
+            HomonymAdditions = new HomonymAdditions(@event.HomonymAdditions);
+            MergedMunicipalityIds = @event.MergedMunicipalityIds.Select(x => new MunicipalityId(x)).ToList();
+            MergedStreetNamePersistentLocalIds = @event.MergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)).ToList();
             IsRemoved = false;
             _lastEvent = @event;
         }

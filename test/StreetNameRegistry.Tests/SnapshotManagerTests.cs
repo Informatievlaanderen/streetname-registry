@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -9,6 +10,7 @@ namespace StreetNameRegistry.Tests
     using FluentAssertions;
     using Microsoft.Extensions.Logging.Abstractions;
     using Moq;
+    using Newtonsoft.Json;
     using NodaTime;
     using Xunit;
 
@@ -145,7 +147,8 @@ namespace StreetNameRegistry.Tests
                 CancellationToken.None);
 
             result.Should().NotBeNull();
-            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None), () => Times.AtMost(options.MaxRetryWaitIntervalSeconds + 1));
+            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None),
+                () => Times.AtMost(options.MaxRetryWaitIntervalSeconds + 1));
         }
 
         [Fact]
@@ -191,7 +194,8 @@ namespace StreetNameRegistry.Tests
                 CancellationToken.None);
 
             result.Should().NotBeNull();
-            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None), () => Times.AtMost(options.MaxRetryWaitIntervalSeconds + 1));
+            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None),
+                () => Times.AtMost(options.MaxRetryWaitIntervalSeconds + 1));
         }
 
         [Fact]
@@ -273,7 +277,8 @@ namespace StreetNameRegistry.Tests
                 throwStaleWhenGone: false,
                 CancellationToken.None);
 
-            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None), () => Times.Exactly(options.MaxRetryWaitIntervalSeconds + 1));
+            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None),
+                () => Times.Exactly(options.MaxRetryWaitIntervalSeconds + 1));
         }
     }
 }
