@@ -73,6 +73,14 @@
                     ct);
             });
 
+            //TODO-rik
+            // When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
+            //     MunicipalityDomain.StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (_, message, ct) =>
+            // {
+            //     await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position,
+            //         ct);
+            // });
+
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
                 MunicipalityDomain.StreetNameWasRenamed>>(async (_, message, ct) =>
             {

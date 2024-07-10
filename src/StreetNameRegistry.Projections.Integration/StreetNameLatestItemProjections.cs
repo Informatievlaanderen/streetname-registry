@@ -128,6 +128,16 @@
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameLatestItem(message.Message.PersistentLocalId, item =>
+                {
+                    item.Status = StreetNameStatus.Retired;
+                    item.OsloStatus = StreetNameStatus.Retired.Map();
+                    item.VersionTimestamp = message.Message.Provenance.Timestamp;
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasRenamed>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameLatestItem(message.Message.PersistentLocalId, item =>

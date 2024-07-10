@@ -144,6 +144,10 @@ namespace StreetNameRegistry.Producer.Extensions
         public static Contracts.StreetNameWasRetiredV2 ToContract(this StreetNameWasRetiredV2 message) =>
             new Contracts.StreetNameWasRetiredV2(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
 
+        //TODO-rik
+        // public static Contracts.StreetNameWasRetiredBecauseOfMunicipalityMerger ToContract(this StreetNameWasRetiredBecauseOfMunicipalityMerger message) =>
+        //     new Contracts.StreetNameWasRetiredBecauseOfMunicipalityMerger(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
+
         public static Contracts.StreetNameWasRenamed ToContract(this StreetNameWasRenamed message) =>
             new Contracts.StreetNameWasRenamed(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.DestinationPersistentLocalId, message.Provenance.ToContract());
 

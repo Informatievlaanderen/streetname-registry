@@ -360,6 +360,43 @@
         }
 
         [Fact]
+        public async Task WhenStreetNameWasRetiredBecauseOfMunicipalityMerger()
+        {
+            var streetNameWasMigratedToMunicipality = _fixture.Create<StreetNameWasMigratedToMunicipality>();
+            var streetNameWasRetiredBecauseOfMunicipalityMerger = _fixture.Create<StreetNameWasRetiredBecauseOfMunicipalityMerger>();
+
+            var position = _fixture.Create<long>();
+
+            var firstEventMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position }
+            };
+            var secondEventMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position + 1 }
+            };
+
+            await Sut
+                .Given(
+                    new Envelope<StreetNameWasMigratedToMunicipality>(new Envelope(streetNameWasMigratedToMunicipality, firstEventMetadata)),
+                    new Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>(new Envelope(streetNameWasRetiredBecauseOfMunicipalityMerger, secondEventMetadata)))
+                .Then(async ct =>
+                {
+                    var expectedLatestItem =
+                        await ct.StreetNameLatestItems.FindAsync(streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId);
+                    expectedLatestItem.Should().NotBeNull();
+                    expectedLatestItem!.Status.Should().Be(StreetNameStatus.Retired);
+                    expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.Gehistoreerd.ToString());
+
+                    expectedLatestItem.Namespace.Should().Be(Namespace);
+                    expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId}");
+                    expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp);
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameWasRenamed()
         {
             var streetNameWasMigratedToMunicipality = _fixture.Create<StreetNameWasMigratedToMunicipality>();

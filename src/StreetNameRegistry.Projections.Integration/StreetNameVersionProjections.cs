@@ -384,6 +384,15 @@
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
+                {
+                    item.Status = StreetNameStatus.Retired;
+                    item.OsloStatus = StreetNameStatus.Retired.Map();
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasRenamed>>(async (context, message, ct) =>
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>

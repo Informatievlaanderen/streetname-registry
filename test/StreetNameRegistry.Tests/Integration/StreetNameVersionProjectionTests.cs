@@ -407,6 +407,49 @@
         }
 
         [Fact]
+        public async Task WhenStreetNameWasRetiredBecauseOfMunicipalityMerger()
+        {
+            var streetNameWasProposedV2 = new StreetNameWasProposedV2Builder(_fixture)
+                .Build();
+
+            var streetNameWasRetiredBecauseOfMunicipalityMerger = _fixture.Create<StreetNameWasRetiredBecauseOfMunicipalityMerger>();
+
+            var position = _fixture.Create<long>();
+
+            var firstEvenMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position },
+                { Envelope.EventNameMetadataKey, _fixture.Create<string>()}
+            };
+
+            var secondEventMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position + 1 },
+                { Envelope.EventNameMetadataKey, nameof(streetNameWasRetiredBecauseOfMunicipalityMerger)}
+            };
+
+            await Sut
+                .Given(
+                    new Envelope<StreetNameWasProposedV2>(new Envelope(streetNameWasProposedV2, firstEvenMetadata)),
+                    new Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>(new Envelope(streetNameWasRetiredBecauseOfMunicipalityMerger, secondEventMetadata)))
+                .Then(async ct =>
+                {
+                    var expectedLatestItem =
+                        await ct.StreetNameVersions.FindAsync(position + 1, streetNameWasProposedV2.PersistentLocalId);
+                    expectedLatestItem.Should().NotBeNull();
+                    expectedLatestItem!.Status.Should().Be(StreetNameStatus.Retired);
+                    expectedLatestItem.OsloStatus.Should().Be("Gehistoreerd");
+                    expectedLatestItem.Type.Should().Be(nameof(streetNameWasRetiredBecauseOfMunicipalityMerger));
+
+                    expectedLatestItem.Namespace.Should().Be(Namespace);
+                    expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedV2.PersistentLocalId}");
+                    expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp);
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameWasRenamed()
         {
             var streetNameWasProposedV2 = new StreetNameWasProposedV2Builder(_fixture)

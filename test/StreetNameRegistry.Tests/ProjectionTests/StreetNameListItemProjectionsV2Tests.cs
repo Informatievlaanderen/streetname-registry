@@ -345,6 +345,45 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         }
 
         [Fact]
+        public async Task WhenStreetNameWasRetiredBecauseOfMunicipalityMerger_ThenStreetNameStatusWasChangedToRetired()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+            var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasApproved = new StreetNameWasApproved(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId));
+            ((ISetProvenance)streetNameWasApproved).SetProvenance(_fixture.Create<Provenance>());
+            var streetNameWasRetiredBecauseOfMunicipalityMerger = new StreetNameWasRetiredBecauseOfMunicipalityMerger(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId));
+            ((ISetProvenance)streetNameWasRetiredBecauseOfMunicipalityMerger).SetProvenance(_fixture.Create<Provenance>());
+
+            await Sut
+                .Given(
+                    _fixture.Create<MunicipalityWasImported>(),
+                    streetNameWasProposedV2,
+                    streetNameWasApproved,
+                    streetNameWasRetiredBecauseOfMunicipalityMerger)
+                .Then(async ct =>
+                {
+                    var expectedStreetName = (await ct.FindAsync<StreetNameListItemV2>(streetNameWasProposedV2.PersistentLocalId));
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
+                    expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
+                    expectedStreetName.IsInFlemishRegion.Should().Be(RegionFilter.IsFlemishRegion(streetNameWasProposedV2.NisCode));
+                    expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
+                    expectedStreetName.Removed.Should().BeFalse();
+                    expectedStreetName.Status.Should().Be(StreetNameStatus.Retired);
+                    expectedStreetName.VersionTimestamp.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp);
+                    expectedStreetName.NameDutch.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.Dutch));
+                    expectedStreetName.NameFrench.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.French));
+                    expectedStreetName.NameGerman.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.German));
+                    expectedStreetName.NameEnglish.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.English));
+                    expectedStreetName.PrimaryLanguage.Should().Be(null);
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameWasRenamed_ThenStreetNameStatusWasChangedToRetired()
         {
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));

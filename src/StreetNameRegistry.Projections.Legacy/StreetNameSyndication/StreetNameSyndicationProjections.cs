@@ -325,6 +325,14 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
+                {
+                    UpdateStatus(streetNameNameV2, StreetNameStatus.Retired);
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasRenamed>>(async (context, message, ct) =>
             {
                 await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>

@@ -466,6 +466,45 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
         }
 
         [Fact]
+        public void StreetNameWasRetiredBecauseOfMunicipalityMergerIsSavedInSnapshot()
+        {
+            var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();
+
+            var streetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasApproved = Fixture.Create<StreetNameWasApproved>();
+            var streetNameWasRetiredBecauseOfMunicipalityMerger = Fixture.Create<StreetNameWasRetiredBecauseOfMunicipalityMerger>();
+            ((ISetProvenance)streetNameWasRetiredBecauseOfMunicipalityMerger).SetProvenance(Fixture.Create<Provenance>());
+
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>(),
+                streetNameWasProposedV2,
+                streetNameWasApproved,
+                streetNameWasRetiredBecauseOfMunicipalityMerger
+            });
+
+            var snapshot = aggregate.TakeSnapshot();
+
+            snapshot.Should().BeOfType<MunicipalitySnapshot>();
+            var municipalitySnapshot = (MunicipalitySnapshot)snapshot;
+
+            municipalitySnapshot.StreetNames.Should().BeEquivalentTo(new List<StreetNameData>
+            {
+                new StreetNameData(
+                    new PersistentLocalId(streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId),
+                    StreetNameStatus.Retired,
+                    new Names(streetNameWasProposedV2.StreetNameNames),
+                    new HomonymAdditions(),
+                    false,
+                    false,
+                    null,
+                    [],
+                    streetNameWasRetiredBecauseOfMunicipalityMerger.GetHash(),
+                    streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance)
+            });
+        }
+
+        [Fact]
         public void StreetNameNamesWereCorrectedIsSavedInSnapshot()
         {
             var names = new Names(new[] { new StreetNameName("Kapelstraat", Language.Dutch) });
