@@ -24,6 +24,19 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
         }
 
+        public void ApproveForMunicipalityMerger()
+        {
+            if (Status == StreetNameStatus.Current)
+            {
+                return;
+            }
+
+            GuardStreetNameStatus(StreetNameStatus.Proposed);
+
+            //TODO-rik andere event? StreetNameWasApprovedBecauseOfMunicipalityMerger
+            Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
+        }
+
         public void Reject()
         {
             if (Status == StreetNameStatus.Rejected)
@@ -46,6 +59,18 @@ namespace StreetNameRegistry.Municipality
             GuardStreetNameStatus(StreetNameStatus.Current);
 
             Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
+        }
+
+        public void RetireForMunicipalityMerger()
+        {
+            if (Status == StreetNameStatus.Retired)
+            {
+                return;
+            }
+
+            GuardStreetNameStatus(StreetNameStatus.Current);
+
+            Apply(new StreetNameWasRetiredBecauseOfMunicipalityMerger(_municipalityId, PersistentLocalId));
         }
 
         public void CorrectNames(Names namesToCorrect, Action<Names, HomonymAdditions, PersistentLocalId> guardStreetNameNames)

@@ -44,7 +44,6 @@ namespace StreetNameRegistry.Municipality
                         message.Command.StreetNameNames,
                         message.Command.HomonymAdditions,
                         message.Command.PersistentLocalId,
-                        message.Command.MergedMunicipalityIds,
                         message.Command.MergedStreetNamePersistentLocalIds);
                 });
 
@@ -56,6 +55,16 @@ namespace StreetNameRegistry.Municipality
                 {
                     var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.ApproveStreetName(message.Command.PersistentLocalId);
+                });
+
+            For<ApproveStreetNamesForMunicipalityMerger>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<ApproveStreetNamesForMunicipalityMerger, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.ApproveStreetNamesForMunicipalityMerger();
                 });
 
             For<CorrectStreetNameApproval>()
@@ -115,6 +124,16 @@ namespace StreetNameRegistry.Municipality
                 {
                     var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.RetireStreetName(message.Command.PersistentLocalId);
+                });
+
+            For<RetireStreetNamesForMunicipalityMerger>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<RetireStreetNamesForMunicipalityMerger, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.RetireStreetNamesForMunicipalityMerger();
                 });
 
             For<CorrectStreetNameRetirement>()

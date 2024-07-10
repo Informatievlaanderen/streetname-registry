@@ -43,6 +43,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasApproved>(When);
             Register<StreetNameWasRejected>(When);
             Register<StreetNameWasRetiredV2>(When);
+            Register<StreetNameWasRetiredBecauseOfMunicipalityMerger>(When);
             Register<StreetNameNamesWereCorrected>(When);
             Register<StreetNameNamesWereChanged>(When);
             Register<StreetNameWasCorrectedFromApprovedToProposed>(When);
@@ -138,6 +139,8 @@ namespace StreetNameRegistry.Municipality
         private void When(StreetNameWasRejected @event) => RouteToStreetName(@event);
 
         private void When(StreetNameWasRetiredV2 @event) => RouteToStreetName(@event);
+
+        private void When(StreetNameWasRetiredBecauseOfMunicipalityMerger @event) => RouteToStreetName(@event);
 
         private void When(StreetNameNamesWereCorrected @event) => RouteToStreetName(@event);
 

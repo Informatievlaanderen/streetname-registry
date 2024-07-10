@@ -44,8 +44,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 .WithMunicipalityId(_municipalityId)
                 .WithStreetNameNames([new(Fixture.Create<string>(), Language.Dutch)])
                 .WithHomonymAdditions([new (new string(Fixture.CreateMany<char>(5).ToArray()), Language.Dutch)])
-                .WithMergedMunicipalityIds(Fixture.CreateMany<Guid>().Select(x => new MunicipalityId(x)).ToList())
-                .WithMergedStreetNamePersistentIds(Fixture.CreateMany<PersistentLocalId>().ToList());
+                ;
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
@@ -63,7 +62,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                         command.StreetNameNames,
                         command.HomonymAdditions,
                         command.PersistentLocalId,
-                        command.MergedMunicipalityIds,
                         command.MergedStreetNamePersistentLocalIds))));
         }
 
@@ -136,7 +134,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                         command.StreetNameNames,
                         command.HomonymAdditions,
                         command.PersistentLocalId,
-                        command.MergedMunicipalityIds.Distinct().ToList(),
                         command.MergedStreetNamePersistentLocalIds))));
         }
 
@@ -168,7 +165,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                         command.StreetNameNames,
                         command.HomonymAdditions,
                         command.PersistentLocalId,
-                        command.MergedMunicipalityIds.Distinct().ToList(),
                         command.MergedStreetNamePersistentLocalIds))));
         }
 
@@ -203,7 +199,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                         command.StreetNameNames,
                         command.HomonymAdditions,
                         command.PersistentLocalId,
-                        command.MergedMunicipalityIds.Distinct().ToList(),
                         command.MergedStreetNamePersistentLocalIds))));
         }
 
@@ -258,7 +253,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                         command.StreetNameNames,
                         command.HomonymAdditions,
                         command.PersistentLocalId,
-                        command.MergedMunicipalityIds.Distinct().ToList(),
                         command.MergedStreetNamePersistentLocalIds))));
         }
 
@@ -437,35 +431,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                         command.StreetNameNames,
                         command.HomonymAdditions,
                         command.PersistentLocalId,
-                        command.MergedMunicipalityIds.Distinct().ToList(),
                         command.MergedStreetNamePersistentLocalIds))));
-        }
-
-        [Fact]
-        public void WithEmptyMergedMunicipalityIds_ThenThrowsMergedMunicipalityIdsAreMissingException()
-        {
-            var streetNameName = Fixture.Create<StreetNameName>();
-            Fixture.Register(() => new Names { streetNameName });
-            Fixture.Register(() => Language.Dutch);
-            Fixture.Register(() => Taal.NL);
-
-            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
-            var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
-            var streetNameWasMigrated = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
-                .WithStatus(StreetNameStatus.Current)
-                .Build();
-
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithRandomStreetName(Fixture)
-                .WithMergedMunicipalityIds(new List<MunicipalityId>());
-
-            Assert(new Scenario()
-                .Given(_streamId,
-                    municipalityWasImported,
-                    municipalityOfficialLanguageWasAdded,
-                    streetNameWasMigrated)
-                .When(command)
-                .Throws(new MergedMunicipalityIdsAreMissingException()));
         }
 
         [Fact]
@@ -549,7 +515,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
             result.Names.Count.Should().BeGreaterThan(0);
             result.Names.Should().BeEquivalentTo(new Names(streetNameWasProposedForMunicipalityMerger.StreetNameNames));
             result.HomonymAdditions.Should().BeEquivalentTo(new HomonymAdditions(streetNameWasProposedForMunicipalityMerger.HomonymAdditions));
-            result.MergedMunicipalityIds.Should().BeEquivalentTo(streetNameWasProposedForMunicipalityMerger.MergedMunicipalityIds.Select(x => new MunicipalityId(x)));
             result.MergedStreetNamePersistentLocalIds.Should().BeEquivalentTo(streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)));
         }
     }

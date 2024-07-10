@@ -313,7 +313,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     new StreetNameId(streetNameWasMigratedToMunicipality.StreetNameId),
                     [],
-                    [],
                     streetNameWasMigratedToMunicipality.GetHash(),
                     streetNameWasMigratedToMunicipality.Provenance)
             });
@@ -347,7 +346,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     false,
                     null,
-                    [],
                     [],
                     streetNameWasProposedV2.GetHash(),
                     streetNameWasProposedV2.Provenance)
@@ -386,7 +384,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     null,
                     [],
-                    [],
                     streetNameWasApproved.GetHash(),
                     streetNameWasApproved.Provenance)
             });
@@ -423,7 +420,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     false,
                     null,
-                    [],
                     [],
                     streetNameWasRejected.GetHash(),
                     streetNameWasRejected.Provenance)
@@ -463,7 +459,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     false,
                     null,
-                    [],
                     [],
                     streetNameWasRetiredV2.GetHash(),
                     streetNameWasRetiredV2.Provenance)
@@ -507,7 +502,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     null,
                     [],
-                    [],
                     streetNameNamesWereCorrected.GetHash(),
                     streetNameNamesWereCorrected.Provenance)
             });
@@ -550,7 +544,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     null,
                     [],
-                    [],
                     streetNameNamesWereChanged.GetHash(),
                     streetNameNamesWereChanged.Provenance)
             });
@@ -592,7 +585,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     false,
                     null,
                     [],
-                    [],
                     nameWasCorrectedFromRetiredToCurrent.GetHash(),
                     nameWasCorrectedFromRetiredToCurrent.Provenance)
             });
@@ -631,7 +623,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     true,
                     false,
                     null,
-                    [],
                     [],
                     streetNameWasRemovedV2.GetHash(),
                     streetNameWasRemovedV2.Provenance)
@@ -672,7 +663,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     true,
                     null,
                     [],
-                    [],
                     streetNameWasRenamed.GetHash(),
                     streetNameWasRenamed.Provenance)
             });
@@ -712,7 +702,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     isRemoved:false,
                     isRenamed:false,
                     legacyStreetNameId:null,
-                    streetNameWasProposedForMunicipalityMerger.MergedMunicipalityIds.Select(x => new MunicipalityId(x)).ToList(),
                     streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)).ToList(),
                     streetNameWasProposedForMunicipalityMerger.GetHash(),
                     streetNameWasProposedForMunicipalityMerger.Provenance)

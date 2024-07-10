@@ -14,7 +14,6 @@
                 command.StreetNameNames,
                 command.HomonymAdditions,
                 command.PersistentLocalId,
-                command.MergedMunicipalityIds,
                 command.MergedStreetNamePersistentLocalIds,
                 command.Provenance);
         }
@@ -26,7 +25,6 @@
                 new Names(new List<StreetNameName> { fixture.Create<StreetNameName>() }),
                 command.HomonymAdditions,
                 command.PersistentLocalId,
-                command.MergedMunicipalityIds,
                 command.MergedStreetNamePersistentLocalIds,
                 command.Provenance);
         }
@@ -38,7 +36,6 @@
                 names,
                 command.HomonymAdditions,
                 command.PersistentLocalId,
-                command.MergedMunicipalityIds,
                 command.MergedStreetNamePersistentLocalIds,
                 command.Provenance);
         }
@@ -50,7 +47,6 @@
                 command.StreetNameNames,
                 homonymAdditions,
                 command.PersistentLocalId,
-                command.MergedMunicipalityIds,
                 command.MergedStreetNamePersistentLocalIds,
                 command.Provenance);
         }
@@ -62,19 +58,6 @@
                 command.StreetNameNames,
                 command.HomonymAdditions,
                 persistentLocalId,
-                command.MergedMunicipalityIds,
-                command.MergedStreetNamePersistentLocalIds,
-                command.Provenance);
-        }
-
-        public static ProposeStreetNameForMunicipalityMerger WithMergedMunicipalityIds(this ProposeStreetNameForMunicipalityMerger command, List<MunicipalityId> mergedMunicipalityIds)
-        {
-            return new ProposeStreetNameForMunicipalityMerger(
-                command.MunicipalityId,
-                command.StreetNameNames,
-                command.HomonymAdditions,
-                command.PersistentLocalId,
-                mergedMunicipalityIds,
                 command.MergedStreetNamePersistentLocalIds,
                 command.Provenance);
         }
@@ -86,7 +69,6 @@
                 command.StreetNameNames,
                 command.HomonymAdditions,
                 command.PersistentLocalId,
-                command.MergedMunicipalityIds,
                 mergedStreetNamePersistentIds,
                 command.Provenance);
         }

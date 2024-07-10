@@ -15,7 +15,6 @@
         public HomonymAdditions HomonymAdditions { get; }
         public PersistentLocalId PersistentLocalId { get; }
 
-        public List<MunicipalityId> MergedMunicipalityIds { get; }
         public List<PersistentLocalId> MergedStreetNamePersistentLocalIds { get; }
         public Provenance Provenance { get; }
         public ProposeStreetNameForMunicipalityMerger(
@@ -23,7 +22,6 @@
             Names streetNameNames,
             HomonymAdditions? homonymAdditions,
             PersistentLocalId persistentLocalId,
-            List<MunicipalityId> mergedMunicipalityIds,
             List<PersistentLocalId> mergedStreetNamePersistentLocalIds,
             Provenance provenance)
         {
@@ -31,7 +29,6 @@
             StreetNameNames = streetNameNames;
             HomonymAdditions = homonymAdditions ?? [];
             PersistentLocalId = persistentLocalId;
-            MergedMunicipalityIds = mergedMunicipalityIds;
             MergedStreetNamePersistentLocalIds = mergedStreetNamePersistentLocalIds;
             Provenance = provenance;
         }
@@ -55,11 +52,6 @@
             foreach (var homonymAddition in HomonymAdditions)
             {
                 yield return homonymAddition;
-            }
-
-            foreach (var mergedMunicipalityId in MergedMunicipalityIds)
-            {
-                yield return mergedMunicipalityId;
             }
 
             foreach (var mergedStreetNamePersistentLocalId in MergedStreetNamePersistentLocalIds)
