@@ -84,6 +84,29 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     .AddAsync(streetNameExtractItemV2, ct);
             });
 
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var streetNameExtractItemV2 = new StreetNameExtractItemV2
+                {
+                    StreetNamePersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    DbaseRecord = new StreetNameDbaseRecordV2
+                    {
+                        gemeenteid = { Value = message.Message.NisCode},
+                        creatieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() },
+                        versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
+                    }.ToBytes(_encoding)
+                };
+                UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
+                UpdateStraatnm(streetNameExtractItemV2, message.Message.StreetNameNames);
+                UpdateHomoniemtv(streetNameExtractItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
+                UpdateStatus(streetNameExtractItemV2, Proposed);
+
+                await context
+                    .StreetNameExtractV2
+                    .AddAsync(streetNameExtractItemV2, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var streetNameExtractItemV2 = new StreetNameExtractItemV2
@@ -100,6 +123,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
                 UpdateStraatnm(streetNameExtractItemV2, message.Message.StreetNameNames);
                 UpdateStatus(streetNameExtractItemV2, Proposed);
+
                 await context
                     .StreetNameExtractV2
                     .AddAsync(streetNameExtractItemV2, ct);

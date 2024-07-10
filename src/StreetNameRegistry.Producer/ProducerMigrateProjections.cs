@@ -31,6 +31,14 @@
                     ct);
             });
 
+            //TODO-rik contract
+            // When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
+            //     MunicipalityDomain.StreetNameWasProposedForMunicipalityMerger>>(async (_, message, ct) =>
+            // {
+            //     await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position,
+            //         ct);
+            // });
+
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
                 MunicipalityDomain.StreetNameWasProposedV2>>(async (_, message, ct) =>
             {

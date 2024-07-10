@@ -56,6 +56,29 @@
                     .AddAsync(item, ct);
             });
 
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var item = new StreetNameLatestItem
+                {
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    Status = StreetNameStatus.Proposed,
+                    OsloStatus = StreetNameStatus.Proposed.Map(),
+                    NisCode = message.Message.NisCode,
+                    IsRemoved = false,
+                    VersionTimestamp = message.Message.Provenance.Timestamp,
+                    Namespace = options.Value.Namespace,
+                    Puri = $"{options.Value.Namespace}/{message.Message.PersistentLocalId}",
+                };
+
+                item.UpdateNameByLanguage(message.Message.StreetNameNames);
+                item.UpdateHomonymAdditionByLanguage(message.Message.HomonymAdditions);
+
+                await context
+                    .StreetNameLatestItems
+                    .AddAsync(item, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var item = new StreetNameLatestItem

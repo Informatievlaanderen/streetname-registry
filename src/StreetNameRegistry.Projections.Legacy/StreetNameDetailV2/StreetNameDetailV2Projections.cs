@@ -37,6 +37,26 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                     .StreetNameDetailV2
                     .AddAsync(streetNameDetailV2, ct);
             });
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var streetNameDetailV2 = new StreetNameDetailV2
+                {
+                    MunicipalityId = message.Message.MunicipalityId,
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    NisCode = message.Message.NisCode,
+                    VersionTimestamp = message.Message.Provenance.Timestamp,
+                    Removed = false,
+                    Status = StreetNameStatus.Proposed
+                };
+
+                UpdateNameByLanguage(streetNameDetailV2, message.Message.StreetNameNames);
+                UpdateHomonymAdditionByLanguage(streetNameDetailV2, new HomonymAdditions(message.Message.HomonymAdditions));
+                UpdateHash(streetNameDetailV2, message);
+
+                await context
+                    .StreetNameDetailV2
+                    .AddAsync(streetNameDetailV2, ct);
+            });
 
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {

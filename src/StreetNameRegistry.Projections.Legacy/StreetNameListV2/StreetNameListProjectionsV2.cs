@@ -42,6 +42,32 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     .AddAsync(streetNameListItemV2, ct);
             });
 
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var municipality =
+                    await context.StreetNameListMunicipality.FindAsync(message.Message.MunicipalityId,
+                        cancellationToken: ct);
+
+                var streetNameListItemV2 = new StreetNameListItemV2
+                {
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    NisCode = message.Message.NisCode,
+                    IsInFlemishRegion = RegionFilter.IsFlemishRegion(message.Message.NisCode),
+                    VersionTimestamp = message.Message.Provenance.Timestamp,
+                    Removed = false,
+                    PrimaryLanguage = municipality.PrimaryLanguage,
+                    Status = StreetNameStatus.Proposed
+                };
+
+                UpdateNameByLanguage(streetNameListItemV2, message.Message.StreetNameNames);
+                UpdateHomonymAdditionByLanguage(streetNameListItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
+
+                await context
+                    .StreetNameListV2
+                    .AddAsync(streetNameListItemV2, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var municipality =

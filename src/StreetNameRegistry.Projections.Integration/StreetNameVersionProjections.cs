@@ -312,6 +312,35 @@
                     .AddAsync(item, ct);
             });
 
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var item = new StreetNameVersion
+                {
+                    MunicipalityId = message.Message.MunicipalityId,
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    NisCode = message.Message.NisCode,
+                    VersionTimestamp = message.Message.Provenance.Timestamp,
+                    IsRemoved = false,
+                    CreatedOnTimestamp = message.Message.Provenance.Timestamp,
+                    Namespace = options.Value.Namespace,
+                    Puri = $"{options.Value.Namespace}/{message.Message.PersistentLocalId}",
+                    Type = message.EventName
+                };
+
+                item.Position = message.Position;
+                item.Status = StreetNameStatus.Proposed;
+                item.OsloStatus = StreetNameStatus.Proposed.Map();
+
+                foreach (var (language, value) in message.Message.StreetNameNames)
+                    item.UpdateNameByLanguage(language, value);
+                foreach (var (language, value) in message.Message.HomonymAdditions)
+                    item.UpdateHomonymAdditionByLanguage(language, value);
+
+                await context
+                    .StreetNameVersions
+                    .AddAsync(item, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var item = new StreetNameVersion

@@ -36,6 +36,20 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
                     ct);
             });
 
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (_, message, ct) =>
+            {
+                await FindAndProduce(async () =>
+                    await snapshotManager.FindMatchingSnapshot(
+                        message.Message.PersistentLocalId.ToString(),
+                        message.Message.Provenance.Timestamp,
+                        message.Message.GetHash(),
+                        message.Position,
+                        throwStaleWhenGone: false,
+                        ct),
+                    message.Position,
+                    ct);
+            });
+
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameWasProposedV2>>(async (_, message, ct) =>
             {
                 await FindAndProduce(async () =>

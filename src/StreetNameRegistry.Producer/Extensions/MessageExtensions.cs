@@ -129,6 +129,16 @@ namespace StreetNameRegistry.Producer.Extensions
                 message.IsRemoved,
                 message.Provenance.ToContract());
 
+        //TODO-rik contract
+        // public static Contracts.StreetNameWasProposedForMunicipalityMerger ToContract(this StreetNameWasProposedForMunicipalityMerger message) =>
+        //     new Contracts.StreetNameWasProposedForMunicipalityMerger(
+        //         message.MunicipalityId.ToString("D"),
+        //         message.NisCode,
+        //         message.PersistentLocalId,
+        //         message.StreetNameNames.ToDictionary(x => x.Key.ToString(), x => x.Value),
+        //         message.HomonymAdditions.ToDictionary(x => x.Key.ToString(), x => x.Value),
+        //         message.Provenance.ToContract());
+
         public static Contracts.StreetNameWasApproved ToContract(this StreetNameWasApproved message) =>
             new Contracts.StreetNameWasApproved(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
 

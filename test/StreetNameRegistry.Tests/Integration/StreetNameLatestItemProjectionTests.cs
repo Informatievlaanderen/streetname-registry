@@ -49,7 +49,7 @@
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
                 { Envelope.PositionMetadataKey, position }
             };
-
+//TODO-rik integration en projection tests voor StreetNameWasProposedForMunicipalityMerger
             await Sut
                 .Given(
                     new Envelope<StreetNameWasMigratedToMunicipality>(new Envelope(streetNameWasMigratedToMunicipality, metadata)),
