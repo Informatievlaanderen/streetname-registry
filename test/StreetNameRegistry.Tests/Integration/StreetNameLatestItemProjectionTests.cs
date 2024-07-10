@@ -285,6 +285,43 @@
         }
 
         [Fact]
+        public async Task WhenStreetNameWasRejectedBecauseOfMunicipalityMerger()
+        {
+            var streetNameWasMigratedToMunicipality = _fixture.Create<StreetNameWasMigratedToMunicipality>();
+            var streetNameWasRejectedBecauseOfMunicipalityMerger = _fixture.Create<StreetNameWasRejectedBecauseOfMunicipalityMerger>();
+
+            var position = _fixture.Create<long>();
+
+            var firstEventMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position }
+            };
+            var secondEventMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position + 1 }
+            };
+
+            await Sut
+                .Given(
+                    new Envelope<StreetNameWasMigratedToMunicipality>(new Envelope(streetNameWasMigratedToMunicipality, firstEventMetadata)),
+                    new Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>(new Envelope(streetNameWasRejectedBecauseOfMunicipalityMerger, secondEventMetadata)))
+                .Then(async ct =>
+                {
+                    var expectedLatestItem =
+                        await ct.StreetNameLatestItems.FindAsync(streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId);
+                    expectedLatestItem.Should().NotBeNull();
+                    expectedLatestItem!.Status.Should().Be(StreetNameStatus.Rejected);
+                    expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.Afgekeurd.ToString());
+
+                    expectedLatestItem.Namespace.Should().Be(Namespace);
+                    expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId}");
+                    expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp);
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameWasCorrectedFromRejectedToProposed()
         {
             var streetNameWasMigratedToMunicipality = _fixture.Create<StreetNameWasMigratedToMunicipality>();

@@ -31,8 +31,9 @@
         private IEnumerable<object> IdentityFields()
         {
             yield return MunicipalityId;
-            //TODO-rik mss toch lijst van streetnameids meegeven, wat als er later nog een merge gebeurd naar dezelfde gemeente?
-            //voor idempotency, of provenance hiervoor gebruiken met timestamp?
+
+            foreach (var field in Provenance.GetIdentityFields())
+                yield return field;
         }
     }
 }

@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Municipality
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Events;
@@ -81,6 +82,42 @@ namespace StreetNameRegistry.Municipality
             if (MunicipalityStatus != MunicipalityStatus.Retired)
             {
                 ApplyChange(new MunicipalityWasRetired(_municipalityId));
+            }
+        }
+
+        public void RetireForMunicipalityMerger(Municipality newMunicipality)
+        {
+            var currentStreetNames = StreetNames
+                .Where(x => x.Status == StreetNameStatus.Current && !x.IsRemoved)
+                .ToList();
+
+            foreach (var streetName in currentStreetNames)
+            {
+                var newStreetNamePersistentLocalIds = newMunicipality.StreetNames
+                    .Where(x => x.MergedStreetNamePersistentLocalIds.Contains(streetName.PersistentLocalId))
+                    .Select(x => x.PersistentLocalId)
+                    .ToList();
+
+                streetName.RetireForMunicipalityMerger(newStreetNamePersistentLocalIds);
+            }
+
+            var proposedStreetNames = StreetNames
+                .Where(x => x.Status == StreetNameStatus.Proposed && !x.IsRemoved)
+                .ToList();
+
+            foreach (var streetName in proposedStreetNames)
+            {
+                var newStreetNamePersistentLocalIds = newMunicipality.StreetNames
+                    .Where(x => x.MergedStreetNamePersistentLocalIds.Contains(streetName.PersistentLocalId))
+                    .Select(x => x.PersistentLocalId)
+                    .ToList();
+
+                streetName.RejectForMunicipalityMerger(newStreetNamePersistentLocalIds);
+            }
+
+            if (MunicipalityStatus != MunicipalityStatus.Retired)
+            {
+                ApplyChange(new MunicipalityWasMerged(_municipalityId, newMunicipality.MunicipalityId));
             }
         }
 

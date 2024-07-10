@@ -72,6 +72,18 @@ namespace StreetNameRegistry.Municipality
                     municipality.Retire();
                 });
 
+            For<RetireMunicipalityForMunicipalityMerger>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<RetireMunicipalityForMunicipalityMerger, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    var newMunicipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.NewMunicipalityId), ct);
+
+                    municipality.RetireForMunicipalityMerger(newMunicipality);
+                });
+
             For<DefineMunicipalityNisCode>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
                 .AddEventHash<DefineMunicipalityNisCode, Municipality>(getUnitOfWork)

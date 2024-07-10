@@ -34,6 +34,7 @@ namespace StreetNameRegistry.Municipality
             Register<MunicipalityFacilityLanguageWasRemoved>(When);
             Register<MunicipalityBecameCurrent>(When);
             Register<MunicipalityWasRetired>(When);
+            Register<MunicipalityWasMerged>(When);
             Register<MunicipalityWasCorrectedToCurrent>(When);
             Register<MunicipalityWasCorrectedToRetired>(When);
 
@@ -42,6 +43,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasProposedForMunicipalityMerger>(When);
             Register<StreetNameWasApproved>(When);
             Register<StreetNameWasRejected>(When);
+            Register<StreetNameWasRejectedBecauseOfMunicipalityMerger>(When);
             Register<StreetNameWasRetiredV2>(When);
             Register<StreetNameWasRetiredBecauseOfMunicipalityMerger>(When);
             Register<StreetNameNamesWereCorrected>(When);
@@ -100,6 +102,11 @@ namespace StreetNameRegistry.Municipality
             MunicipalityStatus = MunicipalityStatus.Retired;
         }
 
+        private void When(MunicipalityWasMerged @event)
+        {
+            MunicipalityStatus = MunicipalityStatus.Retired;
+        }
+
         private void When(MunicipalityWasCorrectedToCurrent @event)
         {
             if (MunicipalityStatus != MunicipalityStatus.Current)
@@ -137,6 +144,8 @@ namespace StreetNameRegistry.Municipality
         private void When(StreetNameWasApproved @event) => RouteToStreetName(@event);
 
         private void When(StreetNameWasRejected @event) => RouteToStreetName(@event);
+
+        private void When(StreetNameWasRejectedBecauseOfMunicipalityMerger @event) => RouteToStreetName(@event);
 
         private void When(StreetNameWasRetiredV2 @event) => RouteToStreetName(@event);
 

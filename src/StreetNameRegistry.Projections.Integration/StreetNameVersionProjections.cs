@@ -366,6 +366,15 @@
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>
+                {
+                    item.Status = StreetNameStatus.Rejected;
+                    item.OsloStatus = StreetNameStatus.Rejected.Map();
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
             {
                 await context.NewStreetNameVersion(message.Message.PersistentLocalId, message, item =>

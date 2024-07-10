@@ -141,6 +141,18 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
+                {
+                    UpdateStatus(x, Rejected);
+                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameExtract(

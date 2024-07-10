@@ -177,6 +177,11 @@ namespace StreetNameRegistry.Projections.LastChangedList
                 await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
             });
 
+            When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+            });
+
             When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
             {
                 await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);

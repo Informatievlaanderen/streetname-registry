@@ -58,6 +58,13 @@
                 await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position,
                     ct);
             });
+//TODO-rik contract
+            // When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
+            //     MunicipalityDomain.StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (_, message, ct) =>
+            // {
+            //     await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position,
+            //         ct);
+            // });
 
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
                 MunicipalityDomain.StreetNameWasCorrectedFromRejectedToProposed>>(async (_, message, ct) =>
@@ -73,7 +80,7 @@
                     ct);
             });
 
-            //TODO-rik
+            //TODO-rik contract
             // When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
             //     MunicipalityDomain.StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (_, message, ct) =>
             // {

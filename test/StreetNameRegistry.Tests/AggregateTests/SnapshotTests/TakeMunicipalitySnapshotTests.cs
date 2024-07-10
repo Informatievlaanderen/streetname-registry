@@ -427,6 +427,43 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
         }
 
         [Fact]
+        public void StreetNameWasRejectedBecauseOfMunicipalityMergerIsSavedInSnapshot()
+        {
+            var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();
+
+            var streetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasRejectedBecauseOfMunicipalityMerger = Fixture.Create<StreetNameWasRejectedBecauseOfMunicipalityMerger>();
+            ((ISetProvenance)streetNameWasRejectedBecauseOfMunicipalityMerger).SetProvenance(Fixture.Create<Provenance>());
+
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>(),
+                streetNameWasProposedV2,
+                streetNameWasRejectedBecauseOfMunicipalityMerger
+            });
+
+            var snapshot = aggregate.TakeSnapshot();
+
+            snapshot.Should().BeOfType<MunicipalitySnapshot>();
+            var municipalitySnapshot = (MunicipalitySnapshot)snapshot;
+
+            municipalitySnapshot.StreetNames.Should().BeEquivalentTo(new List<StreetNameData>
+            {
+                new StreetNameData(
+                    new PersistentLocalId(streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId),
+                    StreetNameStatus.Rejected,
+                    new Names(streetNameWasProposedV2.StreetNameNames),
+                    new HomonymAdditions(),
+                    false,
+                    false,
+                    null,
+                    [],
+                    streetNameWasRejectedBecauseOfMunicipalityMerger.GetHash(),
+                    streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance)
+            });
+        }
+
+        [Fact]
         public void StreetNameWasRetiredIsSavedInSnapshot()
         {
             var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();

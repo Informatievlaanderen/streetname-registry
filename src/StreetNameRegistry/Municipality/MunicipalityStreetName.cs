@@ -33,7 +33,6 @@ namespace StreetNameRegistry.Municipality
 
             GuardStreetNameStatus(StreetNameStatus.Proposed);
 
-            //TODO-rik andere event? StreetNameWasApprovedBecauseOfMunicipalityMerger
             Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
         }
 
@@ -49,6 +48,18 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasRejected(_municipalityId, PersistentLocalId));
         }
 
+        public void RejectForMunicipalityMerger(ICollection<PersistentLocalId> newPersistentLocalIds)
+        {
+            if (Status == StreetNameStatus.Rejected)
+            {
+                return;
+            }
+
+            GuardStreetNameStatus(StreetNameStatus.Proposed);
+
+            Apply(new StreetNameWasRejectedBecauseOfMunicipalityMerger(_municipalityId, PersistentLocalId, newPersistentLocalIds));
+        }
+
         public void Retire()
         {
             if (Status == StreetNameStatus.Retired)
@@ -61,7 +72,7 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
         }
 
-        public void RetireForMunicipalityMerger()
+        public void RetireForMunicipalityMerger(ICollection<PersistentLocalId> newPersistentLocalIds)
         {
             if (Status == StreetNameStatus.Retired)
             {
@@ -70,7 +81,7 @@ namespace StreetNameRegistry.Municipality
 
             GuardStreetNameStatus(StreetNameStatus.Current);
 
-            Apply(new StreetNameWasRetiredBecauseOfMunicipalityMerger(_municipalityId, PersistentLocalId));
+            Apply(new StreetNameWasRetiredBecauseOfMunicipalityMerger(_municipalityId, PersistentLocalId, newPersistentLocalIds));
         }
 
         public void CorrectNames(Names namesToCorrect, Action<Names, HomonymAdditions, PersistentLocalId> guardStreetNameNames)

@@ -126,16 +126,6 @@ namespace StreetNameRegistry.Municipality
                     municipality.RetireStreetName(message.Command.PersistentLocalId);
                 });
 
-            For<RetireStreetNamesForMunicipalityMerger>()
-                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
-                .AddEventHash<RetireStreetNamesForMunicipalityMerger, Municipality>(getUnitOfWork)
-                .AddProvenance(getUnitOfWork, provenanceFactory)
-                .Handle(async (message, ct) =>
-                {
-                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
-                    municipality.RetireStreetNamesForMunicipalityMerger();
-                });
-
             For<CorrectStreetNameRetirement>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
                 .AddEventHash<CorrectStreetNameRetirement, Municipality>(getUnitOfWork)

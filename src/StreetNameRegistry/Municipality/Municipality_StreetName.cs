@@ -141,31 +141,9 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             streetName.Retire();
-        }
-
-        public void RetireStreetNamesForMunicipalityMerger()
-        {
-            //TODO-rik is het nodig om status af te toetsen? ik denk van niet
-            // if (MunicipalityStatus != MunicipalityStatus.Retired)
-            // {
-            //     throw new MunicipalityHasInvalidStatusException();
-            // }
-
-            //TODO-rik wat doen we met Proposed streetnames?
-            var currentStreetNames = StreetNames
-                .Where(x => x.Status == StreetNameStatus.Current && !x.IsRemoved)
-                .ToList();
-
-            foreach (var streetName in currentStreetNames)
-            {
-                streetName.RetireForMunicipalityMerger();
-            }
         }
 
         public void CorrectStreetNameName(Names streetNameNames, PersistentLocalId persistentLocalId)
@@ -186,10 +164,7 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             streetName.CorrectApproval();
         }
@@ -198,10 +173,7 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             streetName.CorrectRejection(GuardUniqueActiveStreetNameNames);
         }
@@ -210,10 +182,7 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             streetName.CorrectRetirement(GuardUniqueActiveStreetNameNames);
         }
@@ -251,10 +220,7 @@ namespace StreetNameRegistry.Municipality
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(sourcePersistentLocalId);
             var destinationStreetName = StreetNames.GetNotRemovedByPersistentLocalId(destinationPersistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             if (streetName.Status != StreetNameStatus.Current)
             {

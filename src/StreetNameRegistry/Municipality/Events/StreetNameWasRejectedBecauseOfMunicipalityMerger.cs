@@ -11,10 +11,10 @@ namespace StreetNameRegistry.Municipality.Events
 
     [EventTags(EventTag.For.Sync, EventTag.For.Edit)]
     [EventName(EventName)]
-    [EventDescription("De straatnaam werd gehistoreerd in functie van een gemeentelijke fusie.")]
-    public sealed class StreetNameWasRetiredBecauseOfMunicipalityMerger : IMunicipalityEvent, IHasPersistentLocalId
+    [EventDescription("De straatnaam werd afgekeurdS in functie van een gemeentelijke fusie.")]
+    public sealed class StreetNameWasRejectedBecauseOfMunicipalityMerger : IMunicipalityEvent, IHasPersistentLocalId
     {
-        public const string EventName = "StreetNameWasRetiredBecauseOfMunicipalityMerger"; // BE CAREFUL CHANGING THIS!!
+        public const string EventName = "StreetNameWasRejectedBecauseOfMunicipalityMerger"; // BE CAREFUL CHANGING THIS!!
 
         [EventPropertyDescription("Interne GUID van de gemeente aan dewelke de straatnaam is gekoppeld.")]
         public Guid MunicipalityId { get; }
@@ -28,7 +28,7 @@ namespace StreetNameRegistry.Municipality.Events
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 
-        public StreetNameWasRetiredBecauseOfMunicipalityMerger(
+        public StreetNameWasRejectedBecauseOfMunicipalityMerger(
             MunicipalityId municipalityId,
             PersistentLocalId persistentLocalId,
             IEnumerable<PersistentLocalId> newPersistentLocalIds)
@@ -39,7 +39,7 @@ namespace StreetNameRegistry.Municipality.Events
         }
 
         [JsonConstructor]
-        private StreetNameWasRetiredBecauseOfMunicipalityMerger(
+        private StreetNameWasRejectedBecauseOfMunicipalityMerger(
             Guid municipalityId,
             int persistentLocalId,
             List<int> newPersistentLocalIds,

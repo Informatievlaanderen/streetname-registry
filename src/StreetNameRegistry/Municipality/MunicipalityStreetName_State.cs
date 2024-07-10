@@ -39,6 +39,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasProposedForMunicipalityMerger>(When);
             Register<StreetNameWasApproved>(When);
             Register<StreetNameWasRejected>(When);
+            Register<StreetNameWasRejectedBecauseOfMunicipalityMerger>(When);
             Register<StreetNameWasRetiredV2>(When);
             Register<StreetNameWasRetiredBecauseOfMunicipalityMerger>(When);
             Register<StreetNameNamesWereCorrected>(When);
@@ -98,6 +99,12 @@ namespace StreetNameRegistry.Municipality
             _lastEvent = @event;
         }
 
+        private void When(StreetNameWasRejectedBecauseOfMunicipalityMerger @event)
+        {
+            Status = StreetNameStatus.Rejected;
+            _lastEvent = @event;
+        }
+
         private void When(StreetNameWasRetiredV2 @event)
         {
             Status = StreetNameStatus.Retired;
@@ -107,8 +114,6 @@ namespace StreetNameRegistry.Municipality
         private void When(StreetNameWasRetiredBecauseOfMunicipalityMerger @event)
         {
             Status = StreetNameStatus.Retired;
-            //TODO-rik dit is vermoedelijk een final state? meaning deze mag niet terug actief worden gemaakt
-            //zo ja, dan die uitbreiding nog doen + add unit tests (zie usages of command CorrectStreetNameFromRetirement, ook in tests)
             _lastEvent = @event;
         }
 
