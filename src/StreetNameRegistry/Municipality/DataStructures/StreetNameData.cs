@@ -20,7 +20,6 @@ namespace StreetNameRegistry.Municipality.DataStructures
         public Guid? LegacyStreetNameId { get; }
         public string LastEventHash { get; }
 
-        public List<Guid> MergedMunicipalityIds { get; }
         public List<int> MergedStreetNamePersistentLocalIds { get; }
 
         public ProvenanceData LastProvenanceData { get; }
@@ -33,7 +32,6 @@ namespace StreetNameRegistry.Municipality.DataStructures
                 streetName.IsRemoved,
                 streetName.IsRenamed,
                 streetName.LegacyStreetNameId,
-                streetName.MergedMunicipalityIds.ToList(),
                 streetName.MergedStreetNamePersistentLocalIds.ToList(),
                 streetName.LastEventHash,
                 streetName.LastProvenanceData)
@@ -47,7 +45,6 @@ namespace StreetNameRegistry.Municipality.DataStructures
             bool isRemoved,
             bool isRenamed,
             StreetNameId? legacyStreetNameId,
-            List<MunicipalityId> mergedMunicipalityIds,
             List<PersistentLocalId> mergedStreetNamePersistentLocalIds,
             string lastEventHash,
             ProvenanceData lastProvenanceData)
@@ -59,7 +56,6 @@ namespace StreetNameRegistry.Municipality.DataStructures
             IsRemoved = isRemoved;
             IsRenamed = isRenamed;
             LegacyStreetNameId = legacyStreetNameId is null ? (Guid?)null : legacyStreetNameId;
-            MergedMunicipalityIds = mergedMunicipalityIds.Select(x => (Guid)x).ToList();
             MergedStreetNamePersistentLocalIds = mergedStreetNamePersistentLocalIds.Select(x => (int)x).ToList();
             LastEventHash = lastEventHash;
             LastProvenanceData = lastProvenanceData;
@@ -74,7 +70,6 @@ namespace StreetNameRegistry.Municipality.DataStructures
             bool isRemoved,
             bool? isRenamed,
             Guid? legacyStreetNameId,
-            List<Guid>? mergedMunicipalityIds,
             List<int>? mergedStreetNamePersistentLocalIds,
             string lastEventHash,
             ProvenanceData lastProvenanceData)
@@ -86,7 +81,6 @@ namespace StreetNameRegistry.Municipality.DataStructures
             IsRemoved = isRemoved;
             IsRenamed = isRenamed ?? false;
             LegacyStreetNameId = legacyStreetNameId;
-            MergedMunicipalityIds = mergedMunicipalityIds ?? [];
             MergedStreetNamePersistentLocalIds = mergedStreetNamePersistentLocalIds ?? [];
             LastEventHash = lastEventHash;
             LastProvenanceData = lastProvenanceData;

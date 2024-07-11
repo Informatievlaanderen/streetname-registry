@@ -31,6 +31,13 @@
                     ct);
             });
 
+             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
+                 MunicipalityDomain.StreetNameWasProposedForMunicipalityMerger>>(async (_, message, ct) =>
+             {
+                 await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position,
+                     ct);
+             });
+
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
                 MunicipalityDomain.StreetNameWasProposedV2>>(async (_, message, ct) =>
             {
@@ -60,6 +67,13 @@
             });
 
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
+                MunicipalityDomain.StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (_, message, ct) =>
+            {
+                await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position,
+                    ct);
+            });
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
                 MunicipalityDomain.StreetNameWasCorrectedFromRejectedToProposed>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position,
@@ -68,6 +82,13 @@
 
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
                 MunicipalityDomain.StreetNameWasRetiredV2>>(async (_, message, ct) =>
+            {
+                await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position,
+                    ct);
+            });
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<
+                MunicipalityDomain.StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position,
                     ct);

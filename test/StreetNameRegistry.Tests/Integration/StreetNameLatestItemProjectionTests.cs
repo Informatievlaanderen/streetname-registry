@@ -126,6 +126,64 @@
         }
 
         [Fact]
+        public async Task WhenStreetNameWasProposedForMunicipalityMerger()
+        {
+            var streetNameWasProposedForMunicipalityMerger = new StreetNameWasProposedForMunicipalityMergerBuilder(_fixture)
+                .WithNames(new Names
+                {
+                    new("Bergstraat", Language.Dutch),
+                    new("Rue De Montaigne", Language.French),
+                    new("Mountain street", Language.English),
+                    new("Bergstraat de", Language.German),
+                })
+                .WithHomonymAdditions(new HomonymAdditions(new[]
+                {
+                    new StreetNameHomonymAddition("ABC", Language.Dutch),
+                    new StreetNameHomonymAddition("DEF", Language.French),
+                    new StreetNameHomonymAddition("AZE", Language.English),
+                    new StreetNameHomonymAddition("QSD", Language.German),
+                }))
+                .Build();
+
+            var position = _fixture.Create<long>();
+
+            var firstEventMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position }
+            };
+
+            await Sut
+                .Given(new Envelope<StreetNameWasProposedForMunicipalityMerger>(new Envelope(streetNameWasProposedForMunicipalityMerger, firstEventMetadata)))
+                .Then(async ct =>
+                {
+                    var expectedLatestItem =
+                        await ct.StreetNameLatestItems.FindAsync(streetNameWasProposedForMunicipalityMerger.PersistentLocalId);
+                    expectedLatestItem.Should().NotBeNull();
+                    expectedLatestItem!.Status.Should().Be(StreetNameStatus.Proposed);
+                    expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.Voorgesteld.ToString());
+                    expectedLatestItem.NisCode.Should().Be(streetNameWasProposedForMunicipalityMerger.NisCode);
+                    expectedLatestItem.MunicipalityId.Should().Be(streetNameWasProposedForMunicipalityMerger.MunicipalityId);
+
+                    expectedLatestItem.IsRemoved.Should().BeFalse();
+
+                    expectedLatestItem.NameDutch.Should().Be("Bergstraat");
+                    expectedLatestItem.NameFrench.Should().Be("Rue De Montaigne");
+                    expectedLatestItem.NameEnglish.Should().Be("Mountain street");
+                    expectedLatestItem.NameGerman.Should().Be("Bergstraat de");
+
+                    expectedLatestItem.HomonymAdditionDutch.Should().Be("ABC");
+                    expectedLatestItem.HomonymAdditionFrench.Should().Be("DEF");
+                    expectedLatestItem.HomonymAdditionEnglish.Should().Be("AZE");
+                    expectedLatestItem.HomonymAdditionGerman.Should().Be("QSD");
+
+                    expectedLatestItem.Namespace.Should().Be(Namespace);
+                    expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasProposedForMunicipalityMerger.PersistentLocalId}");
+                    expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasProposedForMunicipalityMerger.Provenance.Timestamp);
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameWasProposedV2()
         {
             var streetNameWasProposedV2 = new StreetNameWasProposedV2Builder(_fixture)
@@ -145,7 +203,6 @@
                 { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
                 { Envelope.PositionMetadataKey, position }
             };
-
 
             await Sut
                 .Given(new Envelope<StreetNameWasProposedV2>(new Envelope(streetNameWasProposedV2, firstEventMetadata)))
@@ -285,6 +342,43 @@
         }
 
         [Fact]
+        public async Task WhenStreetNameWasRejectedBecauseOfMunicipalityMerger()
+        {
+            var streetNameWasMigratedToMunicipality = _fixture.Create<StreetNameWasMigratedToMunicipality>();
+            var streetNameWasRejectedBecauseOfMunicipalityMerger = _fixture.Create<StreetNameWasRejectedBecauseOfMunicipalityMerger>();
+
+            var position = _fixture.Create<long>();
+
+            var firstEventMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position }
+            };
+            var secondEventMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position + 1 }
+            };
+
+            await Sut
+                .Given(
+                    new Envelope<StreetNameWasMigratedToMunicipality>(new Envelope(streetNameWasMigratedToMunicipality, firstEventMetadata)),
+                    new Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>(new Envelope(streetNameWasRejectedBecauseOfMunicipalityMerger, secondEventMetadata)))
+                .Then(async ct =>
+                {
+                    var expectedLatestItem =
+                        await ct.StreetNameLatestItems.FindAsync(streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId);
+                    expectedLatestItem.Should().NotBeNull();
+                    expectedLatestItem!.Status.Should().Be(StreetNameStatus.Rejected);
+                    expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.Afgekeurd.ToString());
+
+                    expectedLatestItem.Namespace.Should().Be(Namespace);
+                    expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId}");
+                    expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp);
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameWasCorrectedFromRejectedToProposed()
         {
             var streetNameWasMigratedToMunicipality = _fixture.Create<StreetNameWasMigratedToMunicipality>();
@@ -356,6 +450,43 @@
                     expectedLatestItem.Namespace.Should().Be(Namespace);
                     expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasRetiredV2.PersistentLocalId}");
                     expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasRetiredV2.Provenance.Timestamp);
+                });
+        }
+
+        [Fact]
+        public async Task WhenStreetNameWasRetiredBecauseOfMunicipalityMerger()
+        {
+            var streetNameWasMigratedToMunicipality = _fixture.Create<StreetNameWasMigratedToMunicipality>();
+            var streetNameWasRetiredBecauseOfMunicipalityMerger = _fixture.Create<StreetNameWasRetiredBecauseOfMunicipalityMerger>();
+
+            var position = _fixture.Create<long>();
+
+            var firstEventMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position }
+            };
+            var secondEventMetadata = new Dictionary<string, object>
+            {
+                { AddEventHashPipe.HashMetadataKey, _fixture.Create<string>() },
+                { Envelope.PositionMetadataKey, position + 1 }
+            };
+
+            await Sut
+                .Given(
+                    new Envelope<StreetNameWasMigratedToMunicipality>(new Envelope(streetNameWasMigratedToMunicipality, firstEventMetadata)),
+                    new Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>(new Envelope(streetNameWasRetiredBecauseOfMunicipalityMerger, secondEventMetadata)))
+                .Then(async ct =>
+                {
+                    var expectedLatestItem =
+                        await ct.StreetNameLatestItems.FindAsync(streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId);
+                    expectedLatestItem.Should().NotBeNull();
+                    expectedLatestItem!.Status.Should().Be(StreetNameStatus.Retired);
+                    expectedLatestItem.OsloStatus.Should().Be(StraatnaamStatus.Gehistoreerd.ToString());
+
+                    expectedLatestItem.Namespace.Should().Be(Namespace);
+                    expectedLatestItem.Puri.Should().Be($"{Namespace}/{streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId}");
+                    expectedLatestItem.VersionTimestamp.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp);
                 });
         }
 

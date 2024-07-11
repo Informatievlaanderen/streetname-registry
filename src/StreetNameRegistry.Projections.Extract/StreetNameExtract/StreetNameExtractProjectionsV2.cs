@@ -84,6 +84,29 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     .AddAsync(streetNameExtractItemV2, ct);
             });
 
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var streetNameExtractItemV2 = new StreetNameExtractItemV2
+                {
+                    StreetNamePersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    DbaseRecord = new StreetNameDbaseRecordV2
+                    {
+                        gemeenteid = { Value = message.Message.NisCode},
+                        creatieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() },
+                        versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
+                    }.ToBytes(_encoding)
+                };
+                UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
+                UpdateStraatnm(streetNameExtractItemV2, message.Message.StreetNameNames);
+                UpdateHomoniemtv(streetNameExtractItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
+                UpdateStatus(streetNameExtractItemV2, Proposed);
+
+                await context
+                    .StreetNameExtractV2
+                    .AddAsync(streetNameExtractItemV2, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var streetNameExtractItemV2 = new StreetNameExtractItemV2
@@ -100,6 +123,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
                 UpdateStraatnm(streetNameExtractItemV2, message.Message.StreetNameNames);
                 UpdateStatus(streetNameExtractItemV2, Proposed);
+
                 await context
                     .StreetNameExtractV2
                     .AddAsync(streetNameExtractItemV2, ct);
@@ -141,6 +165,18 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
+                {
+                    UpdateStatus(x, Rejected);
+                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameExtract(
@@ -154,6 +190,18 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             });
 
             When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(
+                    message.Message.MunicipalityId,
+                    message.Message.PersistentLocalId,
+                    x =>
+                {
+                    UpdateStatus(x, Retired);
+                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
+            When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameExtract(
                     message.Message.MunicipalityId,

@@ -49,6 +49,25 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
                     .AddAsync(entity, ct);
             });
 
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var entity = new StreetNameHelperV2
+                {
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    NisCode = message.Message.NisCode,
+                    Removed = false,
+                    Status = StreetNameStatus.Proposed,
+                    Version = message.Message.Provenance.Timestamp,
+                };
+                UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
+                UpdateNameByLanguage(entity, message.Message.StreetNameNames);
+                UpdateHomonymAdditionByLanguage(entity, new HomonymAdditions(message.Message.HomonymAdditions));
+                await context
+                    .StreetNameHelperV2
+                    .AddAsync(entity, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var entity = new StreetNameHelperV2
@@ -94,6 +113,14 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
+                {
+                    UpdateStatus(streetNameHelperV2, StreetNameStatus.Rejected);
+                    UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
 
             When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
             {
@@ -105,6 +132,15 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
             });
 
             When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
+                {
+                    UpdateStatus(streetNameHelperV2, StreetNameStatus.Retired);
+                    UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
+            When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
                 {

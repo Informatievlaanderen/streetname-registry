@@ -261,6 +261,31 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                     .AddAsync(streetNameSyndicationItem, ct);
             });
 
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var streetNameSyndicationItem = new StreetNameSyndicationItem
+                {
+                    Position = message.Position,
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    NisCode = message.Message.NisCode,
+                    RecordCreatedAt = message.Message.Provenance.Timestamp,
+                    LastChangedOn = message.Message.Provenance.Timestamp,
+                    ChangeType = message.EventName,
+                    SyndicationItemCreatedAt = DateTimeOffset.UtcNow,
+                    Status = StreetNameStatus.Proposed,
+                    IsComplete = true
+                };
+                UpdateNameByLanguage(streetNameSyndicationItem, message.Message.StreetNameNames);
+                UpdateHomonymAdditionByLanguage(streetNameSyndicationItem, new HomonymAdditions(message.Message.HomonymAdditions));
+                streetNameSyndicationItem.ApplyProvenance(message.Message.Provenance);
+                streetNameSyndicationItem.SetEventData(message.Message, message.EventName);
+
+                await context
+                    .StreetNameSyndication
+                    .AddAsync(streetNameSyndicationItem, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var streetNameSyndicationItem = new StreetNameSyndicationItem
@@ -309,6 +334,14 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
+                {
+                    UpdateStatus(streetNameNameV2, StreetNameStatus.Rejected);
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
             {
                 await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
@@ -318,6 +351,14 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             });
 
             When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
+            {
+                await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
+                {
+                    UpdateStatus(streetNameNameV2, StreetNameStatus.Retired);
+                }, ct);
+            });
+
+            When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
             {
                 await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
                 {

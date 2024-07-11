@@ -24,6 +24,18 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
         }
 
+        public void ApproveForMunicipalityMerger()
+        {
+            if (Status == StreetNameStatus.Current)
+            {
+                return;
+            }
+
+            GuardStreetNameStatus(StreetNameStatus.Proposed);
+
+            Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
+        }
+
         public void Reject()
         {
             if (Status == StreetNameStatus.Rejected)
@@ -36,6 +48,18 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasRejected(_municipalityId, PersistentLocalId));
         }
 
+        public void RejectForMunicipalityMerger(ICollection<PersistentLocalId> newPersistentLocalIds)
+        {
+            if (Status == StreetNameStatus.Rejected)
+            {
+                return;
+            }
+
+            GuardStreetNameStatus(StreetNameStatus.Proposed);
+
+            Apply(new StreetNameWasRejectedBecauseOfMunicipalityMerger(_municipalityId, PersistentLocalId, newPersistentLocalIds));
+        }
+
         public void Retire()
         {
             if (Status == StreetNameStatus.Retired)
@@ -46,6 +70,18 @@ namespace StreetNameRegistry.Municipality
             GuardStreetNameStatus(StreetNameStatus.Current);
 
             Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
+        }
+
+        public void RetireForMunicipalityMerger(ICollection<PersistentLocalId> newPersistentLocalIds)
+        {
+            if (Status == StreetNameStatus.Retired)
+            {
+                return;
+            }
+
+            GuardStreetNameStatus(StreetNameStatus.Current);
+
+            Apply(new StreetNameWasRetiredBecauseOfMunicipalityMerger(_municipalityId, PersistentLocalId, newPersistentLocalIds));
         }
 
         public void CorrectNames(Names namesToCorrect, Action<Names, HomonymAdditions, PersistentLocalId> guardStreetNameNames)

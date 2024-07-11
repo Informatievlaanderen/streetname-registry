@@ -23,7 +23,6 @@ namespace StreetNameRegistry.Municipality
         public bool IsRetired => Status == StreetNameStatus.Retired;
         public bool IsRejected => Status == StreetNameStatus.Rejected;
 
-        public IReadOnlyList<MunicipalityId> MergedMunicipalityIds { get; private set; } = [];
         public IReadOnlyList<PersistentLocalId> MergedStreetNamePersistentLocalIds { get; private set; } = [];
 
         public StreetNameId? LegacyStreetNameId { get; private set; }
@@ -40,7 +39,9 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasProposedForMunicipalityMerger>(When);
             Register<StreetNameWasApproved>(When);
             Register<StreetNameWasRejected>(When);
+            Register<StreetNameWasRejectedBecauseOfMunicipalityMerger>(When);
             Register<StreetNameWasRetiredV2>(When);
+            Register<StreetNameWasRetiredBecauseOfMunicipalityMerger>(When);
             Register<StreetNameNamesWereCorrected>(When);
             Register<StreetNameNamesWereChanged>(When);
             Register<StreetNameWasCorrectedFromApprovedToProposed>(When);
@@ -81,7 +82,6 @@ namespace StreetNameRegistry.Municipality
             PersistentLocalId = new PersistentLocalId(@event.PersistentLocalId);
             Names = new Names(@event.StreetNameNames);
             HomonymAdditions = new HomonymAdditions(@event.HomonymAdditions);
-            MergedMunicipalityIds = @event.MergedMunicipalityIds.Select(x => new MunicipalityId(x)).ToList();
             MergedStreetNamePersistentLocalIds = @event.MergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)).ToList();
             IsRemoved = false;
             _lastEvent = @event;
@@ -99,7 +99,19 @@ namespace StreetNameRegistry.Municipality
             _lastEvent = @event;
         }
 
+        private void When(StreetNameWasRejectedBecauseOfMunicipalityMerger @event)
+        {
+            Status = StreetNameStatus.Rejected;
+            _lastEvent = @event;
+        }
+
         private void When(StreetNameWasRetiredV2 @event)
+        {
+            Status = StreetNameStatus.Retired;
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameWasRetiredBecauseOfMunicipalityMerger @event)
         {
             Status = StreetNameStatus.Retired;
             _lastEvent = @event;

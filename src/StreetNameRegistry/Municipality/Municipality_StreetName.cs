@@ -68,7 +68,6 @@ namespace StreetNameRegistry.Municipality
             Names streetNameNames,
             HomonymAdditions homonymAdditions,
             PersistentLocalId persistentLocalId,
-            List<MunicipalityId> mergedMunicipalityIds,
             List<PersistentLocalId> mergedStreetNamePersistentLocalIds)
         {
             if (MunicipalityStatus == MunicipalityStatus.Retired)
@@ -91,10 +90,7 @@ namespace StreetNameRegistry.Municipality
                 }
             }
 
-            if(!mergedMunicipalityIds.Any())
-                throw new MergedMunicipalityIdsAreMissingException();
-
-            if(!mergedStreetNamePersistentLocalIds.Any())
+            if (!mergedStreetNamePersistentLocalIds.Any())
                 throw new MergedStreetNamePersistentLocalIdsAreMissingException();
 
             if (mergedStreetNamePersistentLocalIds.Count != mergedStreetNamePersistentLocalIds.Distinct().Count())
@@ -106,7 +102,6 @@ namespace StreetNameRegistry.Municipality
                 streetNameNames,
                 homonymAdditions,
                 persistentLocalId,
-                mergedMunicipalityIds.Distinct().ToList(),
                 mergedStreetNamePersistentLocalIds));
         }
 
@@ -114,22 +109,30 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             streetName.Approve();
+        }
+
+        public void ApproveStreetNamesForMunicipalityMerger()
+        {
+            GuardMunicipalityStatusMustBeCurrent();
+
+            var proposedStreetNames = StreetNames
+                .Where(x => x.Status == StreetNameStatus.Proposed)
+                .ToList();
+
+            foreach (var streetName in proposedStreetNames)
+            {
+                streetName.ApproveForMunicipalityMerger();
+            }
         }
 
         public void RejectStreetName(PersistentLocalId persistentLocalId)
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             streetName.Reject();
         }
@@ -138,10 +141,7 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             streetName.Retire();
         }
@@ -164,10 +164,7 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             streetName.CorrectApproval();
         }
@@ -176,10 +173,7 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             streetName.CorrectRejection(GuardUniqueActiveStreetNameNames);
         }
@@ -188,10 +182,7 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             streetName.CorrectRetirement(GuardUniqueActiveStreetNameNames);
         }
@@ -229,10 +220,7 @@ namespace StreetNameRegistry.Municipality
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(sourcePersistentLocalId);
             var destinationStreetName = StreetNames.GetNotRemovedByPersistentLocalId(destinationPersistentLocalId);
 
-            if (MunicipalityStatus != MunicipalityStatus.Current)
-            {
-                throw new MunicipalityHasInvalidStatusException();
-            }
+            GuardMunicipalityStatusMustBeCurrent();
 
             if (streetName.Status != StreetNameStatus.Current)
             {
@@ -277,6 +265,14 @@ namespace StreetNameRegistry.Municipality
                 {
                     throw new StreetNameNameLanguageIsNotSupportedException($"The language '{language}' is not an official or facility language of municipality '{_municipalityId}'.");
                 }
+            }
+        }
+
+        private void GuardMunicipalityStatusMustBeCurrent()
+        {
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                throw new MunicipalityHasInvalidStatusException();
             }
         }
 

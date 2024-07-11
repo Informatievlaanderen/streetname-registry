@@ -31,9 +31,6 @@ namespace StreetNameRegistry.Municipality.Events
         [EventPropertyDescription("Objectidentificator van de straatnaam.")]
         public int PersistentLocalId { get; }
 
-        [EventPropertyDescription("Lijst van interne GUIDs van de gefusioneerde gemeenten waarvoor deze straatnaam is voorgesteld.")]
-        public List<Guid> MergedMunicipalityIds { get; }
-
         [EventPropertyDescription("Lijst van objectidentificatoren van de straatnamen van de gefusioneerde gemeenten waarvoor deze straatnaam is voorgesteld.")]
         public List<int> MergedStreetNamePersistentLocalIds { get; }
 
@@ -46,7 +43,6 @@ namespace StreetNameRegistry.Municipality.Events
             Names streetNameNames,
             HomonymAdditions homonymAdditions,
             PersistentLocalId persistentLocalId,
-            List<MunicipalityId> mergedMunicipalityIds,
             List<PersistentLocalId> mergedStreetNamePersistentLocalIds)
         {
             MunicipalityId = municipalityId;
@@ -54,7 +50,6 @@ namespace StreetNameRegistry.Municipality.Events
             StreetNameNames = streetNameNames.ToDictionary();
             HomonymAdditions = homonymAdditions.ToDictionary();
             PersistentLocalId = persistentLocalId;
-            MergedMunicipalityIds = mergedMunicipalityIds.Select(x => (Guid)x).ToList();
             MergedStreetNamePersistentLocalIds = mergedStreetNamePersistentLocalIds.Select(x => (int)x).ToList();
         }
 
@@ -65,7 +60,6 @@ namespace StreetNameRegistry.Municipality.Events
             IDictionary<Language, string> streetNameNames,
             IDictionary<Language, string> homonymAdditions,
             int persistentLocalId,
-            List<Guid> mergedMunicipalityIds,
             List<int> mergedStreetNamePersistentLocalIds,
             ProvenanceData provenance) :
             this(
@@ -74,9 +68,8 @@ namespace StreetNameRegistry.Municipality.Events
                 new Names(streetNameNames),
                 new HomonymAdditions(homonymAdditions),
                 new PersistentLocalId(persistentLocalId),
-                mergedMunicipalityIds.Select(x=> new MunicipalityId(x)).ToList(),
                 mergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)).ToList())
-        => SetProvenance(provenance.ToProvenance());
+            => SetProvenance(provenance.ToProvenance());
 
         public void SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);
 
@@ -88,7 +81,6 @@ namespace StreetNameRegistry.Municipality.Events
             fields.Add(PersistentLocalId.ToString());
             fields.AddRange(StreetNameNames.Select(streetNameName => $"{streetNameName.Key}: {streetNameName.Value}"));
             fields.AddRange(HomonymAdditions.Select(homonymAddition => $"{homonymAddition.Key}: {homonymAddition.Value}"));
-            fields.AddRange(MergedMunicipalityIds.Select(mergedMunicipalityId => mergedMunicipalityId.ToString("D")));
             fields.AddRange(MergedStreetNamePersistentLocalIds.Select(mergedStreetNamePersistentLocalId => mergedStreetNamePersistentLocalId.ToString()));
             return fields;
         }

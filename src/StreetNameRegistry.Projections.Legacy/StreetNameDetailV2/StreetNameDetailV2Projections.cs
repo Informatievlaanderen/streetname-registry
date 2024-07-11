@@ -37,6 +37,26 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                     .StreetNameDetailV2
                     .AddAsync(streetNameDetailV2, ct);
             });
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var streetNameDetailV2 = new StreetNameDetailV2
+                {
+                    MunicipalityId = message.Message.MunicipalityId,
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    NisCode = message.Message.NisCode,
+                    VersionTimestamp = message.Message.Provenance.Timestamp,
+                    Removed = false,
+                    Status = StreetNameStatus.Proposed
+                };
+
+                UpdateNameByLanguage(streetNameDetailV2, message.Message.StreetNameNames);
+                UpdateHomonymAdditionByLanguage(streetNameDetailV2, new HomonymAdditions(message.Message.HomonymAdditions));
+                UpdateHash(streetNameDetailV2, message);
+
+                await context
+                    .StreetNameDetailV2
+                    .AddAsync(streetNameDetailV2, ct);
+            });
 
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
@@ -88,6 +108,16 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameDetailV2(message.Message.PersistentLocalId, streetNameDetailV2 =>
+                {
+                    UpdateStatus(streetNameDetailV2, StreetNameStatus.Rejected);
+                    UpdateHash(streetNameDetailV2, message);
+                    UpdateVersionTimestamp(streetNameDetailV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameDetailV2(message.Message.PersistentLocalId, streetNameDetailV2 =>
@@ -99,6 +129,16 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
             });
 
             When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameDetailV2(message.Message.PersistentLocalId, streetNameDetailV2 =>
+                {
+                    UpdateStatus(streetNameDetailV2, StreetNameStatus.Retired);
+                    UpdateHash(streetNameDetailV2, message);
+                    UpdateVersionTimestamp(streetNameDetailV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
+            When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameDetailV2(message.Message.PersistentLocalId, streetNameDetailV2 =>
                 {
