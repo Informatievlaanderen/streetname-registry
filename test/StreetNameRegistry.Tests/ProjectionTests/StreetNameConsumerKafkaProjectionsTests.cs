@@ -79,7 +79,8 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     new object[] { new MunicipalityBecameCurrent(id, provenance) },
                     new object[] { new MunicipalityWasCorrectedToCurrent(id, provenance) },
                     new object[] { new MunicipalityWasRetired(id, retirementDate, provenance) },
-                    new object[] { new MunicipalityWasCorrectedToRetired(id, retirementDate, provenance) } // test fails on date format
+                    new object[] { new MunicipalityWasCorrectedToRetired(id, retirementDate, provenance) } // test fails on date format,
+                    // MunicipalityWasMerged: not added because the specific tests already cover this (and it's more complex)
                 };
                 return result.GetEnumerator();
             }
