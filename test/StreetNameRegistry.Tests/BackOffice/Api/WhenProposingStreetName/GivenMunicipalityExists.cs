@@ -8,10 +8,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;
     using global::AutoFixture;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
-    using Municipality;
     using NodaTime;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
