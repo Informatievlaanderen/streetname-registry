@@ -10,8 +10,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
-    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using FluentAssertions;
     using global::AutoFixture;

@@ -27,6 +27,8 @@ nuget Npgsql 8.0.2
 nuget Npgsql.EntityFrameworkCore.PostgreSQL 8.0.2
 nuget Npgsql.EntityFrameworkCore.PostgreSQL.Design 2.0.0-preview1
 
+nuget CsvHelper 33.0.1
+
 // Datadog
 nuget Datadog.Trace.Bundle 2.49.0
 

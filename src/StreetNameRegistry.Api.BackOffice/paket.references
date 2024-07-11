@@ -15,6 +15,7 @@ Be.Vlaanderen.Basisregisters.TicketingService.Abstractions
 Be.Vlaanderen.Basisregisters.TicketingService.Proxy.HttpProxy
 
 MediatR
+CsvHelper
 
 SourceLink.Embed.AllSourceFiles
 SourceLink.Copy.PdbFiles
