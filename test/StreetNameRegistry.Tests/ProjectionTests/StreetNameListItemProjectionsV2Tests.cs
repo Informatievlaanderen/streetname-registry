@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Builders;
     using FluentAssertions;
     using global::AutoFixture;
     using Municipality;
@@ -37,6 +38,44 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     expectedMunicipality.Should().NotBeNull();
                     expectedMunicipality.MunicipalityId.Should().Be(municipalityWasImported.MunicipalityId);
                     expectedMunicipality.NisCode.Should().Be(municipalityWasImported.NisCode);
+                });
+        }
+
+        [Fact]
+        public async Task WhenStreetNameWasProposedForMunicipalityMerger_ThenStreetNameWasAdded()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+
+            var streetNameWasProposedForMunicipalityMerger = new StreetNameWasProposedForMunicipalityMergerBuilder(_fixture)
+                .WithHomonymAdditions(new HomonymAdditions(new[]
+                {
+                    new StreetNameHomonymAddition("ABC", Language.Dutch),
+                    new StreetNameHomonymAddition("XYZ", Language.French),
+                }))
+                .Build();
+
+            await Sut
+                .Given(
+                    _fixture.Create<MunicipalityWasImported>(),
+                    streetNameWasProposedForMunicipalityMerger)
+                .Then(async ct =>
+                {
+                    var expectedStreetName = (await ct.FindAsync<StreetNameListItemV2>(streetNameWasProposedForMunicipalityMerger.PersistentLocalId));
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedForMunicipalityMerger.MunicipalityId);
+                    expectedStreetName.NisCode.Should().Be(streetNameWasProposedForMunicipalityMerger.NisCode);
+                    expectedStreetName.IsInFlemishRegion.Should().Be(RegionFilter.IsFlemishRegion(streetNameWasProposedForMunicipalityMerger.NisCode));
+                    expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedForMunicipalityMerger.PersistentLocalId);
+                    expectedStreetName.Removed.Should().BeFalse();
+                    expectedStreetName.Status.Should().Be(StreetNameStatus.Proposed);
+                    expectedStreetName.VersionTimestamp.Should().Be(streetNameWasProposedForMunicipalityMerger.Provenance.Timestamp);
+                    expectedStreetName.NameDutch.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedForMunicipalityMerger.StreetNameNames, Language.Dutch));
+                    expectedStreetName.NameFrench.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedForMunicipalityMerger.StreetNameNames, Language.French));
+                    expectedStreetName.NameGerman.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedForMunicipalityMerger.StreetNameNames, Language.German));
+                    expectedStreetName.NameEnglish.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedForMunicipalityMerger.StreetNameNames, Language.English));
+                    expectedStreetName.HomonymAdditionDutch.Should().Be("ABC");
+                    expectedStreetName.HomonymAdditionFrench.Should().Be("XYZ");
+                    expectedStreetName.PrimaryLanguage.Should().Be(null);
                 });
         }
 
