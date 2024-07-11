@@ -129,15 +129,15 @@ namespace StreetNameRegistry.Producer.Extensions
                 message.IsRemoved,
                 message.Provenance.ToContract());
 
-        //TODO-rik contract
-        // public static Contracts.StreetNameWasProposedForMunicipalityMerger ToContract(this StreetNameWasProposedForMunicipalityMerger message) =>
-        //     new Contracts.StreetNameWasProposedForMunicipalityMerger(
-        //         message.MunicipalityId.ToString("D"),
-        //         message.NisCode,
-        //         message.PersistentLocalId,
-        //         message.StreetNameNames.ToDictionary(x => x.Key.ToString(), x => x.Value),
-        //         message.HomonymAdditions.ToDictionary(x => x.Key.ToString(), x => x.Value),
-        //         message.Provenance.ToContract());
+         public static Contracts.StreetNameWasProposedForMunicipalityMerger ToContract(this StreetNameWasProposedForMunicipalityMerger message) =>
+             new Contracts.StreetNameWasProposedForMunicipalityMerger(
+                 message.MunicipalityId.ToString("D"),
+                 message.NisCode,
+                 message.StreetNameNames.ToDictionary(x => x.Key.ToString(), x => x.Value),
+                 message.HomonymAdditions.ToDictionary(x => x.Key.ToString(), x => x.Value),
+                 message.PersistentLocalId,
+                 message.MergedStreetNamePersistentLocalIds,
+                 message.Provenance.ToContract());
 
         public static Contracts.StreetNameWasApproved ToContract(this StreetNameWasApproved message) =>
             new Contracts.StreetNameWasApproved(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
@@ -147,9 +147,9 @@ namespace StreetNameRegistry.Producer.Extensions
 
         public static Contracts.StreetNameWasRejected ToContract(this StreetNameWasRejected message) =>
             new Contracts.StreetNameWasRejected(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
-//TODO-rik contract
-        // public static Contracts.StreetNameWasRejectedBecauseOfMunicipalityMerger ToContract(this StreetNameWasRejectedBecauseOfMunicipalityMerger message) =>
-        //     new Contracts.StreetNameWasRejectedBecauseOfMunicipalityMerger(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasRejectedBecauseOfMunicipalityMerger ToContract(this StreetNameWasRejectedBecauseOfMunicipalityMerger message) =>
+            new Contracts.StreetNameWasRejectedBecauseOfMunicipalityMerger(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.NewPersistentLocalIds, message.Provenance.ToContract());
 
         public static Contracts.StreetNameWasCorrectedFromRejectedToProposed ToContract(this StreetNameWasCorrectedFromRejectedToProposed message) =>
             new Contracts.StreetNameWasCorrectedFromRejectedToProposed(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
@@ -157,9 +157,8 @@ namespace StreetNameRegistry.Producer.Extensions
         public static Contracts.StreetNameWasRetiredV2 ToContract(this StreetNameWasRetiredV2 message) =>
             new Contracts.StreetNameWasRetiredV2(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
 
-        //TODO-rik contract
-        // public static Contracts.StreetNameWasRetiredBecauseOfMunicipalityMerger ToContract(this StreetNameWasRetiredBecauseOfMunicipalityMerger message) =>
-        //     new Contracts.StreetNameWasRetiredBecauseOfMunicipalityMerger(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
+        public static Contracts.StreetNameWasRetiredBecauseOfMunicipalityMerger ToContract(this StreetNameWasRetiredBecauseOfMunicipalityMerger message) =>
+            new Contracts.StreetNameWasRetiredBecauseOfMunicipalityMerger(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.NewPersistentLocalIds, message.Provenance.ToContract());
 
         public static Contracts.StreetNameWasRenamed ToContract(this StreetNameWasRenamed message) =>
             new Contracts.StreetNameWasRenamed(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.DestinationPersistentLocalId, message.Provenance.ToContract());
