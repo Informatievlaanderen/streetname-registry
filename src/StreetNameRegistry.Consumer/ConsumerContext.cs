@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Consumer
     public class ConsumerContext : RunnerDbContext<ConsumerContext>
     {
         public DbSet<MunicipalityConsumerItem> MunicipalityConsumerItems { get; set; }
+        public DbSet<MunicipalityMergerItem> MunicipalityMergerItems { get; set; }
 
         // This needs to be here to please EF
         public ConsumerContext()

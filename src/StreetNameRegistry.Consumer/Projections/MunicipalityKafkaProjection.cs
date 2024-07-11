@@ -1,10 +1,16 @@
 namespace StreetNameRegistry.Consumer.Projections
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
+    using Microsoft.EntityFrameworkCore;
+    using Municipality;
     using NodaTime.Text;
     using StreetNameRegistry.Municipality;
     using StreetNameRegistry.Municipality.Commands;
@@ -13,7 +19,7 @@ namespace StreetNameRegistry.Consumer.Projections
 
     public class MunicipalityKafkaProjection : ConnectedProjection<CommandHandler>
     {
-        public MunicipalityKafkaProjection()
+        public MunicipalityKafkaProjection(IDbContextFactory<ConsumerContext> consumerContextFactory)
         {
             When<MunicipalityWasRegistered>(async (commandHandler, message, ct) =>
             {
@@ -98,6 +104,58 @@ namespace StreetNameRegistry.Consumer.Projections
                 var command = GetCommand(message);
                 await commandHandler.Handle(command, ct);
             });
+
+            When<MunicipalityWasMerged>(async (commandHandler, message, ct) =>
+            {
+                await using var context = await consumerContextFactory.CreateDbContextAsync(ct);
+
+                var municipalityId = new MunicipalityId(Guid.Parse(message.MunicipalityId));
+                var newMunicipalityId = new MunicipalityId(Guid.Parse(message.NewMunicipalityId));
+
+                var retireCommand = new RetireMunicipalityForMunicipalityMerger(
+                    municipalityId,
+                    newMunicipalityId,
+                    FromProvenance(message.Provenance)
+                );
+                await commandHandler.Handle(retireCommand, ct);
+
+                await context.MunicipalityMergerItems.AddAsync(new MunicipalityMergerItem
+                {
+                    MunicipalityId = municipalityId,
+                    IsRetired = true
+                });
+                await context.SaveChangesAsync(ct);
+
+                var allMunicipalitiesAreRetired = await AllMunicipalitiesAreRetiredForMunicipalityMerger(
+                    message.MunicipalityIdsToMergeWith.Select(Guid.Parse),
+                    context,
+                    ct);
+                if (allMunicipalitiesAreRetired)
+                {
+                    var approveCommand = new ApproveStreetNamesForMunicipalityMerger(
+                        newMunicipalityId,
+                        FromProvenance(message.Provenance)
+                    );
+                    await commandHandler.Handle(approveCommand, ct);
+                }
+            });
+        }
+
+        private static async Task<bool> AllMunicipalitiesAreRetiredForMunicipalityMerger(
+            IEnumerable<Guid> municipalityIds,
+            ConsumerContext context,
+            CancellationToken ct)
+        {
+            foreach (var municipalityId in municipalityIds)
+            {
+                var municipalityMerge = await context.MunicipalityMergerItems.FindAsync(municipalityId, ct);
+                if (municipalityMerge is null || !municipalityMerge.IsRetired)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public static IHasCommandProvenance GetCommand(IQueueMessage message)
