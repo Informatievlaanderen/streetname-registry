@@ -89,6 +89,13 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                             {
                                 sqlServerOptions.EnableRetryOnFailure();
                                 sqlServerOptions.MigrationsHistoryTable(MigrationTables.ConsumerProjections, Schema.ConsumerProjections);
+                            }))
+                        .AddDbContextFactory<ConsumerContext>((_, options) => options
+                            .UseLoggerFactory(loggerFactory)
+                            .UseSqlServer(hostContext.Configuration.GetConnectionString("Consumer"), sqlServerOptions =>
+                            {
+                                sqlServerOptions.EnableRetryOnFailure();
+                                sqlServerOptions.MigrationsHistoryTable(MigrationTables.ConsumerProjections, Schema.ConsumerProjections);
                             }));
                 })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())

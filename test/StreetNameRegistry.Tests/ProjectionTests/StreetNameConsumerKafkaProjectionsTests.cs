@@ -3,14 +3,20 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using AutoFixture;
+    using BackOffice;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Consumer;
+    using Consumer.Municipality;
     using Consumer.Projections;
+    using FluentAssertions;
     using global::AutoFixture;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging.Abstractions;
     using Moq;
     using Municipality;
@@ -23,11 +29,13 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     public sealed class StreetNameConsumerKafkaProjectionsTests : StreetNameConsumerKafkaProjectionTest<CommandHandler, MunicipalityKafkaProjection>
     {
         private readonly Mock<FakeCommandHandler> _mockCommandHandler;
+        private readonly Mock<IDbContextFactory<ConsumerContext>> _consumerContextFactoryMock;
 
         public StreetNameConsumerKafkaProjectionsTests(ITestOutputHelper output)
             : base(output)
         {
             _mockCommandHandler = new Mock<FakeCommandHandler>();
+            _consumerContextFactoryMock = new Mock<IDbContextFactory<ConsumerContext>>();
         }
 
         private class MunicipalityEventsGenerator : IEnumerable<object[]>
@@ -424,6 +432,149 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             });
         }
 
+        [Fact]
+        public async Task GivenFirstMunicipalityWasMergedWithMunicipalityIdsToMergeWith_ThenRetireMunicipalityForMunicipalityMerger()
+        {
+            var consumerContext = new FakeConsumerContextFactory(dontDispose: true).CreateDbContext();
+
+            _consumerContextFactoryMock
+                .Setup(x => x.CreateDbContextAsync(It.IsAny<CancellationToken>()))
+                .Returns(() => Task.FromResult((ConsumerContext)consumerContext));
+
+            var @event = new MunicipalityWasMerged(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<string>(),
+                Fixture.CreateMany<Guid>(3).Select(x => x.ToString()),
+                Fixture.CreateMany<string>(3),
+                Fixture.Create<string>(),
+                Fixture.Create<string>(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+
+            consumerContext.MunicipalityMergerItems.Should().BeEmpty();
+
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Invocations.Count.Should().Be(1);
+
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(cmd => cmd is RetireMunicipalityForMunicipalityMerger), CancellationToken.None),
+                    Times.Once);
+
+                var mergerItems = consumerContext.MunicipalityMergerItems.ToList();
+                mergerItems.Count.Should().Be(1);
+                mergerItems[0].MunicipalityId.Should().Be(Guid.Parse(@event.MunicipalityId));
+                mergerItems[0].IsRetired.Should().BeTrue();
+
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenLastMunicipalityWasMergedWithMunicipalityIdsToMergeWith_ThenRetireOldAndApproveNew()
+        {
+            var consumerContext = new FakeConsumerContextFactory(dontDispose: true).CreateDbContext();
+
+            _consumerContextFactoryMock
+                .Setup(x => x.CreateDbContextAsync(It.IsAny<CancellationToken>()))
+                .Returns(() => Task.FromResult((ConsumerContext)consumerContext));
+
+            var @event = new MunicipalityWasMerged(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<string>(),
+                Fixture.CreateMany<Guid>(3).Select(x => x.ToString()),
+                Fixture.CreateMany<string>(3),
+                Fixture.Create<string>(),
+                Fixture.Create<string>(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+
+            consumerContext.MunicipalityMergerItems.AddRange(@event.MunicipalityIdsToMergeWith
+                .Select(municipalityId => new MunicipalityMergerItem
+                {
+                    MunicipalityId = Guid.Parse(municipalityId),
+                    IsRetired = true
+                }));
+            await consumerContext.SaveChangesAsync();
+
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Invocations.Count.Should().Be(2);
+
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(cmd => cmd is RetireMunicipalityForMunicipalityMerger), CancellationToken.None),
+                    Times.Once);
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(cmd => cmd is ApproveStreetNamesForMunicipalityMerger), CancellationToken.None),
+                    Times.Once);
+
+                var mergerItem = consumerContext.MunicipalityMergerItems.Last();
+                mergerItem.MunicipalityId.Should().Be(Guid.Parse(@event.MunicipalityId));
+                mergerItem.IsRetired.Should().BeTrue();
+
+                await Task.CompletedTask;
+            });
+        }
+
+        [Fact]
+        public async Task GivenMunicipalityWasMergedWithoutMunicipalityIdsToMergeWith_ThenRetireOldAndApproveNew()
+        {
+            var consumerContext = new FakeConsumerContextFactory(dontDispose: true).CreateDbContext();
+
+            _consumerContextFactoryMock
+                .Setup(x => x.CreateDbContextAsync(It.IsAny<CancellationToken>()))
+                .Returns(() => Task.FromResult((ConsumerContext)consumerContext));
+
+            var @event = new MunicipalityWasMerged(
+                Fixture.Create<Guid>().ToString(),
+                Fixture.Create<string>(),
+                [],
+                [],
+                Fixture.Create<string>(),
+                Fixture.Create<string>(),
+                new Provenance(
+                    Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
+                    Application.StreetNameRegistry.ToString(),
+                    Modification.Update.ToString(),
+                    Organisation.Aiv.ToString(),
+                    "test"));
+
+            Given(@event);
+
+            consumerContext.MunicipalityMergerItems.Should().BeEmpty();
+
+            await Then(async _ =>
+            {
+                _mockCommandHandler.Invocations.Count.Should().Be(2);
+
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(cmd => cmd is RetireMunicipalityForMunicipalityMerger), CancellationToken.None),
+                    Times.Once);
+                _mockCommandHandler.Verify(
+                    x => x.Handle(It.Is<IHasCommandProvenance>(cmd => cmd is ApproveStreetNamesForMunicipalityMerger), CancellationToken.None),
+                    Times.Once);
+
+                var mergerItems = consumerContext.MunicipalityMergerItems.ToList();
+                mergerItems.Count.Should().Be(1);
+                mergerItems[0].MunicipalityId.Should().Be(Guid.Parse(@event.MunicipalityId));
+                mergerItems[0].IsRetired.Should().BeTrue();
+
+                await Task.CompletedTask;
+            });
+        }
+
         protected override CommandHandler CreateContext()
         {
             return _mockCommandHandler.Object;
@@ -431,7 +582,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
 
         protected override MunicipalityKafkaProjection CreateProjection()
         {
-            return new MunicipalityKafkaProjection();
+            return new MunicipalityKafkaProjection(_consumerContextFactoryMock.Object);
         }
     }
 
