@@ -1,3 +1,13 @@
+# [4.6.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.5.2...v4.6.0) (2024-07-15)
+
+
+### Features
+
+* add commands ApproveStreetNamesForMunicipalityMerger and RetireMunicipalityForMunicipalityMerger ([aefb429](https://github.com/informatievlaanderen/streetname-registry/commit/aefb429c74fb9f9a484fbe2a885367da461937d6))
+* add domain propose streetname from merger ([76f2f6d](https://github.com/informatievlaanderen/streetname-registry/commit/76f2f6da3cae398df23a7e092c06e823616e4905))
+* add MunicipalityWasMerged handler to consumer ([e6e6333](https://github.com/informatievlaanderen/streetname-registry/commit/e6e63335864187b1910d55266462e5cb36086673))
+* add propose for muni merger api + lambda ([4dfd328](https://github.com/informatievlaanderen/streetname-registry/commit/4dfd3289bc21d381aad7c75c2051425b51c2910d))
+
 ## [4.5.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.5.1...v4.5.2) (2024-07-02)
 
 
