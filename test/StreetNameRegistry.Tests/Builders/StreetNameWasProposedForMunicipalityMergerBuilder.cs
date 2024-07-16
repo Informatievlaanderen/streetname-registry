@@ -66,7 +66,7 @@
                 _names ?? _fixture.Create<Names>(),
                 _homonymAdditions ?? _fixture.Create<HomonymAdditions>(),
                 _persistentLocalId ?? _fixture.Create<PersistentLocalId>(),
-                _mergedStreetNamePersistentLocalIds ?? _fixture.CreateMany<PersistentLocalId>(5).ToList());
+                _mergedStreetNamePersistentLocalIds ?? _fixture.CreateMany<int>(5).Select(x => new PersistentLocalId(x)).ToList());
 
             StreetNameWasProposedForMunicipalityMerger.SetProvenance(_fixture.Create<Provenance>());
 
