@@ -24,6 +24,14 @@ namespace StreetNameRegistry.Projections.BackOffice
                 await using var backOfficeContext = await backOfficeContextFactory.CreateDbContextAsync(cancellationToken);
                 await backOfficeContext.AddIdempotentMunicipalityStreetNameIdRelation(message.Message.PersistentLocalId, message.Message.MunicipalityId, message.Message.NisCode, cancellationToken);
             });
+
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (_, message, cancellationToken) =>
+            {
+                await DelayProjection(message, delayInSeconds, cancellationToken);
+
+                await using var backOfficeContext = await backOfficeContextFactory.CreateDbContextAsync(cancellationToken);
+                await backOfficeContext.AddIdempotentMunicipalityStreetNameIdRelation(message.Message.PersistentLocalId, message.Message.MunicipalityId, message.Message.NisCode, cancellationToken);
+            });
         }
 
         private static async Task DelayProjection<TMessage>(Envelope<TMessage> envelope, int delayInSeconds, CancellationToken cancellationToken)
