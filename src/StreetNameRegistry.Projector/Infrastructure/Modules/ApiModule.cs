@@ -21,6 +21,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using StreetNameRegistry.Projections.Extract.StreetNameExtract;
     using StreetNameRegistry.Projections.Integration;
     using StreetNameRegistry.Projections.Integration.Infrastructure;
+    using StreetNameRegistry.Projections.Integration.Merger;
     using StreetNameRegistry.Projections.LastChangedList;
     using StreetNameRegistry.Projections.Legacy;
     using StreetNameRegistry.Projections.Legacy.StreetNameDetailV2;
@@ -102,11 +103,12 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjections<StreetNameLatestItemProjections, IntegrationContext>(
                     context => new StreetNameLatestItemProjections(context.Resolve<IOptions<IntegrationOptions>>()),
                     ConnectedProjectionSettings.Default)
-            .RegisterProjections<StreetNameVersionProjections, IntegrationContext>(
-                context => new StreetNameVersionProjections(
-                    context.Resolve<IOptions<IntegrationOptions>>(),
-                    context.Resolve<IEventsRepository>()),
-                ConnectedProjectionSettings.Default);
+                .RegisterProjections<StreetNameVersionProjections, IntegrationContext>(
+                    context => new StreetNameVersionProjections(
+                        context.Resolve<IOptions<IntegrationOptions>>(),
+                        context.Resolve<IEventsRepository>()),
+                    ConnectedProjectionSettings.Default)
+                .RegisterProjections<StreetNameMergerItemProjections, IntegrationContext>(ConnectedProjectionSettings.Default);
         }
 
         private void RegisterExtractProjectionsV2(ContainerBuilder builder)

@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Projections.Integration
 {
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
+    using Merger;
     using Microsoft.EntityFrameworkCore;
     using StreetNameRegistry.Infrastructure;
 
@@ -9,6 +10,7 @@ namespace StreetNameRegistry.Projections.Integration
         public override string ProjectionStateSchema => Schema.Integration;
 
         public DbSet<StreetNameLatestItem> StreetNameLatestItems => Set<StreetNameLatestItem>();
+        public DbSet<StreetNameMergerItem> StreetNameMergerItems => Set<StreetNameMergerItem>();
         public DbSet<StreetNameVersion> StreetNameVersions => Set<StreetNameVersion>();
 
         // This needs to be here to please EF
