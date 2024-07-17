@@ -126,7 +126,7 @@ namespace StreetNameRegistry.Api.BackOffice
                                 x.Key.StreetName,
                                 x.Key.HomonymAddition,
                                 x.Value)).ToList(),
-                            new ProvenanceData(CreateProvenance(Modification.Insert)))
+                            new ProvenanceData(CreateProvenance(Modification.Insert, $"Fusie {nisCode}")))
                         , cancellationToken);
 
                 return Accepted(result);
