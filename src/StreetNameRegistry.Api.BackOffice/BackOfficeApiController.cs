@@ -34,7 +34,7 @@ namespace StreetNameRegistry.Api.BackOffice
             };
         }
 
-        protected Provenance CreateProvenance(Modification modification)
-            => _provenanceFactory.Create(new Reason(""), modification);
+        protected Provenance CreateProvenance(Modification modification, string reason = "")
+            => _provenanceFactory.Create(new Reason(reason), modification);
     }
 }
