@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Municipality.Events
 
     [EventTags(EventTag.For.Sync, EventTag.For.Edit)]
     [EventName(EventName)]
-    [EventDescription("De straatnaam werd gehistoreerd in functie van een gemeentelijke fusie.")]
+    [EventDescription("De straatnaam werd gehistoreerd in functie van een gemeentefusie.")]
     public sealed class StreetNameWasRetiredBecauseOfMunicipalityMerger : IMunicipalityEvent, IHasPersistentLocalId
     {
         public const string EventName = "StreetNameWasRetiredBecauseOfMunicipalityMerger"; // BE CAREFUL CHANGING THIS!!
