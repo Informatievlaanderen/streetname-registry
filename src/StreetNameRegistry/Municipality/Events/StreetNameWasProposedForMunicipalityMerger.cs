@@ -22,7 +22,7 @@ namespace StreetNameRegistry.Municipality.Events
         [EventPropertyDescription("NIS-code (= objectidentificator) van de gemeente aan dewelke de straatnaam is toegewezen.")]
         public string NisCode { get; }
 
-        [EventPropertyDescription("De gewenste status van de straatnaam na het uitvoeren van de gemeentefusie. Mogelijkheden: Current, Proposed en Retired.")]
+        [EventPropertyDescription("De gewenste status van de straatnaam na het uitvoeren van de gemeentefusie. Mogelijkheden: Current en Proposed.")]
         public StreetNameStatus DesiredStatus { get; }
 
         [EventPropertyDescription("De straatnamen in de officiële en (eventuele) faciliteitentaal van de gemeente. Mogelijkheden: Dutch, French, German of English.")]
