@@ -48,7 +48,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             }
 
             var latestEventHash = await GetStreetNameHash(
-                request.MunicipalityPersistentLocalId(),
+                request.MunicipalityId(),
                 new PersistentLocalId(id.StreetNamePersistentLocalId),
                 cancellationToken);
 

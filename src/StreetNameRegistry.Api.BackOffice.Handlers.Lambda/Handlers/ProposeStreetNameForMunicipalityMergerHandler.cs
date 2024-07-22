@@ -63,11 +63,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 await _backOfficeContext
                     .AddIdempotentMunicipalityStreetNameIdRelation(
                         command.PersistentLocalId,
-                        request.MunicipalityPersistentLocalId(),
+                        request.MunicipalityId(),
                         request.NisCode,
                         cancellationToken);
 
-                var lastHash = await GetStreetNameHash(request.MunicipalityPersistentLocalId(), command.PersistentLocalId, cancellationToken);
+                var lastHash = await GetStreetNameHash(request.MunicipalityId(), command.PersistentLocalId, cancellationToken);
                 etagResponses.Add(new ETagResponse(string.Format(DetailUrlFormat, command.PersistentLocalId), lastHash));
             }
 
@@ -103,7 +103,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                         : StreetNameStatus.Proposed;
 
                     return new ProposeStreetNameForMunicipalityMerger(
-                        request.MunicipalityPersistentLocalId(),
+                        request.MunicipalityId(),
                         desiredStatus,
                         new Names(new[] { new StreetNameName(streetName.StreetName, Language.Dutch) }),
                         streetName.HomonymAddition is not null

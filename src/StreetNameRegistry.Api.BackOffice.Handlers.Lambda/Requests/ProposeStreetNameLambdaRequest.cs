@@ -36,7 +36,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
                 Request.Straatnamen.Select(x => new StreetNameName(x.Value, TaalMapper.ToLanguage(x.Key))));
 
             return new ProposeStreetName(
-                this.MunicipalityPersistentLocalId(),
+                this.MunicipalityId(),
                 names,
                 PersistentLocalId,
                 Provenance);

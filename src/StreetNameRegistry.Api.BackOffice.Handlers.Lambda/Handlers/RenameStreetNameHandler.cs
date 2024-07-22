@@ -45,7 +45,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             }
 
             var lastHash = await GetStreetNameHash(
-                request.MunicipalityPersistentLocalId(), new PersistentLocalId(request.StreetNamePersistentLocalId), cancellationToken);
+                request.MunicipalityId(), new PersistentLocalId(request.StreetNamePersistentLocalId), cancellationToken);
             return new ETagResponse(string.Format(DetailUrlFormat, request.StreetNamePersistentLocalId), lastHash);
         }
 
