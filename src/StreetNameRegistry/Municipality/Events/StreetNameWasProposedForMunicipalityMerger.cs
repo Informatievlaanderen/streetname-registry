@@ -22,6 +22,9 @@ namespace StreetNameRegistry.Municipality.Events
         [EventPropertyDescription("NIS-code (= objectidentificator) van de gemeente aan dewelke de straatnaam is toegewezen.")]
         public string NisCode { get; }
 
+        [EventPropertyDescription("De gewenste status van de straatnaam na het uitvoeren van de gemeentefusie. Mogelijkheden: Current, Proposed en Retired.")]
+        public StreetNameStatus DesiredStatus { get; }
+
         [EventPropertyDescription("De straatnamen in de officiële en (eventuele) faciliteitentaal van de gemeente. Mogelijkheden: Dutch, French, German of English.")]
         public IDictionary<Language, string> StreetNameNames { get; }
 
@@ -40,6 +43,7 @@ namespace StreetNameRegistry.Municipality.Events
         public StreetNameWasProposedForMunicipalityMerger(
             MunicipalityId municipalityId,
             NisCode nisCode,
+            StreetNameStatus desiredStatus,
             Names streetNameNames,
             HomonymAdditions homonymAdditions,
             PersistentLocalId persistentLocalId,
@@ -47,6 +51,7 @@ namespace StreetNameRegistry.Municipality.Events
         {
             MunicipalityId = municipalityId;
             NisCode = nisCode;
+            DesiredStatus = desiredStatus;
             StreetNameNames = streetNameNames.ToDictionary();
             HomonymAdditions = homonymAdditions.ToDictionary();
             PersistentLocalId = persistentLocalId;
@@ -57,6 +62,7 @@ namespace StreetNameRegistry.Municipality.Events
         private StreetNameWasProposedForMunicipalityMerger(
             Guid municipalityId,
             string nisCode,
+            StreetNameStatus desiredStatus,
             IDictionary<Language, string> streetNameNames,
             IDictionary<Language, string> homonymAdditions,
             int persistentLocalId,
@@ -65,6 +71,7 @@ namespace StreetNameRegistry.Municipality.Events
             this(
                 new MunicipalityId(municipalityId),
                 new NisCode(nisCode),
+                desiredStatus,
                 new Names(streetNameNames),
                 new HomonymAdditions(homonymAdditions),
                 new PersistentLocalId(persistentLocalId),
@@ -78,6 +85,7 @@ namespace StreetNameRegistry.Municipality.Events
             var fields = Provenance.GetHashFields().ToList();
             fields.Add(MunicipalityId.ToString("D"));
             fields.Add(NisCode);
+            fields.Add(DesiredStatus.ToString());
             fields.Add(PersistentLocalId.ToString());
             fields.AddRange(StreetNameNames.Select(streetNameName => $"{streetNameName.Key}: {streetNameName.Value}"));
             fields.AddRange(HomonymAdditions.Select(homonymAddition => $"{homonymAddition.Key}: {homonymAddition.Value}"));

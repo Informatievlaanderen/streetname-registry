@@ -11,14 +11,16 @@
         private static readonly Guid Namespace = new Guid("eaf63006-10de-403f-a692-084707cc5ed4");
 
         public MunicipalityId MunicipalityId { get; }
+        public StreetNameStatus DesiredStatus { get; }
         public Names StreetNameNames { get; }
         public HomonymAdditions HomonymAdditions { get; }
         public PersistentLocalId PersistentLocalId { get; }
-
         public List<PersistentLocalId> MergedStreetNamePersistentLocalIds { get; }
         public Provenance Provenance { get; }
+
         public ProposeStreetNameForMunicipalityMerger(
             MunicipalityId municipalityId,
+            StreetNameStatus desiredStatus,
             Names streetNameNames,
             HomonymAdditions? homonymAdditions,
             PersistentLocalId persistentLocalId,
@@ -26,6 +28,7 @@
             Provenance provenance)
         {
             MunicipalityId = municipalityId;
+            DesiredStatus = desiredStatus;
             StreetNameNames = streetNameNames;
             HomonymAdditions = homonymAdditions ?? [];
             PersistentLocalId = persistentLocalId;
@@ -43,6 +46,7 @@
         {
             yield return MunicipalityId;
             yield return PersistentLocalId;
+            yield return DesiredStatus;
 
             foreach (var streetNameName in StreetNameNames)
             {

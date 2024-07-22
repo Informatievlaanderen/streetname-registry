@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
@@ -10,15 +11,18 @@ namespace StreetNameRegistry.Api.BackOffice
     using Abstractions.Validation;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
-    using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
+    using Be.Vlaanderen.Basisregisters.GrAr.Edit.Validators;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
+    using Consumer;
+    using Consumer.Municipality;
     using CsvHelper;
     using CsvHelper.Configuration;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using Municipality;
     using Swashbuckle.AspNetCore.Filters;
 
@@ -31,6 +35,7 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <param name="file"></param>
         /// <param name="nisCode"></param>
         /// <param name="persistentLocalIdGenerator"></param>
+        /// <param name="municipalityConsumerContext"></param>
         /// <param name="cancellationToken"></param>
         [HttpPost("acties/voorstellen/gemeentefusie/{niscode}")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
@@ -46,12 +51,13 @@ namespace StreetNameRegistry.Api.BackOffice
             IFormFile? file,
             [FromRoute(Name = "niscode")] string nisCode,
             [FromServices] IPersistentLocalIdGenerator persistentLocalIdGenerator,
+            [FromServices] ConsumerContext municipalityConsumerContext,
             CancellationToken cancellationToken = default)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("Please upload a CSV file.");
 
-            if (!Path.GetExtension(file.FileName).Equals(".csv", System.StringComparison.CurrentCultureIgnoreCase))
+            if (!Path.GetExtension(file.FileName).Equals(".csv", StringComparison.CurrentCultureIgnoreCase))
                 return BadRequest("Only CSV files are allowed.");
 
             try
@@ -65,20 +71,35 @@ namespace StreetNameRegistry.Api.BackOffice
                     using (var reader = new StreamReader(stream))
                     using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
                            {
-                               Delimiter = ";"
+                               Delimiter = ";",
+                               HasHeaderRecord = true,
+                               IgnoreBlankLines = true
                            }))
                     {
+                        await csv.ReadAsync();
+                        csv.ReadHeader();
+
                         var recordNr = 0;
                         while (await csv.ReadAsync())
                         {
                             recordNr++;
 
-                            var oldStreetNamePersistentLocalId = csv.GetField<string>(0);
-                            var newNisCode = csv.GetField<string>(1);
-                            var streetName = csv.GetField<string>(2);
+                            var oldNisCode = csv.GetField<string>("OUD NIS code");
+                            var oldStreetNamePuri = csv.GetField<string>("OUD straatnaamid");
+                            var newNisCode = csv.GetField<string>("NIEUW NIS code");
+                            var streetName = csv.GetField<string>("NIEUW straatnaam");
+                            var homonymAddition = csv.GetField<string>("NIEUW homoniemtoevoeging");
 
-                            if(string.IsNullOrWhiteSpace(oldStreetNamePersistentLocalId))
-                                return BadRequest($"OldStreetNamePersistentLocalId is required at record number {recordNr}");
+                            if (string.IsNullOrWhiteSpace(oldNisCode))
+                                return BadRequest($"OldNisCode is required at record number {recordNr}");
+
+                            if (string.IsNullOrWhiteSpace(oldStreetNamePuri))
+                                return BadRequest($"OldStreetNamePuri is required at record number {recordNr}");
+
+                            if (!OsloPuriValidator.TryParseIdentifier(oldStreetNamePuri, out var oldStreetNamePersistentLocalIdAsString)
+                                || !int.TryParse(oldStreetNamePersistentLocalIdAsString, out var oldStreetNamePersistentLocalId))
+                                return BadRequest($"OldStreetNamePuri is NaN at record number {recordNr}");
+
 
                             if (string.IsNullOrWhiteSpace(newNisCode))
                                 return BadRequest($"NisCode is required at record number {recordNr}");
@@ -92,10 +113,11 @@ namespace StreetNameRegistry.Api.BackOffice
 
                             records.Add(new CsvRecord
                             {
-                                OldStreetNamePersistentLocalId = oldStreetNamePersistentLocalId.Trim(),
+                                OldNisCode = oldNisCode.Trim(),
+                                OldStreetNamePersistentLocalId = oldStreetNamePersistentLocalId,
                                 NisCode = nisCode.Trim(),
                                 StreetName = streetName.Trim(),
-                                HomonymAddition = csv.GetField<string>(3)?.Trim()
+                                HomonymAddition = homonymAddition?.Trim()
                             });
                         }
                     }
@@ -109,13 +131,28 @@ namespace StreetNameRegistry.Api.BackOffice
                     .Single()
                     .Value;
 
+                var oldMunicipalities = new List<MunicipalityConsumerItem>();
+                foreach (var oldMunicipalityNisCode in records.Select(x => x.OldNisCode).Distinct())
+                {
+                    var oldMunicipality = await municipalityConsumerContext.MunicipalityConsumerItems.SingleOrDefaultAsync(
+                        x => x.NisCode == oldMunicipalityNisCode, cancellationToken: cancellationToken);
+
+                    if (oldMunicipality is null)
+                    {
+                        return BadRequest($"No municipality found for {oldMunicipalityNisCode}");
+                    }
+
+                    oldMunicipalities.Add(oldMunicipality);
+                }
+
                 // group by streetname and homonym addition
                 var streetNamesByNisCode = streetNamesByNisCodeRecords
                     .GroupBy(x => (x.StreetName, x.HomonymAddition))
                     .ToDictionary(
                         x => x.Key,
-                        y => y
-                            .Select(z =>  z.OldStreetNamePersistentLocalId.AsIdentifier().Map(int.Parse).Value).ToList());
+                        y => y.Select(z => new MergedStreetName(
+                            z.OldStreetNamePersistentLocalId,
+                            oldMunicipalities.Single(x => x.NisCode == z.OldNisCode).MunicipalityId)).ToList());
 
                 var result = await _mediator
                     .Send(
@@ -143,7 +180,8 @@ namespace StreetNameRegistry.Api.BackOffice
 
     public sealed class CsvRecord
     {
-        public required string OldStreetNamePersistentLocalId { get; init; }
+        public required string OldNisCode { get; init; }
+        public required int OldStreetNamePersistentLocalId { get; init; }
         public required string NisCode { get; init; }
         public required string StreetName { get; init; }
         public string? HomonymAddition { get; init; }

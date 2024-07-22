@@ -65,6 +65,7 @@ namespace StreetNameRegistry.Municipality
         }
 
         public void ProposeStreetNameForMunicipalityMerger(
+            StreetNameStatus desiredStatus,
             Names streetNameNames,
             HomonymAdditions homonymAdditions,
             PersistentLocalId persistentLocalId,
@@ -78,6 +79,11 @@ namespace StreetNameRegistry.Municipality
             if (StreetNames.HasPersistentLocalId(persistentLocalId))
             {
                 throw new StreetNamePersistentLocalIdAlreadyExistsException();
+            }
+
+            if (desiredStatus != StreetNameStatus.Proposed && desiredStatus != StreetNameStatus.Current)
+            {
+                throw new StreetNameHasInvalidDesiredStatusException();
             }
 
             GuardStreetNameNames(streetNameNames, homonymAdditions, persistentLocalId);
@@ -99,6 +105,7 @@ namespace StreetNameRegistry.Municipality
             ApplyChange(new StreetNameWasProposedForMunicipalityMerger(
                 _municipalityId,
                 _nisCode,
+                desiredStatus,
                 streetNameNames,
                 homonymAdditions,
                 persistentLocalId,

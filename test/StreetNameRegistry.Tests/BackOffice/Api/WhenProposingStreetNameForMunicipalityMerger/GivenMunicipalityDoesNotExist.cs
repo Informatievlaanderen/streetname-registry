@@ -3,8 +3,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetNameForMuni
     using System;
     using System.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
+    using Consumer.Municipality;
     using FluentAssertions;
     using FluentValidation;
     using Moq;
@@ -16,8 +16,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetNameForMuni
 
     public sealed class GivenMunicipalityDoesNotExist : BackOfficeApiTest<StreetNameController>
     {
+        private readonly TestConsumerContext _municipalityConsumerContext;
+
         public GivenMunicipalityDoesNotExist(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
+            _municipalityConsumerContext = new FakeConsumerContextFactory().CreateDbContext();
         }
 
         [Fact]
@@ -31,12 +34,20 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetNameForMuni
             mockPersistentLocalIdGenerator.Setup(x => x.GenerateNextPersistentLocalId())
                 .Returns(new PersistentLocalId(1));
 
-            Func<Task> act = async () =>
+            _municipalityConsumerContext.Add(new MunicipalityConsumerItem
+            {
+                MunicipalityId = Guid.NewGuid(),
+                NisCode = CsvHelpers.OldNisCode
+            });
+            _municipalityConsumerContext.SaveChanges();
+
+            var act = async () =>
             {
                 await Controller.ProposeForMunicipalityMerger(
                     CsvHelpers.CreateFormFileFromString(CsvHelpers.Example),
                     "11001",
                     mockPersistentLocalIdGenerator.Object,
+                    _municipalityConsumerContext,
                 CancellationToken.None);
             };
 

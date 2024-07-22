@@ -48,6 +48,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                         true,
                         fixture.Create<StreetNameId?>(),
                         fixture.CreateMany<PersistentLocalId>(3).ToList(),
+                        StreetNameStatus.Current,
                         fixture.Create<string>(),
                         fixture.Create<ProvenanceData>()))
                     .CreateMany(random.Next(2, 10));
@@ -133,6 +134,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                 {
                     streetName.LegacyStreetNameId.Should().Be(new StreetNameId(snapshotStreetName.LegacyStreetNameId.Value));
                 }
+
+                streetName.MergedStreetNamePersistentLocalIds.Should().BeEquivalentTo(
+                    snapshotStreetName.MergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)));
+                streetName.MergedStatus.Should().Be(snapshotStreetName.MergedStatus);
 
                 streetName.LastProvenanceData.Should().BeEquivalentTo(snapshotStreetName.LastProvenanceData);
                 streetName.LastEventHash.Should().Be(snapshotStreetName.LastEventHash);

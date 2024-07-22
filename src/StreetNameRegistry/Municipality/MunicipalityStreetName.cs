@@ -26,7 +26,17 @@ namespace StreetNameRegistry.Municipality
 
         public void ApproveForMunicipalityMerger()
         {
+            if (IsRemoved)
+            {
+                return;
+            }
+
             if (Status == StreetNameStatus.Current)
+            {
+                return;
+            }
+
+            if (MergedStatus != StreetNameStatus.Current)
             {
                 return;
             }
@@ -223,6 +233,9 @@ namespace StreetNameRegistry.Municipality
             LegacyStreetNameId = streetNameData.LegacyStreetNameId is null
                 ? null
                 : new StreetNameId(streetNameData.LegacyStreetNameId.Value);
+
+            MergedStreetNamePersistentLocalIds = streetNameData.MergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)).ToList();
+            MergedStatus = streetNameData.MergedStatus;
 
             _lastSnapshotEventHash = streetNameData.LastEventHash;
             _lastSnapshotProvenance = streetNameData.LastProvenanceData;
