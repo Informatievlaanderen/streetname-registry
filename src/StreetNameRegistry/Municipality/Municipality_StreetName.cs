@@ -81,11 +81,6 @@ namespace StreetNameRegistry.Municipality
                 throw new StreetNamePersistentLocalIdAlreadyExistsException();
             }
 
-            if (desiredStatus != StreetNameStatus.Proposed && desiredStatus != StreetNameStatus.Current)
-            {
-                throw new StreetNameHasInvalidDesiredStatusException();
-            }
-
             GuardStreetNameNames(streetNameNames, homonymAdditions, persistentLocalId);
 
             foreach (var language in _officialLanguages.Concat(_facilityLanguages))

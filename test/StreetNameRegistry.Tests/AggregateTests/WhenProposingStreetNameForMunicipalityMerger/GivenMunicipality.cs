@@ -100,29 +100,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 .Throws(new StreetNamePersistentLocalIdAlreadyExistsException()));
         }
 
-        [Theory]
-        [InlineData(StreetNameStatus.Rejected)]
-        [InlineData(StreetNameStatus.Retired)]
-        public void WithInvalidDesiredStreetNameStatus_ThenThrowsStreetNameHasInvalidDesiredStatusException(StreetNameStatus desiredStatus)
-        {
-            var streetNameName = Fixture.Create<StreetNameName>();
-            Fixture.Register(() => new Names { streetNameName });
-            Fixture.Register(() => StreetNameStatus.Retired);
-            Fixture.Register(() => Language.Dutch);
-            Fixture.Register(() => Taal.NL);
-
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(desiredStatus);
-
-            Assert(new Scenario()
-                .Given(_streamId,
-                    Fixture.Create<MunicipalityWasImported>(),
-                    Fixture.Create<MunicipalityOfficialLanguageWasAdded>(),
-                    Fixture.Create<StreetNameWasMigratedToMunicipality>())
-                .When(command)
-                .Throws(new StreetNameHasInvalidDesiredStatusException()));
-        }
-
         [Fact]
         public void WithExistingRetiredStreetName_ThenStreetNameWasProposed()
         {

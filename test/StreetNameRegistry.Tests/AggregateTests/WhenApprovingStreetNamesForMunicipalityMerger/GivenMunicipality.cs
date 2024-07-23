@@ -46,6 +46,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetNamesForMun
                 new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
                     .WithDesiredStatus(StreetNameStatus.Current)
                     .Build(),
+                new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
+                    .WithDesiredStatus(StreetNameStatus.Rejected)
+                    .Build(),
+                new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
+                    .WithDesiredStatus(StreetNameStatus.Retired)
+                    .Build(),
             };
 
             // Act, assert
@@ -59,7 +65,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetNamesForMun
                     .ToArray()
                 )
                 .When(command)
-                .Then(streetNameWasProposedList.Where(x => x.DesiredStatus == StreetNameStatus.Current)
+                .Then(streetNameWasProposedList.Where(x => x.DesiredStatus != StreetNameStatus.Proposed)
                     .Select(streetNameWasProposed => new Fact(
                         _streamId,
                         new StreetNameWasApproved(_municipalityId, new PersistentLocalId(streetNameWasProposed.PersistentLocalId))

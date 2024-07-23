@@ -31,12 +31,12 @@ namespace StreetNameRegistry.Municipality
                 return;
             }
 
-            if (Status == StreetNameStatus.Current)
+            if (MergedStatus == StreetNameStatus.Proposed)
             {
                 return;
             }
 
-            if (MergedStatus != StreetNameStatus.Current)
+            if (Status == StreetNameStatus.Current)
             {
                 return;
             }
