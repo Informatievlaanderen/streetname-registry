@@ -6,7 +6,8 @@
 
     public sealed class CsvHelpers
     {
-        public const string Example = @"http://v/a/123;11001;naam;BB";
+        public const string OldNisCode = "11000";
+        public const string Example = $"OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n{OldNisCode};http://v/a/123;11001;naam;BB";
         //Convert the string to be able to passed as IFormFile
 
         public static IFormFile CreateFormFileFromString(string content, string fileName = "file.csv")

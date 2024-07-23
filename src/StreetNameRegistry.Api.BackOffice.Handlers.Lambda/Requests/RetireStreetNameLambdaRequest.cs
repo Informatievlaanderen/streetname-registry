@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
         public RetireStreetName ToCommand(PersistentLocalId streetNamePersistentLocalId)
         {
             return new RetireStreetName(
-                this.MunicipalityPersistentLocalId(),
+                this.MunicipalityId(),
                 streetNamePersistentLocalId,
                 Provenance);
         }

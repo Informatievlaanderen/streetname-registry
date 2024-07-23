@@ -45,7 +45,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
                     .ToDictionary(x => TaalMapper.ToLanguage(x.Key), x => x.Value));
 
             return new CorrectStreetNameHomonymAdditions(
-                this.MunicipalityPersistentLocalId(),
+                this.MunicipalityId(),
                 new PersistentLocalId(StreetNamePersistentLocalId),
                 homonymAdditionsToCorrect,
                 homonymsToRemove,

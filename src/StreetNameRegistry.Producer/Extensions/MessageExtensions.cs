@@ -133,6 +133,7 @@ namespace StreetNameRegistry.Producer.Extensions
              new Contracts.StreetNameWasProposedForMunicipalityMerger(
                  message.MunicipalityId.ToString("D"),
                  message.NisCode,
+                 message.DesiredStatus.ToString(),
                  message.StreetNameNames.ToDictionary(x => x.Key.ToString(), x => x.Value),
                  message.HomonymAdditions.ToDictionary(x => x.Key.ToString(), x => x.Value),
                  message.PersistentLocalId,

@@ -65,6 +65,7 @@ namespace StreetNameRegistry.Municipality
         }
 
         public void ProposeStreetNameForMunicipalityMerger(
+            StreetNameStatus desiredStatus,
             Names streetNameNames,
             HomonymAdditions homonymAdditions,
             PersistentLocalId persistentLocalId,
@@ -99,6 +100,7 @@ namespace StreetNameRegistry.Municipality
             ApplyChange(new StreetNameWasProposedForMunicipalityMerger(
                 _municipalityId,
                 _nisCode,
+                desiredStatus,
                 streetNameNames,
                 homonymAdditions,
                 persistentLocalId,

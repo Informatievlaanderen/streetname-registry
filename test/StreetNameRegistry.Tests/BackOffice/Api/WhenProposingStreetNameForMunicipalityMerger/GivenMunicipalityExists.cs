@@ -1,9 +1,11 @@
 ﻿namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetNameForMunicipalityMerger
 {
     using System;
+    using System.Linq;
     using System.Threading;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Requests;
+    using Consumer.Municipality;
     using FluentAssertions;
     using global::AutoFixture;
     using Microsoft.AspNetCore.Mvc;
@@ -17,8 +19,12 @@
 
     public sealed class GivenMunicipalityExists : BackOfficeApiTest<StreetNameController>
     {
+        private readonly TestConsumerContext _municipalityConsumerContext;
+
         public GivenMunicipalityExists(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
-        { }
+        {
+            _municipalityConsumerContext = new FakeConsumerContextFactory().CreateDbContext();
+        }
 
         [Fact]
         public void WithNoFormFile_ThenReturnsBadRequest()
@@ -28,6 +34,7 @@
                     null,
                     "bla",
                     Mock.Of<IPersistentLocalIdGenerator>(),
+                    _municipalityConsumerContext,
                     CancellationToken.None).GetAwaiter().GetResult();
 
             result.Should().BeOfType<BadRequestObjectResult>();
@@ -42,6 +49,7 @@
                     CsvHelpers.CreateFormFileFromString("file", "content"),
                     "bla",
                     Mock.Of<IPersistentLocalIdGenerator>(),
+                    _municipalityConsumerContext,
                     CancellationToken.None).GetAwaiter().GetResult();
 
             result.Should().BeOfType<BadRequestObjectResult>();
@@ -53,9 +61,11 @@
         {
             var result =
                 Controller.ProposeForMunicipalityMerger(
-                    CsvHelpers.CreateFormFileFromString("http://b/123;;Name;HO"),
+                    CsvHelpers.CreateFormFileFromString("OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n" +
+                                                        "11001;http://b/123;;Name;HO"),
                     "bla",
                     Mock.Of<IPersistentLocalIdGenerator>(),
+                    _municipalityConsumerContext,
                     CancellationToken.None).GetAwaiter().GetResult();
 
             result.Should().BeOfType<BadRequestObjectResult>();
@@ -68,9 +78,11 @@
             var nisCode = "bla";
             var result =
                 Controller.ProposeForMunicipalityMerger(
-                    CsvHelpers.CreateFormFileFromString("http://b/123;11001;Name;HO"),
+                    CsvHelpers.CreateFormFileFromString("OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n" +
+                                                        "11000;http://b/123;11001;Name;HO"),
                     nisCode,
                     Mock.Of<IPersistentLocalIdGenerator>(),
+                    _municipalityConsumerContext,
                     CancellationToken.None).GetAwaiter().GetResult();
 
             result.Should().BeOfType<BadRequestObjectResult>();
@@ -82,9 +94,11 @@
         {
             var result =
                 Controller.ProposeForMunicipalityMerger(
-                    CsvHelpers.CreateFormFileFromString("http://b/123;NisCode;;HO"),
+                    CsvHelpers.CreateFormFileFromString("OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n" +
+                                                        "11000;http://b/123;NisCode;;HO"),
                     "NisCode",
                     Mock.Of<IPersistentLocalIdGenerator>(),
+                    _municipalityConsumerContext,
                     CancellationToken.None).GetAwaiter().GetResult();
 
             result.Should().BeOfType<BadRequestObjectResult>();
@@ -102,11 +116,22 @@
             mockPersistentLocalIdGenerator.Setup(x => x.GenerateNextPersistentLocalId())
                 .Returns(new PersistentLocalId(1));
 
+            const string oldNisCode = "11000";
+            var oldMunicipalityId = Guid.NewGuid();
+            _municipalityConsumerContext.Add(new MunicipalityConsumerItem
+            {
+                MunicipalityId = oldMunicipalityId,
+                NisCode = oldNisCode
+            });
+            _municipalityConsumerContext.SaveChanges();
+
             var result =
                 Controller.ProposeForMunicipalityMerger(
-                    CsvHelpers.CreateFormFileFromString("http://a/123;11001;Street;HO\nhttp://a/456;11001;Name;NYM\nhttp://a/789;11001;Street;HO"),
+                    CsvHelpers.CreateFormFileFromString($"OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n" +
+                                                        $"{oldNisCode};http://a/123;11001;Street;HO\n{oldNisCode};http://a/456;11001;Name;NYM\n{oldNisCode};http://a/789;11001;Street;HO"),
                     "11001",
                     mockPersistentLocalIdGenerator.Object,
+                    _municipalityConsumerContext,
                     CancellationToken.None).GetAwaiter().GetResult();
 
             MockMediator.Verify(x =>
@@ -114,6 +139,7 @@
                     It.Is<ProposeStreetNamesForMunicipalityMergerSqsRequest>(request =>
                         request.NisCode == "11001" &&
                         request.StreetNames.Count == 2 &&
+                        request.StreetNames.TrueForAll(y => y.MergedStreetNames.All(z => z.MunicipalityId == oldMunicipalityId)) &&
                         request.ProvenanceData.Timestamp != Instant.MinValue &&
                         request.ProvenanceData.Application == Application.StreetNameRegistry &&
                         request.ProvenanceData.Modification == Modification.Insert),

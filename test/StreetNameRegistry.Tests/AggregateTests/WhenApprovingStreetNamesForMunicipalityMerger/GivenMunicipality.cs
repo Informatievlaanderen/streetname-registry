@@ -1,14 +1,13 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetNamesForMunicipalityMerger
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Builders;
-    using Extensions;
     using FluentAssertions;
     using global::AutoFixture;
     using Municipality;
@@ -36,11 +35,29 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetNamesForMun
         public void ThenStreetNamesWereApproved()
         {
             var command = Fixture.Create<ApproveStreetNamesForMunicipalityMerger>();
-            var streetNameWasProposedList = Fixture.CreateMany<StreetNameWasProposedV2>(5).ToList();
+            var streetNameWasProposedList = new[]
+            {
+                new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
+                    .WithDesiredStatus(StreetNameStatus.Proposed)
+                    .Build(),
+                new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
+                    .WithDesiredStatus(StreetNameStatus.Current)
+                    .Build(),
+                new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
+                    .WithDesiredStatus(StreetNameStatus.Current)
+                    .Build(),
+                new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
+                    .WithDesiredStatus(StreetNameStatus.Rejected)
+                    .Build(),
+                new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
+                    .WithDesiredStatus(StreetNameStatus.Retired)
+                    .Build(),
+            };
 
             // Act, assert
             Assert(new Scenario()
-                .Given(_streamId, new object[] {
+                .Given(_streamId, new object[]
+                    {
                         Fixture.Create<MunicipalityWasImported>(),
                         Fixture.Create<MunicipalityBecameCurrent>()
                     }
@@ -48,7 +65,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetNamesForMun
                     .ToArray()
                 )
                 .When(command)
-                .Then(streetNameWasProposedList
+                .Then(streetNameWasProposedList.Where(x => x.DesiredStatus != StreetNameStatus.Proposed)
                     .Select(streetNameWasProposed => new Fact(
                         _streamId,
                         new StreetNameWasApproved(_municipalityId, new PersistentLocalId(streetNameWasProposed.PersistentLocalId))
@@ -77,17 +94,21 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetNamesForMun
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var municipalityBecameCurrent = Fixture.Create<MunicipalityBecameCurrent>();
-            var streetNameMigratedToMunicipality = new StreetNameWasMigratedToMunicipalityBuilder(Fixture)
-                .WithStatus(StreetNameStatus.Current)
-                .WithIsRemoved()
+            var streetNameWasProposedForMunicipalityMerger = new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
+                .WithDesiredStatus(StreetNameStatus.Current)
                 .Build();
+            var streetNameWasRemovedV2 = new StreetNameWasRemovedV2(
+                Fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedForMunicipalityMerger.PersistentLocalId));
+            ((ISetProvenance)streetNameWasRemovedV2).SetProvenance(Fixture.Create<Provenance>());
 
             // Act, assert
             Assert(new Scenario()
                 .Given(_streamId,
                     municipalityWasImported,
                     municipalityBecameCurrent,
-                    streetNameMigratedToMunicipality)
+                    streetNameWasProposedForMunicipalityMerger,
+                    streetNameWasRemovedV2)
                 .When(command)
                 .ThenNone());
         }
@@ -159,23 +180,37 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetNamesForMun
         {
             var persistentLocalIds = Fixture.CreateMany<PersistentLocalId>(5).ToArray();
             persistentLocalIds.Should().NotBeEmpty();
+            var streetNameToRemainProposedPersistentLocalId = new PersistentLocalId(persistentLocalIds.Sum(x => (int)x));
+
             var aggregate = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
+            aggregate.Initialize(
+                new List<object>
+                {
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
+                        .WithPersistentLocalId(streetNameToRemainProposedPersistentLocalId)
+                        .WithDesiredStatus(StreetNameStatus.Proposed)
+                        .Build()
+                }.Concat(persistentLocalIds.Select(x =>
+                    new StreetNameWasProposedForMunicipalityMergerBuilder(Fixture)
+                        .WithPersistentLocalId(x)
+                        .WithDesiredStatus(StreetNameStatus.Current)
+                        .Build())));
 
-            aggregate.Initialize(new List<object>
-            {
-                Fixture.Create<MunicipalityWasImported>(),
-                Fixture.Create<MunicipalityBecameCurrent>()
-            }.Concat(persistentLocalIds.Select(persistentLocalId => Fixture.Create<StreetNameWasProposedV2>().WithPersistentLocalId(persistentLocalId))));
-
-            // Act
             aggregate.ApproveStreetNamesForMunicipalityMerger();
 
-            // Assert
             foreach (var persistentLocalId in persistentLocalIds)
             {
                 var result = aggregate.StreetNames.GetByPersistentLocalId(persistentLocalId);
                 result.Status.Should().Be(StreetNameStatus.Current);
             }
+
+            aggregate.StreetNames
+                .GetByPersistentLocalId(streetNameToRemainProposedPersistentLocalId)
+                .Status
+                .Should()
+                .Be(StreetNameStatus.Proposed);
         }
     }
 }

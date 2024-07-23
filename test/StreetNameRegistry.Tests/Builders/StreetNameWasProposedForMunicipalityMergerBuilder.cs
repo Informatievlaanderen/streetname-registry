@@ -12,6 +12,7 @@
         private readonly Fixture _fixture;
         private MunicipalityId? _municipalityId;
         private NisCode? _nisCode;
+        private StreetNameStatus? _desiredStatus;
         private PersistentLocalId? _persistentLocalId;
         private Names? _names;
         private HomonymAdditions? _homonymAdditions;
@@ -40,6 +41,12 @@
             return this;
         }
 
+        public StreetNameWasProposedForMunicipalityMergerBuilder WithDesiredStatus(StreetNameStatus status)
+        {
+            _desiredStatus = status;
+            return this;
+        }
+
         public StreetNameWasProposedForMunicipalityMergerBuilder WithNames(Names names)
         {
             _names = names;
@@ -63,6 +70,7 @@
             var StreetNameWasProposedForMunicipalityMerger = new StreetNameWasProposedForMunicipalityMerger(
                 _municipalityId ?? _fixture.Create<MunicipalityId>(),
                 _nisCode ?? _fixture.Create<NisCode>(),
+                _desiredStatus ?? StreetNameStatus.Current,
                 _names ?? _fixture.Create<Names>(),
                 _homonymAdditions ?? _fixture.Create<HomonymAdditions>(),
                 _persistentLocalId ?? _fixture.Create<PersistentLocalId>(),

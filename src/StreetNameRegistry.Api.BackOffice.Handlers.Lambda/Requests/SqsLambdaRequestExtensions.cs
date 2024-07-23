@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
 
     public static class SqsLambdaRequestExtensions
     {
-        public static MunicipalityId MunicipalityPersistentLocalId(this SqsLambdaRequest request) =>
-            MunicipalityId.CreateFor(request.MessageGroupId);
+        public static MunicipalityId MunicipalityId(this SqsLambdaRequest request) =>
+            StreetNameRegistry.Municipality.MunicipalityId.CreateFor(request.MessageGroupId);
     }
 }

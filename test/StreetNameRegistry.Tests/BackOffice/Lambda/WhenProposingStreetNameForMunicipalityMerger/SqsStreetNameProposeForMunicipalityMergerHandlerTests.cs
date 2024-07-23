@@ -28,30 +28,31 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
 
     public sealed class SqsStreetNameProposeForMunicipalityMergerHandlerTests : BackOfficeLambdaTest
     {
-        private readonly TestConsumerContext _consumerContext;
         private readonly TestBackOfficeContext _backOfficeContext;
         private readonly IdempotencyContext _idempotencyContext;
 
         public SqsStreetNameProposeForMunicipalityMergerHandlerTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
-            _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext(Array.Empty<string>());
-            _consumerContext = new FakeConsumerContextFactory().CreateDbContext(Array.Empty<string>());
-            _backOfficeContext = new FakeBackOfficeContextFactory().CreateDbContext(Array.Empty<string>());
+            _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext([]);
+            _backOfficeContext = new FakeBackOfficeContextFactory().CreateDbContext([]);
         }
 
         [Fact]
         public async Task ThenTheStreetNameIsProposed()
         {
-            const int persistentLocalId = 5;
-
             //Arrange
-            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
+            var oldStreetNamePersistentLocalId = Fixture.Create<PersistentLocalId>();
+            var newStreetNamePersistentLocalId = Fixture.Create<PersistentLocalId>();
 
-            var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
-            var nisCode = "23002";
+            var newMunicipalityId = Fixture.Create<MunicipalityId>();
+            var oldMunicipalityId = Fixture.Create<MunicipalityId>();
+            const string newNisCode = "23002";
 
-            ImportMunicipality(municipalityId, new NisCode(nisCode));
-            AddOfficialLanguageDutch(municipalityId);
+            ImportMunicipality(oldMunicipalityId, new NisCode("23001"));
+            ProposeStreetName(oldMunicipalityId, Fixture.Create<Names>(), oldStreetNamePersistentLocalId, Fixture.Create<Provenance>());
+
+            ImportMunicipality(newMunicipalityId, new NisCode(newNisCode));
+            AddOfficialLanguageDutch(newMunicipalityId);
 
             var etag = new List<ETagResponse>();
             var ticketing = new Mock<ITicketing>();
@@ -72,17 +73,18 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 Container.Resolve<IMunicipalities>());
 
             //Act
-            await handler.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId, new ProposeStreetNamesForMunicipalityMergerSqsRequest
+            await handler.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+                new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
-                    NisCode = municipalityLatestItem.NisCode,
+                    NisCode = newNisCode,
                     StreetNames =
                     [
                         new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
                         (
-                            persistentLocalId,
+                            newStreetNamePersistentLocalId,
                             "Rodekruisstraat",
                             homonymAddition: "RR",
-                            mergedStreetNamePersistentLocalIds: [persistentLocalId + 1]
+                            mergedStreetNames: [new MergedStreetName(oldStreetNamePersistentLocalId, oldMunicipalityId)]
                         )
                     ],
                     TicketId = Guid.NewGuid(),
@@ -90,57 +92,58 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                     ProvenanceData = Fixture.Create<ProvenanceData>()
                 })
             {
-                MessageGroupId = municipalityId
+                MessageGroupId = newMunicipalityId
             }, CancellationToken.None);
 
             //Assert
-            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 2, 1);
+            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(newMunicipalityId)), 2, 1);
             stream.Messages.First().JsonMetadata.Should().Contain(etag.First().ETag);
             stream.Messages.First().JsonMetadata.Should().Contain(Provenance.ProvenanceMetadataKey.ToLower());
 
-            var municipalityIdByPersistentLocalId = await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(persistentLocalId);
+            var municipalityIdByPersistentLocalId =
+                await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync((int)newStreetNamePersistentLocalId);
             municipalityIdByPersistentLocalId.Should().NotBeNull();
-            municipalityIdByPersistentLocalId.MunicipalityId.Should().Be(municipalityLatestItem.MunicipalityId);
-            municipalityIdByPersistentLocalId.NisCode.Should().Be(nisCode);
+            municipalityIdByPersistentLocalId!.MunicipalityId.Should().Be((Guid)newMunicipalityId);
+            municipalityIdByPersistentLocalId.NisCode.Should().Be(newNisCode);
         }
 
         [Fact]
         public async Task WhenStreetNameNameAlreadyExistsException_ThenTicketingErrorIsExpected()
         {
-            // Arrange
-            var ticketing = new Mock<ITicketing>();
+            //Arrange
+            var newMunicipalityId = Fixture.Create<MunicipalityId>();
+            const string streetname = "Bremt";
 
-            var streetname = "Bremt";
+            var ticketing = new Mock<ITicketing>();
 
             var sut = new ProposeStreetNameForMunicipalityMergerHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
                 ticketing.Object,
-                MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname))
-                    .Object,
+                MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname)).Object,
                 _backOfficeContext,
                 Mock.Of<IMunicipalities>());
 
-            var municipalityId = Guid.NewGuid().ToString();
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId, new ProposeStreetNamesForMunicipalityMergerSqsRequest
+            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+                new ProposeStreetNamesForMunicipalityMergerSqsRequest
+                {
+                    NisCode = "23002",
+                    StreetNames =
+                    [
+                        new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
+                        (
+                            Fixture.Create<PersistentLocalId>(),
+                            streetname,
+                            homonymAddition: "RR",
+                            mergedStreetNames: []
+                        )
+                    ],
+                    TicketId = Guid.NewGuid(),
+                    Metadata = new Dictionary<string, object?>(),
+                    ProvenanceData = Fixture.Create<ProvenanceData>()
+                })
             {
-                NisCode = "11001",
-                StreetNames =
-                [
-                    new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
-                    (
-                        1,
-                        streetname,
-                        homonymAddition: "RR",
-                        mergedStreetNamePersistentLocalIds: [2]
-                    )
-                ],
-                TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object?>(),
-                ProvenanceData = Fixture.Create<ProvenanceData>()
-            })
-            {
-                MessageGroupId = municipalityId
+                MessageGroupId = newMunicipalityId
             }, CancellationToken.None);
 
             //Assert
@@ -156,6 +159,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
         public async Task WhenMunicipalityHasInvalidStatusException_ThenTicketingErrorIsExpected()
         {
             // Arrange
+            var newMunicipalityId = Fixture.Create<MunicipalityId>();
+
             var ticketing = new Mock<ITicketing>();
 
             var sut = new ProposeStreetNameForMunicipalityMergerHandler(
@@ -166,40 +171,42 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 _backOfficeContext,
                 Mock.Of<IMunicipalities>());
 
-            var municipalityId = Guid.NewGuid().ToString();
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId, new ProposeStreetNamesForMunicipalityMergerSqsRequest
+            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+                new ProposeStreetNamesForMunicipalityMergerSqsRequest
+                {
+                    NisCode = "23002",
+                    StreetNames =
+                    [
+                        new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
+                        (
+                            Fixture.Create<PersistentLocalId>(),
+                            "streetname",
+                            homonymAddition: "RR",
+                            mergedStreetNames: []
+                        )
+                    ],
+                    TicketId = Guid.NewGuid(),
+                    Metadata = new Dictionary<string, object?>(),
+                    ProvenanceData = Fixture.Create<ProvenanceData>()
+                })
             {
-                NisCode = "11001",
-                StreetNames =
-                [
-                    new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
-                    (
-                        1,
-                        "streetname",
-                        homonymAddition: "RR",
-                        mergedStreetNamePersistentLocalIds: [2]
-                    )
-                ],
-                TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object?>(),
-                ProvenanceData = Fixture.Create<ProvenanceData>()
-            })
-            {
-                MessageGroupId = municipalityId
+                MessageGroupId = newMunicipalityId
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
                 x.Error(
                     It.IsAny<Guid>(),
-                    new TicketError("Deze actie is enkel toegestaan binnen gemeenten met status 'voorgesteld' of 'inGebruik'.", "StraatnaamGemeenteVoorgesteldOfInGebruik"),
+                    new TicketError("Deze actie is enkel toegestaan binnen gemeenten met status 'voorgesteld' of 'inGebruik'.",
+                        "StraatnaamGemeenteVoorgesteldOfInGebruik"),
                     CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenStreetNameNameLanguageIsNotSupportedException_ThenTicketingErrorIsExpected()
         {
-            // Arrange
+            const string newNisCode = "23002";
+
             var ticketing = new Mock<ITicketing>();
 
             var sut = new ProposeStreetNameForMunicipalityMergerHandler(
@@ -212,23 +219,24 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
 
             // Act
             var municipalityId = Guid.NewGuid().ToString();
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId, new ProposeStreetNamesForMunicipalityMergerSqsRequest
-            {
-                NisCode = "11001",
-                StreetNames =
-                [
-                    new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
-                    (
-                        1,
-                        "streetname",
-                        homonymAddition: "RR",
-                        mergedStreetNamePersistentLocalIds: [2]
-                    )
-                ],
-                TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object?>(),
-                ProvenanceData = Fixture.Create<ProvenanceData>()
-            })
+            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId,
+                new ProposeStreetNamesForMunicipalityMergerSqsRequest
+                {
+                    NisCode = newNisCode,
+                    StreetNames =
+                    [
+                        new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
+                        (
+                            Fixture.Create<PersistentLocalId>(),
+                            "streetname",
+                            homonymAddition: "RR",
+                            mergedStreetNames: []
+                        )
+                    ],
+                    TicketId = Guid.NewGuid(),
+                    Metadata = new Dictionary<string, object?>(),
+                    ProvenanceData = Fixture.Create<ProvenanceData>()
+                })
             {
                 MessageGroupId = municipalityId
             }, CancellationToken.None);
@@ -245,7 +253,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
         [Fact]
         public async Task WhenStreetNameIsMissingALanguageException_ThenTicketingErrorIsExpected()
         {
-            // Arrange
+            //Arrange
+            var newMunicipalityId = Fixture.Create<MunicipalityId>();
+
             var ticketing = new Mock<ITicketing>();
 
             var sut = new ProposeStreetNameForMunicipalityMergerHandler(
@@ -257,26 +267,26 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 Mock.Of<IMunicipalities>());
 
             // Act
-            var municipalityId = Guid.NewGuid().ToString();
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId, new ProposeStreetNamesForMunicipalityMergerSqsRequest
+            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+                new ProposeStreetNamesForMunicipalityMergerSqsRequest
+                {
+                    NisCode = "23002",
+                    StreetNames =
+                    [
+                        new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
+                        (
+                            Fixture.Create<PersistentLocalId>(),
+                            "streetname",
+                            homonymAddition: "RR",
+                            mergedStreetNames: []
+                        )
+                    ],
+                    TicketId = Guid.NewGuid(),
+                    Metadata = new Dictionary<string, object?>(),
+                    ProvenanceData = Fixture.Create<ProvenanceData>()
+                })
             {
-                NisCode = "11001",
-                StreetNames =
-                [
-                    new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
-                    (
-                        1,
-                        "streetname",
-                        homonymAddition: "RR",
-                        mergedStreetNamePersistentLocalIds: [2]
-                    )
-                ],
-                TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object?>(),
-                ProvenanceData = Fixture.Create<ProvenanceData>()
-            })
-            {
-                MessageGroupId = municipalityId
+                MessageGroupId = newMunicipalityId
             }, CancellationToken.None);
 
             //Assert
@@ -293,6 +303,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
         public async Task WhenMergedStreetNamePersistentLocalIdsAreMissingException_ThenTicketingErrorIsExpected()
         {
             // Arrange
+            var newMunicipalityId = Fixture.Create<MunicipalityId>();
+
             var ticketing = new Mock<ITicketing>();
 
             var sut = new ProposeStreetNameForMunicipalityMergerHandler(
@@ -304,26 +316,26 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 Mock.Of<IMunicipalities>());
 
             // Act
-            var municipalityId = Guid.NewGuid().ToString();
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId, new ProposeStreetNamesForMunicipalityMergerSqsRequest
+            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+                new ProposeStreetNamesForMunicipalityMergerSqsRequest
+                {
+                    NisCode = "11001",
+                    StreetNames =
+                    [
+                        new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
+                        (
+                            Fixture.Create<PersistentLocalId>(),
+                            "streetname",
+                            homonymAddition: "RR",
+                            mergedStreetNames: []
+                        )
+                    ],
+                    TicketId = Guid.NewGuid(),
+                    Metadata = new Dictionary<string, object?>(),
+                    ProvenanceData = Fixture.Create<ProvenanceData>()
+                })
             {
-                NisCode = "11001",
-                StreetNames =
-                [
-                    new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
-                    (
-                        1,
-                        "streetname",
-                        homonymAddition: "RR",
-                        mergedStreetNamePersistentLocalIds: []
-                    )
-                ],
-                TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object?>(),
-                ProvenanceData = Fixture.Create<ProvenanceData>()
-            })
-            {
-                MessageGroupId = municipalityId
+                MessageGroupId = newMunicipalityId
             }, CancellationToken.None);
 
             //Assert
@@ -340,6 +352,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
         public async Task WhenMergedStreetNamePersistentLocalIdsAreNotUniqueException_ThenTicketingErrorIsExpected()
         {
             // Arrange
+            var newMunicipalityId = Fixture.Create<MunicipalityId>();
+
             var ticketing = new Mock<ITicketing>();
 
             var sut = new ProposeStreetNameForMunicipalityMergerHandler(
@@ -351,26 +365,26 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 Mock.Of<IMunicipalities>());
 
             // Act
-            var municipalityId = Guid.NewGuid().ToString();
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId, new ProposeStreetNamesForMunicipalityMergerSqsRequest
+            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+                new ProposeStreetNamesForMunicipalityMergerSqsRequest
+                {
+                    NisCode = "11001",
+                    StreetNames =
+                    [
+                        new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
+                        (
+                            Fixture.Create<PersistentLocalId>(),
+                            "streetname",
+                            homonymAddition: "RR",
+                            mergedStreetNames: []
+                        )
+                    ],
+                    TicketId = Guid.NewGuid(),
+                    Metadata = new Dictionary<string, object?>(),
+                    ProvenanceData = Fixture.Create<ProvenanceData>()
+                })
             {
-                NisCode = "11001",
-                StreetNames =
-                [
-                    new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
-                    (
-                        1,
-                        "streetname",
-                        homonymAddition: "RR",
-                        mergedStreetNamePersistentLocalIds: []
-                    )
-                ],
-                TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object?>(),
-                ProvenanceData = Fixture.Create<ProvenanceData>()
-            })
-            {
-                MessageGroupId = municipalityId
+                MessageGroupId = newMunicipalityId
             }, CancellationToken.None);
 
             //Assert
@@ -384,21 +398,74 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
         }
 
         [Fact]
-        public async Task WhenIdempotencyException_ThenTicketingCompleteIsExpected()
+        public async Task WhenStreetNameHasInvalidDesiredStatusException_ThenTicketingErrorIsExpected()
         {
             // Arrange
-            var municipalityId = Fixture.Create<MunicipalityId>();
-            var nisCode = Fixture.Create<NisCode>();
-            var persistentLocalId = 123;
+            var newMunicipalityId = Fixture.Create<MunicipalityId>();
 
-            ImportMunicipality(municipalityId, nisCode);
-            SetMunicipalityToCurrent(municipalityId);
-            AddOfficialLanguageDutch(municipalityId);
+            var ticketing = new Mock<ITicketing>();
 
+            var sut = new ProposeStreetNameForMunicipalityMergerHandler(
+                Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
+                ticketing.Object,
+                MockExceptionIdempotentCommandHandler<StreetNameHasInvalidDesiredStatusException>().Object,
+                _backOfficeContext,
+                Mock.Of<IMunicipalities>());
+
+            // Act
+            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+                new ProposeStreetNamesForMunicipalityMergerSqsRequest
+                {
+                    NisCode = "11001",
+                    StreetNames =
+                    [
+                        new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
+                        (
+                            Fixture.Create<PersistentLocalId>(),
+                            "streetname",
+                            homonymAddition: "RR",
+                            mergedStreetNames: []
+                        )
+                    ],
+                    TicketId = Guid.NewGuid(),
+                    Metadata = new Dictionary<string, object?>(),
+                    ProvenanceData = Fixture.Create<ProvenanceData>()
+                })
+            {
+                MessageGroupId = newMunicipalityId
+            }, CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError(
+                        "Desired status should be proposed or current",
+                        "StreetNameHasInvalidDesiredStatus"),
+                    CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task WhenIdempotencyException_ThenTicketingCompleteIsExpected()
+        {
+            //Arrange
+            var oldStreetNamePersistentLocalId = Fixture.Create<PersistentLocalId>();
+            var newStreetNamePersistentLocalId = Fixture.Create<PersistentLocalId>();
+
+            var newMunicipalityId = Fixture.Create<MunicipalityId>();
+            var oldMunicipalityId = Fixture.Create<MunicipalityId>();
+            const string newNisCode = "23002";
+
+            ImportMunicipality(oldMunicipalityId, new NisCode("23001"));
+            ProposeStreetName(oldMunicipalityId, Fixture.Create<Names>(), oldStreetNamePersistentLocalId, Fixture.Create<Provenance>());
+
+            ImportMunicipality(newMunicipalityId, new NisCode(newNisCode));
+            AddOfficialLanguageDutch(newMunicipalityId);
             ProposeStreetName(
-                municipalityId,
+                newMunicipalityId,
                 new Names(new Dictionary<Language, string> { { Language.Dutch, "Bosstraat" } }),
-                new PersistentLocalId(persistentLocalId),
+                new PersistentLocalId(newStreetNamePersistentLocalId),
                 Fixture.Create<Provenance>());
 
             var ticketing = new Mock<ITicketing>();
@@ -417,29 +484,30 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 municipalities);
 
             // Act
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId, new ProposeStreetNamesForMunicipalityMergerSqsRequest
+            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+                new ProposeStreetNamesForMunicipalityMergerSqsRequest
+                {
+                    NisCode = "11001",
+                    StreetNames =
+                    [
+                        new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
+                        (
+                            newStreetNamePersistentLocalId,
+                            "streetname",
+                            homonymAddition: "RR",
+                            mergedStreetNames: [new MergedStreetName(oldStreetNamePersistentLocalId, oldMunicipalityId)]
+                        )
+                    ],
+                    TicketId = Guid.NewGuid(),
+                    Metadata = new Dictionary<string, object?>(),
+                    ProvenanceData = Fixture.Create<ProvenanceData>()
+                })
             {
-                NisCode = "11001",
-                StreetNames =
-                [
-                    new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
-                    (
-                        persistentLocalId,
-                        "streetname",
-                        homonymAddition: "RR",
-                        mergedStreetNamePersistentLocalIds: [2]
-                    )
-                ],
-                TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object?>(),
-                ProvenanceData = Fixture.Create<ProvenanceData>()
-            })
-            {
-                MessageGroupId = municipalityId
+                MessageGroupId = newMunicipalityId
             }, CancellationToken.None);
 
             //Assert
-            var municipality = await municipalities.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None);
+            var municipality = await municipalities.GetAsync(new MunicipalityStreamId(newMunicipalityId), CancellationToken.None);
 
             ticketing.Verify(x =>
                 x.Complete(
@@ -447,8 +515,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                     new TicketResult(new List<ETagResponse>
                     {
                         new ETagResponse(
-                            string.Format(ConfigDetailUrl, new PersistentLocalId(persistentLocalId)),
-                            municipality.GetStreetNameHash(new PersistentLocalId(persistentLocalId)))
+                            string.Format(ConfigDetailUrl, newStreetNamePersistentLocalId),
+                            municipality.GetStreetNameHash(newStreetNamePersistentLocalId))
                     }),
                     CancellationToken.None));
         }
@@ -457,16 +525,22 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
         public async Task GivenRetryingRequest_ThenTicketingCompleteIsExpected()
         {
             // Arrange
-            var municipalityId = Fixture.Create<MunicipalityId>();
-            var nisCode = Fixture.Create<NisCode>();
+            var oldStreetNamePersistentLocalId = Fixture.Create<PersistentLocalId>();
+            var newStreetNamePersistentLocalId = Fixture.Create<PersistentLocalId>();
 
-            ImportMunicipality(municipalityId, nisCode);
-            SetMunicipalityToCurrent(municipalityId);
-            AddOfficialLanguageDutch(municipalityId);
+            var newMunicipalityId = Fixture.Create<MunicipalityId>();
+            var oldMunicipalityId = Fixture.Create<MunicipalityId>();
+            const string newNisCode = "23002";
+
+            ImportMunicipality(oldMunicipalityId, new NisCode("23001"));
+            ProposeStreetName(oldMunicipalityId, Fixture.Create<Names>(), oldStreetNamePersistentLocalId, Fixture.Create<Provenance>());
+
+            ImportMunicipality(newMunicipalityId, new NisCode(newNisCode));
+            AddOfficialLanguageDutch(newMunicipalityId);
 
             var ticketing = new Mock<ITicketing>();
-            var municipalities = Container.Resolve<IMunicipalities>();
 
+            var municipalities = Container.Resolve<IMunicipalities>();
             var proposeStreetNameHandler = new ProposeStreetNameForMunicipalityMergerHandler(
                 Container.Resolve<IConfiguration>(),
                 new FakeRetryPolicy(),
@@ -475,26 +549,26 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 _backOfficeContext,
                 municipalities);
 
-            var persistentLocalId = 123;
-            var request = new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId, new ProposeStreetNamesForMunicipalityMergerSqsRequest
+            var request = new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+                new ProposeStreetNamesForMunicipalityMergerSqsRequest
+                {
+                    NisCode = "11001",
+                    StreetNames =
+                    [
+                        new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
+                        (
+                            newStreetNamePersistentLocalId,
+                            "streetname",
+                            homonymAddition: "RR",
+                            mergedStreetNames: [new MergedStreetName(oldStreetNamePersistentLocalId, oldMunicipalityId)]
+                        )
+                    ],
+                    TicketId = Guid.NewGuid(),
+                    Metadata = new Dictionary<string, object?>(),
+                    ProvenanceData = Fixture.Create<ProvenanceData>()
+                })
             {
-                NisCode = "11001",
-                StreetNames =
-                [
-                    new ProposeStreetNamesForMunicipalityMergerSqsRequestItem
-                    (
-                        persistentLocalId,
-                        "streetname",
-                        homonymAddition: "RR",
-                        mergedStreetNamePersistentLocalIds: [2]
-                    )
-                ],
-                TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object?>(),
-                ProvenanceData = Fixture.Create<ProvenanceData>()
-            })
-            {
-                MessageGroupId = municipalityId
+                MessageGroupId = newMunicipalityId
             };
 
             // Act
@@ -502,7 +576,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
             await proposeStreetNameHandler.Handle(request, CancellationToken.None);
 
             //Assert
-            var municipality = await municipalities.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None);
+            var municipality = await municipalities.GetAsync(new MunicipalityStreamId(newMunicipalityId), CancellationToken.None);
 
             ticketing.Verify(x =>
                 x.Complete(
@@ -510,8 +584,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                     new TicketResult(new List<ETagResponse>
                     {
                         new ETagResponse(
-                            string.Format(ConfigDetailUrl, new PersistentLocalId(persistentLocalId)),
-                            municipality.GetStreetNameHash(new PersistentLocalId(persistentLocalId)))
+                            string.Format(ConfigDetailUrl, newStreetNamePersistentLocalId),
+                            municipality.GetStreetNameHash(newStreetNamePersistentLocalId))
                     }),
                     CancellationToken.None));
         }

@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
         public ApproveStreetName ToCommand()
         {
             return new ApproveStreetName(
-                this.MunicipalityPersistentLocalId(),
+                this.MunicipalityId(),
                 new PersistentLocalId(StreetNamePersistentLocalId),
                 Provenance);
         }

@@ -39,7 +39,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
                 .Map(int.Parse);
 
             return new RenameStreetName(
-                this.MunicipalityPersistentLocalId(),
+                this.MunicipalityId(),
                 new PersistentLocalId(StreetNamePersistentLocalId),
                 new PersistentLocalId(identifier.Value),
                 Provenance);

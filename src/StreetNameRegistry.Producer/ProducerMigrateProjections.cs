@@ -10,7 +10,6 @@
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Extensions;
     using MunicipalityDomain = Municipality.Events;
-    using StreetNameDomain = StreetName.Events;
 
     [ConnectedProjectionName("Kafka producer start vanaf migratie")]
     [ConnectedProjectionDescription("Projectie die berichten naar de kafka broker stuurt startende vanaf migratie.")]

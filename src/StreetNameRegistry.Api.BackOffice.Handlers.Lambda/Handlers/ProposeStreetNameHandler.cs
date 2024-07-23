@@ -59,11 +59,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             await _backOfficeContext
                 .AddIdempotentMunicipalityStreetNameIdRelation(
                     request.PersistentLocalId,
-                    request.MunicipalityPersistentLocalId(),
+                    request.MunicipalityId(),
                     nisCode,
                     cancellationToken);
 
-            var lastHash = await GetStreetNameHash(request.MunicipalityPersistentLocalId(), request.PersistentLocalId, cancellationToken);
+            var lastHash = await GetStreetNameHash(request.MunicipalityId(), request.PersistentLocalId, cancellationToken);
             return new ETagResponse(string.Format(DetailUrlFormat, request.PersistentLocalId), lastHash);
         }
 

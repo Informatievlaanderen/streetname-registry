@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using Microsoft.Extensions.Configuration;
     using Municipality;
+    using Municipality.Commands;
     using Municipality.Exceptions;
     using Requests;
     using TicketingService.Abstractions;
@@ -33,9 +34,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             _backOfficeContext = backOfficeContext;
         }
 
-        protected override async Task<object> InnerHandle(ProposeStreetNameForMunicipalityMergerLambdaRequest request, CancellationToken cancellationToken)
+        protected override async Task<object> InnerHandle(
+            ProposeStreetNameForMunicipalityMergerLambdaRequest request,
+            CancellationToken cancellationToken)
         {
-            var commands = request.ToCommand().ToList();
+            var commands = await BuildCommands(request, cancellationToken);
 
             try
             {
@@ -44,7 +47,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                     await IdempotentCommandHandler.Dispatch(
                         command.CreateCommandId(),
                         command,
-                        request.Metadata,
+                        request.Metadata!,
                         cancellationToken);
                 }
             }
@@ -60,18 +63,61 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 await _backOfficeContext
                     .AddIdempotentMunicipalityStreetNameIdRelation(
                         command.PersistentLocalId,
-                        request.MunicipalityPersistentLocalId(),
+                        request.MunicipalityId(),
                         request.NisCode,
                         cancellationToken);
 
-                var lastHash = await GetStreetNameHash(request.MunicipalityPersistentLocalId(), command.PersistentLocalId, cancellationToken);
+                var lastHash = await GetStreetNameHash(request.MunicipalityId(), command.PersistentLocalId, cancellationToken);
                 etagResponses.Add(new ETagResponse(string.Format(DetailUrlFormat, command.PersistentLocalId), lastHash));
             }
 
             return etagResponses;
         }
 
-        protected override TicketError? InnerMapDomainException(DomainException exception, ProposeStreetNameForMunicipalityMergerLambdaRequest request)
+        private async Task<IList<ProposeStreetNameForMunicipalityMerger>> BuildCommands(
+            ProposeStreetNameForMunicipalityMergerLambdaRequest request,
+            CancellationToken cancellationToken)
+        {
+            var oldMunicipalities = new List<Municipality>();
+            foreach (var municipalityId in request.StreetNames
+                         .SelectMany(x => x.MergedStreetNames.Select(y => y.MunicipalityId))
+                         .Distinct())
+            {
+                oldMunicipalities.Add(await Municipalities.GetAsync(
+                    new MunicipalityStreamId(new MunicipalityId(municipalityId)), cancellationToken));
+            }
+
+            return request.StreetNames
+                .Select(streetName =>
+                {
+                    var desiredStatus = streetName.MergedStreetNames
+                        .Any(mergedStreetName =>
+                        {
+                            return oldMunicipalities
+                                .Single(x => x.MunicipalityId == mergedStreetName.MunicipalityId)
+                                .StreetNames.Any(y =>
+                                    y.PersistentLocalId == mergedStreetName.StreetNamePersistentLocalId
+                                    && y.Status == StreetNameStatus.Current);
+                        })
+                        ? StreetNameStatus.Current
+                        : StreetNameStatus.Proposed;
+
+                    return new ProposeStreetNameForMunicipalityMerger(
+                        request.MunicipalityId(),
+                        desiredStatus,
+                        new Names(new[] { new StreetNameName(streetName.StreetName, Language.Dutch) }),
+                        streetName.HomonymAddition is not null
+                            ? new HomonymAdditions(new[] { new StreetNameHomonymAddition(streetName.HomonymAddition, Language.Dutch) })
+                            : null,
+                        new PersistentLocalId(streetName.NewPersistentLocalId),
+                        streetName.MergedStreetNames.Select(x => new PersistentLocalId(x.StreetNamePersistentLocalId)).ToList(),
+                        request.Provenance);
+                })
+                .ToList();
+        }
+
+        protected override TicketError? InnerMapDomainException(DomainException exception,
+            ProposeStreetNameForMunicipalityMergerLambdaRequest request)
         {
             return exception switch
             {
@@ -79,6 +125,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                     ValidationErrors.Common.StreetNameAlreadyExists.ToTicketError(nameExists.Name),
                 MunicipalityHasInvalidStatusException =>
                     ValidationErrors.Common.MunicipalityHasInvalidStatus.ToTicketError(),
+                StreetNameHasInvalidDesiredStatusException =>
+                    new TicketError("Desired status should be proposed or current", "StreetNameHasInvalidDesiredStatus"),
                 StreetNameNameLanguageIsNotSupportedException _ =>
                     ValidationErrors.Common.StreetNameNameLanguageIsNotSupported.ToTicketError(),
                 StreetNameIsMissingALanguageException _ =>

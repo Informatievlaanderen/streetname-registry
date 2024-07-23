@@ -41,6 +41,7 @@ namespace StreetNameRegistry.Municipality
                 {
                     var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.ProposeStreetNameForMunicipalityMerger(
+                        message.Command.DesiredStatus,
                         message.Command.StreetNameNames,
                         message.Command.HomonymAdditions,
                         message.Command.PersistentLocalId,

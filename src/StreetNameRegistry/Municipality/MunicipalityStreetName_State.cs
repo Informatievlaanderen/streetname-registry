@@ -24,6 +24,7 @@ namespace StreetNameRegistry.Municipality
         public bool IsRejected => Status == StreetNameStatus.Rejected;
 
         public IReadOnlyList<PersistentLocalId> MergedStreetNamePersistentLocalIds { get; private set; } = [];
+        public StreetNameStatus? DesiredStatusAfterMunicipalityMerger { get; private set; }
 
         public StreetNameId? LegacyStreetNameId { get; private set; }
 
@@ -79,6 +80,7 @@ namespace StreetNameRegistry.Municipality
         {
             _municipalityId = new MunicipalityId(@event.MunicipalityId);
             Status = StreetNameStatus.Proposed;
+            DesiredStatusAfterMunicipalityMerger = @event.DesiredStatus;
             PersistentLocalId = new PersistentLocalId(@event.PersistentLocalId);
             Names = new Names(@event.StreetNameNames);
             HomonymAdditions = new HomonymAdditions(@event.HomonymAdditions);
