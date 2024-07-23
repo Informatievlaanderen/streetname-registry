@@ -26,6 +26,11 @@ namespace StreetNameRegistry.Consumer.Read.Postal.Projections
             {
                 await context.FindAndUpdate(message.PostalCode, i => i.NisCode = message.NisCode, ct);
             });
+
+            When<MunicipalityWasRelinked>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdate(message.PostalCode, i => i.NisCode = message.NewNisCode, ct);
+            });
         }
     }
 }
