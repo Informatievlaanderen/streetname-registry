@@ -31,7 +31,7 @@ namespace StreetNameRegistry.Municipality
                 return;
             }
 
-            if (MergedStatus == StreetNameStatus.Proposed)
+            if (DesiredStatusAfterMunicipalityMerger == StreetNameStatus.Proposed)
             {
                 return;
             }
@@ -235,7 +235,7 @@ namespace StreetNameRegistry.Municipality
                 : new StreetNameId(streetNameData.LegacyStreetNameId.Value);
 
             MergedStreetNamePersistentLocalIds = streetNameData.MergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)).ToList();
-            MergedStatus = streetNameData.MergedStatus;
+            DesiredStatusAfterMunicipalityMerger = streetNameData.DesiredStatusAfterMunicipalityMerger;
 
             _lastSnapshotEventHash = streetNameData.LastEventHash;
             _lastSnapshotProvenance = streetNameData.LastProvenanceData;

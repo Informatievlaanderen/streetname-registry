@@ -137,7 +137,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
 
                 streetName.MergedStreetNamePersistentLocalIds.Should().BeEquivalentTo(
                     snapshotStreetName.MergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)));
-                streetName.MergedStatus.Should().Be(snapshotStreetName.MergedStatus);
+                streetName.DesiredStatusAfterMunicipalityMerger.Should().Be(snapshotStreetName.DesiredStatusAfterMunicipalityMerger);
 
                 streetName.LastProvenanceData.Should().BeEquivalentTo(snapshotStreetName.LastProvenanceData);
                 streetName.LastEventHash.Should().Be(snapshotStreetName.LastEventHash);

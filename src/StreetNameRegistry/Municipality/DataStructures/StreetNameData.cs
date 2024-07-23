@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
         public Guid? LegacyStreetNameId { get; }
 
         public List<int> MergedStreetNamePersistentLocalIds { get; }
-        public StreetNameStatus? MergedStatus { get; }
+        public StreetNameStatus? DesiredStatusAfterMunicipalityMerger { get; }
 
         public string LastEventHash { get; }
 
@@ -35,7 +35,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
                 streetName.IsRenamed,
                 streetName.LegacyStreetNameId,
                 streetName.MergedStreetNamePersistentLocalIds.ToList(),
-                streetName.MergedStatus,
+                streetName.DesiredStatusAfterMunicipalityMerger,
                 streetName.LastEventHash,
                 streetName.LastProvenanceData)
         { }
@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
             bool isRenamed,
             StreetNameId? legacyStreetNameId,
             List<PersistentLocalId> mergedStreetNamePersistentLocalIds,
-            StreetNameStatus? mergedStatus,
+            StreetNameStatus? desiredStatusAfterMunicipalityMerger,
             string lastEventHash,
             ProvenanceData lastProvenanceData)
         {
@@ -61,7 +61,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
             IsRenamed = isRenamed;
             LegacyStreetNameId = legacyStreetNameId is null ? (Guid?)null : legacyStreetNameId;
             MergedStreetNamePersistentLocalIds = mergedStreetNamePersistentLocalIds.Select(x => (int)x).ToList();
-            MergedStatus = mergedStatus;
+            DesiredStatusAfterMunicipalityMerger = desiredStatusAfterMunicipalityMerger;
             LastEventHash = lastEventHash;
             LastProvenanceData = lastProvenanceData;
         }
@@ -76,7 +76,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
             bool? isRenamed,
             Guid? legacyStreetNameId,
             List<int>? mergedStreetNamePersistentLocalIds,
-            StreetNameStatus? mergedStatus,
+            StreetNameStatus? desiredStatusAfterMunicipalityMerger,
             string lastEventHash,
             ProvenanceData lastProvenanceData)
         {
@@ -88,7 +88,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
             IsRenamed = isRenamed ?? false;
             LegacyStreetNameId = legacyStreetNameId;
             MergedStreetNamePersistentLocalIds = mergedStreetNamePersistentLocalIds ?? [];
-            MergedStatus = mergedStatus;
+            DesiredStatusAfterMunicipalityMerger = desiredStatusAfterMunicipalityMerger;
             LastEventHash = lastEventHash;
             LastProvenanceData = lastProvenanceData;
         }

@@ -498,7 +498,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
             result.Names.Should().BeEquivalentTo(new Names(streetNameWasProposedForMunicipalityMerger.StreetNameNames));
             result.HomonymAdditions.Should().BeEquivalentTo(new HomonymAdditions(streetNameWasProposedForMunicipalityMerger.HomonymAdditions));
             result.MergedStreetNamePersistentLocalIds.Should().BeEquivalentTo(streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.Select(x => new PersistentLocalId(x)));
-            result.MergedStatus.Should().Be(streetNameWasProposedForMunicipalityMerger.DesiredStatus);
+            result.DesiredStatusAfterMunicipalityMerger.Should().Be(streetNameWasProposedForMunicipalityMerger.DesiredStatus);
         }
     }
 }
