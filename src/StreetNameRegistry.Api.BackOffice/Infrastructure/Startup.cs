@@ -51,7 +51,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                 .GetSection(nameof(OAuth2IntrospectionOptions))
                 .Get<OAuth2IntrospectionOptions>();
 
-            var baseUrl = _configuration.GetValue<string>("BaseUrl");
+            var baseUrl = _configuration.GetValue<string>("BaseUrl")!;
             var baseUrlForExceptions = baseUrl.EndsWith("/")
                 ? baseUrl.Substring(0, baseUrl.Length - 1)
                 : baseUrl;
@@ -85,7 +85,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                                     Url = new Uri("https://backoffice.basisregisters.vlaanderen")
                                 }
                             },
-                            XmlCommentPaths = new[] { typeof(Startup).GetTypeInfo().Assembly.GetName().Name }
+                            XmlCommentPaths = [typeof(Startup).GetTypeInfo().Assembly.GetName().Name!]
                         },
                         MiddlewareHooks =
                         {
@@ -98,14 +98,20 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 
                                 foreach (var connectionString in connectionStrings)
                                     health.AddSqlServer(
-                                        connectionString.Value,
+                                        connectionString.Value!,
                                         name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
                                         tags: new[] { DatabaseTag, "sql", "sqlserver" });
                             },
 
                             Authorization = options =>
                             {
-                                options.AddAcmIdmAuthorization();
+                              var blacklistedOvoCodes =  _configuration
+                                    .GetSection("BlacklistedOvoCodes")
+                                    .GetChildren()
+                                    .Select(c => c.Value!)
+                                    .ToArray();
+
+                                options.AddAddressPolicies(blacklistedOvoCodes);
                             }
                         }
                     }
@@ -174,10 +180,10 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
             serviceProvider.MigrateIdempotencyDatabase();
 
             StreetNameRegistry.Infrastructure.MigrationsHelper.Run(
-                _configuration.GetConnectionString("Sequences"),
+                _configuration.GetConnectionString("Sequences")!,
                 serviceProvider.GetService<ILoggerFactory>());
             MigrationsHelper.Run(
-                _configuration.GetConnectionString("BackOffice"),
+                _configuration.GetConnectionString("BackOffice")!,
                 serviceProvider.GetService<ILoggerFactory>());
 
             StartupHelpers.CheckDatabases(healthCheckService, DatabaseTag, loggerFactory).GetAwaiter().GetResult();
