@@ -1,3 +1,20 @@
+# [4.7.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.6.0...v4.7.0) (2024-07-29)
+
+
+### Bug Fixes
+
+* add fusie reason ([fbc2bd7](https://github.com/informatievlaanderen/streetname-registry/commit/fbc2bd739a45d1a9705efbfcd494531da90f98ca))
+* add streetnamewasproposedformunicipalitymerger to backoffice projection ([4f6d24f](https://github.com/informatievlaanderen/streetname-registry/commit/4f6d24f446f14f2b0ecceb2eb6c8746e47f6695d))
+
+
+### Features
+
+* add integration projection for merger ([f2a02f2](https://github.com/informatievlaanderen/streetname-registry/commit/f2a02f2f422d1e16f9cd686be11b60423c9a2e54))
+* add snapshot status endpoint ([c87475b](https://github.com/informatievlaanderen/streetname-registry/commit/c87475b91882b0921a7cf5b3bd8826b02e3c7be6))
+* **consumer:** add postal relink municipality ([9ae2c22](https://github.com/informatievlaanderen/streetname-registry/commit/9ae2c221a58f806eeaa0a592534ca78d15989281))
+* enable blacklisted ovocodes ([316329b](https://github.com/informatievlaanderen/streetname-registry/commit/316329bc18712b7b2c320089369fd57bc241bce9))
+* proposed streetnames can be included in municipality merger ([b84a270](https://github.com/informatievlaanderen/streetname-registry/commit/b84a27041a137547546b1ec91465a4a7e5e7ce07))
+
 # [4.6.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.5.2...v4.6.0) (2024-07-15)
 
 
