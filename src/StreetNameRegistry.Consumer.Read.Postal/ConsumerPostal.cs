@@ -37,7 +37,7 @@ namespace StreetNameRegistry.Consumer.Read.Postal
 
             try
             {
-                await _consumer.ConsumeContinuously(async message =>
+                await _consumer.ConsumeContinuously(async (message, messageContext) =>
                 {
                     _logger.LogInformation("Handling next message");
 
@@ -45,6 +45,7 @@ namespace StreetNameRegistry.Consumer.Read.Postal
                     await projector.ProjectAsync(context, message, stoppingToken).ConfigureAwait(false);
 
                     //CancellationToken.None to prevent halfway consumption
+                    await context.UpdateProjectionState(typeof(ConsumerPostal).FullName, messageContext.Offset, stoppingToken);
                     await context.SaveChangesAsync(CancellationToken.None);
 
                 }, stoppingToken);
