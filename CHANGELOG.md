@@ -1,3 +1,11 @@
+# [4.8.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.7.0...v4.8.0) (2024-08-22)
+
+
+### Features
+
+* clean up legacy api ([82df484](https://github.com/informatievlaanderen/streetname-registry/commit/82df484354fce8a0f4355e7cdd16c8f9656f0001))
+* **consumer:** add offset as projection state to read consumer ([aaea937](https://github.com/informatievlaanderen/streetname-registry/commit/aaea937b2e82dab51a3f0df4849d5a948e3a7435))
+
 # [4.7.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.6.0...v4.7.0) (2024-07-29)
 
 
