@@ -73,7 +73,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 Container.Resolve<IMunicipalities>());
 
             //Act
-            await handler.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+            await handler.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
                     NisCode = newNisCode,
@@ -124,7 +124,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 _backOfficeContext,
                 Mock.Of<IMunicipalities>());
 
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+            await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
                     NisCode = "23002",
@@ -171,7 +171,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 _backOfficeContext,
                 Mock.Of<IMunicipalities>());
 
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+            await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
                     NisCode = "23002",
@@ -219,7 +219,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
 
             // Act
             var municipalityId = Guid.NewGuid().ToString();
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(municipalityId,
+            await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(municipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
                     NisCode = newNisCode,
@@ -267,7 +267,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 Mock.Of<IMunicipalities>());
 
             // Act
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+            await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
                     NisCode = "23002",
@@ -316,7 +316,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 Mock.Of<IMunicipalities>());
 
             // Act
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+            await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
                     NisCode = "11001",
@@ -365,7 +365,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 Mock.Of<IMunicipalities>());
 
             // Act
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+            await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
                     NisCode = "11001",
@@ -414,7 +414,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 Mock.Of<IMunicipalities>());
 
             // Act
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+            await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
                     NisCode = "11001",
@@ -484,7 +484,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 municipalities);
 
             // Act
-            await sut.Handle(new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+            await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
                     NisCode = "11001",
@@ -549,7 +549,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 _backOfficeContext,
                 municipalities);
 
-            var request = new ProposeStreetNameForMunicipalityMergerLambdaRequest(newMunicipalityId,
+            var request = new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
                 {
                     NisCode = "11001",

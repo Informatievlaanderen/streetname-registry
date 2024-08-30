@@ -2,12 +2,12 @@
 {
     using Abstractions.SqsRequests;
 
-    public sealed record ProposeStreetNameForMunicipalityMergerLambdaRequest : StreetNameLambdaRequest
+    public sealed record ProposeStreetNamesForMunicipalityMergerLambdaRequest : StreetNameLambdaRequest
     {
         public IEnumerable<ProposeStreetNamesForMunicipalityMergerSqsRequestItem> StreetNames { get; }
         public string NisCode { get; }
 
-        public ProposeStreetNameForMunicipalityMergerLambdaRequest(
+        public ProposeStreetNamesForMunicipalityMergerLambdaRequest(
             string groupId,
             ProposeStreetNamesForMunicipalityMergerSqsRequest sqsRequest)
             : base(
