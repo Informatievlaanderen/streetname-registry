@@ -46,7 +46,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
 
             var sqsQueue = new Mock<ISqsQueue>();
 
-            var sut = new ProposeStreetNameForMunicipalityMergerHandler(
+            var sut = new ProposeStreetNamesForMunicipalityMergerHandler(
                 sqsQueue.Object,
                 ticketingMock.Object,
                 ticketingUrl,
@@ -68,7 +68,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
         public void ForNotExistingMunicipality_ThrowsAggregateIdNotFound()
         {
             // Arrange
-            var sut = new ProposeStreetNameForMunicipalityMergerHandler(
+            var sut = new ProposeStreetNamesForMunicipalityMergerHandler(
                 Mock.Of<ISqsQueue>(),
                 Mock.Of<ITicketing>(),
                 Mock.Of<ITicketingUrl>(),
