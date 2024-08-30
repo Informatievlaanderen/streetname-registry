@@ -2,21 +2,19 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Abstractions.Convertors;
     using Abstractions.SqsRequests;
-    using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
     using Be.Vlaanderen.Basisregisters.Sqs;
     using Be.Vlaanderen.Basisregisters.Sqs.Handlers;
     using Consumer;
     using Microsoft.EntityFrameworkCore;
     using TicketingService.Abstractions;
 
-    public class ProposeStreetNameForMunicipalityMergerHandler : SqsHandler<ProposeStreetNamesForMunicipalityMergerSqsRequest>
+    public class ProposeStreetNamesForMunicipalityMergerHandler : SqsHandler<ProposeStreetNamesForMunicipalityMergerSqsRequest>
     {
-        private const string Action = "ProposeStreetNameForMunicipalityMerger";
+        private const string Action = "ProposeStreetNamesForMunicipalityMerger";
         private readonly ConsumerContext _consumerContext;
 
-        public ProposeStreetNameForMunicipalityMergerHandler(
+        public ProposeStreetNamesForMunicipalityMergerHandler(
             ISqsQueue sqsQueue,
             ITicketing ticketing,
             ITicketingUrl ticketingUrl,
