@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public sealed class ProposeStreetNameForMunicipalityMergerHandler : StreetNameLambdaHandler<ProposeStreetNameForMunicipalityMergerLambdaRequest>
+    public sealed class ProposeStreetNameForMunicipalityMergerHandler : StreetNameLambdaHandler<ProposeStreetNamesForMunicipalityMergerLambdaRequest>
     {
         private readonly BackOfficeContext _backOfficeContext;
 
@@ -35,7 +35,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
         }
 
         protected override async Task<object> InnerHandle(
-            ProposeStreetNameForMunicipalityMergerLambdaRequest request,
+            ProposeStreetNamesForMunicipalityMergerLambdaRequest request,
             CancellationToken cancellationToken)
         {
             var commands = await BuildCommands(request, cancellationToken);
@@ -75,7 +75,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
         }
 
         private async Task<IList<ProposeStreetNameForMunicipalityMerger>> BuildCommands(
-            ProposeStreetNameForMunicipalityMergerLambdaRequest request,
+            ProposeStreetNamesForMunicipalityMergerLambdaRequest request,
             CancellationToken cancellationToken)
         {
             var oldMunicipalities = new List<Municipality>();
@@ -117,7 +117,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
         }
 
         protected override TicketError? InnerMapDomainException(DomainException exception,
-            ProposeStreetNameForMunicipalityMergerLambdaRequest request)
+            ProposeStreetNamesForMunicipalityMergerLambdaRequest request)
         {
             return exception switch
             {
