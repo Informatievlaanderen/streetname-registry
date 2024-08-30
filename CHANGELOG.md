@@ -1,3 +1,10 @@
+## [4.8.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.8.0...v4.8.1) (2024-08-30)
+
+
+### Bug Fixes
+
+* add missing sqs->lambda request mapping for ProposeStreetNamesForMunicipalityMerger ([195767c](https://github.com/informatievlaanderen/streetname-registry/commit/195767ce725e1d4cb3db5f80f402f2f73868cc91))
+
 # [4.8.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.7.0...v4.8.0) (2024-08-22)
 
 
