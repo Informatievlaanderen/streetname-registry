@@ -1,3 +1,10 @@
+## [4.8.3](https://github.com/informatievlaanderen/streetname-registry/compare/v4.8.2...v4.8.3) (2024-09-03)
+
+
+### Bug Fixes
+
+* rename streetname to same streetname ([8d756aa](https://github.com/informatievlaanderen/streetname-registry/commit/8d756aaf12264295fb27281456e9e9df69c9bf80))
+
 ## [4.8.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.8.1...v4.8.2) (2024-09-03)
 
 
