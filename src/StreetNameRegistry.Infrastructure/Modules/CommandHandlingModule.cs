@@ -1,10 +1,8 @@
 namespace StreetNameRegistry.Infrastructure.Modules
 {
     using Autofac;
-    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Microsoft.Extensions.Configuration;
-
 
     public class CommandHandlingModule : Module
     {
@@ -18,6 +16,7 @@ namespace StreetNameRegistry.Infrastructure.Modules
             builder.RegisterModule(new AggregateSourceModule(_configuration));
 
             CommandHandlerModules.Register(builder);
+            AllStream.CommandHandlerModules.Register(builder);
 
             builder
                 .RegisterType<CommandHandlerResolver>()
