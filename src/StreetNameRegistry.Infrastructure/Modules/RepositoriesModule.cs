@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Infrastructure.Modules
 {
+    using AllStream;
     using Autofac;
     using Municipality;
     using StreetName;
@@ -17,6 +18,10 @@ namespace StreetNameRegistry.Infrastructure.Modules
             builder
                 .RegisterType<Municipalities>()
                 .As<IMunicipalities>();
+
+            builder
+                .RegisterType<AllStreamRepository>()
+                .As<IAllStreamRepository>();
         }
     }
 }

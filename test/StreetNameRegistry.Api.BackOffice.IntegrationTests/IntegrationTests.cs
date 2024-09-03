@@ -20,6 +20,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
 
         [Theory]
         [InlineData("/v2/straatnamen/acties/voorstellen", Scopes.DvArAdresBeheer)]
+        [InlineData("/v2/straatnamen/acties/oslosnapshots", $"{Scopes.DvArAdresUitzonderingen}")]
         [InlineData("/v2/straatnamen/1/acties/goedkeuren", Scopes.DvArAdresBeheer)]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/goedkeuring", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/homoniemtoevoeging", $"{Scopes.DvArAdresBeheer} {Scopes.DvArAdresUitzonderingen}")]
@@ -45,6 +46,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
 
         [Theory]
         [InlineData("/v2/straatnamen/acties/voorstellen")]
+        [InlineData("/v2/straatnamen/acties/oslosnapshots")]
         [InlineData("/v2/straatnamen/1/acties/goedkeuren")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/goedkeuring")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/homoniemtoevoeging")]
@@ -68,6 +70,7 @@ namespace StreetNameRegistry.Api.BackOffice.IntegrationTests
 
         [Theory]
         [InlineData("/v2/straatnamen/acties/voorstellen")]
+        [InlineData("/v2/straatnamen/acties/oslosnapshots")]
         [InlineData("/v2/straatnamen/1/acties/goedkeuren")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/goedkeuring")]
         [InlineData("/v2/straatnamen/1/acties/corrigeren/homoniemtoevoeging")]

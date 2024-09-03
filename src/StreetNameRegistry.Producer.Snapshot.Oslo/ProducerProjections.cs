@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using AllStream.Events;
     using Be.Vlaanderen.Basisregisters.GrAr.Oslo.SnapshotProducer;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer;
@@ -18,9 +19,29 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
 
         private readonly IProducer _producer;
 
-        public ProducerProjections(IProducer producer, ISnapshotManager snapshotManager, string osloNamespace)
+        public ProducerProjections(
+            IProducer producer,
+            ISnapshotManager snapshotManager,
+            string osloNamespace,
+            IOsloProxy osloProxy)
         {
             _producer = producer;
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameOsloSnapshotsWereRequested>>(async (_, message, ct) =>
+            {
+                foreach (var persistentLocalId in message.Message.PersistentLocalIds)
+                {
+                    if (ct.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
+                    await FindAndProduce(async () =>
+                            await osloProxy.GetSnapshot(persistentLocalId.ToString(), ct),
+                        message.Position,
+                        ct);
+                }
+            });
 
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameWasMigratedToMunicipality>>(async (_, message, ct) =>
             {

@@ -89,6 +89,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
                     await mediator.Send(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(messageMetadata.MessageGroupId!, request), cancellationToken);
                     break;
 
+                case CreateOsloSnapshotsSqsRequest request:
+                    await mediator.Send(
+                        new CreateOsloSnapshotsLambdaRequest(messageMetadata.MessageGroupId!, request),
+                        cancellationToken);
+                    break;
+
                 default:
                     throw new NotImplementedException(
                         $"{sqsRequest.GetType().Name} has no corresponding SqsLambdaRequest defined.");

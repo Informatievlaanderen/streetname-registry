@@ -87,7 +87,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure.Modules
                         //var osloNamespace = _configuration["OsloNamespace"];
                         //osloNamespace = osloNamespace.TrimEnd('/');
 
-                        var bootstrapServers = _configuration["Kafka:BootstrapServers"];
+                        var bootstrapServers = _configuration["Kafka:BootstrapServers"]!;
                         var topic = $"{_configuration[ProducerProjections.StreetNameTopicKey]}" ?? throw new ArgumentException($"Configuration has no value for {ProducerProjections.StreetNameTopicKey}");
                         var producerOptions = new ProducerOptions(
                                 new BootstrapServers(bootstrapServers),
@@ -99,19 +99,21 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure.Modules
                             && !string.IsNullOrEmpty(_configuration["Kafka:SaslPassword"]))
                         {
                             producerOptions.ConfigureSaslAuthentication(new SaslAuthentication(
-                                _configuration["Kafka:SaslUserName"],
-                                _configuration["Kafka:SaslPassword"]));
+                                _configuration["Kafka:SaslUserName"]!,
+                                _configuration["Kafka:SaslPassword"]!));
                         }
 
+                        var osloProxy = c.Resolve<IOsloProxy>();
                         return new ProducerProjections(
                             new Producer(producerOptions),
                             new SnapshotManager(
                                 c.Resolve<ILoggerFactory>(),
-                                c.Resolve<IOsloProxy>(),
+                                osloProxy,
                                 SnapshotManagerOptions.Create(
-                                    _configuration["RetryPolicy:MaxRetryWaitIntervalSeconds"],
-                                    _configuration["RetryPolicy:RetryBackoffFactor"])),
-                            _configuration["OsloNamespace"]);
+                                    _configuration["RetryPolicy:MaxRetryWaitIntervalSeconds"]!,
+                                    _configuration["RetryPolicy:RetryBackoffFactor"]!)),
+                            _configuration["OsloNamespace"]!,
+                            osloProxy);
                     },
                     connectedProjectionSettings);
         }
