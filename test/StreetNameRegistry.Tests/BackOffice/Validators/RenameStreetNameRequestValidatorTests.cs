@@ -101,5 +101,28 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 .WithErrorMessage("De meegegeven straatnamen liggen in verschillende gemeenten.")
                 .WithErrorCode("StraatnamenAndereGemeenten");
         }
+
+        [Fact]
+        public async Task GivenSourceAndDestinationStreetNameAreTheSame_ReturnsExpectedError()
+        {
+            var municipalityId = Guid.NewGuid();
+            var persistentLocalId = 10000;
+            _backOfficeContext.MunicipalityIdByPersistentLocalId.Add(new MunicipalityIdByPersistentLocalId(
+                persistentLocalId,
+                municipalityId,
+                "NISCODE"));
+            await _backOfficeContext.SaveChangesAsync();
+
+            var doelStraatnaamId = $"https://data.vlaanderen.be/id/straatnaam/{persistentLocalId}";
+            var result = await _validator.TestValidateAsync(new RenameStreetNameRequest
+            {
+                DoelStraatnaamId = doelStraatnaamId,
+                StreetNamePersistentLocalId = persistentLocalId
+            });
+
+            result.ShouldHaveValidationErrorFor(nameof(RenameStreetNameRequest.DoelStraatnaamId))
+                .WithErrorMessage($"Het doelStraatnaamId is hetzelfde als de bron straatnaam: {doelStraatnaamId}.")
+                .WithErrorCode("BronStraatnaamIdHetzelfdeAlsDoelStraatnaam");
+        }
     }
 }

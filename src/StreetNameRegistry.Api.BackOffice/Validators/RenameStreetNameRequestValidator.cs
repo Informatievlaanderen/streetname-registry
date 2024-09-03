@@ -3,7 +3,9 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     using Abstractions;
     using Abstractions.Requests;
     using Abstractions.Validation;
+    using Azure.Core;
     using Be.Vlaanderen.Basisregisters.GrAr.Edit.Validators;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using FluentValidation;
 
@@ -15,6 +17,18 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
                 .Must(straatNaamId =>
                     OsloPuriValidator.TryParseIdentifier(straatNaamId, out var persistentLocalId) && int.TryParse(persistentLocalId, out _))
                 .DependentRules(() =>
+                {
+                    RuleFor(x => x.DoelStraatnaamId)
+                        .MustAsync(async (request, straatNaamId, ct) =>
+                        {
+                            OsloPuriValidator.TryParseIdentifier(straatNaamId, out var persistentLocalIdAsString);
+
+                            var persistentLocalId = int.Parse(persistentLocalIdAsString);
+                            return persistentLocalId != request.StreetNamePersistentLocalId;
+                        })
+                        .WithMessage((_, straatNaamId) => ValidationErrors.RenameStreetName.SourceAndDestinationStreetNameAreTheSame.Message(straatNaamId))
+                        .WithErrorCode(ValidationErrors.RenameStreetName.SourceAndDestinationStreetNameAreTheSame.Code);
+
                     RuleFor(x => x.DoelStraatnaamId)
                         .MustAsync(async (straatNaamId, ct) =>
                         {
@@ -49,13 +63,15 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
                                     return
                                         municipalityIdBySourcePersistentLocalId is null
                                         || municipalityIdByDestinationPersistentLocalId is null
-                                        || municipalityIdByDestinationPersistentLocalId.MunicipalityId == municipalityIdBySourcePersistentLocalId.MunicipalityId;
+                                        || municipalityIdByDestinationPersistentLocalId.MunicipalityId ==
+                                        municipalityIdBySourcePersistentLocalId.MunicipalityId;
                                 })
                                 .WithMessage(ValidationErrors.RenameStreetName.SourceAndDestinationStreetNameAreNotInSameMunicipality.Message)
                                 .WithErrorCode(ValidationErrors.RenameStreetName.SourceAndDestinationStreetNameAreNotInSameMunicipality.Code)
                         )
                         .WithMessage((_, straatNaamId) => ValidationErrors.Common.StreetNameInvalid.Message(straatNaamId))
-                        .WithErrorCode(ValidationErrors.Common.StreetNameInvalid.Code))
+                        .WithErrorCode(ValidationErrors.Common.StreetNameInvalid.Code);
+                })
                 .WithMessage(ValidationErrors.Common.StreetNameNotFound.Message)
                 .WithErrorCode(ValidationErrors.Common.StreetNameNotFound.Code);
         }

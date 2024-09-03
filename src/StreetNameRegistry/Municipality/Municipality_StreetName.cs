@@ -219,6 +219,9 @@ namespace StreetNameRegistry.Municipality
 
         public void RenameStreetName(PersistentLocalId sourcePersistentLocalId, PersistentLocalId destinationPersistentLocalId)
         {
+            if(sourcePersistentLocalId == destinationPersistentLocalId)
+                throw new SourceAndDestinationStreetNameAreTheSameException(sourcePersistentLocalId);
+
             var streetName = StreetNames.GetNotRemovedByPersistentLocalId(sourcePersistentLocalId);
             var destinationStreetName = StreetNames.GetNotRemovedByPersistentLocalId(destinationPersistentLocalId);
 

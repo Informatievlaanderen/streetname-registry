@@ -29,6 +29,14 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Validation
 
                 public static TicketError ToTicketError() => new TicketError(Message, Code);
             }
+
+            public static class SourceAndDestinationStreetNameAreTheSame
+            {
+                public const string Code = "BronStraatnaamIdHetzelfdeAlsDoelStraatnaam";
+                public static string Message(string straatNaamId) => $"Het doelStraatnaamId is hetzelfde als de bron straatnaam: {straatNaamId}.";
+
+                public static TicketError ToTicketError(string straatNaamId) => new TicketError(Message(straatNaamId), Code);
+            }
         }
     }
 }
