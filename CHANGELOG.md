@@ -1,3 +1,10 @@
+# [4.9.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.8.3...v4.9.0) (2024-09-03)
+
+
+### Features
+
+* all stream create oslo snapshots ([d752316](https://github.com/informatievlaanderen/streetname-registry/commit/d752316833d7891d65bb4f607fa8466ab1e5347e))
+
 ## [4.8.3](https://github.com/informatievlaanderen/streetname-registry/compare/v4.8.2...v4.8.3) (2024-09-03)
 
 
