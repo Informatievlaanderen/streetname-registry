@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRenamingStreetName
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Builders;
     using FluentAssertions;
     using global::AutoFixture;
@@ -59,6 +60,34 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRenamingStreetName
                 .Then(
                     new Fact(_streamId, new StreetNameWasApproved(_municipalityId, command.DestinationPersistentLocalId)),
                     new Fact(_streamId, new StreetNameWasRenamed(_municipalityId, command.PersistentLocalId, command.DestinationPersistentLocalId))));
+        }
+
+        [Fact]
+        public void WithDestinationSameAsSource_ThenThrowsSourceAndDestinationStreetNameAreTheSameException()
+        {
+            var command = new RenameStreetName(
+                Fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(1),
+                new PersistentLocalId(1),
+                Fixture.Create<Provenance>());
+
+            var sourceStreetNameWasProposed = new StreetNameWasProposedV2Builder(Fixture)
+                .WithPersistentLocalId(command.PersistentLocalId)
+                .Build();
+
+            var sourceStreetNameWasApproved = new StreetNameWasApprovedBuilder(Fixture)
+                .WithPersistentLocalId(sourceStreetNameWasProposed.PersistentLocalId)
+                .Build();
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    sourceStreetNameWasProposed,
+                    sourceStreetNameWasApproved)
+                .When(command)
+                .Throws(new SourceAndDestinationStreetNameAreTheSameException(command.PersistentLocalId)));
         }
 
         [Fact]
