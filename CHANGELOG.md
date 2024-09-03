@@ -1,3 +1,10 @@
+## [4.8.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.8.1...v4.8.2) (2024-09-03)
+
+
+### Bug Fixes
+
+* sqs handler name to match request ([da579ce](https://github.com/informatievlaanderen/streetname-registry/commit/da579ce7bf26651cddf6e5daaca4c67e92b92846))
+
 ## [4.8.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.8.0...v4.8.1) (2024-08-30)
 
 
