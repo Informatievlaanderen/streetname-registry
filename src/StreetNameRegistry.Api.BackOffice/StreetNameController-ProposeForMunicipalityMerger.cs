@@ -161,7 +161,7 @@ namespace StreetNameRegistry.Api.BackOffice
                             streetNamesByNisCode.Select(x => new ProposeStreetNamesForMunicipalityMergerSqsRequestItem(
                                 persistentLocalIdGenerator.GenerateNextPersistentLocalId(),
                                 x.Key.StreetName,
-                                x.Key.HomonymAddition,
+                                string.IsNullOrWhiteSpace(x.Key.HomonymAddition) ? null : x.Key.HomonymAddition,
                                 x.Value)).ToList(),
                             new ProvenanceData(CreateProvenance(Modification.Insert, $"Fusie {nisCode}")))
                         , cancellationToken);
