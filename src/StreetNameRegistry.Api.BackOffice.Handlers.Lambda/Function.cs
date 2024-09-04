@@ -80,6 +80,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
                 .AsSelf()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<ScopedIdempotentCommandHandler>()
+                .As<IScopedIdempotentCommandHandler>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
+
             services.ConfigureIdempotency(
                 configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()
                     .ConnectionString,

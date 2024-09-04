@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using Municipality;
     using Municipality.Commands;
     using Municipality.Exceptions;
@@ -16,14 +17,17 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     public sealed class ProposeStreetNameForMunicipalityMergerHandler : StreetNameLambdaHandler<ProposeStreetNamesForMunicipalityMergerLambdaRequest>
     {
         private readonly BackOfficeContext _backOfficeContext;
+        private readonly ILogger _logger;
 
         public ProposeStreetNameForMunicipalityMergerHandler(
             IConfiguration configuration,
             ICustomRetryPolicy retryPolicy,
             ITicketing ticketing,
-            IIdempotentCommandHandler idempotentCommandHandler,
+            IScopedIdempotentCommandHandler idempotentCommandHandler,
             BackOfficeContext backOfficeContext,
-            IMunicipalities municipalities)
+            IMunicipalities municipalities,
+            ILoggerFactory loggerFactory
+        )
             : base(
                 configuration,
                 retryPolicy,
@@ -32,6 +36,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 idempotentCommandHandler)
         {
             _backOfficeContext = backOfficeContext;
+            _logger = loggerFactory.CreateLogger(GetType());
         }
 
         protected override async Task<object> InnerHandle(
@@ -40,20 +45,24 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
         {
             var commands = await BuildCommands(request, cancellationToken);
 
-            try
+            foreach (var command in commands)
             {
-                foreach (var command in commands)
+                _logger.LogDebug($"Handling {command.GetType().FullName}");
+
+                try
                 {
                     await IdempotentCommandHandler.Dispatch(
                         command.CreateCommandId(),
                         command,
                         request.Metadata!,
-                        cancellationToken);
+                        cancellationToken: cancellationToken);
+                    _logger.LogDebug($"Handled {command.GetType().FullName}");
                 }
-            }
-            catch (IdempotencyException)
-            {
-                // Idempotent: Do Nothing return last etag
+                catch (IdempotencyException)
+                {
+                    // Idempotent: Do Nothing return last etag
+                    _logger.LogDebug($"Skipped due to idempotency {command.GetType().FullName}");
+                }
             }
 
             var etagResponses = new List<ETagResponse>();

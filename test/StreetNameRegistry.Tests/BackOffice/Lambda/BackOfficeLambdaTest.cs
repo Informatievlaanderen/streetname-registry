@@ -13,6 +13,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using Municipality;
     using Municipality.Commands;
     using Newtonsoft.Json;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers;
     using Testing;
     using TicketingService.Abstractions;
     using Xunit.Abstractions;
@@ -44,6 +46,28 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             where TException : Exception
         {
             var idempotentCommandHandler = new Mock<IIdempotentCommandHandler>();
+            idempotentCommandHandler
+                .Setup(x => x.Dispatch(It.IsAny<Guid>(), It.IsAny<object>(),
+                    It.IsAny<IDictionary<string, object>>(), CancellationToken.None))
+                .Throws(exceptionFactory());
+            return idempotentCommandHandler;
+        }
+
+        protected Mock<IScopedIdempotentCommandHandler> MockExceptionScopedIdempotentCommandHandler<TException>()
+            where TException : Exception, new()
+        {
+            var idempotentCommandHandler = new Mock<IScopedIdempotentCommandHandler>();
+            idempotentCommandHandler
+                .Setup(x => x.Dispatch(It.IsAny<Guid>(), It.IsAny<object>(),
+                    It.IsAny<IDictionary<string, object>>(), CancellationToken.None))
+                .Throws<TException>();
+            return idempotentCommandHandler;
+        }
+
+        protected Mock<IScopedIdempotentCommandHandler> MockExceptionScopedIdempotentCommandHandler<TException>(Func<TException> exceptionFactory)
+            where TException : Exception
+        {
+            var idempotentCommandHandler = new Mock<IScopedIdempotentCommandHandler>();
             idempotentCommandHandler
                 .Setup(x => x.Dispatch(It.IsAny<Guid>(), It.IsAny<object>(),
                     It.IsAny<IDictionary<string, object>>(), CancellationToken.None))
