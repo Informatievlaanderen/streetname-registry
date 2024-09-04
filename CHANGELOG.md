@@ -1,3 +1,10 @@
+## [4.9.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.1...v4.9.2) (2024-09-04)
+
+
+### Bug Fixes
+
+* use lifetimescope when dispatching multiple commands for municipality proposal ([965a6e6](https://github.com/informatievlaanderen/streetname-registry/commit/965a6e6772615b99cc5196108d46bf4c3e76072b))
+
 ## [4.9.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.0...v4.9.1) (2024-09-04)
 
 
