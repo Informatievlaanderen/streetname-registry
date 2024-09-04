@@ -1,3 +1,10 @@
+## [4.9.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.0...v4.9.1) (2024-09-04)
+
+
+### Bug Fixes
+
+* check for empty HomonymAddition when proposing merger ([26a29b8](https://github.com/informatievlaanderen/streetname-registry/commit/26a29b8ec0f82482f4e64a0386f53b6d79f77343))
+
 # [4.9.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.8.3...v4.9.0) (2024-09-03)
 
 
