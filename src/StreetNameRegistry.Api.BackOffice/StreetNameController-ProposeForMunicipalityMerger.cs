@@ -117,7 +117,7 @@ namespace StreetNameRegistry.Api.BackOffice
                                 OldStreetNamePersistentLocalId = oldStreetNamePersistentLocalId,
                                 NisCode = nisCode.Trim(),
                                 StreetName = streetName.Trim(),
-                                HomonymAddition = homonymAddition?.Trim()
+                                HomonymAddition = string.IsNullOrWhiteSpace(homonymAddition) ? null : homonymAddition.Trim()
                             });
                         }
                     }
@@ -161,7 +161,7 @@ namespace StreetNameRegistry.Api.BackOffice
                             streetNamesByNisCode.Select(x => new ProposeStreetNamesForMunicipalityMergerSqsRequestItem(
                                 persistentLocalIdGenerator.GenerateNextPersistentLocalId(),
                                 x.Key.StreetName,
-                                string.IsNullOrWhiteSpace(x.Key.HomonymAddition) ? null : x.Key.HomonymAddition,
+                                x.Key.HomonymAddition,
                                 x.Value)).ToList(),
                             new ProvenanceData(CreateProvenance(Modification.Insert, $"Fusie {nisCode}")))
                         , cancellationToken);
