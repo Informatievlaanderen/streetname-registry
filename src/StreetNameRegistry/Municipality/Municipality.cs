@@ -79,6 +79,9 @@ namespace StreetNameRegistry.Municipality
 
         public void Retire()
         {
+            if (StreetNames.Any(x => x.Status is StreetNameStatus.Current or StreetNameStatus.Proposed && !x.IsRemoved))
+                throw new StreetNamesAreActiveException();
+
             if (MunicipalityStatus != MunicipalityStatus.Retired)
             {
                 ApplyChange(new MunicipalityWasRetired(_municipalityId));

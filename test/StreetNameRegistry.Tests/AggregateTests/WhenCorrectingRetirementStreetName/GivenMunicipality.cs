@@ -197,7 +197,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingRetirementStreet
         }
 
         [Fact]
-        public void ThenStreetNameStatusIsRetired()
+        public void StateCheck()
         {
             var persistentLocalId = Fixture.Create<PersistentLocalId>();
             var aggregate = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();

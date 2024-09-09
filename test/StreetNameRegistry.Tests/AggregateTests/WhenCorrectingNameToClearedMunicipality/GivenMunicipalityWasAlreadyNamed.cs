@@ -44,6 +44,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingNameToClearedMun
                 .When(commandNameMunicipality)
                 .Then(new Fact(_streamId, new MunicipalityWasNamed(_municipalityId, new MunicipalityName(string.Empty, language)))));
         }
+
+        // No state check needed
     }
 
     public static class NameExtensions

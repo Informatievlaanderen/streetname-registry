@@ -1,8 +1,11 @@
 ﻿namespace StreetNameRegistry.Tests.AggregateTests.WhenDefiningNisCode
 {
+    using System.Collections.Generic;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
+    using FluentAssertions;
     using global::AutoFixture;
     using Municipality;
     using Municipality.Commands;
@@ -35,6 +38,26 @@
                     Fixture.Create<MunicipalityWasImported>())
                 .When(command)
                 .Then(new Fact(_streamId, new MunicipalityNisCodeWasChanged(command.MunicipalityId, command.NisCode))));
+        }
+
+        [Fact]
+        public void StateCheck()
+        {
+            var aggregate = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var newNisCode = Fixture.Create<NisCode>();
+
+            aggregate.Initialize(new List<object>
+            {
+                municipalityWasImported
+            });
+
+            // Act
+            aggregate.DefineOrChangeNisCode(newNisCode);
+
+            // Assert
+            municipalityWasImported.NisCode.Should().NotBe(newNisCode);
+            aggregate.NisCode.Should().Be(newNisCode);
         }
     }
 

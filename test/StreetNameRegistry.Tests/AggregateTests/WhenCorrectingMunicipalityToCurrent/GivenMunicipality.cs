@@ -1,8 +1,11 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToCurrent
 {
+    using System.Collections.Generic;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
+    using FluentAssertions;
     using global::AutoFixture;
     using Municipality;
     using Municipality.Commands;
@@ -47,6 +50,23 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToCu
                     Fixture.Create<MunicipalityBecameCurrent>())
                 .When(commandCorrectMunicipality)
                 .ThenNone());
+        }
+
+        [Fact]
+        public void StateCheck()
+        {
+            var aggregate = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
+
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>()
+            });
+
+            // Act
+            aggregate.CorrectToCurrent();
+
+            // Assert
+            aggregate.MunicipalityStatus.Should().Be(MunicipalityStatus.Current);
         }
     }
 }
