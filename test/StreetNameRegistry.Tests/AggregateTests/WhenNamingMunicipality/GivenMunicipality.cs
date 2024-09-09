@@ -52,6 +52,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenNamingMunicipality
                 .Then(new Fact(_streamId, new MunicipalityWasNamed(_municipalityId, new MunicipalityName("GreatName", language)))));
         }
 
+        // No state check needed
     }
     public static class NameExtensions
     {

@@ -1,9 +1,12 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingNameMunicipality
 {
+    using System.Collections.Generic;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using FluentAssertions;
     using global::AutoFixture;
     using Municipality;
     using Municipality.Commands;
@@ -59,6 +62,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingNameMunicipality
                 .Then(
                     new Fact(_streamId, new MunicipalityWasNamed(_municipalityId, new MunicipalityName("GreatName", language)))));
         }
+
+        // No state check needed
     }
 
     public static class NameExtensions

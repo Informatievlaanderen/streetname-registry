@@ -1,12 +1,15 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 {
     using System.Collections.Generic;
+    using System.Linq;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Builders;
     using Extensions;
+    using FluentAssertions;
     using global::AutoFixture;
     using Municipality;
     using Municipality.Commands;
@@ -370,6 +373,30 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .Then(new Fact(_streamId,
                     new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames,
                         command.PersistentLocalId))));
+        }
+
+        [Fact]
+        public void StateCheck()
+        {
+            var aggregate = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
+            var names = Fixture.Create<Names>();
+            var persistentLocalId = Fixture.Create<PersistentLocalId>();
+
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>()
+            });
+
+            // Act
+            aggregate.ProposeStreetName(names, persistentLocalId);
+
+            // Assert
+            aggregate.StreetNames.Should().NotBeEmpty();
+
+            var streetName = aggregate.StreetNames.First();
+
+            streetName.PersistentLocalId.Should().Be(persistentLocalId);
+            streetName.Names.Should().BeEquivalentTo(names);
         }
     }
 }

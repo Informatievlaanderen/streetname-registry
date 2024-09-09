@@ -1,13 +1,16 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacilityLanguage
 {
+    using System.Collections.Generic;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
     using Municipality;
     using Municipality.Commands;
     using Municipality.Events;
     using Extensions;
+    using FluentAssertions;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -80,6 +83,30 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacili
                 .Given(_streamId, Fixture.Create<MunicipalityWasImported>(), commandAddedEnglish.ToEvent(), commandAddedDutch.ToEvent())
                 .When(commandLanguageRemoved)
                 .Then(new Fact(_streamId, new MunicipalityFacilityLanguageWasRemoved(_municipalityId, Language.English))));
+        }
+
+        [Theory]
+        [InlineData(Language.Dutch)]
+        [InlineData(Language.French)]
+        [InlineData(Language.English)]
+        [InlineData(Language.German)]
+        public void StateCheck(Language language)
+        {
+            Fixture.Register(() => language);
+
+            var aggregate = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
+
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>(),
+                Fixture.Create<MunicipalityFacilityLanguageWasAdded>()
+            });
+
+            // Act
+            aggregate.RemoveFacilityLanguage(language);
+
+            // Assert
+            aggregate.FacilityLanguages.Should().NotContain(language);
         }
     }
 }
