@@ -85,7 +85,7 @@ namespace StreetNameRegistry.Api.BackOffice
                             recordNr++;
 
                             var oldNisCode = csv.GetField<string>("OUD NIS code");
-                            var oldStreetNamePuri = csv.GetField<string>("OUD straatnaamid");
+                            var oldStreetNamePersistentLocalIdAsString = csv.GetField<string>("OUD straatnaamid");
                             var newNisCode = csv.GetField<string>("NIEUW NIS code");
                             var streetName = csv.GetField<string>("NIEUW straatnaam");
                             var homonymAddition = csv.GetField<string>("NIEUW homoniemtoevoeging");
@@ -93,13 +93,11 @@ namespace StreetNameRegistry.Api.BackOffice
                             if (string.IsNullOrWhiteSpace(oldNisCode))
                                 return BadRequest($"OldNisCode is required at record number {recordNr}");
 
-                            if (string.IsNullOrWhiteSpace(oldStreetNamePuri))
-                                return BadRequest($"OldStreetNamePuri is required at record number {recordNr}");
+                            if (string.IsNullOrWhiteSpace(oldStreetNamePersistentLocalIdAsString))
+                                return BadRequest($"OldStreetNamePersistentLocalId is required at record number {recordNr}");
 
-                            if (!OsloPuriValidator.TryParseIdentifier(oldStreetNamePuri, out var oldStreetNamePersistentLocalIdAsString)
-                                || !int.TryParse(oldStreetNamePersistentLocalIdAsString, out var oldStreetNamePersistentLocalId))
-                                return BadRequest($"OldStreetNamePuri is NaN at record number {recordNr}");
-
+                            if (!int.TryParse(oldStreetNamePersistentLocalIdAsString, out var oldStreetNamePersistentLocalId))
+                                return BadRequest($"OldStreetNamePersistentLocalId is NaN at record number {recordNr}");
 
                             if (string.IsNullOrWhiteSpace(newNisCode))
                                 return BadRequest($"NisCode is required at record number {recordNr}");

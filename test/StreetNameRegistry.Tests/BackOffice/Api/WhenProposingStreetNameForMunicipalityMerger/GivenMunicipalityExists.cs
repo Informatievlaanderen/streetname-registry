@@ -62,7 +62,7 @@
             var result =
                 Controller.ProposeForMunicipalityMerger(
                     CsvHelpers.CreateFormFileFromString("OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n" +
-                                                        "11001;http://b/123;;Name;HO"),
+                                                        "11001;123;;Name;HO"),
                     "bla",
                     Mock.Of<IPersistentLocalIdGenerator>(),
                     _municipalityConsumerContext,
@@ -79,7 +79,7 @@
             var result =
                 Controller.ProposeForMunicipalityMerger(
                     CsvHelpers.CreateFormFileFromString("OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n" +
-                                                        "11000;http://b/123;11001;Name;HO"),
+                                                        "11000;123;11001;Name;HO"),
                     nisCode,
                     Mock.Of<IPersistentLocalIdGenerator>(),
                     _municipalityConsumerContext,
@@ -95,7 +95,7 @@
             var result =
                 Controller.ProposeForMunicipalityMerger(
                     CsvHelpers.CreateFormFileFromString("OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n" +
-                                                        "11000;http://b/123;NisCode;;HO"),
+                                                        "11000;123;NisCode;;HO"),
                     "NisCode",
                     Mock.Of<IPersistentLocalIdGenerator>(),
                     _municipalityConsumerContext,
@@ -128,7 +128,7 @@
             var result =
                 Controller.ProposeForMunicipalityMerger(
                     CsvHelpers.CreateFormFileFromString($"OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n" +
-                                                        $"{oldNisCode};http://a/123;11001;Street;HO\n{oldNisCode};http://a/456;11001;Name;NYM\n{oldNisCode};http://a/789;11001;Street;HO"),
+                                                        $"{oldNisCode};123;11001;Street;HO\n{oldNisCode};456;11001;Name;NYM\n{oldNisCode};789;11001;Street;HO"),
                     "11001",
                     mockPersistentLocalIdGenerator.Object,
                     _municipalityConsumerContext,
