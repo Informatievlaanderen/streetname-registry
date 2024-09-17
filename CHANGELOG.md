@@ -1,3 +1,10 @@
+## [4.9.3](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.2...v4.9.3) (2024-09-17)
+
+
+### Bug Fixes
+
+* use persistentlocalids for propose streetnames for municipality merger ([84040ec](https://github.com/informatievlaanderen/streetname-registry/commit/84040ec88a29c979ed209b80a50407d1bd17fbb1))
+
 ## [4.9.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.1...v4.9.2) (2024-09-04)
 
 
