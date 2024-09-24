@@ -62,6 +62,7 @@ namespace StreetNameRegistry.Api.BackOffice
 
             try
             {
+                var errorMessages = new List<string>();
                 var records = new List<CsvRecord>();
                 using (var stream = new MemoryStream())
                 {
@@ -84,6 +85,8 @@ namespace StreetNameRegistry.Api.BackOffice
                         {
                             recordNr++;
 
+                            var recordErrorMessages = new List<string>();
+
                             var oldNisCode = csv.GetField<string>("OUD NIS code");
                             var oldStreetNamePersistentLocalIdAsString = csv.GetField<string>("OUD straatnaamid");
                             var newNisCode = csv.GetField<string>("NIEUW NIS code");
@@ -91,43 +94,52 @@ namespace StreetNameRegistry.Api.BackOffice
                             var homonymAddition = csv.GetField<string>("NIEUW homoniemtoevoeging");
 
                             if (string.IsNullOrWhiteSpace(oldNisCode))
-                                return BadRequest($"OldNisCode is required at record number {recordNr}");
+                            {
+                                recordErrorMessages.Add($"OldNisCode is required at record number {recordNr}");
+                            }
 
                             if (string.IsNullOrWhiteSpace(oldStreetNamePersistentLocalIdAsString))
-                                return BadRequest($"OldStreetNamePersistentLocalId is required at record number {recordNr}");
+                            {
+                                recordErrorMessages.Add($"OldStreetNamePersistentLocalId is required at record number {recordNr}");
+                            }
 
-                            if (!int.TryParse(oldStreetNamePersistentLocalIdAsString, out var oldStreetNamePersistentLocalId))
-                                return BadRequest($"OldStreetNamePersistentLocalId is NaN at record number {recordNr}");
+                            if (!string.IsNullOrWhiteSpace(oldStreetNamePersistentLocalIdAsString)
+                                & !int.TryParse(oldStreetNamePersistentLocalIdAsString, out var oldStreetNamePersistentLocalId))
+                            {
+                                recordErrorMessages.Add($"OldStreetNamePersistentLocalId is NaN at record number {recordNr}");
+                            }
 
                             if (string.IsNullOrWhiteSpace(newNisCode))
-                                return BadRequest($"NisCode is required at record number {recordNr}");
-
-                            if (newNisCode.Trim() != nisCode)
-                                return BadRequest(
-                                    $"NisCode {newNisCode} does not match the provided NisCode {nisCode} at record number {recordNr}");
+                            {
+                                recordErrorMessages.Add($"NisCode is required at record number {recordNr}");
+                            }
+                            else if (newNisCode.Trim() != nisCode)
+                            {
+                                recordErrorMessages.Add($"NisCode {newNisCode} does not match the provided NisCode {nisCode} at record number {recordNr}");
+                            }
 
                             if (string.IsNullOrWhiteSpace(streetName))
-                                return BadRequest($"StreetName is required at record number {recordNr}");
+                            {
+                                recordErrorMessages.Add($"StreetName is required at record number {recordNr}");
+                            }
+
+                            if (recordErrorMessages.Any())
+                            {
+                                errorMessages.AddRange(recordErrorMessages);
+                                continue;
+                            }
 
                             records.Add(new CsvRecord
                             {
-                                OldNisCode = oldNisCode.Trim(),
+                                OldNisCode = oldNisCode!.Trim(),
                                 OldStreetNamePersistentLocalId = oldStreetNamePersistentLocalId,
                                 NisCode = nisCode.Trim(),
-                                StreetName = streetName.Trim(),
+                                StreetName = streetName!.Trim(),
                                 HomonymAddition = string.IsNullOrWhiteSpace(homonymAddition) ? null : homonymAddition.Trim()
                             });
                         }
                     }
                 }
-
-                var streetNamesByNisCodeRecords = records
-                    .GroupBy(x => x.NisCode)
-                    .ToDictionary(
-                        x => x.Key,
-                        y => y.ToList())
-                    .Single()
-                    .Value;
 
                 var oldMunicipalities = new List<MunicipalityConsumerItem>();
                 foreach (var oldMunicipalityNisCode in records.Select(x => x.OldNisCode).Distinct())
@@ -137,11 +149,25 @@ namespace StreetNameRegistry.Api.BackOffice
 
                     if (oldMunicipality is null)
                     {
-                        return BadRequest($"No municipality found for {oldMunicipalityNisCode}");
+                        errorMessages.Add($"No municipality found for NisCode '{oldMunicipalityNisCode}'");
+                        continue;
                     }
 
                     oldMunicipalities.Add(oldMunicipality);
                 }
+
+                if (errorMessages.Any())
+                {
+                    return BadRequest(errorMessages);
+                }
+
+                var streetNamesByNisCodeRecords = records
+                    .GroupBy(x => x.NisCode)
+                    .ToDictionary(
+                        x => x.Key,
+                        y => y.ToList())
+                    .Single()
+                    .Value;
 
                 // group by streetname and homonym addition
                 var streetNamesByNisCode = streetNamesByNisCodeRecords
