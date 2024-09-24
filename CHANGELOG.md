@@ -1,3 +1,10 @@
+## [4.9.4](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.3...v4.9.4) (2024-09-24)
+
+
+### Bug Fixes
+
+* ci deploy lambda ([49d398f](https://github.com/informatievlaanderen/streetname-registry/commit/49d398f0475d15eacd2afd7601bf38be06291eec))
+
 ## [4.9.3](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.2...v4.9.3) (2024-09-17)
 
 
