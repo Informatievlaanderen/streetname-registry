@@ -69,7 +69,7 @@
                     CancellationToken.None).GetAwaiter().GetResult();
 
             result.Should().BeOfType<BadRequestObjectResult>();
-            ((BadRequestObjectResult)result).Value.Should().BeEquivalentTo("NisCode is required at record number 1");
+            ((BadRequestObjectResult)result).Value.Should().BeEquivalentTo(new[] { "NisCode is required at record number 1" });
         }
 
         [Fact]
@@ -86,7 +86,7 @@
                     CancellationToken.None).GetAwaiter().GetResult();
 
             result.Should().BeOfType<BadRequestObjectResult>();
-            ((BadRequestObjectResult)result).Value.Should().BeEquivalentTo($"NisCode 11001 does not match the provided NisCode {nisCode} at record number 1");
+            ((BadRequestObjectResult)result).Value.Should().BeEquivalentTo(new[] { $"NisCode 11001 does not match the provided NisCode {nisCode} at record number 1" });
         }
 
         [Fact]
@@ -102,7 +102,7 @@
                     CancellationToken.None).GetAwaiter().GetResult();
 
             result.Should().BeOfType<BadRequestObjectResult>();
-            ((BadRequestObjectResult)result).Value.Should().BeEquivalentTo("StreetName is required at record number 1");
+            ((BadRequestObjectResult)result).Value.Should().BeEquivalentTo(new[] { "StreetName is required at record number 1" });
         }
 
         [Fact]
