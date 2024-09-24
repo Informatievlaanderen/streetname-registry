@@ -1,3 +1,10 @@
+## [4.9.5](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.4...v4.9.5) (2024-09-24)
+
+
+### Bug Fixes
+
+* municipality status for MunicipalityWasImported should be Proposed ([94244b0](https://github.com/informatievlaanderen/streetname-registry/commit/94244b019b8ac3f866b5b07b3150c5a7916b36f6))
+
 ## [4.9.4](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.3...v4.9.4) (2024-09-24)
 
 
