@@ -65,6 +65,7 @@ namespace StreetNameRegistry.Municipality
         {
             _municipalityId = new MunicipalityId(@event.MunicipalityId);
             _nisCode = new NisCode(@event.NisCode);
+            MunicipalityStatus = MunicipalityStatus.Proposed;
         }
 
         private void When(MunicipalityNisCodeWasChanged @event)

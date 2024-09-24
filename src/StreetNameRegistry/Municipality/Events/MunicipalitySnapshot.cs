@@ -24,14 +24,14 @@ namespace StreetNameRegistry.Municipality.Events
         public MunicipalitySnapshot(
             MunicipalityId municipalityId,
             NisCode nisCode,
-            MunicipalityStatus? municipalityStatus,
+            MunicipalityStatus municipalityStatus,
             IEnumerable<Language> officialLanguages,
             IEnumerable<Language> facilityLanguages,
             MunicipalityStreetNames streetNames)
         {
             MunicipalityId = municipalityId;
             NisCode = nisCode;
-            MunicipalityStatus = municipalityStatus?.Status ?? string.Empty;
+            MunicipalityStatus = municipalityStatus.Status;
             OfficialLanguages = officialLanguages;
             FacilityLanguages = facilityLanguages;
             StreetNames = streetNames.Select(x => new StreetNameData(x)).ToList();
@@ -48,9 +48,7 @@ namespace StreetNameRegistry.Municipality.Events
             : this(
                 new MunicipalityId(municipalityId),
                 new NisCode(nisCode),
-                string.IsNullOrEmpty(municipalityStatus)
-                    ? null
-                    : StreetNameRegistry.Municipality.MunicipalityStatus.Parse(municipalityStatus),
+                StreetNameRegistry.Municipality.MunicipalityStatus.Parse(municipalityStatus),
                 officialLanguages,
                 facilityLanguages,
                 new MunicipalityStreetNames())

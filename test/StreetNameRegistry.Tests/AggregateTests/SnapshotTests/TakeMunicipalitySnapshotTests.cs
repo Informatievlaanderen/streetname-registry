@@ -44,7 +44,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
 
             municipalitySnapshot.NisCode.Should().Be(municipalityWasImported.NisCode);
             municipalitySnapshot.MunicipalityId.Should().Be(municipalityWasImported.MunicipalityId);
-            municipalitySnapshot.MunicipalityStatus.Should().BeNullOrEmpty();
+            municipalitySnapshot.MunicipalityStatus.Should().Be(MunicipalityStatus.Proposed);
             municipalitySnapshot.StreetNames.Should().BeEmpty();
             municipalitySnapshot.OfficialLanguages.Should().BeEmpty();
             municipalitySnapshot.FacilityLanguages.Should().BeEmpty();

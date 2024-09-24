@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Municipality
     {
         public static readonly MunicipalityStatus Current = new MunicipalityStatus("Current");
         public static readonly MunicipalityStatus Retired = new MunicipalityStatus("Retired");
+        public static readonly MunicipalityStatus Proposed = new MunicipalityStatus("Proposed");
 
         public string Status { get; }
 
@@ -14,8 +15,9 @@ namespace StreetNameRegistry.Municipality
         public static MunicipalityStatus Parse(string status)
         {
             if (status != Retired.Status &&
-                status != Current.Status)
-                throw new NotImplementedException($"Cannot parse {status} to {nameof(MunicipalityStatus)}");
+                status != Current.Status &&
+                status != Proposed.Status)
+                throw new NotImplementedException($"Cannot parse '{status}' to {nameof(MunicipalityStatus)}");
 
             return new MunicipalityStatus(status);
         }
