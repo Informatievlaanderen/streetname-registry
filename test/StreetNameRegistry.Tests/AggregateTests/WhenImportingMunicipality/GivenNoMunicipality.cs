@@ -48,6 +48,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenImportingMunicipality
             // Assert
             aggregate.MunicipalityId.Should().Be(municipalityId);
             aggregate.NisCode.Should().Be(nisCode);
+            aggregate.MunicipalityStatus.Should().Be(MunicipalityStatus.Proposed);
         }
     }
 }
