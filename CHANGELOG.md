@@ -1,3 +1,10 @@
+## [4.9.6](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.5...v4.9.6) (2024-09-24)
+
+
+### Bug Fixes
+
+* return multiple error messages at once for propose for municipality merger ([5cf5823](https://github.com/informatievlaanderen/streetname-registry/commit/5cf5823ec43d96db6680d1aa279f1e1de3a5d529))
+
 ## [4.9.5](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.4...v4.9.5) (2024-09-24)
 
 
