@@ -23,6 +23,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
             When(MunicipalityEvent.MunicipalityOfficialLanguageWasRemoved, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityFacilitiesLanguageWasAdded, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityFacilitiesLanguageWasRemoved, AddSyndicationItemEntry);
+            When(MunicipalityEvent.MunicipalityWasMerged, AddSyndicationItemEntry);
         }
 
         private static async Task AddSyndicationItemEntry(AtomEntry<SyndicationContent<Gemeente>> entry, SyndicationContext context, CancellationToken ct)
