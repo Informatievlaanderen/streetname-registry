@@ -18,6 +18,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
             When(MunicipalityEvent.MunicipalityNameWasCleared, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityNameWasCorrected, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityNameWasCorrectedToCleared, AddSyndicationItemEntry);
+            When(MunicipalityEvent.MunicipalityWasMerged, AddSyndicationItemEntry);
 
             //these events only update version timestamp & position
             When(MunicipalityEvent.MunicipalityOfficialLanguageWasAdded, AddSyndicationItemEntry);

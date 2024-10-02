@@ -26,6 +26,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         [InlineData(MunicipalityEvent.MunicipalityNameWasCorrectedToCleared)]
         [InlineData(MunicipalityEvent.MunicipalityNisCodeWasDefined)]
         [InlineData(MunicipalityEvent.MunicipalityNisCodeWasCorrected)]
+        [InlineData(MunicipalityEvent.MunicipalityWasMerged)]
         public async Task MunicipalityEventInsertsRecord(MunicipalityEvent @event)
         {
             var id = Arrange(Produce.Guid());
