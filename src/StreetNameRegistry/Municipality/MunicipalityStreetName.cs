@@ -167,10 +167,10 @@ namespace StreetNameRegistry.Municipality
 
             GuardStreetNameStatus(StreetNameStatus.Retired);
 
-            if (IsRenamed)
-            {
-                throw new StreetNameIsRenamedException(PersistentLocalId);
-            }
+            //if (IsRenamed)
+            //{
+            //    throw new StreetNameIsRenamedException(PersistentLocalId);
+            //}
 
             guardUniqueActiveStreetNameNames(Names, HomonymAdditions, PersistentLocalId);
 
