@@ -1,3 +1,10 @@
+## [4.9.7](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.6...v4.9.7) (2024-10-03)
+
+
+### Bug Fixes
+
+* temporarily disable correct renamed streetname ([d62ff86](https://github.com/informatievlaanderen/streetname-registry/commit/d62ff86454abfbbc31bfcf02750e1f87f9fa7b9b))
+
 ## [4.9.6](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.5...v4.9.6) (2024-09-24)
 
 
