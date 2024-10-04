@@ -12,7 +12,6 @@ namespace StreetNameRegistry.Api.BackOffice
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Municipality;
-    using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
     using System.Threading;
     using System.Threading.Tasks;
@@ -39,6 +38,7 @@ namespace StreetNameRegistry.Api.BackOffice
         [SwaggerResponseExample(StatusCodes.Status412PreconditionFailed, typeof(PreconditionFailedResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyNames.Adres.DecentraleBijwerker)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyNames.Adres.InterneBijwerker)]
         public async Task<IActionResult> Retire(
             [FromServices] IIfMatchHeaderValidator ifMatchHeaderValidator,
             [FromRoute] RetireStreetNameRequest request,
