@@ -12,7 +12,6 @@ namespace StreetNameRegistry.Api.BackOffice
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Municipality;
-    using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
     using System.Threading;
     using System.Threading.Tasks;
