@@ -1,3 +1,15 @@
+# [4.10.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.7...v4.10.0) (2024-10-07)
+
+
+### Bug Fixes
+
+* municipality merger in syndication ([db0b3eb](https://github.com/informatievlaanderen/streetname-registry/commit/db0b3ebe0c1a9322174128ad0a10624e5fb60d41))
+
+
+### Features
+
+* **backoffice:** restrict rename & retire ([e9db544](https://github.com/informatievlaanderen/streetname-registry/commit/e9db54463c5e40c083e248dc6003a77d4d3fb912))
+
 ## [4.9.7](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.6...v4.9.7) (2024-10-03)
 
 
