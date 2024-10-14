@@ -1,3 +1,10 @@
+## [4.10.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.10.0...v4.10.1) (2024-10-14)
+
+
+### Bug Fixes
+
+* **backoffice:** add default blacklistedovocodes section ([3270f61](https://github.com/informatievlaanderen/streetname-registry/commit/3270f61bfea919b042481a1aac56ba6bc7e16f01))
+
 # [4.10.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.9.7...v4.10.0) (2024-10-07)
 
 
