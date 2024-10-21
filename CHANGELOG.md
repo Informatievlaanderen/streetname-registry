@@ -1,3 +1,10 @@
+## [4.10.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.10.1...v4.10.2) (2024-10-21)
+
+
+### Bug Fixes
+
+* check duplicate merger streetnames in api ([9a34ee7](https://github.com/informatievlaanderen/streetname-registry/commit/9a34ee738df7e43e2b3bfb40b88ea50f4f36a9d2))
+
 ## [4.10.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.10.0...v4.10.1) (2024-10-14)
 
 
