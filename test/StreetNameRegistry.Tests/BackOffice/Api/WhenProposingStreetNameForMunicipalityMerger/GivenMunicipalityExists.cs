@@ -105,6 +105,37 @@
             ((BadRequestObjectResult)result).Value.Should().BeEquivalentTo(new[] { "StreetName is required at record number 1" });
         }
 
+        [Theory]
+        [InlineData("Kerkstraat", "Kerkstraat", "", "")]
+        [InlineData("Kerkstraat", "KERKSTRAAT", "", "")]
+        [InlineData("Kerkstraat", "Kerkstraat", "HO", "ho")]
+        public void WithDuplicateStreetName_ThenReturnsBadRequest(
+            string streetNameNameOne, string streetNameNameTwo,
+            string homonymAdditionOne, string homonymAdditionTwo)
+        {
+            const string oldNisCode = "11000";
+            var oldMunicipalityId = Guid.NewGuid();
+            _municipalityConsumerContext.Add(new MunicipalityConsumerItem
+            {
+                MunicipalityId = oldMunicipalityId,
+                NisCode = oldNisCode
+            });
+            _municipalityConsumerContext.SaveChanges();
+
+            var result =
+                Controller.ProposeForMunicipalityMerger(
+                    CsvHelpers.CreateFormFileFromString("OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n" +
+                                                        $"11000;123;NisCode;{streetNameNameOne};{homonymAdditionOne}\n" +
+                                                        $"11000;123;NisCode;{streetNameNameTwo};{homonymAdditionTwo}"),
+                    "NisCode",
+                    Mock.Of<IPersistentLocalIdGenerator>(),
+                    _municipalityConsumerContext,
+                    CancellationToken.None).GetAwaiter().GetResult();
+
+            result.Should().BeOfType<BadRequestObjectResult>();
+            ((BadRequestObjectResult)result).Value.Should().BeEquivalentTo(new[] { "Duplicate record for streetName with persistent local id 123" });
+        }
+
         [Fact]
         public void WithValidCsv_ThenReturnsOk()
         {

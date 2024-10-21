@@ -156,6 +156,16 @@ namespace StreetNameRegistry.Api.BackOffice
                     oldMunicipalities.Add(oldMunicipality);
                 }
 
+                errorMessages.AddRange(records
+                    .GroupBy(x => new
+                    {
+                        x.OldStreetNamePersistentLocalId,
+                        StreetName = x.StreetName.ToLowerInvariant()
+                    })
+                    .Where(x => x.Count() > 1)
+                    .Select(x =>
+                        $"Duplicate record for streetName with persistent local id {x.Key.OldStreetNamePersistentLocalId}"));
+
                 if (errorMessages.Any())
                 {
                     return BadRequest(errorMessages);
