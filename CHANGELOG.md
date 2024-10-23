@@ -1,3 +1,10 @@
+# [4.11.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.10.2...v4.11.0) (2024-10-23)
+
+
+### Features
+
+* **wfs:** add geolocation view ([34334b2](https://github.com/informatievlaanderen/streetname-registry/commit/34334b25a07b6de02b3b3d23616990c5a17700a1))
+
 ## [4.10.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.10.1...v4.10.2) (2024-10-21)
 
 
