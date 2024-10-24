@@ -18,6 +18,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
+    using StreetNameToPropose = Municipality.Commands.ProposeStreetNamesForMunicipalityMerger.StreetNameToPropose;
 
     public sealed class GivenMunicipality : StreetNameRegistryTest
     {
@@ -41,10 +42,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
             Fixture.Register(() => Language.Dutch);
             Fixture.Register(() => Taal.NL);
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
+            var streetName = Fixture.Create<StreetNameToPropose>()
                 .WithDesiredStatus(StreetNameStatus.Current)
-                .WithStreetNameNames([new(Fixture.Create<string>(), Language.Dutch)])
-                .WithHomonymAdditions([new (new string(Fixture.CreateMany<char>(5).ToArray()), Language.Dutch)]);
+                .WithStreetNameNames([new StreetNameName(Fixture.Create<string>(), Language.Dutch)])
+                .WithHomonymAdditions([new StreetNameHomonymAddition(new string(Fixture.CreateMany<char>(5).ToArray()), Language.Dutch)]);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([streetName]);
 
             //Act, assert
             Assert(new Scenario()
@@ -56,11 +59,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                     new StreetNameWasProposedForMunicipalityMerger(
                         _municipalityId,
                         Fixture.Create<NisCode>(),
-                        command.DesiredStatus,
-                        command.StreetNameNames,
-                        command.HomonymAdditions,
-                        command.PersistentLocalId,
-                        command.MergedStreetNamePersistentLocalIds))));
+                        streetName.DesiredStatus,
+                        streetName.StreetNameNames,
+                        streetName.HomonymAdditions,
+                        streetName.PersistentLocalId,
+                        streetName.MergedStreetNamePersistentLocalIds))));
         }
 
         [Theory]
@@ -71,9 +74,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
             var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>()
                 .WithNames(new Names(new List<StreetNameName> { new(name, Language.Dutch) }));
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(StreetNameStatus.Current)
-                .WithStreetNameNames(new Names(new List<StreetNameName> { new(newName, Language.Dutch) }));
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([
+                    Fixture.Create<StreetNameToPropose>()
+                        .WithDesiredStatus(StreetNameStatus.Current)
+                        .WithStreetNameNames(new Names(new List<StreetNameName> { new(newName, Language.Dutch) }))
+                ]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -89,8 +95,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
         {
             var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>();
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithPersistentLocalId(new PersistentLocalId(streetNameWasProposed.PersistentLocalId));
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([
+                    Fixture.Create<StreetNameToPropose>().WithPersistentLocalId(new PersistentLocalId(streetNameWasProposed.PersistentLocalId))
+                ]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -109,8 +117,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
             Fixture.Register(() => Language.Dutch);
             Fixture.Register(() => Taal.NL);
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(StreetNameStatus.Current);
+            var streetName = Fixture.Create<StreetNameToPropose>().WithDesiredStatus(StreetNameStatus.Current);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([streetName]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -122,11 +131,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                     new StreetNameWasProposedForMunicipalityMerger(
                         _municipalityId,
                         Fixture.Create<NisCode>(),
-                        command.DesiredStatus,
-                        command.StreetNameNames,
-                        command.HomonymAdditions,
-                        command.PersistentLocalId,
-                        command.MergedStreetNamePersistentLocalIds))));
+                        streetName.DesiredStatus,
+                        streetName.StreetNameNames,
+                        streetName.HomonymAdditions,
+                        streetName.PersistentLocalId,
+                        streetName.MergedStreetNamePersistentLocalIds))));
         }
 
         [Fact]
@@ -140,8 +149,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
 
             var streetNameWasMigrated = Fixture.Create<StreetNameWasMigratedToMunicipality>();
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(StreetNameStatus.Current);
+            var streetName = Fixture.Create<StreetNameToPropose>().WithDesiredStatus(StreetNameStatus.Current);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([streetName]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -153,11 +163,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                     new StreetNameWasProposedForMunicipalityMerger(
                         _municipalityId,
                         Fixture.Create<NisCode>(),
-                        command.DesiredStatus,
-                        command.StreetNameNames,
-                        command.HomonymAdditions,
-                        command.PersistentLocalId,
-                        command.MergedStreetNamePersistentLocalIds))));
+                        streetName.DesiredStatus,
+                        streetName.StreetNameNames,
+                        streetName.HomonymAdditions,
+                        streetName.PersistentLocalId,
+                        streetName.MergedStreetNamePersistentLocalIds))));
         }
 
         [Fact]
@@ -173,8 +183,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 .WithIsRemoved()
                 .Build();
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(StreetNameStatus.Current);
+            var streetName = Fixture.Create<StreetNameToPropose>().WithDesiredStatus(StreetNameStatus.Current);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([streetName]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -186,11 +197,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                     new StreetNameWasProposedForMunicipalityMerger(
                         _municipalityId,
                         Fixture.Create<NisCode>(),
-                        command.DesiredStatus,
-                        command.StreetNameNames,
-                        command.HomonymAdditions,
-                        command.PersistentLocalId,
-                        command.MergedStreetNamePersistentLocalIds))));
+                        streetName.DesiredStatus,
+                        streetName.StreetNameNames,
+                        streetName.HomonymAdditions,
+                        streetName.PersistentLocalId,
+                        streetName.MergedStreetNamePersistentLocalIds))));
         }
 
         [Fact]
@@ -200,9 +211,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
             var newStreetNameName = Fixture.Create<StreetNameName>();
             Fixture.Register(() => new Names { existingStreetNameName });
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithStreetNameNames([existingStreetNameName, newStreetNameName])
-                .WithDesiredStatus(StreetNameStatus.Current);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([
+                    Fixture.Create<StreetNameToPropose>()
+                        .WithStreetNameNames([existingStreetNameName, newStreetNameName])
+                        .WithDesiredStatus(StreetNameStatus.Current)
+                ]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -224,9 +238,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
 
             var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>();
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
+            var streetName = Fixture.Create<StreetNameToPropose>()
                 .WithStreetNameNames([newStreetNameName])
                 .WithDesiredStatus(StreetNameStatus.Current);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([streetName]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -238,17 +254,17 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                     new StreetNameWasProposedForMunicipalityMerger(
                         _municipalityId,
                         Fixture.Create<NisCode>(),
-                        command.DesiredStatus,
-                        command.StreetNameNames,
-                        command.HomonymAdditions,
-                        command.PersistentLocalId,
-                        command.MergedStreetNamePersistentLocalIds))));
+                        streetName.DesiredStatus,
+                        streetName.StreetNameNames,
+                        streetName.HomonymAdditions,
+                        streetName.PersistentLocalId,
+                        streetName.MergedStreetNamePersistentLocalIds))));
         }
 
         [Fact]
         public void WithMunicipalityRetired_ThenThrowsMunicipalityHasInvalidStatusException()
         {
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>();
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>();
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -270,9 +286,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 new(Fixture.Create<string>(), Language.French)
             };
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithStreetNameNames(names)
-                .WithDesiredStatus(StreetNameStatus.Current);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([
+                    Fixture.Create<StreetNameToPropose>()
+                        .WithStreetNameNames(names)
+                        .WithDesiredStatus(StreetNameStatus.Current)
+                ]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -295,9 +314,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 new(Fixture.Create<string>(), Language.Dutch)
             };
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithStreetNameNames(names)
-                .WithDesiredStatus(StreetNameStatus.Current);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([
+                    Fixture.Create<StreetNameToPropose>()
+                        .WithStreetNameNames(names)
+                        .WithDesiredStatus(StreetNameStatus.Current)
+                ]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -323,9 +345,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 new(Fixture.Create<string>(), Language.French)
             };
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(StreetNameStatus.Current)
-                .WithStreetNameNames(names);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([
+                    Fixture.Create<StreetNameToPropose>()
+                        .WithDesiredStatus(StreetNameStatus.Current)
+                        .WithStreetNameNames(names)
+                ]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -348,8 +373,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 .WithStatus(StreetNameStatus.Current)
                 .Build();
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(StreetNameStatus.Current);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([Fixture.Create<StreetNameToPropose>().WithDesiredStatus(StreetNameStatus.Current)]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -373,9 +398,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 .WithHomonymAdditions([new("test", Language.Dutch)])
                 .Build();
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(StreetNameStatus.Current)
-                .WithHomonymAdditions([new("test", Language.Dutch)]);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([
+                    Fixture.Create<StreetNameToPropose>()
+                        .WithDesiredStatus(StreetNameStatus.Current)
+                        .WithHomonymAdditions([new("test", Language.Dutch)])
+                ]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -399,8 +427,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 .WithHomonymAdditions([new("test", Language.Dutch)])
                 .Build();
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(StreetNameStatus.Current);
+            var streetName = Fixture.Create<StreetNameToPropose>().WithDesiredStatus(StreetNameStatus.Current);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([streetName]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -412,11 +441,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                     new StreetNameWasProposedForMunicipalityMerger(
                         _municipalityId,
                         Fixture.Create<NisCode>(),
-                        command.DesiredStatus,
-                        command.StreetNameNames,
-                        command.HomonymAdditions,
-                        command.PersistentLocalId,
-                        command.MergedStreetNamePersistentLocalIds))));
+                        streetName.DesiredStatus,
+                        streetName.StreetNameNames,
+                        streetName.HomonymAdditions,
+                        streetName.PersistentLocalId,
+                        streetName.MergedStreetNamePersistentLocalIds))));
         }
 
         [Fact]
@@ -431,10 +460,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 .WithStatus(StreetNameStatus.Current)
                 .Build();
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(StreetNameStatus.Current)
-                .WithRandomStreetName(Fixture)
-                .WithMergedStreetNamePersistentIds([]);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([
+                    Fixture.Create<StreetNameToPropose>()
+                        .WithDesiredStatus(StreetNameStatus.Current)
+                        .WithRandomStreetName(Fixture)
+                        .WithMergedStreetNamePersistentIds([])
+                ]);
 
             Assert(new Scenario()
                 .Given(_streamId,
@@ -457,10 +489,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetNameForMuni
                 .WithStatus(StreetNameStatus.Current)
                 .Build();
 
-            var command = Fixture.Create<ProposeStreetNameForMunicipalityMerger>()
-                .WithDesiredStatus(StreetNameStatus.Current)
-                .WithRandomStreetName(Fixture)
-                .WithMergedStreetNamePersistentIds([new(5), new(5)]);
+            var command = Fixture.Create<ProposeStreetNamesForMunicipalityMerger>()
+                .WithStreetNames([
+                    Fixture.Create<StreetNameToPropose>()
+                        .WithDesiredStatus(StreetNameStatus.Current)
+                        .WithRandomStreetName(Fixture)
+                        .WithMergedStreetNamePersistentIds([new(5), new(5)])
+                ]);
 
             Assert(new Scenario()
                 .Given(_streamId,

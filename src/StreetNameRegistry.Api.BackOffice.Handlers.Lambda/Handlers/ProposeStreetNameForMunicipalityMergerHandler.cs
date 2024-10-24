@@ -7,7 +7,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
     using Municipality;
     using Municipality.Commands;
     using Municipality.Exceptions;
@@ -17,7 +16,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     public sealed class ProposeStreetNameForMunicipalityMergerHandler : StreetNameLambdaHandler<ProposeStreetNamesForMunicipalityMergerLambdaRequest>
     {
         private readonly BackOfficeContext _backOfficeContext;
-        private readonly ILogger _logger;
 
         public ProposeStreetNameForMunicipalityMergerHandler(
             IConfiguration configuration,
@@ -25,8 +23,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
             ITicketing ticketing,
             IScopedIdempotentCommandHandler idempotentCommandHandler,
             BackOfficeContext backOfficeContext,
-            IMunicipalities municipalities,
-            ILoggerFactory loggerFactory
+            IMunicipalities municipalities
         )
             : base(
                 configuration,
@@ -36,54 +33,46 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                 idempotentCommandHandler)
         {
             _backOfficeContext = backOfficeContext;
-            _logger = loggerFactory.CreateLogger(GetType());
         }
 
         protected override async Task<object> InnerHandle(
             ProposeStreetNamesForMunicipalityMergerLambdaRequest request,
             CancellationToken cancellationToken)
         {
-            var commands = await BuildCommands(request, cancellationToken);
+            var command = await BuildCommand(request, cancellationToken);
 
-            foreach (var command in commands)
+            try
             {
-                _logger.LogDebug($"Handling {command.GetType().FullName}");
-
-                try
-                {
-                    await IdempotentCommandHandler.Dispatch(
-                        command.CreateCommandId(),
-                        command,
-                        request.Metadata!,
-                        cancellationToken: cancellationToken);
-                    _logger.LogDebug($"Handled {command.GetType().FullName}");
-                }
-                catch (IdempotencyException)
-                {
-                    // Idempotent: Do Nothing return last etag
-                    _logger.LogDebug($"Skipped due to idempotency {command.GetType().FullName}");
-                }
+                await IdempotentCommandHandler.Dispatch(
+                    command.CreateCommandId(),
+                    command,
+                    request.Metadata!,
+                    cancellationToken: cancellationToken);
+            }
+            catch (IdempotencyException)
+            {
+                // Idempotent: do nothing return last etag
             }
 
             var etagResponses = new List<ETagResponse>();
 
-            foreach (var command in commands)
+            foreach (var streetName in command.StreetNames)
             {
                 await _backOfficeContext
                     .AddIdempotentMunicipalityStreetNameIdRelation(
-                        command.PersistentLocalId,
+                        streetName.PersistentLocalId,
                         request.MunicipalityId(),
                         request.NisCode,
                         cancellationToken);
 
-                var lastHash = await GetStreetNameHash(request.MunicipalityId(), command.PersistentLocalId, cancellationToken);
-                etagResponses.Add(new ETagResponse(string.Format(DetailUrlFormat, command.PersistentLocalId), lastHash));
+                var lastHash = await GetStreetNameHash(request.MunicipalityId(), streetName.PersistentLocalId, cancellationToken);
+                etagResponses.Add(new ETagResponse(string.Format(DetailUrlFormat, streetName.PersistentLocalId), lastHash));
             }
 
             return etagResponses;
         }
 
-        private async Task<IList<ProposeStreetNameForMunicipalityMerger>> BuildCommands(
+        private async Task<ProposeStreetNamesForMunicipalityMerger> BuildCommand(
             ProposeStreetNamesForMunicipalityMergerLambdaRequest request,
             CancellationToken cancellationToken)
         {
@@ -96,7 +85,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                     new MunicipalityStreamId(new MunicipalityId(municipalityId)), cancellationToken));
             }
 
-            return request.StreetNames
+            var streetNames = request.StreetNames
                 .Select(streetName =>
                 {
                     var desiredStatus = streetName.MergedStreetNames
@@ -111,18 +100,21 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
                         ? StreetNameStatus.Current
                         : StreetNameStatus.Proposed;
 
-                    return new ProposeStreetNameForMunicipalityMerger(
-                        request.MunicipalityId(),
+                    return new ProposeStreetNamesForMunicipalityMerger.StreetNameToPropose(
                         desiredStatus,
-                        new Names(new[] { new StreetNameName(streetName.StreetName, Language.Dutch) }),
+                        new Names([new StreetNameName(streetName.StreetName, Language.Dutch)]),
                         streetName.HomonymAddition is not null
-                            ? new HomonymAdditions(new[] { new StreetNameHomonymAddition(streetName.HomonymAddition, Language.Dutch) })
-                            : null,
+                            ? new HomonymAdditions([new StreetNameHomonymAddition(streetName.HomonymAddition, Language.Dutch)])
+                            : [],
                         new PersistentLocalId(streetName.NewPersistentLocalId),
-                        streetName.MergedStreetNames.Select(x => new PersistentLocalId(x.StreetNamePersistentLocalId)).ToList(),
-                        request.Provenance);
+                        streetName.MergedStreetNames.Select(x => new PersistentLocalId(x.StreetNamePersistentLocalId)).ToList());
                 })
                 .ToList();
+
+            return new ProposeStreetNamesForMunicipalityMerger(
+                request.MunicipalityId(),
+                streetNames,
+                request.Provenance);
         }
 
         protected override TicketError? InnerMapDomainException(DomainException exception,

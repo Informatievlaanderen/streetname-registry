@@ -13,7 +13,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
     using FluentAssertions;
     using global::AutoFixture;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging.Abstractions;
     using Moq;
     using Municipality;
     using Municipality.Exceptions;
@@ -72,8 +71,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 ticketing.Object,
                 new FakeScopedIdemponentCommandHandler(() => new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext)),
                 _backOfficeContext,
-                Container.Resolve<IMunicipalities>(),
-                new NullLoggerFactory());
+                Container.Resolve<IMunicipalities>());
 
             //Act
             await handler.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
@@ -125,8 +123,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 ticketing.Object,
                 MockExceptionScopedIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname)).Object,
                 _backOfficeContext,
-                Mock.Of<IMunicipalities>(),
-                new NullLoggerFactory());
+                Mock.Of<IMunicipalities>());
 
             await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
@@ -173,8 +170,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 ticketing.Object,
                 MockExceptionScopedIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object,
                 _backOfficeContext,
-                Mock.Of<IMunicipalities>(),
-                new NullLoggerFactory());
+                Mock.Of<IMunicipalities>());
 
             await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest
@@ -220,8 +216,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 ticketing.Object,
                 MockExceptionScopedIdempotentCommandHandler<StreetNameNameLanguageIsNotSupportedException>().Object,
                 _backOfficeContext,
-                Mock.Of<IMunicipalities>(),
-                new NullLoggerFactory());
+                Mock.Of<IMunicipalities>());
 
             // Act
             var municipalityId = Guid.NewGuid().ToString();
@@ -270,8 +265,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 ticketing.Object,
                 MockExceptionScopedIdempotentCommandHandler<StreetNameIsMissingALanguageException>().Object,
                 _backOfficeContext,
-                Mock.Of<IMunicipalities>(),
-                new NullLoggerFactory());
+                Mock.Of<IMunicipalities>());
 
             // Act
             await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
@@ -320,8 +314,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 ticketing.Object,
                 MockExceptionScopedIdempotentCommandHandler<MergedStreetNamePersistentLocalIdsAreMissingException>().Object,
                 _backOfficeContext,
-                Mock.Of<IMunicipalities>(),
-                new NullLoggerFactory());
+                Mock.Of<IMunicipalities>());
 
             // Act
             await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
@@ -370,8 +363,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 ticketing.Object,
                 MockExceptionScopedIdempotentCommandHandler<MergedStreetNamePersistentLocalIdsAreNotUniqueException>().Object,
                 _backOfficeContext,
-                Mock.Of<IMunicipalities>(),
-                new NullLoggerFactory());
+                Mock.Of<IMunicipalities>());
 
             // Act
             await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
@@ -420,8 +412,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 ticketing.Object,
                 MockExceptionScopedIdempotentCommandHandler<StreetNameHasInvalidDesiredStatusException>().Object,
                 _backOfficeContext,
-                Mock.Of<IMunicipalities>(),
-                new NullLoggerFactory());
+                Mock.Of<IMunicipalities>());
 
             // Act
             await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
@@ -491,8 +482,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 ticketing.Object,
                 MockExceptionScopedIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object,
                 _backOfficeContext,
-                municipalities,
-                new NullLoggerFactory());
+                municipalities);
 
             // Act
             await sut.Handle(new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
@@ -558,8 +548,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetNameForM
                 ticketing.Object,
                 new FakeScopedIdemponentCommandHandler(() => new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext)),
                 _backOfficeContext,
-                municipalities,
-                new NullLoggerFactory());
+                municipalities);
 
             var request = new ProposeStreetNamesForMunicipalityMergerLambdaRequest(newMunicipalityId,
                 new ProposeStreetNamesForMunicipalityMergerSqsRequest

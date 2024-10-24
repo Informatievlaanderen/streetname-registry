@@ -4,98 +4,92 @@
     using global::AutoFixture;
     using Municipality;
     using Municipality.Commands;
+    using StreetNameToPropose = Municipality.Commands.ProposeStreetNamesForMunicipalityMerger.StreetNameToPropose;
 
     public static class ProposeStreetNameForMunicipalityMergerExtensions
     {
-        public static ProposeStreetNameForMunicipalityMerger WithMunicipalityId(
-            this ProposeStreetNameForMunicipalityMerger command, MunicipalityId municipalityId)
+        public static ProposeStreetNamesForMunicipalityMerger WithMunicipalityId(
+            this ProposeStreetNamesForMunicipalityMerger command, MunicipalityId municipalityId)
         {
-            return new ProposeStreetNameForMunicipalityMerger(
+            return new ProposeStreetNamesForMunicipalityMerger(
                 municipalityId,
-                command.DesiredStatus,
-                command.StreetNameNames,
-                command.HomonymAdditions,
-                command.PersistentLocalId,
-                command.MergedStreetNamePersistentLocalIds,
+                command.StreetNames,
                 command.Provenance);
         }
 
-        public static ProposeStreetNameForMunicipalityMerger WithRandomStreetName(
-            this ProposeStreetNameForMunicipalityMerger command, Fixture fixture)
+        public static ProposeStreetNamesForMunicipalityMerger WithStreetNames(
+            this ProposeStreetNamesForMunicipalityMerger command, List<StreetNameToPropose> streetNames)
         {
-            return new ProposeStreetNameForMunicipalityMerger(
+            return new ProposeStreetNamesForMunicipalityMerger(
                 command.MunicipalityId,
-                command.DesiredStatus,
+                streetNames,
+                command.Provenance);
+        }
+
+        public static StreetNameToPropose WithRandomStreetName(
+            this StreetNameToPropose streetName, Fixture fixture)
+        {
+            return new StreetNameToPropose(
+                streetName.DesiredStatus,
                 new Names(new List<StreetNameName> { fixture.Create<StreetNameName>() }),
-                command.HomonymAdditions,
-                command.PersistentLocalId,
-                command.MergedStreetNamePersistentLocalIds,
-                command.Provenance);
+                streetName.HomonymAdditions,
+                streetName.PersistentLocalId,
+                streetName.MergedStreetNamePersistentLocalIds);
         }
 
-        public static ProposeStreetNameForMunicipalityMerger WithStreetNameNames(
-            this ProposeStreetNameForMunicipalityMerger command, Names names)
+        public static StreetNameToPropose WithStreetNameNames(
+            this StreetNameToPropose streetName, Names names)
         {
-            return new ProposeStreetNameForMunicipalityMerger(
-                command.MunicipalityId,
-                command.DesiredStatus,
+            return new StreetNameToPropose(
+                streetName.DesiredStatus,
                 names,
-                command.HomonymAdditions,
-                command.PersistentLocalId,
-                command.MergedStreetNamePersistentLocalIds,
-                command.Provenance);
+                streetName.HomonymAdditions,
+                streetName.PersistentLocalId,
+                streetName.MergedStreetNamePersistentLocalIds);
         }
 
-        public static ProposeStreetNameForMunicipalityMerger WithHomonymAdditions(
-            this ProposeStreetNameForMunicipalityMerger command, HomonymAdditions homonymAdditions)
+        public static StreetNameToPropose WithHomonymAdditions(
+            this StreetNameToPropose streetName, HomonymAdditions homonymAdditions)
         {
-            return new ProposeStreetNameForMunicipalityMerger(
-                command.MunicipalityId,
-                command.DesiredStatus,
-                command.StreetNameNames,
+            return new StreetNameToPropose(
+                streetName.DesiredStatus,
+                streetName.StreetNameNames,
                 homonymAdditions,
-                command.PersistentLocalId,
-                command.MergedStreetNamePersistentLocalIds,
-                command.Provenance);
+                streetName.PersistentLocalId,
+                streetName.MergedStreetNamePersistentLocalIds);
         }
 
-        public static ProposeStreetNameForMunicipalityMerger WithPersistentLocalId(
-            this ProposeStreetNameForMunicipalityMerger command, PersistentLocalId persistentLocalId)
+        public static StreetNameToPropose WithPersistentLocalId(
+            this StreetNameToPropose streetName, PersistentLocalId persistentLocalId)
         {
-            return new ProposeStreetNameForMunicipalityMerger(
-                command.MunicipalityId,
-                command.DesiredStatus,
-                command.StreetNameNames,
-                command.HomonymAdditions,
+            return new StreetNameToPropose(
+                streetName.DesiredStatus,
+                streetName.StreetNameNames,
+                streetName.HomonymAdditions,
                 persistentLocalId,
-                command.MergedStreetNamePersistentLocalIds,
-                command.Provenance);
+                streetName.MergedStreetNamePersistentLocalIds);
         }
 
-        public static ProposeStreetNameForMunicipalityMerger WithMergedStreetNamePersistentIds(
-            this ProposeStreetNameForMunicipalityMerger command, List<PersistentLocalId> mergedStreetNamePersistentIds)
+        public static StreetNameToPropose WithMergedStreetNamePersistentIds(
+            this StreetNameToPropose streetName, List<PersistentLocalId> mergedStreetNamePersistentIds)
         {
-            return new ProposeStreetNameForMunicipalityMerger(
-                command.MunicipalityId,
-                command.DesiredStatus,
-                command.StreetNameNames,
-                command.HomonymAdditions,
-                command.PersistentLocalId,
-                mergedStreetNamePersistentIds,
-                command.Provenance);
+            return new StreetNameToPropose(
+                streetName.DesiredStatus,
+                streetName.StreetNameNames,
+                streetName.HomonymAdditions,
+                streetName.PersistentLocalId,
+                mergedStreetNamePersistentIds);
         }
 
-        public static ProposeStreetNameForMunicipalityMerger WithDesiredStatus(
-            this ProposeStreetNameForMunicipalityMerger command, StreetNameStatus desiredStatus)
+        public static StreetNameToPropose WithDesiredStatus(
+            this StreetNameToPropose streetName, StreetNameStatus desiredStatus)
         {
-            return new ProposeStreetNameForMunicipalityMerger(
-                command.MunicipalityId,
+            return new StreetNameToPropose(
                 desiredStatus,
-                command.StreetNameNames,
-                command.HomonymAdditions,
-                command.PersistentLocalId,
-                command.MergedStreetNamePersistentLocalIds,
-                command.Provenance);
+                streetName.StreetNameNames,
+                streetName.HomonymAdditions,
+                streetName.PersistentLocalId,
+                streetName.MergedStreetNamePersistentLocalIds);
         }
     }
 }

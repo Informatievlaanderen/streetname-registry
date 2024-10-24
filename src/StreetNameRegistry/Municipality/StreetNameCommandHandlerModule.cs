@@ -33,19 +33,23 @@ namespace StreetNameRegistry.Municipality
                     municipality.ProposeStreetName(message.Command.StreetNameNames, message.Command.PersistentLocalId);
                 });
 
-            For<ProposeStreetNameForMunicipalityMerger>()
+            For<ProposeStreetNamesForMunicipalityMerger>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
-                .AddEventHash<ProposeStreetNameForMunicipalityMerger, Municipality>(getUnitOfWork)
+                .AddEventHash<ProposeStreetNamesForMunicipalityMerger, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
                     var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
-                    municipality.ProposeStreetNameForMunicipalityMerger(
-                        message.Command.DesiredStatus,
-                        message.Command.StreetNameNames,
-                        message.Command.HomonymAdditions,
-                        message.Command.PersistentLocalId,
-                        message.Command.MergedStreetNamePersistentLocalIds);
+
+                    foreach (var streetName in message.Command.StreetNames)
+                    {
+                        municipality.ProposeStreetNameForMunicipalityMerger(
+                            streetName.DesiredStatus,
+                            streetName.StreetNameNames,
+                            streetName.HomonymAdditions,
+                            streetName.PersistentLocalId,
+                            streetName.MergedStreetNamePersistentLocalIds);
+                    }
                 });
 
             For<ApproveStreetName>()
