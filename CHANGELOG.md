@@ -1,3 +1,10 @@
+## [4.11.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.11.1...v4.11.2) (2024-10-25)
+
+
+### Bug Fixes
+
+* correct streetname when language is not present ([3ab64d1](https://github.com/informatievlaanderen/streetname-registry/commit/3ab64d12eda21d149cf7a8eaaab6b2615ef6e58a))
+
 ## [4.11.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.11.0...v4.11.1) (2024-10-24)
 
 # [4.11.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.10.2...v4.11.0) (2024-10-23)
