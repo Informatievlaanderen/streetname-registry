@@ -107,7 +107,12 @@ namespace StreetNameRegistry.Municipality
 
             foreach (var correctedName in namesToCorrect)
             {
-                var originalName = Names.Single(x => x.Language == correctedName.Language);
+                var originalName = Names.SingleOrDefault(x => x.Language == correctedName.Language);
+
+                // This should never happen in the normal flow, but with CRAB migration there are streetnames without names in supported every language
+                if(originalName is null)
+                    throw new StreetNameNameCorrectionExceededCharacterChangeLimitException(correctedName.Name);
+
                 var changeDifference = LevenshteinDistanceCalculator.CalculatePercentage(correctedName.Name, originalName.Name);
 
                 if (changeDifference > CorrectionChangeLimitPercentage)

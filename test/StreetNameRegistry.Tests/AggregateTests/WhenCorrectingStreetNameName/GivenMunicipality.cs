@@ -330,6 +330,42 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
         }
 
         [Fact]
+        public void WithFacilityLanguageNotInProposedStreetName_ThenThrowsStreetNameNameLanguageNotSupportedException()
+        {
+            var invalidStreetName = new StreetNameName("Rue de la Chapelle", Language.French);
+            var streetNameNames = new Names(new[]
+            {
+                new StreetNameName("Kapelstraat", Language.Dutch),
+                invalidStreetName
+            });
+
+            var command = Fixture.Create<CorrectStreetNameNames>()
+                .WithStreetNameNames(streetNameNames);
+
+            var languageWasAdded = new MunicipalityOfficialLanguageWasAddedBuilder(Fixture)
+                .WithLanguage(Language.Dutch)
+                .Build();
+
+            var facilityLanguageWasAdded = Fixture.Create<AddFacilityLanguageToMunicipality>()
+                .WithLanguage(Language.French)
+                .ToEvent();
+
+            var streetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>()
+                .WithNames(new Names([new StreetNameName("Kapestraat", Language.Dutch)]));
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    languageWasAdded,
+                    facilityLanguageWasAdded,
+                    streetNameWasProposedV2)
+                .When(command)
+                .Throws(new StreetNameNameCorrectionExceededCharacterChangeLimitException(invalidStreetName.Name)));
+        }
+
+        [Fact]
         public void WithNoChanges_ThenNothing()
         {
             var streetNameNames = new Names(new[]
