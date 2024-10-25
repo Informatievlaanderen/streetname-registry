@@ -220,6 +220,41 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingStreetNameName
         }
 
         [Fact]
+        public void WithOneAdded_ThenOnlyOneStreetNameNameWasChanged()
+        {
+            var command = Fixture.Create<ChangeStreetNameNames>()
+                .WithStreetNameNames(new Names())
+                .WithStreetNameName(new StreetNameName("Rue de la Chapelle", Language.French));
+
+            var dutchLanguageWasAdded = new MunicipalityOfficialLanguageWasAddedBuilder(Fixture)
+                .Build();
+
+            var frenchLanguageWasAdded = new MunicipalityOfficialLanguageWasAddedBuilder(Fixture)
+                .WithLanguage(Language.French)
+                .Build();
+
+            var streetNameWasProposedV2 = new StreetNameWasProposedV2Builder(Fixture)
+                .WithNisCode(new NisCode("abc"))
+                .WithNames(new Names(new[]
+                {
+                    new StreetNameName("Kapelstraat", Language.Dutch),
+                }))
+                .Build();
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    dutchLanguageWasAdded,
+                    frenchLanguageWasAdded,
+                    streetNameWasProposedV2)
+                .When(command)
+                .Then(new Fact(_streamId, new StreetNameNamesWereChanged(
+                    _municipalityId, command.PersistentLocalId, new Names(new[] { new StreetNameName("Rue de la Chapelle", Language.French) })))));
+        }
+
+        [Fact]
         public void WithOneChange_ThenOnlyOneStreetNameNameWasChanged()
         {
             var streetNameNames = new Names(new[]
