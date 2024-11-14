@@ -1,3 +1,10 @@
+# [4.12.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.11.2...v4.12.0) (2024-11-14)
+
+
+### Features
+
+* **backoffice:** add dry run to merger + add error for combining and splitting same streetname ([3789e18](https://github.com/informatievlaanderen/streetname-registry/commit/3789e18ce767f6113e6caaf5489c18ba18d35e3b))
+
 ## [4.11.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.11.1...v4.11.2) (2024-10-25)
 
 
