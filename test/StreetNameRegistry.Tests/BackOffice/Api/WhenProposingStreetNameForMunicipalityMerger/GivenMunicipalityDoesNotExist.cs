@@ -47,8 +47,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetNameForMuni
                     CsvHelpers.CreateFormFileFromString(CsvHelpers.Example),
                     "11001",
                     mockPersistentLocalIdGenerator.Object,
-                    _municipalityConsumerContext,
-                CancellationToken.None);
+                    _municipalityConsumerContext);
             };
 
             //Assert
