@@ -35,6 +35,7 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <param name="nisCode"></param>
         /// <param name="persistentLocalIdGenerator"></param>
         /// <param name="municipalityConsumerContext"></param>
+        /// <param name="dryRun"></param>
         /// <param name="cancellationToken"></param>
         [HttpPost("acties/voorstellen/gemeentefusie/{niscode}")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
@@ -51,6 +52,7 @@ namespace StreetNameRegistry.Api.BackOffice
             [FromRoute(Name = "niscode")] string nisCode,
             [FromServices] IPersistentLocalIdGenerator persistentLocalIdGenerator,
             [FromServices] ConsumerContext municipalityConsumerContext,
+            [FromQuery(Name = "dry-run")] bool dryRun = false,
             CancellationToken cancellationToken = default)
         {
             if (file == null || file.Length == 0)
@@ -186,6 +188,30 @@ namespace StreetNameRegistry.Api.BackOffice
                         y => y.Select(z => new MergedStreetName(
                             z.OldStreetNamePersistentLocalId,
                             oldMunicipalities.Single(x => x.NisCode == z.OldNisCode).MunicipalityId)).ToList());
+
+                //if merged streetnames are more than one for a streetname, then it's a merger (combination) of the streetnames
+                foreach (var combinedStreetName in streetNamesByNisCode.Where(x => x.Value.Count > 1))
+                {
+                    //but if said streetname is also present in an other mergedstreetname, then it's also a split
+                    //this combination is not supported
+                    foreach (var mergedStreetName in combinedStreetName.Value)
+                    {
+                        if (streetNamesByNisCode.Any(x =>
+                                x.Key != combinedStreetName.Key &&
+                                x.Value.Any(y => y.StreetNamePersistentLocalId == mergedStreetName.StreetNamePersistentLocalId)))
+                        {
+                            errorMessages.Add($"Trying to combine and split streetname '{combinedStreetName.Key.StreetName}' is not supported");
+                        }
+                    }
+                }
+
+                if (errorMessages.Any())
+                {
+                    return BadRequest(errorMessages.Distinct());
+                }
+
+                if (dryRun)
+                    return NoContent();
 
                 var result = await _mediator
                     .Send(
