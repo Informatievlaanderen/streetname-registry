@@ -1,3 +1,15 @@
+# [4.13.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.12.0...v4.13.0) (2024-11-18)
+
+
+### Bug Fixes
+
+* **backoffice:** finetune multiple split/merge error ([81fc479](https://github.com/informatievlaanderen/streetname-registry/commit/81fc4798c20162b20dcb9e98dc675371f7e3ee3f))
+
+
+### Features
+
+* hide events ([e7f922d](https://github.com/informatievlaanderen/streetname-registry/commit/e7f922de4c5c3f5c57fa967bb9019dacc4e54eab))
+
 # [4.12.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.11.2...v4.12.0) (2024-11-14)
 
 
