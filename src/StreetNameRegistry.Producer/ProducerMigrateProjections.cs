@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer;
@@ -141,6 +142,26 @@
                 await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), message.Position,
                     ct);
             });
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityNisCodeWasChanged>>(
+                async (_, message, ct) =>
+            {
+                await Produce(message.Message.MunicipalityId.ToString(), message.Message.ToContract(), message.Position, ct);
+            });
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityBecameCurrent>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityFacilityLanguageWasAdded>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityFacilityLanguageWasRemoved>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityOfficialLanguageWasAdded>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityOfficialLanguageWasRemoved>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityWasCorrectedToCurrent>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityWasCorrectedToRetired>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityWasImported>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityWasMerged>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityWasNamed>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityWasRetired>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }
 
         private async Task Produce<T>(
@@ -150,8 +171,18 @@
             CancellationToken cancellationToken = default)
             where T : class, IQueueMessage
         {
+            await Produce(persistentLocalId.ToString(), message, storePosition, cancellationToken);
+        }
+
+        private async Task Produce<T>(
+            string messageKey,
+            T message,
+            long storePosition,
+            CancellationToken cancellationToken = default)
+            where T : class, IQueueMessage
+        {
             var result = await _producer.ProduceJsonMessage(
-                new MessageKey(persistentLocalId.ToString()),
+                new MessageKey(messageKey),
                 message,
                 new List<MessageHeader> { new MessageHeader(MessageHeader.IdempotenceKey, storePosition.ToString()) },
                 cancellationToken);
@@ -162,5 +193,7 @@
                                                     result.ErrorReason); //TODO: create custom exception
             }
         }
+
+        private static Task DoNothing<T>(ProducerContext context, Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<T> envelope, CancellationToken ct) where T: IMessage => Task.CompletedTask;
     }
 }

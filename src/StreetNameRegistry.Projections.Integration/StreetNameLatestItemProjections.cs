@@ -2,6 +2,9 @@
 {
     using System;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Converters;
@@ -255,6 +258,22 @@
                     item.VersionTimestamp = message.Message.Provenance.Timestamp;
                 }, ct);
             });
+
+            When<Envelope<MunicipalityBecameCurrent>>(DoNothing);
+            When<Envelope<MunicipalityFacilityLanguageWasAdded>>(DoNothing);
+            When<Envelope<MunicipalityFacilityLanguageWasRemoved>>(DoNothing);
+            When<Envelope<MunicipalityOfficialLanguageWasAdded>>(DoNothing);
+            When<Envelope<MunicipalityOfficialLanguageWasRemoved>>(DoNothing);
+            When<Envelope<MunicipalityWasCorrectedToCurrent>>(DoNothing);
+            When<Envelope<MunicipalityWasCorrectedToRetired>>(DoNothing);
+            When<Envelope<MunicipalityWasImported>>(DoNothing);
+            When<Envelope<MunicipalityWasMerged>>(DoNothing);
+            When<Envelope<MunicipalityWasNamed>>(DoNothing);
+            When<Envelope<MunicipalityWasRetired>>(DoNothing);
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }
+
+        private static Task DoNothing<T>(IntegrationContext context, Envelope<T> envelope, CancellationToken ct) where T: IMessage => Task.CompletedTask;
     }
 }

@@ -4,6 +4,8 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
@@ -312,7 +314,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }, ct);
             });
 
-            When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
+            When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, _) =>
             {
                 var streetNames = context
                     .StreetNameExtractV2
@@ -325,10 +327,24 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     UpdateRecord(streetName, i => i.gemeenteid.Value = message.Message.NisCode);
                 }
             });
+
+            When<Envelope<MunicipalityBecameCurrent>>(DoNothing);
+            When<Envelope<MunicipalityFacilityLanguageWasAdded>>(DoNothing);
+            When<Envelope<MunicipalityFacilityLanguageWasRemoved>>(DoNothing);
+            When<Envelope<MunicipalityOfficialLanguageWasAdded>>(DoNothing);
+            When<Envelope<MunicipalityOfficialLanguageWasRemoved>>(DoNothing);
+            When<Envelope<MunicipalityWasCorrectedToCurrent>>(DoNothing);
+            When<Envelope<MunicipalityWasCorrectedToRetired>>(DoNothing);
+            When<Envelope<MunicipalityWasImported>>(DoNothing);
+            When<Envelope<MunicipalityWasMerged>>(DoNothing);
+            When<Envelope<MunicipalityWasNamed>>(DoNothing);
+            When<Envelope<MunicipalityWasRetired>>(DoNothing);
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }
 
         private void UpdateHomoniemtv(StreetNameExtractItemV2 streetName, List<StreetNameHomonymAddition> homonymAdditions)
-            => UpdateRecord(streetName, record =>
+            => UpdateRecord(streetName, _ =>
             {
                 foreach (var streetNameHomonymAddition in homonymAdditions)
                 {
@@ -357,7 +373,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             });
 
         private void UpdateStraatnm(StreetNameExtractItemV2 streetName, IDictionary<Language, string> streetNameNames)
-            => UpdateRecord(streetName, record =>
+            => UpdateRecord(streetName, _ =>
             {
                 foreach (var (language, streetNameName) in streetNameNames)
                 {
@@ -403,5 +419,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
             municipality.DbaseRecord = record.ToBytes(_encoding);
         }
+
+        private static Task DoNothing<T>(ExtractContext context, Envelope<T> envelope, CancellationToken ct) where T: IMessage => Task.CompletedTask;
     }
 }

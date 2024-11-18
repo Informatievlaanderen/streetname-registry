@@ -28,7 +28,7 @@ namespace StreetNameRegistry.Municipality
 
             if (nisCode != _nisCode)
             {
-                ApplyChange(new MunicipalityNisCodeWasChanged(_municipalityId, nisCode));
+                ApplyChange(new MunicipalityNisCodeWasChanged(_municipalityId, nisCode, StreetNames.Select(x => x.PersistentLocalId).ToList()));
             }
         }
 

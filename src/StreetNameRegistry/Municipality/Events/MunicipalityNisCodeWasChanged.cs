@@ -20,25 +20,32 @@ namespace StreetNameRegistry.Municipality.Events
         [EventPropertyDescription("NIS-code (= objectidentificator) van de gemeente.")]
         public string NisCode { get; }
 
+        [EventPropertyDescription("De lijst van straatnaam objectidentificatoren die geïmpacteerd zijn.")]
+        public List<int> StreetNamePersistentLocalIds { get; }
+
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 
         public MunicipalityNisCodeWasChanged(
             MunicipalityId municipalityId,
-            NisCode nisCode)
+            NisCode nisCode,
+            List<PersistentLocalId> streetNamePersistentLocalIds)
         {
             MunicipalityId = municipalityId;
             NisCode = nisCode;
+            StreetNamePersistentLocalIds = streetNamePersistentLocalIds.Select(id => (int)id).ToList();
         }
 
         [JsonConstructor]
         private MunicipalityNisCodeWasChanged(
             Guid municipalityId,
             string nisCode,
+            List<int> streetNamePersistentLocalIds,
             ProvenanceData provenance)
             : this(
                 new MunicipalityId(municipalityId),
-                new NisCode(nisCode))
+                new NisCode(nisCode),
+                streetNamePersistentLocalIds.Select(id => new PersistentLocalId(id)).ToList())
             => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
 
         void ISetProvenance.SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);
@@ -48,6 +55,7 @@ namespace StreetNameRegistry.Municipality.Events
             var fields = Provenance.GetHashFields().ToList();
             fields.Add(MunicipalityId.ToString("D"));
             fields.Add(NisCode);
+            fields.AddRange(StreetNamePersistentLocalIds.Select(id => id.ToString()));
             return fields;
         }
 
