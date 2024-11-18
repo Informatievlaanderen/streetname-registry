@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Municipality.Events
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
 
+    [HideEvent]
     [EventTags(Tag.Municipality)]
     [EventName(EventName)]
     [EventDescription("De gemeente werd gecorrigeerd tot in gebruik.")]
@@ -17,7 +18,7 @@ namespace StreetNameRegistry.Municipality.Events
 
         public Guid MunicipalityId { get; }
         public ProvenanceData Provenance { get; private set; }
-        
+
         public MunicipalityWasCorrectedToCurrent(MunicipalityId municipalityId)
         {
             MunicipalityId = municipalityId;

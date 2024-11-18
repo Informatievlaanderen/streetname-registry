@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Municipality.Events
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
 
+    [HideEvent]
     [EventTags(Tag.Municipality)]
     [EventName(EventName)]
     [EventDescription("Er werd een faciliteitentaal toegevoegd aan de gemeente.")]
@@ -18,7 +19,7 @@ namespace StreetNameRegistry.Municipality.Events
         public Guid MunicipalityId { get; }
         public Language Language { get; }
         public ProvenanceData Provenance { get; private set; }
-        
+
         public MunicipalityFacilityLanguageWasAdded(MunicipalityId municipalityId, Language language)
         {
             MunicipalityId = municipalityId;
