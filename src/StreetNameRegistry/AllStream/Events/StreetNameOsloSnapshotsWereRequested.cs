@@ -7,6 +7,7 @@
     using Municipality;
     using Newtonsoft.Json;
 
+    [HideEvent]
     [EventName(EventName)]
     [EventDescription("Nieuwe OSLO snapshots werd aangevraagd voor de straatnamen.")]
     public sealed class StreetNameOsloSnapshotsWereRequested : IHasProvenance, ISetProvenance, IMessage
