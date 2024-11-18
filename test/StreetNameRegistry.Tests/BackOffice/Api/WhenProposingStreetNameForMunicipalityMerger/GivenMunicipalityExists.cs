@@ -214,6 +214,62 @@
         }
 
         [Fact]
+        public void WithValidCsvCombinationAndSingleSplit_ThenReturnsOk()
+        {
+            var ticketId = Fixture.Create<Guid>();
+            var expectedLocationResult = new LocationResult(CreateTicketUri(ticketId));
+            MockMediatorResponse<ProposeStreetNamesForMunicipalityMergerSqsRequest, LocationResult>(expectedLocationResult);
+
+            var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
+            mockPersistentLocalIdGenerator.Setup(x => x.GenerateNextPersistentLocalId())
+                .Returns(new PersistentLocalId(1));
+
+            const string oldNisCode = "71069";
+            var oldMunicipalityId = Guid.NewGuid();
+            _municipalityConsumerContext.Add(new MunicipalityConsumerItem
+            {
+                MunicipalityId = oldMunicipalityId,
+                NisCode = oldNisCode
+            });
+            _municipalityConsumerContext.SaveChanges();
+
+            /*
+              71069;117104;71071;Bakhuisstraat;
+              71069;117037;71071;De Schans;
+              71069;117037;71071;Keukenhof;
+              71069;117037;71071;Ravelijnstraat;
+             */
+            var result =
+                Controller.ProposeForMunicipalityMerger(
+                    CsvHelpers.CreateFormFileFromString($"OUD NIS code;OUD straatnaamid;NIEUW NIS code;NIEUW straatnaam;NIEUW homoniemtoevoeging\n" +
+                                                        $"{oldNisCode};117104;71071;Bakhuisstraat;\n" +
+                                                        $"{oldNisCode};117037;71071;Bakhuisstraat;\n" +
+                                                        $"{oldNisCode};117037;71071;De Schans;\n" +
+                                                        $"{oldNisCode};117037;71071;Keukenhof;\n" +
+                                                        $"{oldNisCode};117037;71071;Ravelijnstraat;"),
+                    "71071",
+                    mockPersistentLocalIdGenerator.Object,
+                    _municipalityConsumerContext).GetAwaiter().GetResult();
+
+            MockMediator.Verify(x =>
+                x.Send(
+                    It.Is<ProposeStreetNamesForMunicipalityMergerSqsRequest>(request =>
+                        request.NisCode == "71071" &&
+                        request.StreetNames.Count == 4 &&
+                        request.StreetNames.TrueForAll(y => y.MergedStreetNames.All(z => z.MunicipalityId == oldMunicipalityId)) &&
+                        request.ProvenanceData.Timestamp != Instant.MinValue &&
+                        request.ProvenanceData.Application == Application.StreetNameRegistry &&
+                        request.ProvenanceData.Modification == Modification.Insert),
+                    It.IsAny<CancellationToken>()), Times.Once);
+
+            result.Should().BeOfType<AcceptedResult>();
+
+            var acceptedResult = (AcceptedResult)result;
+            acceptedResult.Location.Should().NotBeNull();
+            AssertLocation(acceptedResult.Location, ticketId);
+        }
+
+        [Fact]
         public void WithCombinationAndSplitOfAStreetName_ThenReturnsBadRequest()
         {
             var ticketId = Fixture.Create<Guid>();

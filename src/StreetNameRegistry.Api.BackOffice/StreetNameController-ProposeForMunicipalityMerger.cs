@@ -189,20 +189,24 @@ namespace StreetNameRegistry.Api.BackOffice
                             z.OldStreetNamePersistentLocalId,
                             oldMunicipalities.Single(x => x.NisCode == z.OldNisCode).MunicipalityId)).ToList());
 
+
+
                 //if merged streetnames are more than one for a streetname, then it's a merger (combination) of the streetnames
-                foreach (var combinedStreetName in streetNamesByNisCode.Where(x => x.Value.Count > 1))
+                var combinedStreetNames = streetNamesByNisCode.Where(x => x.Value.Count > 1).ToList();
+                foreach (var combinedStreetName in combinedStreetNames)
                 {
-                    //but if said streetname is also present in an other mergedstreetname, then it's also a split
-                    //this combination is not supported
+                    var numberOfSplits = 0;
                     foreach (var mergedStreetName in combinedStreetName.Value)
                     {
-                        if (streetNamesByNisCode.Any(x =>
-                                x.Key != combinedStreetName.Key &&
-                                x.Value.Any(y => y.StreetNamePersistentLocalId == mergedStreetName.StreetNamePersistentLocalId)))
-                        {
-                            errorMessages.Add($"Trying to combine and split streetname '{combinedStreetName.Key.StreetName}' is not supported");
-                        }
+                        var count = streetNamesByNisCode.Count(x =>
+                            x.Value.Any(y => y.StreetNamePersistentLocalId == mergedStreetName.StreetNamePersistentLocalId));
+                        if (count > 1)
+                            numberOfSplits++;
                     }
+
+                    //we more than one split occurs with merger, then it's impossible to deduce which streetname was replaced by which
+                    if(numberOfSplits > 1)
+                        errorMessages.Add($"Trying to combine and split streetname '{combinedStreetName.Key.StreetName}' is not supported");
                 }
 
                 if (errorMessages.Any())
