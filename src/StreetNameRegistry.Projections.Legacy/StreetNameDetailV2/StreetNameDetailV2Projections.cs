@@ -2,6 +2,9 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Pipes;
@@ -233,6 +236,36 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                     UpdateVersionTimestamp(streetNameDetailV2, message.Message.Provenance.Timestamp);
                 }, ct);
             });
+
+            When<Envelope<MunicipalityNisCodeWasChanged>>((context, message, _) =>
+            {
+                var streetNamesToChange = context
+                    .StreetNameDetailV2
+                    .Local
+                    .Where(s =>
+                        s.MunicipalityId == message.Message.MunicipalityId)
+                    .Union(context.StreetNameDetailV2.Where(s =>
+                        s.MunicipalityId == message.Message.MunicipalityId));
+
+                foreach (var streetNameDetailV2 in streetNamesToChange)
+                    streetNameDetailV2.NisCode = message.Message.NisCode;
+
+                return Task.CompletedTask;
+            });
+
+            When<Envelope<MunicipalityBecameCurrent>>(DoNothing);
+            When<Envelope<MunicipalityFacilityLanguageWasAdded>>(DoNothing);
+            When<Envelope<MunicipalityFacilityLanguageWasRemoved>>(DoNothing);
+            When<Envelope<MunicipalityOfficialLanguageWasAdded>>(DoNothing);
+            When<Envelope<MunicipalityOfficialLanguageWasRemoved>>(DoNothing);
+            When<Envelope<MunicipalityWasCorrectedToCurrent>>(DoNothing);
+            When<Envelope<MunicipalityWasCorrectedToRetired>>(DoNothing);
+            When<Envelope<MunicipalityWasImported>>(DoNothing);
+            When<Envelope<MunicipalityWasMerged>>(DoNothing);
+            When<Envelope<MunicipalityWasNamed>>(DoNothing);
+            When<Envelope<MunicipalityWasRetired>>(DoNothing);
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }
 
         private static void UpdateHash<T>(StreetNameDetailV2 entity, Envelope<T> wrappedEvent) where T : IHaveHash, IMessage
@@ -305,5 +338,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 
         private static void UpdateStatus(StreetNameDetailV2 streetName, StreetNameStatus status)
             => streetName.Status = status;
+
+        private static Task DoNothing<T>(LegacyContext context, Envelope<T> envelope, CancellationToken ct) where T: IMessage => Task.CompletedTask;
     }
 }

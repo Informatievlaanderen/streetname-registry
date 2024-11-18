@@ -36,7 +36,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
                     Fixture.Create<MunicipalityWasImported>())
                 .When(command)
                 .Then(new Fact(_streamId,
-                    new MunicipalityNisCodeWasChanged(command.MunicipalityId, command.NisCode))));
+                    new MunicipalityNisCodeWasChanged(command.MunicipalityId, command.NisCode, []))));
         }
 
         [Fact]
@@ -46,13 +46,16 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
             var command = Fixture.Create<ChangeMunicipalityNisCode>()
                 .WithNisCode(nisCode);
 
+            var streetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>();
+
             Assert(new Scenario()
                 .Given(_streamId,
-                    Fixture.Create<MunicipalityWasImported>())
+                    Fixture.Create<MunicipalityWasImported>(),
+                    streetNameWasProposedV2)
                 .When(command)
                 .Then(new[]
                 {
-                    new Fact(_streamId, new MunicipalityNisCodeWasChanged(command.MunicipalityId, nisCode))
+                    new Fact(_streamId, new MunicipalityNisCodeWasChanged(command.MunicipalityId, nisCode, [new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId)]))
                 }));
         }
 

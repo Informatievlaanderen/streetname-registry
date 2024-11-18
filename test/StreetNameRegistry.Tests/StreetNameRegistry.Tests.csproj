@@ -8,10 +8,15 @@
     <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice.Handlers.Lambda\StreetNameRegistry.Api.BackOffice.Handlers.Lambda.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice\StreetNameRegistry.Api.BackOffice.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj" />
+    <ProjectReference Include="..\..\src\StreetNameRegistry.Producer\StreetNameRegistry.Producer.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.BackOffice\StreetNameRegistry.Projections.BackOffice.csproj" />
+    <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Extract\StreetNameRegistry.Projections.Extract.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Integration\StreetNameRegistry.Projections.Integration.csproj" />
+    <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.LastChangedList\StreetNameRegistry.Projections.LastChangedList.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />
+    <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Wfs\StreetNameRegistry.Projections.Wfs.csproj" />
+    <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Wms\StreetNameRegistry.Projections.Wms.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry\StreetNameRegistry.csproj" />
   </ItemGroup>
 

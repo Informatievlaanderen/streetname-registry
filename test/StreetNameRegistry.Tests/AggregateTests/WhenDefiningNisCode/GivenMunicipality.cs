@@ -37,7 +37,7 @@
                 .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>())
                 .When(command)
-                .Then(new Fact(_streamId, new MunicipalityNisCodeWasChanged(command.MunicipalityId, command.NisCode))));
+                .Then(new Fact(_streamId, new MunicipalityNisCodeWasChanged(command.MunicipalityId, command.NisCode, []))));
         }
 
         [Fact]

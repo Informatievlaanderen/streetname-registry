@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
     using System.Threading;
     using System.Threading.Tasks;
     using AllStream.Events;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Oslo.SnapshotProducer;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer;
@@ -271,6 +272,29 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
             {
                 await Produce($"{osloNamespace}/{message.Message.PersistentLocalId}", message.Message.PersistentLocalId.ToString(),"{}", message.Position, ct);
             });
+
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityNisCodeWasChanged>>(async (_, message, ct) =>
+            {
+                foreach (var persistentLocalId in message.Message.StreetNamePersistentLocalIds)
+                {
+                    await Produce($"{osloNamespace}/{persistentLocalId}", persistentLocalId.ToString(),"{}", message.Position, ct);
+                }
+            });
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityBecameCurrent>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityFacilityLanguageWasAdded>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityFacilityLanguageWasRemoved>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityOfficialLanguageWasAdded>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityOfficialLanguageWasRemoved>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityWasCorrectedToCurrent>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityWasCorrectedToRetired>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityWasImported>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityWasMerged>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityWasNamed>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityWasRetired>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }
 
         private async Task FindAndProduce(
@@ -304,5 +328,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
                 throw new InvalidOperationException(result.Error + Environment.NewLine + result.ErrorReason);
             }
         }
+
+        private static Task DoNothing<T>(ProducerContext context, Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<T> envelope, CancellationToken ct) where T: IMessage => Task.CompletedTask;
     }
 }

@@ -3,6 +3,9 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
@@ -324,6 +327,20 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                         UpdateVersionTimestamp(streetNameListItemV2, message.Message.Provenance.Timestamp);
                     }, ct);
             });
+
+            When<Envelope<MunicipalityBecameCurrent>>(DoNothing);
+            When<Envelope<MunicipalityFacilityLanguageWasAdded>>(DoNothing);
+            When<Envelope<MunicipalityFacilityLanguageWasRemoved>>(DoNothing);
+            When<Envelope<MunicipalityOfficialLanguageWasAdded>>(DoNothing);
+            When<Envelope<MunicipalityOfficialLanguageWasRemoved>>(DoNothing);
+            When<Envelope<MunicipalityWasCorrectedToCurrent>>(DoNothing);
+            When<Envelope<MunicipalityWasCorrectedToRetired>>(DoNothing);
+            When<Envelope<MunicipalityWasImported>>(DoNothing);
+            When<Envelope<MunicipalityWasMerged>>(DoNothing);
+            When<Envelope<MunicipalityWasNamed>>(DoNothing);
+            When<Envelope<MunicipalityWasRetired>>(DoNothing);
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }
 
         private static void UpdateNameByLanguage(StreetNameListItemV2 entity, IDictionary<Language, string> streetNameNames)
@@ -387,5 +404,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
 
         private static void UpdateStatus(StreetNameListItemV2 streetNameListItemV2, StreetNameStatus status)
             => streetNameListItemV2.Status = status;
+
+        private static Task DoNothing<T>(LegacyContext context, Envelope<T> envelope, CancellationToken ct) where T: IMessage => Task.CompletedTask;
     }
 }
