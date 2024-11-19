@@ -1,3 +1,15 @@
+# [4.14.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.13.0...v4.14.0) (2024-11-19)
+
+
+### Bug Fixes
+
+* **docs:** hide migrated event legacy aggregate ([2f3c89d](https://github.com/informatievlaanderen/streetname-registry/commit/2f3c89db446274449e0bd168fd8aa1f302677f50))
+
+
+### Features
+
+* add events + test to check if projections / producer are missing events ([e746932](https://github.com/informatievlaanderen/streetname-registry/commit/e7469322bc4c9b499a1e8c608bae8077d832aaab))
+
 # [4.13.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.12.0...v4.13.0) (2024-11-18)
 
 
