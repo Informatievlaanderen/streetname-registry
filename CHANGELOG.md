@@ -1,3 +1,10 @@
+# [4.15.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.14.0...v4.15.0) (2024-12-02)
+
+
+### Features
+
+* allow correction of empty name ([388c8fa](https://github.com/informatievlaanderen/streetname-registry/commit/388c8fa8a2f233a03e97208588cad121fa553053))
+
 # [4.14.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.13.0...v4.14.0) (2024-11-19)
 
 
