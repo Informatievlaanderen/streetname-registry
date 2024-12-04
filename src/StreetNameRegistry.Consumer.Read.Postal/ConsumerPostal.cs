@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Consumer.Read.Postal
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Microsoft.EntityFrameworkCore;
@@ -37,18 +38,7 @@ namespace StreetNameRegistry.Consumer.Read.Postal
 
             try
             {
-                await _consumer.ConsumeContinuously(async (message, messageContext) =>
-                {
-                    _logger.LogInformation("Handling next message");
-
-                    await using var context = await _consumerPostalDbContextFactory.CreateDbContextAsync(stoppingToken);
-                    await projector.ProjectAsync(context, message, stoppingToken).ConfigureAwait(false);
-
-                    //CancellationToken.None to prevent halfway consumption
-                    await context.UpdateProjectionState(typeof(ConsumerPostal).FullName, messageContext.Offset, stoppingToken);
-                    await context.SaveChangesAsync(CancellationToken.None);
-
-                }, stoppingToken);
+                await _consumer.ConsumeContinuously(async (message, messageContext) => { await ConsumeHandler(projector, message, messageContext); }, stoppingToken);
             }
             catch (Exception exception)
             {
@@ -56,6 +46,20 @@ namespace StreetNameRegistry.Consumer.Read.Postal
                 _hostApplicationLifetime.StopApplication();
                 throw;
             }
+        }
+
+        private async Task ConsumeHandler(
+            ConnectedProjector<ConsumerPostalContext> projector,
+            object message,
+            MessageContext messageContext)
+        {
+            _logger.LogInformation("Handling next message");
+
+            await using var context = await _consumerPostalDbContextFactory.CreateDbContextAsync(CancellationToken.None);
+            await projector.ProjectAsync(context, message, CancellationToken.None).ConfigureAwait(false);
+
+            await context.UpdateProjectionState(typeof(ConsumerPostal).FullName, messageContext.Offset, CancellationToken.None);
+            await context.SaveChangesAsync(CancellationToken.None);
         }
     }
 }

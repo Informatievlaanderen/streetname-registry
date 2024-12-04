@@ -46,13 +46,7 @@ namespace StreetNameRegistry.Consumer
             {
                 await _kafkaIdemIdompotencyConsumer.ConsumeContinuously(async (message, consumerContext) =>
                 {
-                    _logger.LogInformation("Handling next message");
-
-                    await commandHandlingProjector.ProjectAsync(commandHandler, message, stoppingToken).ConfigureAwait(false);
-
-                    // CancellationToken.None to prevent halfway consumption
-                    await consumerContext.SaveChangesAsync(CancellationToken.None);
-
+                    await ConsumeHandler(commandHandlingProjector, commandHandler, message, consumerContext);
                 }, stoppingToken);
             }
             catch (Exception)
@@ -60,6 +54,19 @@ namespace StreetNameRegistry.Consumer
                 _hostApplicationLifetime.StopApplication();
                 throw;
             }
+        }
+
+        private async Task ConsumeHandler(
+            ConnectedProjector<CommandHandler> commandHandlingProjector,
+            CommandHandler commandHandler,
+            object message,
+            IdempotentConsumerContext consumerContext)
+        {
+            _logger.LogInformation("Handling next message");
+
+            await commandHandlingProjector.ProjectAsync(commandHandler, message, CancellationToken.None).ConfigureAwait(false);
+
+            await consumerContext.SaveChangesAsync(CancellationToken.None);
         }
     }
 }
