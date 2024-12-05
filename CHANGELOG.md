@@ -1,3 +1,10 @@
+# [4.16.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.15.0...v4.16.0) (2024-12-05)
+
+
+### Features
+
+* configure consumer offset without deploy ([e0b3c9f](https://github.com/informatievlaanderen/streetname-registry/commit/e0b3c9fcbe096b41daec040ad62fead0a2466dde))
+
 # [4.15.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.14.0...v4.15.0) (2024-12-02)
 
 
