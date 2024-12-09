@@ -97,7 +97,9 @@ namespace StreetNameRegistry.Municipality
             foreach (var streetName in currentStreetNames)
             {
                 var newStreetNamePersistentLocalIds = newMunicipality.StreetNames
-                    .Where(x => x.MergedStreetNamePersistentLocalIds.Contains(streetName.PersistentLocalId))
+                    .Where(x =>
+                        !x.IsRemoved &&
+                        x.MergedStreetNamePersistentLocalIds.Contains(streetName.PersistentLocalId))
                     .Select(x => x.PersistentLocalId)
                     .ToList();
 
@@ -111,7 +113,9 @@ namespace StreetNameRegistry.Municipality
             foreach (var streetName in proposedStreetNames)
             {
                 var newStreetNamePersistentLocalIds = newMunicipality.StreetNames
-                    .Where(x => x.MergedStreetNamePersistentLocalIds.Contains(streetName.PersistentLocalId))
+                    .Where(x =>
+                        !x.IsRemoved &&
+                        x.MergedStreetNamePersistentLocalIds.Contains(streetName.PersistentLocalId))
                     .Select(x => x.PersistentLocalId)
                     .ToList();
 
