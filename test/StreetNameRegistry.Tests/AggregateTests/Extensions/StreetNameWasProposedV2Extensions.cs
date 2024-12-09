@@ -1,6 +1,5 @@
 namespace StreetNameRegistry.Tests.AggregateTests.Extensions
 {
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Municipality;
     using Municipality.Events;
 
@@ -15,7 +14,21 @@ namespace StreetNameRegistry.Tests.AggregateTests.Extensions
                 new Names(@event.StreetNameNames),
                 id);
 
-            ((ISetProvenance)newEvent).SetProvenance(@event.Provenance.ToProvenance());
+            newEvent.SetProvenance(@event.Provenance.ToProvenance());
+
+            return newEvent;
+        }
+
+        public static StreetNameWasProposedV2 WithMunicipalityId(this StreetNameWasProposedV2 @event,
+            MunicipalityId id)
+        {
+            var newEvent = new StreetNameWasProposedV2(
+                id,
+                new NisCode(@event.NisCode),
+                new Names(@event.StreetNameNames),
+                new PersistentLocalId(@event.PersistentLocalId));
+
+            newEvent.SetProvenance(@event.Provenance.ToProvenance());
 
             return newEvent;
         }
@@ -30,7 +43,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.Extensions
                 names,
                 new PersistentLocalId(@event.PersistentLocalId));
 
-            ((ISetProvenance)newEvent).SetProvenance(@event.Provenance.ToProvenance());
+            newEvent.SetProvenance(@event.Provenance.ToProvenance());
 
             return newEvent;
         }
