@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringMunicipalityForMun
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Builders;
     using Extensions;
     using FluentAssertions;
@@ -64,6 +65,58 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringMunicipalityForMun
                         )))
                     .Concat([new Fact(_streamId, new MunicipalityWasMerged(_municipalityId, command.NewMunicipalityId))])
                     .ToArray()));
+        }
+
+        [Fact]
+        public void WithRemovedNewStreetName_ThenNotInMergedPersistentLocalIds()
+        {
+            Fixture.Customizations.Add(new WithUniqueInteger());
+
+            var oldStreetNamePersistentLocalId = Fixture.Create<PersistentLocalId>();
+            var oldMunicipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var oldStreetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>()
+                .WithPersistentLocalId(oldStreetNamePersistentLocalId);
+            var oldStreetNameWasApproved = Fixture.Create<StreetNameWasApproved>()
+                .WithPersistentLocalId(oldStreetNamePersistentLocalId);
+
+            var newMunicipalityId = new MunicipalityId(Guid.NewGuid());
+            var newMunicipalityStreamId = new MunicipalityStreamId(newMunicipalityId);
+            var newMunicipalityWasImported = Fixture.Create<MunicipalityWasImported>()
+                .WithMunicipalityId(newMunicipalityId);
+            var newStreetNameWasProposedForMunicipalityMerger = Fixture.Create<StreetNameWasProposedForMunicipalityMerger>()
+                .WithMunicipalityId(newMunicipalityId)
+                .WithMergedPersistentLocalIds(oldStreetNamePersistentLocalId);
+            var newStreetNameWasProposedForMunicipalityMergerToRemove = Fixture.Create<StreetNameWasProposedForMunicipalityMerger>()
+                .WithMunicipalityId(newMunicipalityId)
+                .WithMergedPersistentLocalIds(oldStreetNamePersistentLocalId);
+            var streetNameWasRemovedV2 = Fixture.Create<StreetNameWasRemovedV2>()
+                .WithMunicipalityId(newMunicipalityId)
+                .WithPersistentLocalId(new PersistentLocalId(newStreetNameWasProposedForMunicipalityMergerToRemove.PersistentLocalId));
+
+            var command = new RetireMunicipalityForMunicipalityMerger(_municipalityId, newMunicipalityId, Fixture.Create<Provenance>());
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(
+                    new Fact(_streamId, oldMunicipalityWasImported),
+                    new Fact(_streamId, Fixture.Create<MunicipalityBecameCurrent>()),
+                    new Fact(_streamId, oldStreetNameWasProposedV2),
+                    new Fact(_streamId, oldStreetNameWasApproved),
+
+                    new Fact(newMunicipalityStreamId, newMunicipalityWasImported),
+                    new Fact(newMunicipalityStreamId, newStreetNameWasProposedForMunicipalityMerger),
+                    new Fact(newMunicipalityStreamId, newStreetNameWasProposedForMunicipalityMergerToRemove),
+                    new Fact(newMunicipalityStreamId, streetNameWasRemovedV2)
+                    )
+                .When(command)
+                .Then(
+                    new Fact(_streamId,
+                        new StreetNameWasRetiredBecauseOfMunicipalityMerger(
+                            _municipalityId,
+                            new PersistentLocalId(oldStreetNamePersistentLocalId),
+                            [new PersistentLocalId(newStreetNameWasProposedForMunicipalityMerger.PersistentLocalId)])),
+                    new Fact(_streamId, new MunicipalityWasMerged(_municipalityId, command.NewMunicipalityId))
+                    ));
         }
 
         [Fact]
