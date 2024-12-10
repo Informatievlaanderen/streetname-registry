@@ -1,3 +1,10 @@
+## [4.16.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.16.0...v4.16.1) (2024-12-10)
+
+
+### Bug Fixes
+
+* don't include removed streetname in StreetNameWasRetiredBecauseOfMunicipalityMerger.MergedPersistentLocalIds ([2a976bb](https://github.com/informatievlaanderen/streetname-registry/commit/2a976bb0f973355a302c666f88fce10a84ba87d5))
+
 # [4.16.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.15.0...v4.16.0) (2024-12-05)
 
 
