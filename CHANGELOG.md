@@ -1,3 +1,10 @@
+## [4.16.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.16.1...v4.16.2) (2024-12-24)
+
+
+### Bug Fixes
+
+* don't approve streetname for merger when it wasnt merged ([514c55c](https://github.com/informatievlaanderen/streetname-registry/commit/514c55c00c313cf8e33103f626fac39ab93e2c09))
+
 ## [4.16.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.16.0...v4.16.1) (2024-12-10)
 
 
