@@ -31,7 +31,7 @@ namespace StreetNameRegistry.Municipality
                 return;
             }
 
-            if (DesiredStatusAfterMunicipalityMerger == StreetNameStatus.Proposed)
+            if (DesiredStatusAfterMunicipalityMerger is not StreetNameStatus.Current)
             {
                 return;
             }
