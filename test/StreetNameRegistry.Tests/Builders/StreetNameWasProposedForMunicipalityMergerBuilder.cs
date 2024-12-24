@@ -41,7 +41,7 @@
             return this;
         }
 
-        public StreetNameWasProposedForMunicipalityMergerBuilder WithDesiredStatus(StreetNameStatus status)
+        public StreetNameWasProposedForMunicipalityMergerBuilder WithDesiredStatus(StreetNameStatus? status)
         {
             _desiredStatus = status;
             return this;
