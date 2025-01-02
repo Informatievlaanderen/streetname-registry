@@ -1,3 +1,10 @@
+# [4.17.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.16.2...v4.17.0) (2025-01-02)
+
+
+### Features
+
+* add cache introspection ([6e2a6c9](https://github.com/informatievlaanderen/streetname-registry/commit/6e2a6c9852e58dbf8640a67f0575c28926e8b6e7))
+
 ## [4.16.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.16.1...v4.16.2) (2024-12-24)
 
 
