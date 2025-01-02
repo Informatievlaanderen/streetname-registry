@@ -117,7 +117,8 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                     }
                     .EnableJsonErrorActionFilterOption())
                 .Configure<TicketingOptions>(_configuration.GetSection(TicketingModule.TicketingServiceConfigKey))
-                .AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+                .AddSingleton<IActionContextAccessor, ActionContextAccessor>()
+                .AddDistributedMemoryCache();
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new ApiModule(_configuration, services, _loggerFactory));
