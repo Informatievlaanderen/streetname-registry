@@ -1,3 +1,10 @@
+## [4.17.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.17.0...v4.17.1) (2025-01-02)
+
+
+### Bug Fixes
+
+* **backoffice:** add distributed cache for introspection cache ([82b84f2](https://github.com/informatievlaanderen/streetname-registry/commit/82b84f20b8111860cb9b4e3366eb45f6daa54d60))
+
 # [4.17.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.16.2...v4.17.0) (2025-01-02)
 
 
