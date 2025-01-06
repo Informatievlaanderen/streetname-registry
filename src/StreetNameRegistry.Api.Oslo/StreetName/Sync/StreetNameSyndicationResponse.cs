@@ -45,7 +45,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
                 item.AddLink(
                     new SyndicationLink(
                         new Uri($"{responseOptions.Value.Naamruimte}/{streetName.PersistentLocalId.Value}"),
-                        AtomLinkTypes.Related));              
+                        AtomLinkTypes.Related));
             }
 
             item.AddCategory(
@@ -259,6 +259,124 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
     </Straatnamen><StraatnaamStatus i:nil=""true"" /><HomoniemToevoegingen /><NisCode>62022</NisCode><IsCompleet>false</IsCompleet><Creatie><Tijdstip>2002-11-21T11:23:45+01:00</Tijdstip><Organisatie>Vlaamse Landmaatschappij</Organisatie><Reden>Centrale bijhouding CRAB</Reden></Creatie>
   </Object></Content>]]>
 </content>
+</entry>
+<entry>
+    <id>1913485</id>
+    <title>StreetNameWasMigratedToMunicipality-1913485</title>
+    <updated>2023-11-01T08:18:40+01:00</updated>
+    <published>2023-11-01T08:18:40+01:00</published>
+    <link href=""https://data.vlaanderen.be/id/straatnaam/84008"" rel=""related"" />
+    <author>
+      <name>Digitaal Vlaanderen</name>
+    </author>
+    <category term=""straatnamen"" />
+    <content><![CDATA[<Content xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+  <Event>
+    <StreetNameWasMigratedToMunicipality>
+      <MunicipalityId>6265de0b-96c5-5a14-aa21-3485e3be8bc5</MunicipalityId>
+      <NisCode>52043</NisCode>
+      <StreetNameId>c76e4103-d8d8-5037-af54-bc62d45dd626</StreetNameId>
+      <PersistentLocalId>84008</PersistentLocalId>
+      <Status>Current</Status>
+      <PrimaryLanguage>French</PrimaryLanguage>
+      <SecondaryLanguage />
+      <Names>
+        <Names_0>
+          <Key>French</Key>
+          <Value>Rue Jules Stracmans</Value>
+        </Names_0>
+      </Names>
+      <HomonymAdditions />
+      <IsCompleted>true</IsCompleted>
+      <IsRemoved>false</IsRemoved>
+      <Provenance>
+        <Timestamp>2023-11-01T07:18:40Z</Timestamp>
+        <Organisation>DigitaalVlaanderen</Organisation>
+        <Reason>Migrate StreetName aggregate to Municipality.</Reason>
+      </Provenance>
+    </StreetNameWasMigratedToMunicipality>
+  </Event>
+  <Object>
+    <Id>84008</Id>
+    <Identificator>
+      <Id>https://data.vlaanderen.be/id/straatnaam/84008</Id>
+      <Naamruimte>https://data.vlaanderen.be/id/straatnaam</Naamruimte>
+      <ObjectId>84008</ObjectId>
+      <VersieId>2023-11-01T08:18:40+01:00</VersieId>
+    </Identificator>
+    <Straatnamen>
+      <GeografischeNaam>
+        <Spelling>Rue Jules Stracmans</Spelling>
+        <Taal>fr</Taal>
+      </GeografischeNaam>
+    </Straatnamen>
+    <StraatnaamStatus>InGebruik</StraatnaamStatus>
+    <HomoniemToevoegingen />
+    <NisCode>52043</NisCode>
+    <IsCompleet>true</IsCompleet>
+    <Creatie>
+      <Tijdstip>2023-11-01T08:18:40+01:00</Tijdstip>
+      <Organisatie>Digitaal Vlaanderen</Organisatie>
+      <Reden>Migrate StreetName aggregate to Municipality.</Reden>
+    </Creatie>
+  </Object>
+</Content>]]></content>
+</entry>
+<entry>
+    <id>2233010</id>
+    <title>StreetNameWasProposedV2-2233010</title>
+    <updated>2024-08-13T15:00:42+02:00</updated>
+    <published>2024-08-13T15:00:42+02:00</published>
+    <link href=""https://data.vlaanderen.be/id/straatnaam/229009"" rel=""related"" />
+    <author>
+      <name>Andere</name>
+    </author>
+    <category term=""straatnamen"" />
+    <content><![CDATA[<Content xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+  <Event>
+    <StreetNameWasProposedV2>
+      <MunicipalityId>c91136be-9b6c-5cab-8921-e8fc5e784600</MunicipalityId>
+      <NisCode>24059</NisCode>
+      <StreetNameNames>
+        <StreetNameNames_0>
+          <Key>Dutch</Key>
+          <Value>Kruiske</Value>
+        </StreetNameNames_0>
+      </StreetNameNames>
+      <PersistentLocalId>229009</PersistentLocalId>
+      <Provenance>
+        <Timestamp>2024-08-13T13:00:42Z</Timestamp>
+        <Organisation>Other</Organisation>
+        <Reason>
+        </Reason>
+      </Provenance>
+    </StreetNameWasProposedV2>
+  </Event>
+  <Object>
+    <Id>229009</Id>
+    <Identificator>
+      <Id>https://data.vlaanderen.be/id/straatnaam/229009</Id>
+      <Naamruimte>https://data.vlaanderen.be/id/straatnaam</Naamruimte>
+      <ObjectId>229009</ObjectId>
+      <VersieId>2024-08-13T15:00:42+02:00</VersieId>
+    </Identificator>
+    <Straatnamen>
+      <GeografischeNaam>
+        <Spelling>Kruiske</Spelling>
+        <Taal>nl</Taal>
+      </GeografischeNaam>
+    </Straatnamen>
+    <StraatnaamStatus>Voorgesteld</StraatnaamStatus>
+    <HomoniemToevoegingen />
+    <NisCode>24059</NisCode>
+    <IsCompleet>true</IsCompleet>
+    <Creatie>
+      <Tijdstip>2024-08-13T15:00:42+02:00</Tijdstip>
+      <Organisatie>Andere</Organisatie>
+      <Reden />
+    </Creatie>
+  </Object>
+</Content>]]></content>
 </entry>
 </feed>";
 
