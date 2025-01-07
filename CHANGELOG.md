@@ -1,3 +1,10 @@
+# [4.18.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.17.1...v4.18.0) (2025-01-07)
+
+
+### Features
+
+* **api:** add docs for feeds GAWR-5321 ([37965e5](https://github.com/informatievlaanderen/streetname-registry/commit/37965e54388bb641821be936ad0b1b87b28bbc15))
+
 ## [4.17.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.17.0...v4.17.1) (2025-01-02)
 
 
