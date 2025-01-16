@@ -1,3 +1,10 @@
+## [4.18.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.18.1...v4.18.2) (2025-01-16)
+
+
+### Bug Fixes
+
+* **producer:** correct snapshot producer ([c297594](https://github.com/informatievlaanderen/streetname-registry/commit/c29759478494895207545ec43b2ef8bbac1ef2e9))
+
 ## [4.18.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.18.0...v4.18.1) (2025-01-16)
 
 # [4.18.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.17.1...v4.18.0) (2025-01-07)
