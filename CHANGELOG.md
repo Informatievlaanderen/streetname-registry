@@ -1,3 +1,10 @@
+## [4.18.3](https://github.com/informatievlaanderen/streetname-registry/compare/v4.18.2...v4.18.3) (2025-02-03)
+
+
+### Bug Fixes
+
+* **ci:** update deployv4 lambda to trigger build ([45be5a0](https://github.com/informatievlaanderen/streetname-registry/commit/45be5a08706836ebe0b0dfc03113df8c28a916e6))
+
 ## [4.18.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.18.1...v4.18.2) (2025-01-16)
 
 
