@@ -3,10 +3,9 @@ namespace StreetNameRegistry.Producer.Ldes.Infrastructure.Modules
     using System;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
-    using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.AspNetCore.Mvc.Formatters.Json;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
-    using Be.Vlaanderen.Basisregisters.GrAr.Oslo.SnapshotProducer;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer.MigrationExtensions;
@@ -18,6 +17,7 @@ namespace StreetNameRegistry.Producer.Ldes.Infrastructure.Modules
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
     using StreetNameRegistry.Infrastructure;
 
     public class ProducerModule : Module
@@ -40,10 +40,6 @@ namespace StreetNameRegistry.Producer.Ldes.Infrastructure.Modules
         {
             RegisterProjectionSetup(builder);
 
-            builder
-                .RegisterType<ProblemDetailsHelper>()
-                .AsSelf();
-
             builder.Populate(_services);
         }
 
@@ -58,18 +54,15 @@ namespace StreetNameRegistry.Producer.Ldes.Infrastructure.Modules
                 .RegisterEventstreamModule(_configuration)
                 .RegisterModule(new ProjectorModule(_configuration));
 
-            _services.AddOsloProxy(_configuration["OsloApiUrl"]);
-
             RegisterProjections(builder);
         }
 
         private void RegisterProjections(ContainerBuilder builder)
         {
             var logger = _loggerFactory.CreateLogger<ProducerModule>();
-            var connectionString = _configuration.GetConnectionString("ProducerProjections");
+            var connectionString = _configuration.GetConnectionString("ProducerLdesProjections");
 
-            var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
-            if (hasConnectionString)
+            if (!string.IsNullOrWhiteSpace(connectionString))
             {
                 RunOnSqlServer(_services, _loggerFactory, connectionString);
             }
@@ -98,17 +91,15 @@ namespace StreetNameRegistry.Producer.Ldes.Infrastructure.Modules
                     _loggerFactory)
                 .RegisterProjections<ProducerProjections, ProducerContext>(c =>
                     {
-                        //TODO: Needed when removed streetname is implemented
-                        //var osloNamespace = _configuration["OsloNamespace"];
-                        //osloNamespace = osloNamespace.TrimEnd('/');
+                        var osloNamespace = _configuration["OsloNamespace"]!.TrimEnd('/');
 
                         var bootstrapServers = _configuration["Kafka:BootstrapServers"]!;
-                        var topic = $"{_configuration[ProducerProjections.StreetNameTopicKey]}" ??
-                                    throw new ArgumentException($"Configuration has no value for {ProducerProjections.StreetNameTopicKey}");
+                        var topic = _configuration[ProducerProjections.StreetNameTopicKey]
+                                    ?? throw new ArgumentException($"Configuration has no value for {ProducerProjections.StreetNameTopicKey}");
                         var producerOptions = new ProducerOptions(
                                 new BootstrapServers(bootstrapServers),
                                 new Topic(topic),
-                                true,
+                                useSinglePartition: false,
                                 EventsJsonSerializerSettingsProvider.CreateSerializerSettings())
                             .ConfigureEnableIdempotence();
                         if (!string.IsNullOrEmpty(_configuration["Kafka:SaslUserName"])
@@ -119,17 +110,9 @@ namespace StreetNameRegistry.Producer.Ldes.Infrastructure.Modules
                                 _configuration["Kafka:SaslPassword"]!));
                         }
 
-                        var osloProxy = c.Resolve<IOsloProxy>();
                         return new ProducerProjections(
-                            new Producer(producerOptions),
-                            new SnapshotManager(
-                                c.Resolve<ILoggerFactory>(),
-                                osloProxy,
-                                SnapshotManagerOptions.Create(
-                                    _configuration["RetryPolicy:MaxRetryWaitIntervalSeconds"]!,
-                                    _configuration["RetryPolicy:RetryBackoffFactor"]!)),
-                            _configuration["OsloNamespace"]!,
-                            osloProxy);
+                            new Producer(producerOptions),osloNamespace,
+                            new JsonSerializerSettings().ConfigureDefaultForApi());
                     },
                     connectedProjectionSettings);
         }
@@ -145,7 +128,7 @@ namespace StreetNameRegistry.Producer.Ldes.Infrastructure.Modules
                     .UseSqlServer(backofficeProjectionsConnectionString, sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
-                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.ProducerSnapshotOslo, Schema.ProducerSnapshotOslo);
+                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.ProducerLdes, Schema.ProducerLdes);
                     })
                     .UseExtendedSqlServerMigrations());
         }
@@ -158,7 +141,7 @@ namespace StreetNameRegistry.Producer.Ldes.Infrastructure.Modules
             services
                 .AddDbContext<ProducerContext>(options => options
                     .UseLoggerFactory(loggerFactory)
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString(), sqlServerOptions => { }));
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString(), _ => { }));
 
             logger.LogWarning("Running InMemory for {Context}!", nameof(ProducerContext));
         }
