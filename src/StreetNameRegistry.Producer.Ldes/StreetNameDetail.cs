@@ -46,6 +46,9 @@
                 .HasKey(p => p.StreetNamePersistentLocalId)
                 .IsClustered();
 
+            builder.Property(x => x.StreetNamePersistentLocalId)
+                .ValueGeneratedNever();
+
             builder.Property(p => p.NisCode);
 
             builder.Property(p => p.NameDutch);

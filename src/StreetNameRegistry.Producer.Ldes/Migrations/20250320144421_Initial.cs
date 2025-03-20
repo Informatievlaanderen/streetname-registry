@@ -35,8 +35,7 @@ namespace StreetNameRegistry.Producer.Ldes.Migrations
                 schema: "StreetNameRegistryProducerLdes",
                 columns: table => new
                 {
-                    StreetNamePersistentLocalId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StreetNamePersistentLocalId = table.Column<int>(type: "int", nullable: false),
                     MunicipalityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NisCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     NameDutch = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -61,7 +60,8 @@ namespace StreetNameRegistry.Producer.Ldes.Migrations
                 name: "IX_StreetName_NisCode",
                 schema: "StreetNameRegistryProducerLdes",
                 table: "StreetName",
-                column: "NisCode");
+                column: "NisCode")
+                .Annotation("SqlServer:Clustered", true);
         }
 
         /// <inheritdoc />

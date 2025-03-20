@@ -47,10 +47,7 @@ namespace StreetNameRegistry.Producer.Ldes.Migrations
             modelBuilder.Entity("StreetNameRegistry.Producer.Ldes.StreetNameDetail", b =>
                 {
                     b.Property<int>("StreetNamePersistentLocalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StreetNamePersistentLocalId"));
 
                     b.Property<string>("HomonymAdditionDutch")
                         .HasColumnType("nvarchar(max)");
@@ -98,6 +95,8 @@ namespace StreetNameRegistry.Producer.Ldes.Migrations
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("StreetNamePersistentLocalId"));
 
                     b.HasIndex("NisCode");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("NisCode"));
 
                     b.ToTable("StreetName", "StreetNameRegistryProducerLdes");
                 });

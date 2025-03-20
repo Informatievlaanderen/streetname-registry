@@ -111,7 +111,8 @@ namespace StreetNameRegistry.Producer.Ldes.Infrastructure.Modules
                         }
 
                         return new ProducerProjections(
-                            new Producer(producerOptions),osloNamespace,
+                            new Producer(producerOptions),
+                            osloNamespace,
                             new JsonSerializerSettings().ConfigureDefaultForApi());
                     },
                     connectedProjectionSettings);
