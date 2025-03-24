@@ -1,3 +1,10 @@
+## [4.19.1](https://github.com/informatievlaanderen/streetname-registry/compare/v4.19.0...v4.19.1) (2025-03-24)
+
+
+### Bug Fixes
+
+* **ci:** push producer-ldes image to trigger bump ([3ffa21f](https://github.com/informatievlaanderen/streetname-registry/commit/3ffa21f8450aa93622ad73c6c65a141ccd8c3e8d))
+
 # [4.19.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.18.3...v4.19.0) (2025-03-24)
 
 
