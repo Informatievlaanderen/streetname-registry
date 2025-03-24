@@ -626,6 +626,7 @@ jobs:
           , 'consumer'
           , 'producer'
           , 'producer-snapshot-oslo'
+          , 'producer-ldes'
           , 'snapshot-verifier'
         ]
     steps:
