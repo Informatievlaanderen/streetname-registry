@@ -67,6 +67,8 @@ namespace StreetNameRegistry.Producer.Ldes
                 await context
                     .StreetNames
                     .AddAsync(streetNameDetail, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
@@ -87,6 +89,8 @@ namespace StreetNameRegistry.Producer.Ldes
                 await context
                     .StreetNames
                     .AddAsync(streetNameDetail, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
@@ -106,6 +110,8 @@ namespace StreetNameRegistry.Producer.Ldes
                 await context
                     .StreetNames
                     .AddAsync(streetNameDetail, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
@@ -115,6 +121,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateStatus(streetNameDetail, StreetNameStatus.Current);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasCorrectedFromApprovedToProposed>>(async (context, message, ct) =>
@@ -124,6 +132,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateStatus(streetNameDetail, StreetNameStatus.Proposed);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasRejected>>(async (context, message, ct) =>
@@ -133,6 +143,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateStatus(streetNameDetail, StreetNameStatus.Rejected);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
@@ -142,6 +154,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateStatus(streetNameDetail, StreetNameStatus.Rejected);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
@@ -151,6 +165,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateStatus(streetNameDetail, StreetNameStatus.Proposed);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
@@ -160,6 +176,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateStatus(streetNameDetail, StreetNameStatus.Retired);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
@@ -169,6 +187,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateStatus(streetNameDetail, StreetNameStatus.Retired);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasRenamed>>(async (context, message, ct) =>
@@ -178,6 +198,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateStatus(streetNameDetail, StreetNameStatus.Retired);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasCorrectedFromRetiredToCurrent>>(async (context, message, ct) =>
@@ -187,6 +209,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateStatus(streetNameDetail, StreetNameStatus.Current);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
@@ -196,6 +220,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateNameByLanguage(streetNameDetail, message.Message.StreetNameNames);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameNamesWereChanged>>(async (context, message, ct) =>
@@ -205,6 +231,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateNameByLanguage(streetNameDetail, message.Message.StreetNameNames);
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
@@ -214,6 +242,8 @@ namespace StreetNameRegistry.Producer.Ldes
                     UpdateHomonymAdditionByLanguage(streetNameDetail, new HomonymAdditions(message.Message.HomonymAdditions));
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (context, message, ct) =>
@@ -243,6 +273,8 @@ namespace StreetNameRegistry.Producer.Ldes
 
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
             When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
@@ -252,9 +284,11 @@ namespace StreetNameRegistry.Producer.Ldes
                     streetNameDetail.IsRemoved = true;
                     UpdateVersionTimestamp(streetNameDetail, message.Message.Provenance.Timestamp);
                 }, ct);
+
+                await Produce(context, message.Message.PersistentLocalId, message.Position, ct);
             });
 
-            When<Envelope<MunicipalityNisCodeWasChanged>>((context, message, _) =>
+            When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {
                 var streetNamesToChange = context
                     .StreetNames
@@ -265,9 +299,10 @@ namespace StreetNameRegistry.Producer.Ldes
                         s.MunicipalityId == message.Message.MunicipalityId));
 
                 foreach (var streetNameDetail in streetNamesToChange)
+                {
                     streetNameDetail.NisCode = message.Message.NisCode;
-
-                return Task.CompletedTask;
+                    await Produce(context, streetNameDetail.StreetNamePersistentLocalId, message.Position, ct);
+                }
             });
 
             When<Envelope<MunicipalityBecameCurrent>>(DoNothing);
