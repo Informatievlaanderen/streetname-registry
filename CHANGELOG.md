@@ -1,3 +1,10 @@
+# [4.19.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.18.3...v4.19.0) (2025-03-24)
+
+
+### Features
+
+* GAWR-6786 add Ldes Producer ([a816acd](https://github.com/informatievlaanderen/streetname-registry/commit/a816acd37c1b3f56d89cfc909b9188c6d99f571a))
+
 ## [4.18.3](https://github.com/informatievlaanderen/streetname-registry/compare/v4.18.2...v4.18.3) (2025-02-03)
 
 
