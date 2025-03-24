@@ -1,3 +1,10 @@
+## [4.19.3](https://github.com/informatievlaanderen/streetname-registry/compare/v4.19.2...v4.19.3) (2025-03-24)
+
+
+### Bug Fixes
+
+* **ldes:** produce! :) ([a9c4e12](https://github.com/informatievlaanderen/streetname-registry/commit/a9c4e12526097cace211017f1ee8e3f65fe78d24))
+
 ## [4.19.2](https://github.com/informatievlaanderen/streetname-registry/compare/v4.19.1...v4.19.2) (2025-03-24)
 
 
