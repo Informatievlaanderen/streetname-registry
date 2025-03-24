@@ -6,6 +6,7 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Text;
+    using Be.Vlaanderen.Basisregisters.AspNetCore.Mvc.Formatters.Json;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Oslo.SnapshotProducer;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer;
@@ -16,6 +17,7 @@
     using Microsoft.Extensions.Options;
     using Moq;
     using Municipality.Events;
+    using Newtonsoft.Json;
     using Producer;
     using Producer.Snapshot.Oslo;
     using Projections.Extract;
@@ -112,6 +114,11 @@
             yield return [new List<ConnectedProjection<StreetNameRegistry.Producer.ProducerContext>>
             {
                 new ProducerMigrateProjections(Mock.Of<IProducer>())
+            }];
+
+            yield return [new List<ConnectedProjection<StreetNameRegistry.Producer.Ldes.ProducerContext>>
+            {
+                new StreetNameRegistry.Producer.Ldes.ProducerProjections(Mock.Of<IProducer>(), "http://s", new JsonSerializerSettings().ConfigureDefaultForApi())
             }];
         }
 
