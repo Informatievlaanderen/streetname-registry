@@ -65,7 +65,7 @@
                 .HasColumnName(nameof(StreetNameDetail.VersionTimestamp));
             builder.Ignore(p => p.VersionTimestamp);
 
-            builder.HasIndex(x => x.NisCode).IsClustered();
+            builder.HasIndex(x => x.NisCode);
         }
     }
 }

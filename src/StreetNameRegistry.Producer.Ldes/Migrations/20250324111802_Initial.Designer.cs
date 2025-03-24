@@ -12,7 +12,7 @@ using StreetNameRegistry.Producer.Ldes;
 namespace StreetNameRegistry.Producer.Ldes.Migrations
 {
     [DbContext(typeof(ProducerContext))]
-    [Migration("20250320144421_Initial")]
+    [Migration("20250324111802_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -98,8 +98,6 @@ namespace StreetNameRegistry.Producer.Ldes.Migrations
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("StreetNamePersistentLocalId"));
 
                     b.HasIndex("NisCode");
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("NisCode"));
 
                     b.ToTable("StreetName", "StreetNameRegistryProducerLdes");
                 });

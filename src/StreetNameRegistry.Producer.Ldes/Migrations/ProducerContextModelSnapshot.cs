@@ -96,8 +96,6 @@ namespace StreetNameRegistry.Producer.Ldes.Migrations
 
                     b.HasIndex("NisCode");
 
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("NisCode"));
-
                     b.ToTable("StreetName", "StreetNameRegistryProducerLdes");
                 });
 #pragma warning restore 612, 618

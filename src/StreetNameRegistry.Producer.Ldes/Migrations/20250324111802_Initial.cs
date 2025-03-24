@@ -60,8 +60,7 @@ namespace StreetNameRegistry.Producer.Ldes.Migrations
                 name: "IX_StreetName_NisCode",
                 schema: "StreetNameRegistryProducerLdes",
                 table: "StreetName",
-                column: "NisCode")
-                .Annotation("SqlServer:Clustered", true);
+                column: "NisCode");
         }
 
         /// <inheritdoc />
