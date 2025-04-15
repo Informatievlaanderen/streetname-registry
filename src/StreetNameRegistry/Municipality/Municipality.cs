@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Municipality
 
         public void DefineOrChangeNisCode(NisCode nisCode)
         {
-            if (string.IsNullOrWhiteSpace(nisCode))
+            if (nisCode is null || string.IsNullOrWhiteSpace(nisCode))
             {
                 throw new NoNisCodeHasNoValueException("NisCode of a municipality cannot be empty.");
             }

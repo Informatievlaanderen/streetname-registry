@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreetNameRegistry.Projections.Syndication;
 
+#nullable disable
+
 namespace StreetNameRegistry.Projections.Syndication.Migrations
 {
     [DbContext(typeof(SyndicationContext))]
@@ -15,9 +17,10 @@ namespace StreetNameRegistry.Projections.Syndication.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.ProjectionStates.ProjectionStateItem", b =>
                 {
@@ -36,10 +39,9 @@ namespace StreetNameRegistry.Projections.Syndication.Migrations
                     b.Property<long>("Position")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Name")
-                        .HasAnnotation("SqlServer:Clustered", true);
+                    b.HasKey("Name");
 
-                    b.ToTable("ProjectionStates","StreetNameRegistrySyndication");
+                    b.ToTable("ProjectionStates", "StreetNameRegistrySyndication");
                 });
 
             modelBuilder.Entity("StreetNameRegistry.Projections.Syndication.Municipality.MunicipalityLatestItem", b =>
@@ -84,8 +86,9 @@ namespace StreetNameRegistry.Projections.Syndication.Migrations
                     b.Property<string>("Version")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("MunicipalityId")
-                        .HasAnnotation("SqlServer:Clustered", false);
+                    b.HasKey("MunicipalityId");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("MunicipalityId"), false);
 
                     b.HasIndex("NameDutchSearch");
 
@@ -95,12 +98,13 @@ namespace StreetNameRegistry.Projections.Syndication.Migrations
 
                     b.HasIndex("NameGermanSearch");
 
-                    b.HasIndex("NisCode")
-                        .HasAnnotation("SqlServer:Clustered", true);
+                    b.HasIndex("NisCode");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("NisCode"));
 
                     b.HasIndex("Position");
 
-                    b.ToTable("MunicipalityLatestSyndication","StreetNameRegistrySyndication");
+                    b.ToTable("MunicipalityLatestSyndication", "StreetNameRegistrySyndication");
                 });
 
             modelBuilder.Entity("StreetNameRegistry.Projections.Syndication.Municipality.MunicipalitySyndicationItem", b =>
@@ -129,17 +133,19 @@ namespace StreetNameRegistry.Projections.Syndication.Migrations
                     b.Property<string>("Version")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("MunicipalityId", "Position")
-                        .HasAnnotation("SqlServer:Clustered", false);
+                    b.HasKey("MunicipalityId", "Position");
 
-                    b.HasIndex("NisCode")
-                        .HasAnnotation("SqlServer:Clustered", true);
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("MunicipalityId", "Position"), false);
+
+                    b.HasIndex("NisCode");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("NisCode"));
 
                     b.HasIndex("Position");
 
                     b.HasIndex("Version");
 
-                    b.ToTable("MunicipalitySyndication","StreetNameRegistrySyndication");
+                    b.ToTable("MunicipalitySyndication", "StreetNameRegistrySyndication");
                 });
 #pragma warning restore 612, 618
         }

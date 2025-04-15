@@ -23,10 +23,6 @@ namespace StreetNameRegistry.Infrastructure
             var migrationConnectionStringName = "Sequences";
 
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{Environment.MachineName}.json", true)
-                .AddEnvironmentVariables()
                 .Build();
 
             var builder = new DbContextOptionsBuilder<SequenceContext>();

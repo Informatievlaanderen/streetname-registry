@@ -1,8 +1,0 @@
-Be.Vlaanderen.Basisregisters.EventHandling.Autofac
-Be.Vlaanderen.Basisregisters.GrAr.Common
-Be.Vlaanderen.Basisregisters.GrAr.Legacy
-Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer
-Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore
-
-SourceLink.Embed.AllSourceFiles
-SourceLink.Copy.PdbFiles
