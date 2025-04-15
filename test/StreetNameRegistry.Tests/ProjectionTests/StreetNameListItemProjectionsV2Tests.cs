@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Builders;

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <LangVersion>latest</LangVersion>
 
-    <RuntimeFrameworkVersion>8.0.2</RuntimeFrameworkVersion>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <OutputType>Exe</OutputType>
 
@@ -26,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StreetNameRegistry.Projections.Extract\StreetNameRegistry.Projections.Extract.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.LastChangedList\StreetNameRegistry.Projections.LastChangedList.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Wfs\StreetNameRegistry.Projections.Wfs.csproj" />
@@ -41,5 +41,7 @@
     <ProjectReference Include="..\StreetNameRegistry.Projections.Integration\StreetNameRegistry.Projections.Integration.csproj" />
   </ItemGroup>
 
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+  </ItemGroup>
 </Project>

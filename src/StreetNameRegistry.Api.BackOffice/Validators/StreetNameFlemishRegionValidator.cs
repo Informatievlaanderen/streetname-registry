@@ -4,8 +4,8 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions.Convertors;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Consumer;
     using Microsoft.EntityFrameworkCore;
 
