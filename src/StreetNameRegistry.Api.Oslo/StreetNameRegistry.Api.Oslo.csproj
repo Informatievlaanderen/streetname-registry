@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-  <Import Project="..\..\packages\Be.Vlaanderen.Basisregisters.Build.Pipeline\Content\Be.Vlaanderen.Basisregisters.Build.Pipeline.Settings.App.props" />
+  <Import Project="..\..\.build\Be.Vlaanderen.Basisregisters.Build.Pipeline\Content\Be.Vlaanderen.Basisregisters.Build.Pipeline.Settings.App.props" />
 
   <PropertyGroup>
     <!-- Error NETSDK1152: https://docs.microsoft.com/en-us/dotnet/core/compatibility/sdk/6.0/duplicate-files-in-output -->
@@ -10,12 +10,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\net8.0\StreetNameRegistry.Api.Oslo.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\net9.0\StreetNameRegistry.Api.Oslo.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\net8.0\StreetNameRegistry.Api.Oslo.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\net9.0\StreetNameRegistry.Api.Oslo.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
 
@@ -27,20 +27,63 @@
     <Content Include="Dockerfile" CopyToOutputDirectory="Always" />
     <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
     <Content Include="appsettings.*.json" CopyToOutputDirectory="Always" />
-    <Content Include="paket.template" CopyToOutputDirectory="Always" />
     <Content Include="init.sh" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StreetNameRegistry.Consumer.Read.Postal\StreetNameRegistry.Consumer.Read.Postal.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry\StreetNameRegistry.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Consumer.Read.Postal\StreetNameRegistry.Consumer.Read.Postal.csproj" PrivateAssests="All" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" PrivateAssests="All" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" PrivateAssests="All" />
+    <ProjectReference Include="..\StreetNameRegistry\StreetNameRegistry.csproj" PrivateAssests="All" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <PackageId>Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo</PackageId>
+    <Title>Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo</Title>
+    <Authors>Basisregisters Vlaanderen</Authors>
+    <Owners>Digitaal Vlaanderen</Owners>
+    <Copyright>Copyright (c) Digitaal Vlaanderen</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Informatievlaanderen/streetname-registry</PackageProjectUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <Description>StreetName Registry.</Description>
+    <!-- Include referenced projects' outputs in this package -->
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="StreetName\Converters\" />
+    <None Include="..\..\.build\Be.Vlaanderen.Basisregisters.Build.Pipeline\Content\logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
+  <!-- Target to collect reference outputs for packaging -->
+  <Target Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(MSBuildProjectDirectory)\$(OutputPath)StreetNameRegistry.Projections.Legacy.dll" />
+      <BuildOutputInPackage Include="$(MSBuildProjectDirectory)\$(OutputPath)StreetNameRegistry.Projections.Legacy.pdb" />
+
+      <BuildOutputInPackage Include="$(MSBuildProjectDirectory)\$(OutputPath)StreetNameRegistry.Projections.Syndication.dll" />
+      <BuildOutputInPackage Include="$(MSBuildProjectDirectory)\$(OutputPath)StreetNameRegistry.Projections.Syndication.pdb" />
+
+      <BuildOutputInPackage Include="$(MSBuildProjectDirectory)\$(OutputPath)StreetNameRegistry.dll" />
+      <BuildOutputInPackage Include="$(MSBuildProjectDirectory)\$(OutputPath)StreetNameRegistry.pdb" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" />
+    <PackageReference Include="Datadog.Trace.Bundle" />
+
+    <PackageReference Include="Be.Vlaanderen.Basisregisters.Api" />
+    <PackageReference Include="Be.Vlaanderen.Basisregisters.GrAr.Common" />
+    <PackageReference Include="Be.Vlaanderen.Basisregisters.GrAr.Legacy" />
+
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="MediatR.Contracts" />
+
+    <PackageReference Include="SourceLink.Embed.AllSourceFiles" PrivateAssets="all" />
+    <PackageReference Include="SourceLink.Copy.PdbFiles" PrivateAssets="all" />
+  </ItemGroup>
 </Project>
