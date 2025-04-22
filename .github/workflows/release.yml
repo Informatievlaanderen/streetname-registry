@@ -312,7 +312,7 @@ jobs:
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
       registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
-      image-file: sr-lambda-backoffice-image.tar
+      image-file: sr-lambda-sqsbackofficefunction-image.tar
       image-name: lambda-sqsbackofficefunction
       test-project: StreetNameRegistry.Tests
       build-project: StreetNameRegistry.Api.BackOffice.Handlers.Lambda
@@ -613,7 +613,7 @@ jobs:
           , 'producer-snapshot-oslo'
           , 'producer-ldes'
           , 'snapshot-verifier'
-          , 'lambda-backoffice'
+          , 'lambda-sqsbackofficefunction'
         ]
     steps:
       - name: Configure AWS credentials
