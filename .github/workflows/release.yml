@@ -613,7 +613,7 @@ jobs:
           , 'producer-snapshot-oslo'
           , 'producer-ldes'
           , 'snapshot-verifier'
-          , 'lambda-sqsbackofficefunction'
+          , 'lambda-backoffice'
         ]
     steps:
       - name: Configure AWS credentials
