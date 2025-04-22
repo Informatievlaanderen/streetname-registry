@@ -1,4 +1,4 @@
-﻿FROM public.ecr.aws/lambda/dotnet:9.2025.04.03.12 as base
+﻿FROM public.ecr.aws/lambda/dotnet:9.2025.04.21.12 as base
 
 # Stage to download and extract the Datadog .NET tracer
 # https://docs.datadoghq.com/serverless/aws_lambda/installation/dotnet/?tab=containerimage
