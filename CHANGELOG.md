@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.1...v5.0.2) (2025-04-22)
+
+
+### Bug Fixes
+
+* **ci:** fix push image ([fce8b7e](https://github.com/informatievlaanderen/streetname-registry/commit/fce8b7e4820150f26167fd809a839d9668aff919))
+
 ## [5.0.1](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.0...v5.0.1) (2025-04-22)
 
 
