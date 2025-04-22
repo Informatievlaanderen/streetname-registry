@@ -1,3 +1,15 @@
+# [5.0.0](https://github.com/informatievlaanderen/streetname-registry/compare/v4.19.3...v5.0.0) (2025-04-22)
+
+
+### Code Refactoring
+
+* use renovate and nuget + update pipeline ([c6ae4d2](https://github.com/informatievlaanderen/streetname-registry/commit/c6ae4d2bc7d56b0cc456a24a44dcd72a29be7026))
+
+
+### BREAKING CHANGES
+
+* update to dotnet 9
+
 ## [4.19.3](https://github.com/informatievlaanderen/streetname-registry/compare/v4.19.2...v4.19.3) (2025-03-24)
 
 
