@@ -1,3 +1,10 @@
+## [5.0.4](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.3...v5.0.4) (2025-04-23)
+
+
+### Bug Fixes
+
+* **ci:** get correct datadog tracer ([95de95e](https://github.com/informatievlaanderen/streetname-registry/commit/95de95edf6a7611b945a34bd5fdf482dbcd285e1))
+
 ## [5.0.3](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.2...v5.0.3) (2025-04-23)
 
 
