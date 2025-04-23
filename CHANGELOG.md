@@ -1,3 +1,10 @@
+## [5.0.3](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.2...v5.0.3) (2025-04-23)
+
+
+### Bug Fixes
+
+* **ci:** build lambda on arm64 ([2d40248](https://github.com/informatievlaanderen/streetname-registry/commit/2d40248f08b147df9f39881d2e10a39103448be0))
+
 ## [5.0.2](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.1...v5.0.2) (2025-04-22)
 
 
