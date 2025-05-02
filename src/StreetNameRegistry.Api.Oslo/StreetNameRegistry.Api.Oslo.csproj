@@ -31,10 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StreetNameRegistry.Consumer.Read.Postal\StreetNameRegistry.Consumer.Read.Postal.csproj" PrivateAssests="All" />
-    <ProjectReference Include="..\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" PrivateAssests="All" />
-    <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" PrivateAssests="All" />
-    <ProjectReference Include="..\StreetNameRegistry\StreetNameRegistry.csproj" PrivateAssests="All" />
+    <ProjectReference Include="..\StreetNameRegistry.Consumer.Read.Postal\StreetNameRegistry.Consumer.Read.Postal.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\StreetNameRegistry\StreetNameRegistry.csproj" PrivateAssets="All" />
   </ItemGroup>
 
   <PropertyGroup>
