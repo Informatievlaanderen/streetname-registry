@@ -1,3 +1,10 @@
+## [5.0.5](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.4...v5.0.5) (2025-05-02)
+
+
+### Bug Fixes
+
+* **oslo:** fix package ([6730c35](https://github.com/informatievlaanderen/streetname-registry/commit/6730c35493cc834536083fb8c16f8ea59a3ad0b0))
+
 ## [5.0.4](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.3...v5.0.4) (2025-04-23)
 
 
