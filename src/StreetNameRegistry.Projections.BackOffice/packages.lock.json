@@ -1581,8 +1581,7 @@
           "Be.Vlaanderen.Basisregisters.GrAr.Legacy": "[22.0.0, )",
           "Be.Vlaanderen.Basisregisters.Sqs": "[4.0.1, )",
           "Be.Vlaanderen.Basisregisters.TicketingService.Abstractions": "[3.0.0, )",
-          "MediatR.Contracts": "[2.0.1, )",
-          "StreetNameRegistry": "[1.0.0, )"
+          "MediatR.Contracts": "[2.0.1, )"
         }
       },
       "streetnameregistry": {

@@ -21,7 +21,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" PrivateAssets="All" />
-    <ProjectReference Include="..\StreetNameRegistry\StreetNameRegistry.csproj" PrivateAssests="All" />
+    <ProjectReference Include="..\StreetNameRegistry\StreetNameRegistry.csproj" PrivateAssets="All" />
   </ItemGroup>
   
   <PropertyGroup>
