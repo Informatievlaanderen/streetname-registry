@@ -1,3 +1,10 @@
+## [5.0.6](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.5...v5.0.6) (2025-05-02)
+
+
+### Bug Fixes
+
+* **abstractions:** fix package ([c05bac2](https://github.com/informatievlaanderen/streetname-registry/commit/c05bac2a7da1a186a17639889e41645157808d7b))
+
 ## [5.0.5](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.4...v5.0.5) (2025-05-02)
 
 
