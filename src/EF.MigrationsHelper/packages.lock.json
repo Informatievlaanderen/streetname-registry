@@ -330,8 +330,8 @@
       },
       "Datadog.Trace": {
         "type": "Transitive",
-        "resolved": "3.14.3",
-        "contentHash": "LaN99IxeB48ouuhuedweJCqvrX5rEIyWl+r5wXoSWXHK4zFu0YD+A6mRfaSltXpDN0+HViIBHyAcDrf+B79vAg==",
+        "resolved": "3.15.0",
+        "contentHash": "xDdce/RLnXEoyyySKoY+MEp586Yj5x9lNIhN3I2NbZhS7wnaXXHJ/1ieFxdgU2dfY5m6RlEGWKG5auzgKd9rzA==",
         "dependencies": {
           "System.Diagnostics.DiagnosticSource": "4.4.1"
         }
@@ -1674,7 +1674,7 @@
           "Be.Vlaanderen.Basisregisters.TicketingService.Abstractions": "[3.0.0, )",
           "Be.Vlaanderen.Basisregisters.TicketingService.Proxy.HttpProxy": "[3.0.0, )",
           "CsvHelper": "[33.0.1, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.15.0, )",
           "MediatR": "[12.5.0, )",
           "StreetNameRegistry.Consumer": "[1.0.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
@@ -1687,8 +1687,7 @@
           "Be.Vlaanderen.Basisregisters.GrAr.Legacy": "[22.0.0, )",
           "Be.Vlaanderen.Basisregisters.Sqs": "[4.0.1, )",
           "Be.Vlaanderen.Basisregisters.TicketingService.Abstractions": "[3.0.0, )",
-          "MediatR.Contracts": "[2.0.1, )",
-          "StreetNameRegistry": "[1.0.0, )"
+          "MediatR.Contracts": "[2.0.1, )"
         }
       },
       "streetnameregistry": {
@@ -1716,7 +1715,7 @@
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.15.0, )",
           "Destructurama.JsonNet": "[4.0.2, )",
           "Microsoft.EntityFrameworkCore.SqlServer": "[9.0.4, )",
           "Microsoft.Extensions.Hosting": "[9.0.4, )",
@@ -1727,7 +1726,7 @@
           "Serilog.Formatting.Compact": "[3.0.0, )",
           "Serilog.Settings.Configuration": "[9.0.0, )",
           "Serilog.Sinks.Console": "[6.0.0, )",
-          "Serilog.Sinks.File": "[6.0.0, )",
+          "Serilog.Sinks.File": "[7.0.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1739,7 +1738,7 @@
           "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer": "[6.0.2, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.15.0, )",
           "Destructurama.JsonNet": "[4.0.2, )",
           "Microsoft.EntityFrameworkCore.SqlServer": "[9.0.4, )",
           "Microsoft.Extensions.Hosting": "[9.0.4, )",
@@ -1750,7 +1749,7 @@
           "Serilog.Formatting.Compact": "[3.0.0, )",
           "Serilog.Settings.Configuration": "[9.0.0, )",
           "Serilog.Sinks.Console": "[6.0.0, )",
-          "Serilog.Sinks.File": "[6.0.0, )",
+          "Serilog.Sinks.File": "[7.0.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1778,7 +1777,7 @@
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.15.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1793,7 +1792,7 @@
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.15.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1809,7 +1808,7 @@
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.15.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1823,7 +1822,8 @@
           "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.Sqs": "[4.0.1, )",
           "Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions": "[1.0.0, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.15.0, )",
+          "Microsoft.EntityFrameworkCore.Design": "[9.0.4, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1881,7 +1881,7 @@
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication": "[15.0.1, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.15.0, )",
           "Destructurama.JsonNet": "[4.0.2, )",
           "Microsoft.Extensions.Http.Polly": "[9.0.4, )",
           "Microsoft.SyndicationFeed.ReaderWriter": "[1.0.2, )",
@@ -1892,7 +1892,7 @@
           "Serilog.Formatting.Compact": "[3.0.0, )",
           "Serilog.Settings.Configuration": "[9.0.0, )",
           "Serilog.Sinks.Console": "[6.0.0, )",
-          "Serilog.Sinks.File": "[6.0.0, )",
+          "Serilog.Sinks.File": "[7.0.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -2419,11 +2419,11 @@
       },
       "Datadog.Trace.Bundle": {
         "type": "CentralTransitive",
-        "requested": "[3.14.3, )",
-        "resolved": "3.14.3",
-        "contentHash": "zja2mjnx2/vLiB9Q6CfPKZY+f79XobivLoXMO7FuwlLvwkgD3TXPy4KseuhJkgsv99MGi/7SZdvnlzW1eSHBsQ==",
+        "requested": "[3.15.0, )",
+        "resolved": "3.15.0",
+        "contentHash": "mzCLTCiA1Lzlj3dRbE9G84aePo7S+7ekFdl5r3ujm8hmoeKkW0MBayhKIg2+ZvTbIbrA5oHMDcwIscLR125cVg==",
         "dependencies": {
-          "Datadog.Trace": "3.14.3"
+          "Datadog.Trace": "3.15.0"
         }
       },
       "Destructurama.JsonNet": {
@@ -2689,11 +2689,11 @@
       },
       "Serilog.Sinks.File": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0, )",
-        "resolved": "6.0.0",
-        "contentHash": "lxjg89Y8gJMmFxVkbZ+qDgjl+T4yC5F7WSLTvA+5q0R04tfKVLRL/EHpYoJ/MEQd2EeCKDuylBIVnAYMotmh2A==",
+        "requested": "[7.0.0, )",
+        "resolved": "7.0.0",
+        "contentHash": "fKL7mXv7qaiNBUC71ssvn/dU0k9t0o45+qm2XgKAlSt19xF+ijjxyA3R6HmCgfKEKwfcfkwWjayuQtRueZFkYw==",
         "dependencies": {
-          "Serilog": "4.0.0"
+          "Serilog": "4.2.0"
         }
       }
     }
