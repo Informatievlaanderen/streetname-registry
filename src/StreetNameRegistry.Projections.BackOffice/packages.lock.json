@@ -1807,7 +1807,7 @@
       },
       "Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple": {
         "type": "CentralTransitive",
-        "requested": "[6.0.2, )",
+        "requested": "[6.0.3, )",
         "resolved": "6.0.0",
         "contentHash": "N7gB7KczRTPQOSnXjXUoc098dkvnZpnC4+K9f/eXQ8/H9iJiT+n0cmLirV93ay0OARD39f9+oDBa7AgJGOL5YQ==",
         "dependencies": {
@@ -1892,7 +1892,7 @@
       },
       "Microsoft.Data.SqlClient": {
         "type": "CentralTransitive",
-        "requested": "[6.0.1, )",
+        "requested": "[6.0.2, )",
         "resolved": "6.0.1",
         "contentHash": "v7HxnYYXGGCJilxeQ4Pdks+popVuGajBpHmau0RU4ACIcbfs5qCNUnCogGpZ+CJ//8Qafhxq7vc5a8L9d6O8Eg==",
         "dependencies": {
@@ -2080,7 +2080,7 @@
       },
       "Serilog.Sinks.File": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0, )",
+        "requested": "[7.0.0, )",
         "resolved": "6.0.0",
         "contentHash": "lxjg89Y8gJMmFxVkbZ+qDgjl+T4yC5F7WSLTvA+5q0R04tfKVLRL/EHpYoJ/MEQd2EeCKDuylBIVnAYMotmh2A==",
         "dependencies": {
@@ -2504,7 +2504,7 @@
       },
       "Microsoft.Data.SqlClient": {
         "type": "CentralTransitive",
-        "requested": "[6.0.1, )",
+        "requested": "[6.0.2, )",
         "resolved": "6.0.1",
         "contentHash": "v7HxnYYXGGCJilxeQ4Pdks+popVuGajBpHmau0RU4ACIcbfs5qCNUnCogGpZ+CJ//8Qafhxq7vc5a8L9d6O8Eg==",
         "dependencies": {
@@ -2936,7 +2936,7 @@
       },
       "Microsoft.Data.SqlClient": {
         "type": "CentralTransitive",
-        "requested": "[6.0.1, )",
+        "requested": "[6.0.2, )",
         "resolved": "6.0.1",
         "contentHash": "v7HxnYYXGGCJilxeQ4Pdks+popVuGajBpHmau0RU4ACIcbfs5qCNUnCogGpZ+CJ//8Qafhxq7vc5a8L9d6O8Eg==",
         "dependencies": {
@@ -3289,7 +3289,7 @@
       },
       "Microsoft.Data.SqlClient": {
         "type": "CentralTransitive",
-        "requested": "[6.0.1, )",
+        "requested": "[6.0.2, )",
         "resolved": "6.0.1",
         "contentHash": "v7HxnYYXGGCJilxeQ4Pdks+popVuGajBpHmau0RU4ACIcbfs5qCNUnCogGpZ+CJ//8Qafhxq7vc5a8L9d6O8Eg==",
         "dependencies": {
