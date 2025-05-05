@@ -1,3 +1,10 @@
+## [5.0.7](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.6...v5.0.7) (2025-05-05)
+
+
+### Bug Fixes
+
+* **consumer:** bump message-handling to 6.0.3 ([0b73b49](https://github.com/informatievlaanderen/streetname-registry/commit/0b73b49bd794befc1a32af2ca0d947975672eda5))
+
 ## [5.0.6](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.5...v5.0.6) (2025-05-02)
 
 
