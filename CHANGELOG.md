@@ -1,3 +1,10 @@
+## [5.0.8](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.7...v5.0.8) (2025-05-07)
+
+
+### Bug Fixes
+
+* **projector:** add healthcheck ([55c4450](https://github.com/informatievlaanderen/streetname-registry/commit/55c445017dddd433bd4f737a298c05e2e620d348))
+
 ## [5.0.7](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.6...v5.0.7) (2025-05-05)
 
 
