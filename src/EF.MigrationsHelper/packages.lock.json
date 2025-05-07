@@ -322,16 +322,16 @@
       },
       "Confluent.Kafka": {
         "type": "Transitive",
-        "resolved": "2.9.0",
-        "contentHash": "pp+ut4RZBY07FdcGBaot/aOwmnBnyUl5NFFgnxU1tMLavRidoBLkrMFNyX/WNOsHr0N+g4dsAVZfJvUeIgY1YA==",
+        "resolved": "2.10.0",
+        "contentHash": "beGF9x9Yw83NDTs0oyNdRHSR27HjF2NpwwCZZ45hEk1zE+yDW8JXuyzitfdYftLACCbuaBJCEh+ZW7Qxg9cdnA==",
         "dependencies": {
-          "librdkafka.redist": "2.8.0"
+          "librdkafka.redist": "2.10.0"
         }
       },
       "Datadog.Trace": {
         "type": "Transitive",
-        "resolved": "3.14.3",
-        "contentHash": "LaN99IxeB48ouuhuedweJCqvrX5rEIyWl+r5wXoSWXHK4zFu0YD+A6mRfaSltXpDN0+HViIBHyAcDrf+B79vAg==",
+        "resolved": "3.16.0",
+        "contentHash": "inbkllX9QI/FoHqtmNAMAk8I2ZcLpDJSL3caZSpTxLfunNoNlmpnnAE3fcqdNgSj2dxD3PleDp4oG698I+R6Kg==",
         "dependencies": {
           "System.Diagnostics.DiagnosticSource": "4.4.1"
         }
@@ -397,8 +397,8 @@
       },
       "librdkafka.redist": {
         "type": "Transitive",
-        "resolved": "2.8.0",
-        "contentHash": "Gg8nPjn9+Sp6X+O1g9duKarCteFQjpkCVJS06ihVQf4PVnR/jPXkN3vwvWe5zP4L47xiEfU+6wIp4pbIvaQ6rQ=="
+        "resolved": "2.10.0",
+        "contentHash": "QOvg/8WapA3c5EwPojCjnLEdxJNjxJ5s2GO8VxrDV9BTpnXHHGJ14MPwcGKiQeiRsBvPoeoTKMOh5KYu/Wm3jw=="
       },
       "Microsoft.AspNetCore.Authentication.JwtBearer": {
         "type": "Transitive",
@@ -1668,13 +1668,13 @@
           "Be.Vlaanderen.Basisregisters.GrAr.Edit": "[22.0.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Legacy": "[22.0.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm": "[22.0.0, )",
-          "Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple": "[6.0.2, )",
+          "Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple": "[6.0.3, )",
           "Be.Vlaanderen.Basisregisters.Sqs": "[4.0.1, )",
           "Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions": "[1.0.0, )",
           "Be.Vlaanderen.Basisregisters.TicketingService.Abstractions": "[3.0.0, )",
           "Be.Vlaanderen.Basisregisters.TicketingService.Proxy.HttpProxy": "[3.0.0, )",
           "CsvHelper": "[33.0.1, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.16.0, )",
           "MediatR": "[12.5.0, )",
           "StreetNameRegistry.Consumer": "[1.0.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
@@ -1687,8 +1687,7 @@
           "Be.Vlaanderen.Basisregisters.GrAr.Legacy": "[22.0.0, )",
           "Be.Vlaanderen.Basisregisters.Sqs": "[4.0.1, )",
           "Be.Vlaanderen.Basisregisters.TicketingService.Abstractions": "[3.0.0, )",
-          "MediatR.Contracts": "[2.0.1, )",
-          "StreetNameRegistry": "[1.0.0, )"
+          "MediatR.Contracts": "[2.0.1, )"
         }
       },
       "streetnameregistry": {
@@ -1711,12 +1710,12 @@
         "dependencies": {
           "Be.Vlaanderen.Basisregisters.Aws.DistributedMutex": "[5.0.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Contracts": "[22.0.0, )",
-          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": "[6.0.2, )",
+          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": "[6.0.3, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.16.0, )",
           "Destructurama.JsonNet": "[4.0.2, )",
           "Microsoft.EntityFrameworkCore.SqlServer": "[9.0.4, )",
           "Microsoft.Extensions.Hosting": "[9.0.4, )",
@@ -1727,7 +1726,7 @@
           "Serilog.Formatting.Compact": "[3.0.0, )",
           "Serilog.Settings.Configuration": "[9.0.0, )",
           "Serilog.Sinks.Console": "[6.0.0, )",
-          "Serilog.Sinks.File": "[6.0.0, )",
+          "Serilog.Sinks.File": "[7.0.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1736,10 +1735,10 @@
         "dependencies": {
           "Be.Vlaanderen.Basisregisters.Aws.DistributedMutex": "[5.0.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Contracts": "[22.0.0, )",
-          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer": "[6.0.2, )",
+          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer": "[6.0.3, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.16.0, )",
           "Destructurama.JsonNet": "[4.0.2, )",
           "Microsoft.EntityFrameworkCore.SqlServer": "[9.0.4, )",
           "Microsoft.Extensions.Hosting": "[9.0.4, )",
@@ -1750,7 +1749,7 @@
           "Serilog.Formatting.Compact": "[3.0.0, )",
           "Serilog.Settings.Configuration": "[9.0.0, )",
           "Serilog.Sinks.Console": "[6.0.0, )",
-          "Serilog.Sinks.File": "[6.0.0, )",
+          "Serilog.Sinks.File": "[7.0.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1774,11 +1773,11 @@
           "Be.Vlaanderen.Basisregisters.Api": "[24.0.0, )",
           "Be.Vlaanderen.Basisregisters.EventHandling.Autofac": "[7.0.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Contracts": "[22.0.0, )",
-          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer": "[6.0.2, )",
+          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer": "[6.0.3, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.16.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1789,11 +1788,11 @@
           "Be.Vlaanderen.Basisregisters.Api": "[24.0.0, )",
           "Be.Vlaanderen.Basisregisters.EventHandling.Autofac": "[7.0.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Legacy": "[22.0.0, )",
-          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer": "[6.0.2, )",
+          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer": "[6.0.3, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.16.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1805,11 +1804,11 @@
           "Be.Vlaanderen.Basisregisters.EventHandling.Autofac": "[7.0.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Legacy": "[22.0.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Oslo": "[22.0.0, )",
-          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer": "[6.0.2, )",
+          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer": "[6.0.3, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.16.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1823,7 +1822,8 @@
           "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.Sqs": "[4.0.1, )",
           "Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions": "[1.0.0, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.16.0, )",
+          "Microsoft.EntityFrameworkCore.Design": "[9.0.4, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -1881,7 +1881,7 @@
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication": "[15.0.1, )",
-          "Datadog.Trace.Bundle": "[3.14.3, )",
+          "Datadog.Trace.Bundle": "[3.16.0, )",
           "Destructurama.JsonNet": "[4.0.2, )",
           "Microsoft.Extensions.Http.Polly": "[9.0.4, )",
           "Microsoft.SyndicationFeed.ReaderWriter": "[1.0.2, )",
@@ -1892,7 +1892,7 @@
           "Serilog.Formatting.Compact": "[3.0.0, )",
           "Serilog.Settings.Configuration": "[9.0.0, )",
           "Serilog.Sinks.Console": "[6.0.0, )",
-          "Serilog.Sinks.File": "[6.0.0, )",
+          "Serilog.Sinks.File": "[7.0.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -2215,45 +2215,49 @@
       },
       "Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple": {
         "type": "CentralTransitive",
-        "requested": "[6.0.2, )",
-        "resolved": "6.0.2",
-        "contentHash": "0x1ZuXywYqtWEuPgDcpFHTzISIBM3ZtzE0wIH4r/Vz2Q9GFIE8FtwN4GSCkQqqDwwnQlyJPiHtWDWn9StDBtEw==",
+        "requested": "[6.0.3, )",
+        "resolved": "6.0.3",
+        "contentHash": "wxSIdEKfGfWTmL/tW2+PgRdbjZpMmBc8NlCdMcsvvtTfbPzyeAEt3BrPAR4MOmf1kIjHWhhIqwgSakLPKS6JaA==",
         "dependencies": {
           "AWSSDK.Core": "3.7.402.35",
           "AWSSDK.SQS": "3.7.400.129",
-          "Microsoft.Extensions.Configuration.Json": "9.0.3",
-          "Microsoft.Extensions.DependencyInjection": "9.0.3",
+          "Microsoft.Extensions.Configuration.Json": "9.0.4",
+          "Microsoft.Extensions.DependencyInjection": "9.0.4",
           "Newtonsoft.Json": "13.0.3"
         }
       },
       "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer": {
         "type": "CentralTransitive",
-        "requested": "[6.0.2, )",
-        "resolved": "6.0.2",
-        "contentHash": "MYJVDmCsidsnq4VGcrksIyeu7s5pKIfwOVRQAfIJxjrUvjoYLzqKE+jiaWQt7tVj4BUJ4TNaY4COSpRIF0EE5g==",
+        "requested": "[6.0.3, )",
+        "resolved": "6.0.3",
+        "contentHash": "WXy1yd2pDOhCQxKhL9marjPTlsCba772/9xJY6so8TcFUsSmiG6KF3v8lfO0GkfKRVNDFx3HWMg+dPWQIzWpoQ==",
         "dependencies": {
-          "Confluent.Kafka": "2.9.0",
-          "Microsoft.EntityFrameworkCore": "9.0.3",
-          "Microsoft.Extensions.Logging": "9.0.3",
+          "Confluent.Kafka": "2.10.0",
+          "Microsoft.EntityFrameworkCore": "9.0.4",
+          "Microsoft.Extensions.Logging": "9.0.4",
           "Newtonsoft.Json": "13.0.3"
         }
       },
       "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": {
         "type": "CentralTransitive",
-        "requested": "[6.0.2, )",
-        "resolved": "6.0.2",
-        "contentHash": "rlJ1JgpcsyEOdNQAM3ry+nzetI4T1All/grk7f+Wi8kCHm3vkvwcmFruBhgw1UaKoKbC8/tNispEtDjJZuIrGg==",
+        "requested": "[6.0.3, )",
+        "resolved": "6.0.3",
+        "contentHash": "Ty3Ac44+0Pb4uOuBKnutrJfmpfAILNpJe/yc/Ha53cmeoiSz0vdoXjy1daZjT/M3z0XvMgHol05fdmroz6IDGA==",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.SqlServer": "9.0.3"
+          "Confluent.Kafka": "2.10.0",
+          "Microsoft.EntityFrameworkCore": "9.0.4",
+          "Microsoft.EntityFrameworkCore.SqlServer": "9.0.4",
+          "Microsoft.Extensions.Logging": "9.0.4",
+          "Newtonsoft.Json": "13.0.3"
         }
       },
       "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer": {
         "type": "CentralTransitive",
-        "requested": "[6.0.2, )",
-        "resolved": "6.0.2",
-        "contentHash": "nPIG7/1Gf1nLhu1c/r1udJuyVsT77kwHZC2Ry1n2o8eIlT35kS3gwgjOAKBY9hf2PjFYlSkhTebOGqyVxEFtrg==",
+        "requested": "[6.0.3, )",
+        "resolved": "6.0.3",
+        "contentHash": "jA4LLoui/IoBJTRNXYVbgCD34C1zrA0LrFDnBeHkPCTdU94DXe9OiaA4nunzG08ThEjyrCuLD1VkuUmVAiJghw==",
         "dependencies": {
-          "Confluent.Kafka": "2.9.0",
+          "Confluent.Kafka": "2.10.0",
           "Newtonsoft.Json": "13.0.3"
         }
       },
@@ -2419,11 +2423,11 @@
       },
       "Datadog.Trace.Bundle": {
         "type": "CentralTransitive",
-        "requested": "[3.14.3, )",
-        "resolved": "3.14.3",
-        "contentHash": "zja2mjnx2/vLiB9Q6CfPKZY+f79XobivLoXMO7FuwlLvwkgD3TXPy4KseuhJkgsv99MGi/7SZdvnlzW1eSHBsQ==",
+        "requested": "[3.16.0, )",
+        "resolved": "3.16.0",
+        "contentHash": "kNi4zZQNPpYZeICdTAS1DsrR4F54Czo4/1dZHjelyDytx/Ag5sN0+hrvoqxH/7ozkjfPHi2Nz2Kq4IE5fsjBBw==",
         "dependencies": {
-          "Datadog.Trace": "3.14.3"
+          "Datadog.Trace": "3.16.0"
         }
       },
       "Destructurama.JsonNet": {
@@ -2460,7 +2464,7 @@
       },
       "Microsoft.Data.SqlClient": {
         "type": "CentralTransitive",
-        "requested": "[6.0.1, )",
+        "requested": "[6.0.2, )",
         "resolved": "6.0.1",
         "contentHash": "v7HxnYYXGGCJilxeQ4Pdks+popVuGajBpHmau0RU4ACIcbfs5qCNUnCogGpZ+CJ//8Qafhxq7vc5a8L9d6O8Eg==",
         "dependencies": {
@@ -2689,11 +2693,11 @@
       },
       "Serilog.Sinks.File": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0, )",
-        "resolved": "6.0.0",
-        "contentHash": "lxjg89Y8gJMmFxVkbZ+qDgjl+T4yC5F7WSLTvA+5q0R04tfKVLRL/EHpYoJ/MEQd2EeCKDuylBIVnAYMotmh2A==",
+        "requested": "[7.0.0, )",
+        "resolved": "7.0.0",
+        "contentHash": "fKL7mXv7qaiNBUC71ssvn/dU0k9t0o45+qm2XgKAlSt19xF+ijjxyA3R6HmCgfKEKwfcfkwWjayuQtRueZFkYw==",
         "dependencies": {
-          "Serilog": "4.0.0"
+          "Serilog": "4.2.0"
         }
       }
     }
