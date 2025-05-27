@@ -1,3 +1,10 @@
+## [5.0.9](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.8...v5.0.9) (2025-05-27)
+
+
+### Bug Fixes
+
+* **ci:** separate last-changed-list ([f7170cc](https://github.com/informatievlaanderen/streetname-registry/commit/f7170cc7ca73807e1e66e1ea798eb2b6c224892c))
+
 ## [5.0.8](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.7...v5.0.8) (2025-05-07)
 
 
