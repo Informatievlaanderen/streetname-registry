@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
@@ -83,9 +84,9 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
                 streetNames = streetNames.Where(x => x.IsInFlemishRegion);
             }
 
-            var filterMunicipalityName = filtering.Filter.MunicipalityName.RemoveDiacritics();
             if (!string.IsNullOrEmpty(filtering.Filter.MunicipalityName))
             {
+                var filterMunicipalityName = filtering.Filter.MunicipalityName.RemoveDiacritics();
                 var municipalityNisCodes = _syndicationContext
                     .MunicipalityLatestItems
                     .AsNoTracking()
@@ -96,10 +97,20 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
                     .Select(x => x.NisCode)
                     .ToList();
 
-
                 if (streetNames is IQueryable<StreetNameListItemV2> streetNamesV2)
                 {
-                    streetNames = streetNames.Where(m => municipalityNisCodes.Contains(m.NisCode));
+                    if (municipalityNisCodes.Count <= 10)
+                    {
+                        var predicate = PredicateBuilder.False<StreetNameListItemV2>();
+                        foreach (var nisCode in municipalityNisCodes)
+                            predicate = predicate.Or(m => m.NisCode == nisCode);
+
+                        streetNames = streetNames.Where(predicate);
+                    }
+                    else
+                    {
+                        streetNames = streetNames.Where(m => municipalityNisCodes.Contains(m.NisCode));
+                    }
                 }
             }
 
@@ -171,5 +182,19 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
         public string? NisCode { get; set; }
         public string? PostalCode { get; set; }
         public bool? IsInFlemishRegion { get; set; } = null;
+    }
+
+    public static class PredicateBuilder
+    {
+        public static Expression<Func<T, bool>> True<T>() { return f => true; }
+        public static Expression<Func<T, bool>> False<T>() { return f => false; }
+
+        public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> expr1,
+            Expression<Func<T, bool>> expr2)
+        {
+            var invokedExpr = Expression.Invoke(expr2, expr1.Parameters);
+            return Expression.Lambda<Func<T, bool>>
+                (Expression.OrElse(expr1.Body, invokedExpr), expr1.Parameters);
+        }
     }
 }
