@@ -16,67 +16,26 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
     using Projections.Legacy.StreetNameListV2;
     using Projections.Syndication;
 
-    public sealed class StreetNameListOsloQueryV2 : Be.Vlaanderen.Basisregisters.Api.Search.Query<StreetNameListItemV2, StreetNameFilter>
+    public sealed class StreetNameListOsloQueryV2 : Be.Vlaanderen.Basisregisters.Api.Search.Query<StreetNameListView, StreetNameFilter>
     {
         private readonly LegacyContext _legacyContext;
-        private readonly SyndicationContext _syndicationContext;
-        private readonly ConsumerPostalContext _postalContext;
 
         protected override ISorting Sorting => new StreetNameSorting();
 
-        public StreetNameListOsloQueryV2(
-            LegacyContext legacyContext,
-            SyndicationContext syndicationContext,
-            ConsumerPostalContext postalContext)
+        public StreetNameListOsloQueryV2(LegacyContext legacyContext)
         {
             _legacyContext = legacyContext;
-            _syndicationContext = syndicationContext;
-            _postalContext = postalContext;
         }
 
-        protected override IQueryable<StreetNameListItemV2> Filter(FilteringHeader<StreetNameFilter> filtering)
+        protected override IQueryable<StreetNameListView> Filter(FilteringHeader<StreetNameFilter> filtering)
         {
-            IQueryable<StreetNameListItemV2>? streetNames = default;
-
-            streetNames = _legacyContext
-                .StreetNameListV2
+            var streetNames = _legacyContext.StreetNameListView
                 .AsNoTracking()
-                .OrderBy(x => x.PersistentLocalId)
-                .Where(s => !s.Removed);
-
-            if (streetNames is null)
-            {
-                throw new NotImplementedException();
-            }
+                .AsQueryable();
 
             if (!filtering.ShouldFilter)
             {
                 return streetNames;
-            }
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NisCode))
-            {
-                streetNames = streetNames.Where(m => m.NisCode == filtering.Filter.NisCode);
-            }
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameDutch))
-            {
-                streetNames = streetNames.Where(s => s.NameDutch.Contains(filtering.Filter.NameDutch));
-            }
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameEnglish))
-            {
-                streetNames = streetNames.Where(s => s.NameEnglish.Contains(filtering.Filter.NameEnglish));
-            }
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameFrench))
-            {
-                streetNames = streetNames.Where(s => s.NameFrench.Contains(filtering.Filter.NameFrench));
-            }
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameGerman))
-            {
-                streetNames = streetNames.Where(s => s.NameGerman.Contains(filtering.Filter.NameGerman));
             }
 
             if (filtering.Filter.IsInFlemishRegion.HasValue)
@@ -84,71 +43,65 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
                 streetNames = streetNames.Where(x => x.IsInFlemishRegion);
             }
 
+            if (!string.IsNullOrEmpty(filtering.Filter.Status))
+            {
+                if (Enum.TryParse<StraatnaamStatus>(filtering.Filter.Status, true, out var status))
+                {
+                    var streetNameStatus = status.ConvertToMunicipalityStreetNameStatus();
+                    streetNames = streetNames.Where(m => m.StreetNameStatus.HasValue && m.StreetNameStatus.Value == streetNameStatus);
+                }
+                else
+                {
+                    //have to filter on EF cannot return new List<>().AsQueryable() cause non-EF provider does not support .CountAsync()
+                    streetNames = streetNames.Where(m => m.StreetNameStatus.HasValue && (int)m.StreetNameStatus.Value == -1);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(filtering.Filter.NisCode))
+            {
+                streetNames = streetNames.Where(m => m.NisCode == filtering.Filter.NisCode);
+            }
+
             if (!string.IsNullOrEmpty(filtering.Filter.MunicipalityName))
             {
                 var filterMunicipalityName = filtering.Filter.MunicipalityName.RemoveDiacritics();
-                var municipalityNisCodes = _syndicationContext
-                    .MunicipalityLatestItems
-                    .AsNoTracking()
-                    .Where(x => x.NameDutchSearch == filterMunicipalityName ||
-                                x.NameFrenchSearch == filterMunicipalityName ||
-                                x.NameEnglishSearch == filterMunicipalityName ||
-                                x.NameGermanSearch == filterMunicipalityName)
-                    .Select(x => x.NisCode)
-                    .ToList();
+                streetNames = streetNames
+                    .Where(x =>
+                        x.MunicipalityNameDutchSearch == filterMunicipalityName ||
+                        x.MunicipalityNameFrenchSearch == filterMunicipalityName ||
+                        x.MunicipalityNameEnglishSearch == filterMunicipalityName ||
+                        x.MunicipalityNameGermanSearch == filterMunicipalityName);
+            }
 
-                if (streetNames is IQueryable<StreetNameListItemV2> streetNamesV2)
-                {
-                    if (municipalityNisCodes.Count <= 10)
-                    {
-                        var predicate = PredicateBuilder.False<StreetNameListItemV2>();
-                        foreach (var nisCode in municipalityNisCodes)
-                            predicate = predicate.Or(m => m.NisCode == nisCode);
+            if (!string.IsNullOrEmpty(filtering.Filter.NameDutch))
+            {
+                streetNames = streetNames.Where(s => s.StreetNameDutch.Contains(filtering.Filter.NameDutch));
+            }
 
-                        streetNames = streetNames.Where(predicate);
-                    }
-                    else
-                    {
-                        streetNames = streetNames.Where(m => municipalityNisCodes.Contains(m.NisCode));
-                    }
-                }
+            if (!string.IsNullOrEmpty(filtering.Filter.NameEnglish))
+            {
+                streetNames = streetNames.Where(s => s.StreetNameEnglish.Contains(filtering.Filter.NameEnglish));
+            }
+
+            if (!string.IsNullOrEmpty(filtering.Filter.NameFrench))
+            {
+                streetNames = streetNames.Where(s => s.StreetNameFrench.Contains(filtering.Filter.NameFrench));
+            }
+
+            if (!string.IsNullOrEmpty(filtering.Filter.NameGerman))
+            {
+                streetNames = streetNames.Where(s => s.StreetNameGerman.Contains(filtering.Filter.NameGerman));
             }
 
             var filterStreetName = filtering.Filter.StreetNameName.RemoveDiacritics();
             if (!string.IsNullOrEmpty(filtering.Filter.StreetNameName))
             {
                 streetNames = streetNames
-                    .Where(x => x.NameDutchSearch == filterStreetName ||
-                                x.NameFrenchSearch == filterStreetName ||
-                                x.NameEnglishSearch == filterStreetName ||
-                                x.NameGermanSearch == filterStreetName);
-            }
-
-            if (!string.IsNullOrEmpty(filtering.Filter.Status))
-            {
-                if (Enum.TryParse(typeof(StraatnaamStatus), filtering.Filter.Status, true, out var status) && status != null)
-                {
-                    var streetNameStatus = ((StraatnaamStatus)status).ConvertToMunicipalityStreetNameStatus();
-                    streetNames = streetNames.Where(m => m.Status.HasValue && m.Status.Value == streetNameStatus);
-                }
-                else
-                {
-                    //have to filter on EF cannot return new List<>().AsQueryable() cause non-EF provider does not support .CountAsync()
-                    streetNames = streetNames.Where(m => m.Status.HasValue && (int) m.Status.Value == -1);
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(filtering.Filter.PostalCode))
-            {
-                var postalConsumerItem = _postalContext.PostalConsumerItems.Find(filtering.Filter.PostalCode);
-                if (postalConsumerItem?.NisCode != null)
-                {
-                    streetNames = streetNames.Where(m => m.NisCode == postalConsumerItem.NisCode);
-                }
-                else
-                {
-                    streetNames = streetNames.Where(m => m.NisCode == "-1");
-                }
+                    .Where(x =>
+                        x.StreetNameDutchSearch == filterStreetName ||
+                        x.StreetNameFrenchSearch == filterStreetName ||
+                        x.StreetNameEnglishSearch == filterStreetName ||
+                        x.StreetNameGermanSearch == filterStreetName);
             }
 
             return streetNames;
@@ -157,17 +110,17 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
 
     public class StreetNameSorting : ISorting
     {
-        public IEnumerable<string> SortableFields { get; } = new[]
-        {
-            nameof(StreetNameListItem.NameDutch),
-            nameof(StreetNameListItem.NameEnglish),
-            nameof(StreetNameListItem.NameFrench),
-            nameof(StreetNameListItem.NameGerman),
-            nameof(StreetNameListItem.PersistentLocalId)
-        };
+        public IEnumerable<string> SortableFields { get; } =
+        [
+            nameof(StreetNameListView.StreetNameDutch),
+            nameof(StreetNameListView.StreetNameEnglish),
+            nameof(StreetNameListView.StreetNameFrench),
+            nameof(StreetNameListView.StreetNameGerman),
+            nameof(StreetNameListView.StreetNamePersistentLocalId)
+        ];
 
         public SortingHeader DefaultSortingHeader { get; } =
-            new SortingHeader(nameof(StreetNameListItem.PersistentLocalId), SortOrder.Ascending);
+            new SortingHeader(nameof(StreetNameListView.StreetNamePersistentLocalId), SortOrder.Ascending);
     }
 
     public class StreetNameFilter
@@ -180,21 +133,6 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
         public string NameEnglish { get; set; }
         public string Status { get; set; }
         public string? NisCode { get; set; }
-        public string? PostalCode { get; set; }
         public bool? IsInFlemishRegion { get; set; } = null;
-    }
-
-    public static class PredicateBuilder
-    {
-        public static Expression<Func<T, bool>> True<T>() { return f => true; }
-        public static Expression<Func<T, bool>> False<T>() { return f => false; }
-
-        public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> expr1,
-            Expression<Func<T, bool>> expr2)
-        {
-            var invokedExpr = Expression.Invoke(expr2, expr1.Parameters);
-            return Expression.Lambda<Func<T, bool>>
-                (Expression.OrElse(expr1.Body, invokedExpr), expr1.Parameters);
-        }
     }
 }
