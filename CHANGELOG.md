@@ -1,3 +1,10 @@
+## [5.0.10](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.9...v5.0.10) (2025-05-28)
+
+
+### Performance Improvements
+
+* streetname list query GAWR-6931 ([451b869](https://github.com/informatievlaanderen/streetname-registry/commit/451b86936dd5356804b128f1a9068dd52b91b770))
+
 ## [5.0.9](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.8...v5.0.9) (2025-05-27)
 
 
