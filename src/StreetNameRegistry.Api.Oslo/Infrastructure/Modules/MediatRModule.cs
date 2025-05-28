@@ -25,8 +25,6 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
             builder.Register(c => (IRequestHandler<OsloListRequest, StreetNameListOsloResponse>)
                 new OsloListHandlerV2(
                     c.Resolve<LegacyContext>(),
-                    c.Resolve<SyndicationContext>(),
-                    c.Resolve<ConsumerPostalContext>(),
                     c.Resolve<IOptions<ResponseOptions>>())).InstancePerLifetimeScope();
 
             builder.Register(c => (IRequestHandler<OsloDetailRequest, StreetNameOsloResponse>)
@@ -37,9 +35,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
 
             builder.Register(c => (IRequestHandler<OsloCountRequest, TotaalAantalResponse>)
                 new OsloCountHandlerV2(
-                    c.Resolve<LegacyContext>(),
-                    c.Resolve<SyndicationContext>(),
-                    c.Resolve<ConsumerPostalContext>())).InstancePerLifetimeScope();
+                    c.Resolve<LegacyContext>())).InstancePerLifetimeScope();
 
             builder.RegisterType<SyndicationHandler>()
                 .AsImplementedInterfaces()

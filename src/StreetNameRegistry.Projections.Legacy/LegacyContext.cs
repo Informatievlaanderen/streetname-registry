@@ -12,6 +12,7 @@ namespace StreetNameRegistry.Projections.Legacy
     {
         public override string ProjectionStateSchema => Schema.Legacy;
         internal const string StreetNameListViewCountName = "vw_StreetNameListIds";
+        internal const string StreetNameListViewName = "vw_StreetNameList";
 
         public DbSet<StreetNameListItem> StreetNameList { get; set; }
         public DbSet<StreetNameListItemV2> StreetNameListV2 { get; set; }
@@ -21,6 +22,7 @@ namespace StreetNameRegistry.Projections.Legacy
         public DbSet<StreetNameSyndicationItem> StreetNameSyndication { get; set; }
 
         public DbSet<StreetNameListViewCount> StreetNameListViewCount { get; set; }
+        public DbSet<StreetNameListView> StreetNameListView { get; set; }
 
         public DbSet<T> Get<T>() where T : class, new()
         {
@@ -65,6 +67,10 @@ namespace StreetNameRegistry.Projections.Legacy
             modelBuilder.Entity<StreetNameListViewCount>()
                 .HasNoKey()
                 .ToView(StreetNameListViewCountName, Schema.Legacy);
+
+            modelBuilder.Entity<StreetNameListView>()
+                .HasNoKey()
+                .ToView(StreetNameListViewName, Schema.Legacy);
         }
     }
 }
