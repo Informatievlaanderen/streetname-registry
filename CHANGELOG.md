@@ -1,3 +1,10 @@
+## [5.0.11](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.10...v5.0.11) (2025-06-05)
+
+
+### Bug Fixes
+
+* **oslo-api:** correct timestamp for list ([fd49f9c](https://github.com/informatievlaanderen/streetname-registry/commit/fd49f9c174d2e1acfa526a4d41c7b39ab0198025))
+
 ## [5.0.10](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.9...v5.0.10) (2025-05-28)
 
 
