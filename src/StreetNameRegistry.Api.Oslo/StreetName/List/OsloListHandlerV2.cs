@@ -8,12 +8,14 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Converters;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
     using Municipality;
+    using NodaTime.Extensions;
     using Projections.Legacy;
     using Query;
 
@@ -46,7 +48,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
                     GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
                     GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
                     m.StreetNameStatus.ConvertFromMunicipalityStreetNameStatus(),
-                    m.VersionTimestamp))
+                    m.VersionTimestamp.ToInstant().ToBelgianDateTimeOffset()))
                 .ToListAsync(cancellationToken);
 
             return
