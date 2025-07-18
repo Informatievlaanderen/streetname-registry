@@ -18,6 +18,7 @@ namespace StreetNameRegistry.Municipality
         internal IReadOnlyList<Language> FacilityLanguages => _facilityLanguages;
 
         public MunicipalityStatus MunicipalityStatus { get; private set; }
+        public bool IsRemoved { get; private set; } = false;
 
         internal Municipality(ISnapshotStrategy snapshotStrategy) : this()
         {
@@ -57,6 +58,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasRenamed>(When);
 
             Register<MunicipalitySnapshot>(When);
+            Register<MunicipalityWasRemoved>(When);
         }
 
 
@@ -118,6 +120,11 @@ namespace StreetNameRegistry.Municipality
         {
             if (MunicipalityStatus != MunicipalityStatus.Retired)
                 MunicipalityStatus = MunicipalityStatus.Retired;
+        }
+
+        private void When(MunicipalityWasRemoved @event)
+        {
+            IsRemoved = true;
         }
         #endregion Municipality
 

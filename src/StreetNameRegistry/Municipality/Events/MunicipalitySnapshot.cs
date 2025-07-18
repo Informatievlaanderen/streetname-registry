@@ -21,6 +21,7 @@ namespace StreetNameRegistry.Municipality.Events
         public IEnumerable<Language> FacilityLanguages { get; }
 
         public IEnumerable<StreetNameData> StreetNames { get; }
+        public bool IsRemoved { get; set; }
 
         public MunicipalitySnapshot(
             MunicipalityId municipalityId,
@@ -28,7 +29,8 @@ namespace StreetNameRegistry.Municipality.Events
             MunicipalityStatus municipalityStatus,
             IEnumerable<Language> officialLanguages,
             IEnumerable<Language> facilityLanguages,
-            MunicipalityStreetNames streetNames)
+            MunicipalityStreetNames streetNames,
+            bool isRemoved)
         {
             MunicipalityId = municipalityId;
             NisCode = nisCode;
@@ -36,6 +38,7 @@ namespace StreetNameRegistry.Municipality.Events
             OfficialLanguages = officialLanguages;
             FacilityLanguages = facilityLanguages;
             StreetNames = streetNames.Select(x => new StreetNameData(x)).ToList();
+            IsRemoved = isRemoved;
         }
 
         [JsonConstructor]
@@ -45,14 +48,16 @@ namespace StreetNameRegistry.Municipality.Events
             string municipalityStatus,
             IEnumerable<Language> officialLanguages,
             IEnumerable<Language> facilityLanguages,
-            IEnumerable<StreetNameData> streetNames)
+            IEnumerable<StreetNameData> streetNames,
+            bool isRemoved = false)
             : this(
                 new MunicipalityId(municipalityId),
                 new NisCode(nisCode),
                 StreetNameRegistry.Municipality.MunicipalityStatus.Parse(municipalityStatus),
                 officialLanguages,
                 facilityLanguages,
-                new MunicipalityStreetNames())
+                new MunicipalityStreetNames(),
+                isRemoved)
         {
             StreetNames = streetNames;
         }

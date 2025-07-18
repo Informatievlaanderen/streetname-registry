@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreetNameRegistry.Projections.Syndication;
 
@@ -11,9 +12,11 @@ using StreetNameRegistry.Projections.Syndication;
 namespace StreetNameRegistry.Projections.Syndication.Migrations
 {
     [DbContext(typeof(SyndicationContext))]
-    partial class SyndicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250722063340_AddMunicipalityIsRemoved")]
+    partial class AddMunicipalityIsRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

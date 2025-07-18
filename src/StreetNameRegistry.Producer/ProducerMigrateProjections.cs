@@ -160,6 +160,7 @@
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityWasMerged>>(DoNothing);
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityWasNamed>>(DoNothing);
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityWasRetired>>(DoNothing);
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.MunicipalityWasRemoved>>(DoNothing);
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }

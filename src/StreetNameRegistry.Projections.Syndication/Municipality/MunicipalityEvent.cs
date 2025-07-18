@@ -19,6 +19,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
         MunicipalityWasRetired,
         MunicipalityWasCorrectedToRetired,
 
-        MunicipalityWasMerged
+        MunicipalityWasMerged,
+        MunicipalityWasRemoved
     }
 }

@@ -105,6 +105,12 @@ namespace StreetNameRegistry.Consumer.Projections
                 await commandHandler.Handle(command, ct);
             });
 
+            When<MunicipalityWasRemoved>(async (commandHandler, message, ct) =>
+            {
+                var command = GetCommand(message);
+                await commandHandler.Handle(command, ct);
+            });
+
             When<MunicipalityWasMerged>(async (commandHandler, message, ct) =>
             {
                 await using var context = await consumerContextFactory.CreateDbContextAsync(ct);
@@ -286,6 +292,14 @@ namespace StreetNameRegistry.Consumer.Projections
                 return new CorrectToRetiredMunicipality(
                     MunicipalityId.CreateFor(msg.MunicipalityId),
                     new RetirementDate(InstantPattern.General.Parse(msg.RetirementDate).GetValueOrThrow()),
+                    FromProvenance(msg.Provenance));
+            }
+
+            if (type == typeof(MunicipalityWasRemoved))
+            {
+                var msg = (MunicipalityWasRemoved)message;
+                return new RemoveMunicipality(
+                    MunicipalityId.CreateFor(msg.MunicipalityId),
                     FromProvenance(msg.Provenance));
             }
 

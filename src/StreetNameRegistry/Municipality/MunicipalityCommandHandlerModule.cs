@@ -193,6 +193,16 @@ namespace StreetNameRegistry.Municipality
                     var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.CorrectToRetired();
                 });
+
+            For<RemoveMunicipality>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<RemoveMunicipality, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.Remove();
+                });
         }
     }
 }
