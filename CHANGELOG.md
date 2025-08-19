@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.11...v5.1.0) (2025-08-19)
+
+
+### Features
+
+* add remove municipality GAWR-4168 ([#467](https://github.com/informatievlaanderen/streetname-registry/issues/467)) ([2be1549](https://github.com/informatievlaanderen/streetname-registry/commit/2be1549e8b3276ec748610aac82461f77523e5b4))
+
 ## [5.0.11](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.10...v5.0.11) (2025-06-05)
 
 
