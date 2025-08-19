@@ -24,6 +24,19 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
             When(MunicipalityEvent.MunicipalityFacilitiesLanguageWasAdded, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityFacilitiesLanguageWasRemoved, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityWasMerged, AddSyndicationItemEntry);
+            When(MunicipalityEvent.MunicipalityWasRemoved, AddRemoveSyndicationItemEntry);
+        }
+
+        private static async Task AddRemoveSyndicationItemEntry(
+            AtomEntry<SyndicationContent<Gemeente>> entry,
+            SyndicationContext context,
+            CancellationToken ct)
+        {
+            var municipalityLatestItem = await context
+                .MunicipalityLatestItems
+                .FindAsync(entry.Content.Object.Id);
+
+            municipalityLatestItem!.IsRemoved = true;
         }
 
         private static async Task AddSyndicationItemEntry(AtomEntry<SyndicationContent<Gemeente>> entry, SyndicationContext context, CancellationToken ct)

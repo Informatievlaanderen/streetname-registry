@@ -240,6 +240,7 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
             When<Envelope<MunicipalityWasMerged>>(DoNothing);
             When<Envelope<MunicipalityWasNamed>>(DoNothing);
             When<Envelope<MunicipalityWasRetired>>(DoNothing);
+            When<Envelope<MunicipalityWasRemoved>>(DoNothing);
             When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
             When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }

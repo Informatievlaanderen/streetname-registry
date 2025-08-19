@@ -335,10 +335,10 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
             When<Envelope<MunicipalityOfficialLanguageWasRemoved>>(DoNothing);
             When<Envelope<MunicipalityWasCorrectedToCurrent>>(DoNothing);
             When<Envelope<MunicipalityWasCorrectedToRetired>>(DoNothing);
-            When<Envelope<MunicipalityWasImported>>(DoNothing);
             When<Envelope<MunicipalityWasMerged>>(DoNothing);
             When<Envelope<MunicipalityWasNamed>>(DoNothing);
             When<Envelope<MunicipalityWasRetired>>(DoNothing);
+            When<Envelope<MunicipalityWasRemoved>>(DoNothing);
             When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
             When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }

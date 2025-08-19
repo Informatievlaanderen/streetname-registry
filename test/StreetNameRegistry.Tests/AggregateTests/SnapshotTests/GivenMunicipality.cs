@@ -97,7 +97,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                 {
                     existingStreetName,
                     newStreetName
-                });
+                },
+                false);
 
             var snapshotStore = (ISnapshotStore)Container.Resolve(typeof(ISnapshotStore));
             var latestSnapshot = await snapshotStore.FindLatestSnapshotAsync(_streamId, CancellationToken.None);

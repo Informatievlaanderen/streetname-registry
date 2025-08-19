@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreetNameRegistry.Consumer;
 
@@ -11,9 +12,11 @@ using StreetNameRegistry.Consumer;
 namespace StreetNameRegistry.Consumer.Migrations
 {
     [DbContext(typeof(ConsumerContext))]
-    partial class ConsumerContextModelSnapshot : ModelSnapshot
+    [Migration("20250718143327_IsRemoved")]
+    partial class IsRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

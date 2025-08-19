@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Consumer.Municipality
     {
         public Guid MunicipalityId { get; set; }
         public string? NisCode { get; set; }
+        public bool IsRemoved { get; set; }
     }
 
     public class MunicipalityConsumerItemConfiguration : IEntityTypeConfiguration<MunicipalityConsumerItem>
@@ -22,6 +23,7 @@ namespace StreetNameRegistry.Consumer.Municipality
                 .IsClustered(false);
 
             builder.Property(x => x.NisCode);
+            builder.Property(x => x.IsRemoved);
 
             builder.HasIndex(x => x.NisCode).IsClustered();
         }

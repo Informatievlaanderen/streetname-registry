@@ -28,6 +28,16 @@ namespace StreetNameRegistry.Consumer.Projections
                 }
                 item.NisCode = message.Message.NisCode;
             });
+
+            When<Envelope<MunicipalityWasRemoved>>(async (context, message, ct) =>
+            {
+                var item = await context.FindAsync<MunicipalityConsumerItem>(new object[] { message.Message.MunicipalityId }, ct);
+                if (item == null)
+                {
+                    throw new InvalidOperationException($"MunicipalityConsumerItem with id {message.Message.MunicipalityId} could not be found.");
+                }
+                item.IsRemoved = true;
+            });
         }
     }
 }

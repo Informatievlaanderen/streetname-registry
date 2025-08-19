@@ -264,6 +264,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
             When<Envelope<MunicipalityWasMerged>>(DoNothing);
             When<Envelope<MunicipalityWasNamed>>(DoNothing);
             When<Envelope<MunicipalityWasRetired>>(DoNothing);
+            When<Envelope<MunicipalityWasRemoved>>(DoNothing);
         }
 
         private static void UpdateHash<T>(StreetNameDetailV2 entity, Envelope<T> wrappedEvent) where T : IHaveHash, IMessage

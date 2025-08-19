@@ -144,6 +144,19 @@ namespace StreetNameRegistry.Municipality
             }
         }
 
+        public void Remove()
+        {
+            if(IsRemoved)
+                return;
+
+            foreach (var streetName in StreetNames.Where(x => !x.IsRemoved))
+            {
+                RemoveStreetName(streetName.PersistentLocalId);
+            }
+
+            ApplyChange(new MunicipalityWasRemoved(_municipalityId));
+        }
+
         #region Metadata
         protected override void BeforeApplyChange(object @event)
         {
@@ -161,7 +174,8 @@ namespace StreetNameRegistry.Municipality
                 MunicipalityStatus,
                 _officialLanguages,
                 _facilityLanguages,
-                StreetNames);
+                StreetNames,
+                IsRemoved);
         }
 
         public ISnapshotStrategy Strategy { get; }

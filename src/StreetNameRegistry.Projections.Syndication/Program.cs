@@ -28,15 +28,15 @@ namespace StreetNameRegistry.Projections.Syndication
             var ct = CancellationTokenSource.Token;
 
             ct.Register(() => Closing.Set());
-            Console.CancelKeyPress += (sender, eventArgs) => CancellationTokenSource.Cancel();
+            Console.CancelKeyPress += (_, _) => CancellationTokenSource.Cancel();
 
-            AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
+            AppDomain.CurrentDomain.FirstChanceException += (_, eventArgs) =>
                 Log.Debug(
                     eventArgs.Exception,
                     "FirstChanceException event raised in {AppDomain}.",
                     AppDomain.CurrentDomain.FriendlyName);
 
-            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
+            AppDomain.CurrentDomain.UnhandledException += (_, eventArgs) =>
                 Log.Fatal((Exception) eventArgs.ExceptionObject, "Encountered a fatal exception, exiting program.");
 
             var configuration = new ConfigurationBuilder()
@@ -103,7 +103,6 @@ namespace StreetNameRegistry.Projections.Syndication
                 true,
                 container.GetService<ILogger<Program>>()!,
                 container.GetService<IRegistryAtomFeedReader>()!,
-                new MunicipalitySyndicationProjections(),
                 new MunicipalityLatestProjections());
         }
 

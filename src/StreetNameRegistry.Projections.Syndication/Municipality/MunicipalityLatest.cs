@@ -24,6 +24,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
         public string? Version { get; set; }
 
         public long Position { get; set; }
+        public bool IsRemoved { get; set; }
     }
 
     public sealed class MunicipalityLatestItemConfiguration : IEntityTypeConfiguration<MunicipalityLatestItem>
@@ -50,8 +51,11 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
 
             builder.Property(x => x.Version);
             builder.Property(x => x.Position);
+            builder.Property(x => x.IsRemoved)
+                .HasDefaultValue(false);
 
             builder.HasIndex(x => x.Position);
+            builder.HasIndex(x => x.IsRemoved);
             builder.HasIndex(x => x.NisCode).IsClustered();
 
             builder.HasIndex(x => x.NameDutchSearch);

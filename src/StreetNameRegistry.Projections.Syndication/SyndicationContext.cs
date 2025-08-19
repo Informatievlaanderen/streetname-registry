@@ -15,7 +15,6 @@ namespace StreetNameRegistry.Projections.Syndication
     {
         public override string ProjectionStateSchema => Schema.Syndication;
 
-        public DbSet<MunicipalitySyndicationItem> MunicipalitySyndicationItems { get; set; }
         public DbSet<MunicipalityLatestItem> MunicipalityLatestItems { get; set; }
 
         // This needs to be here to please EF
