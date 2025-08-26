@@ -8,15 +8,26 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
-    using Consumer.Read.Postal;
     using Converters;
     using Microsoft.EntityFrameworkCore;
+    using Municipality;
     using Projections.Legacy;
-    using Projections.Legacy.StreetNameList;
-    using Projections.Legacy.StreetNameListV2;
-    using Projections.Syndication;
 
-    public sealed class StreetNameListOsloQueryV2 : Be.Vlaanderen.Basisregisters.Api.Search.Query<StreetNameListView, StreetNameFilter>
+    public record StreetNameListViewQueryResponse(
+        int StreetNamePersistentLocalId,
+        Language? PrimaryLanguage,
+        string? StreetNameDutch,
+        string? StreetNameFrench,
+        string? StreetNameEnglish,
+        string? StreetNameGerman,
+        string? HomonymAdditionDutch,
+        string? HomonymAdditionFrench,
+        string? HomonymAdditionEnglish,
+        string? HomonymAdditionGerman,
+        StreetNameStatus? Status,
+        DateTimeOffset Version);
+
+    public sealed class StreetNameListOsloQueryV2 : Be.Vlaanderen.Basisregisters.Api.Search.Query<StreetNameListView, StreetNameFilter, StreetNameListViewQueryResponse>
     {
         private readonly LegacyContext _legacyContext;
 
@@ -106,6 +117,21 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
 
             return streetNames;
         }
+
+        protected override Expression<Func<StreetNameListView, StreetNameListViewQueryResponse>> Transformation =>
+            streetName => new StreetNameListViewQueryResponse(
+                streetName.StreetNamePersistentLocalId,
+                streetName.PrimaryLanguage,
+                streetName.StreetNameDutch,
+                streetName.StreetNameFrench,
+                streetName.StreetNameEnglish,
+                streetName.StreetNameGerman,
+                streetName.StreetNameHomonymAdditionDutch,
+                streetName.StreetNameHomonymAdditionFrench,
+                streetName.StreetNameHomonymAdditionEnglish,
+                streetName.StreetNameHomonymAdditionGerman,
+                streetName.StreetNameStatus,
+                streetName.VersionTimestamp);
     }
 
     public class StreetNameSorting : ISorting
