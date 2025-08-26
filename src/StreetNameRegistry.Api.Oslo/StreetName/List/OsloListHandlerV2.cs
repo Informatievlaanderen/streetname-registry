@@ -37,7 +37,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
         public async Task<StreetNameListOsloResponse> Handle(OsloListRequest request, CancellationToken cancellationToken)
         {
             var streetNameQuery = new StreetNameListOsloQueryV2(_legacyContext)
-                    .Fetch<StreetNameListView, StreetNameListView>(request.Filtering, request.Sorting, request.PaginationRequest);
+                    .Fetch<StreetNameListView, StreetNameListViewQueryResponse>(request.Filtering, request.Sorting, request.PaginationRequest);
 
             var pagedStreetNames = await streetNameQuery
                 .Items
@@ -47,8 +47,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
                     _responseOptions.Value.DetailUrl,
                     GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
                     GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
-                    m.StreetNameStatus.ConvertFromMunicipalityStreetNameStatus(),
-                    m.VersionTimestamp.ToInstant().ToBelgianDateTimeOffset()))
+                    m.Status.ConvertFromMunicipalityStreetNameStatus(),
+                    m.Version.ToInstant().ToBelgianDateTimeOffset()))
                 .ToListAsync(cancellationToken);
 
             return
@@ -62,7 +62,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
                 };
         }
 
-        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListView item, Language? taal)
+        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListViewQueryResponse item, Language? taal)
         {
             switch (taal)
             {
@@ -92,29 +92,29 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
             }
         }
 
-        private static GeografischeNaam? GetHomoniemToevoegingByTaal(StreetNameListView item, Language? taal)
+        private static GeografischeNaam? GetHomoniemToevoegingByTaal(StreetNameListViewQueryResponse item, Language? taal)
         {
             switch (taal)
             {
-                case null when !string.IsNullOrEmpty(item.StreetNameHomonymAdditionDutch):
-                case Language.Dutch when !string.IsNullOrEmpty(item.StreetNameHomonymAdditionDutch):
+                case null when !string.IsNullOrEmpty(item.HomonymAdditionDutch):
+                case Language.Dutch when !string.IsNullOrEmpty(item.HomonymAdditionDutch):
                     return new GeografischeNaam(
-                        item.StreetNameHomonymAdditionDutch,
+                        item.HomonymAdditionDutch,
                         Taal.NL);
 
-                case Language.French when !string.IsNullOrEmpty(item.StreetNameHomonymAdditionFrench):
+                case Language.French when !string.IsNullOrEmpty(item.HomonymAdditionFrench):
                     return new GeografischeNaam(
-                        item.StreetNameHomonymAdditionFrench,
+                        item.HomonymAdditionFrench,
                         Taal.FR);
 
-                case Language.German when !string.IsNullOrEmpty(item.StreetNameHomonymAdditionGerman):
+                case Language.German when !string.IsNullOrEmpty(item.HomonymAdditionGerman):
                     return new GeografischeNaam(
-                        item.StreetNameHomonymAdditionGerman,
+                        item.HomonymAdditionGerman,
                         Taal.DE);
 
-                case Language.English when !string.IsNullOrEmpty(item.StreetNameHomonymAdditionEnglish):
+                case Language.English when !string.IsNullOrEmpty(item.HomonymAdditionEnglish):
                     return new GeografischeNaam(
-                        item.StreetNameHomonymAdditionEnglish,
+                        item.HomonymAdditionEnglish,
                         Taal.EN);
 
                 default:
