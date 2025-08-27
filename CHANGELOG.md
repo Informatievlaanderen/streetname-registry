@@ -1,3 +1,10 @@
+## [5.1.1](https://github.com/informatievlaanderen/streetname-registry/compare/v5.1.0...v5.1.1) (2025-08-27)
+
+
+### Performance Improvements
+
+* **oslo:** add indexes + select only needed fields for list GAWR-7040 ([4fb01ef](https://github.com/informatievlaanderen/streetname-registry/commit/4fb01efeea1489f4e1b7e867550e54f8804ef885))
+
 # [5.1.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.0.11...v5.1.0) (2025-08-19)
 
 
