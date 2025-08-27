@@ -37,7 +37,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.List
         public async Task<StreetNameListOsloResponse> Handle(OsloListRequest request, CancellationToken cancellationToken)
         {
             var streetNameQuery = new StreetNameListOsloQueryV2(_legacyContext)
-                    .Fetch<StreetNameListView, StreetNameListViewQueryResponse>(request.Filtering, request.Sorting, request.PaginationRequest);
+                    .Fetch(request.Filtering, request.Sorting, request.PaginationRequest);
 
             var pagedStreetNames = await streetNameQuery
                 .Items
