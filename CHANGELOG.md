@@ -1,3 +1,10 @@
+## [5.1.2](https://github.com/informatievlaanderen/streetname-registry/compare/v5.1.1...v5.1.2) (2025-08-27)
+
+
+### Bug Fixes
+
+* **oslo:** straatnamen fetch list ([f800eae](https://github.com/informatievlaanderen/streetname-registry/commit/f800eae4a164931e56c5f1e7d9575b4c4c8859e4))
+
 ## [5.1.1](https://github.com/informatievlaanderen/streetname-registry/compare/v5.1.0...v5.1.1) (2025-08-27)
 
 
