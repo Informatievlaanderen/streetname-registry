@@ -74,11 +74,11 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                          new Name(municipalityLatestItem.NameEnglish, StreetNameRegistry.Infrastructure.Elastic.Language.en)
                      }
                      .Where(x => !string.IsNullOrEmpty(x.Spelling)),
-                 ToLanguage(municipalityLatestItem.PrimaryLanguage),
+                 ConvertToLanguage(municipalityLatestItem.PrimaryLanguage),
                  RegionFilter.IsFlemishRegion(municipalityLatestItem.NisCode));
         }
 
-        private static Language? ToLanguage(Taal? taal)
+        private static Language? ConvertToLanguage(Taal? taal)
         {
             if (taal is null)
             {
