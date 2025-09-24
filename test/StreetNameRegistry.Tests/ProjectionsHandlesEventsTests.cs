@@ -127,6 +127,11 @@
             foreach (var projection in projectionsToTest)
             {
                 projection.Handlers.Should().NotBeEmpty();
+
+                var handledEventTypes = projection.Handlers.Select(x => x.Message.GetGenericArguments().First()).ToList();
+                var duplicateHandledEventTypes = handledEventTypes.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key).ToList();
+                duplicateHandledEventTypes.Should().BeEmpty($"The projection {projection.GetType().Name} has duplicate event handlers for the events: {string.Join(", ", duplicateHandledEventTypes.Select(x => x.Name))}");
+
                 foreach (var eventType in _eventTypes)
                 {
                     var messageType = projection.Handlers.Any(x => x.Message.GetGenericArguments().First() == eventType);

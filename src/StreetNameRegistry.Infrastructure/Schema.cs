@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Infrastructure
         public const string Default = "StreetNameRegistry";
         public const string Import = "StreetNameRegistryImport";
         public const string Extract = "StreetNameRegistryExtract";
+        public const string Elastic = "StreetNameRegistryElastic";
         public const string Legacy = "StreetNameRegistryLegacy";
         public const string Syndication = "StreetNameRegistrySyndication";
         public const string Sequence = "StreetNameRegistrySequence";
@@ -26,6 +27,7 @@ namespace StreetNameRegistry.Infrastructure
     {
         public const string Legacy = "__EFMigrationsHistoryLegacy";
         public const string Extract = "__EFMigrationsHistoryExtract";
+        public const string Elastic = "__EFMigrationsHistoryElastic";
         public const string Syndication = "__EFMigrationsHistorySyndication";
         public const string RedisDataMigration = "__EFMigrationsHistoryDataMigration";
         public const string Sequence = "__EFMigrationsHistorySequence";

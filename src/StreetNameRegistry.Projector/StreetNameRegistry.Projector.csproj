@@ -20,6 +20,7 @@
     <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Extract\StreetNameRegistry.Projections.Extract.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Elastic\StreetNameRegistry.Projections.Elastic.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Integration\StreetNameRegistry.Projections.Integration.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.LastChangedList\StreetNameRegistry.Projections.LastChangedList.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" />

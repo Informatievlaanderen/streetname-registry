@@ -470,8 +470,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             When<Envelope<MunicipalityWasNamed>>(DoNothing);
             When<Envelope<MunicipalityWasRetired>>(DoNothing);
             When<Envelope<MunicipalityWasRemoved>>(DoNothing);
-            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
-            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }
 
         private static void UpdateNameByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, string? name, Language? language)

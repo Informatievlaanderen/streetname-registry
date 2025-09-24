@@ -336,6 +336,14 @@
           "System.Diagnostics.DiagnosticSource": "4.4.1"
         }
       },
+      "Elastic.Transport": {
+        "type": "Transitive",
+        "resolved": "0.10.1",
+        "contentHash": "8qUyxd4LzMiR+wtNEzdHHnu+iEpbKfoA001NyYgZZT0YZaNE9fWmFeZMxcTz7HMcYUidZSeT6vvongjZh1j/hQ==",
+        "dependencies": {
+          "Microsoft.CSharp": "4.7.0"
+        }
+      },
       "FluentValidation": {
         "type": "Transitive",
         "resolved": "11.5.1",
@@ -1155,6 +1163,11 @@
           "Polly": "7.1.0"
         }
       },
+      "ProjNET": {
+        "type": "Transitive",
+        "resolved": "2.1.0",
+        "contentHash": "4F0xEYe+cQCgWgnf1UaDlRPFm9RxTaSFt4C/axNnCgSCNWU1AFDNvTyVdN/RwNmTYoGEWxo4sOYMQrW9kQtwpg=="
+      },
       "Scrutor": {
         "type": "Transitive",
         "resolved": "3.3.0",
@@ -1766,6 +1779,13 @@
           "StreetNameRegistry": "[1.0.0, )"
         }
       },
+      "streetnameregistry.infrastructure.elastic": {
+        "type": "Project",
+        "dependencies": {
+          "Elastic.Clients.Elasticsearch": "[9.1.7, )",
+          "Microsoft.Extensions.Configuration": "[9.0.4, )"
+        }
+      },
       "streetnameregistry.producer": {
         "type": "Project",
         "dependencies": {
@@ -1825,6 +1845,22 @@
           "Datadog.Trace.Bundle": "[3.16.0, )",
           "Microsoft.EntityFrameworkCore.Design": "[9.0.4, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
+        }
+      },
+      "streetnameregistry.projections.elastic": {
+        "type": "Project",
+        "dependencies": {
+          "Be.Vlaanderen.Basisregisters.EventHandling.Autofac": "[7.0.0, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
+          "Elastic.Clients.Elasticsearch": "[9.1.7, )",
+          "Microsoft.Extensions.Configuration.Binder": "[9.0.4, )",
+          "ProjNet": "[2.1.0, )",
+          "StreetNameRegistry.Consumer": "[1.0.0, )",
+          "StreetNameRegistry.Infrastructure": "[1.0.0, )",
+          "StreetNameRegistry.Infrastructure.Elastic": "[1.0.0, )",
+          "StreetNameRegistry.Projections.Legacy": "[1.0.0, )",
+          "StreetNameRegistry.Projections.Syndication": "[1.0.0, )"
         }
       },
       "streetnameregistry.projections.extract": {
@@ -2438,6 +2474,15 @@
         "dependencies": {
           "Newtonsoft.Json": "13.0.3",
           "Serilog": "4.2.0"
+        }
+      },
+      "Elastic.Clients.Elasticsearch": {
+        "type": "CentralTransitive",
+        "requested": "[9.1.7, )",
+        "resolved": "9.1.7",
+        "contentHash": "9p180UXXk+xu6F1YcctUBDzYQZtnUG3Ztcm1qZMSJ+o62pnYUpUanGKiZT23UXeFR12/2tSlXpbDDj/xx+OVIg==",
+        "dependencies": {
+          "Elastic.Transport": "0.10.1"
         }
       },
       "Fastenshtein": {
