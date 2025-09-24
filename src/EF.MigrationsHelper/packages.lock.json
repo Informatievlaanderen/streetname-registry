@@ -1163,11 +1163,6 @@
           "Polly": "7.1.0"
         }
       },
-      "ProjNET": {
-        "type": "Transitive",
-        "resolved": "2.1.0",
-        "contentHash": "4F0xEYe+cQCgWgnf1UaDlRPFm9RxTaSFt4C/axNnCgSCNWU1AFDNvTyVdN/RwNmTYoGEWxo4sOYMQrW9kQtwpg=="
-      },
       "Scrutor": {
         "type": "Transitive",
         "resolved": "3.3.0",
@@ -1855,11 +1850,9 @@
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
           "Elastic.Clients.Elasticsearch": "[9.1.7, )",
           "Microsoft.Extensions.Configuration.Binder": "[9.0.4, )",
-          "ProjNet": "[2.1.0, )",
           "StreetNameRegistry.Consumer": "[1.0.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )",
           "StreetNameRegistry.Infrastructure.Elastic": "[1.0.0, )",
-          "StreetNameRegistry.Projections.Legacy": "[1.0.0, )",
           "StreetNameRegistry.Projections.Syndication": "[1.0.0, )"
         }
       },

@@ -53,12 +53,6 @@
           "Microsoft.Extensions.Configuration.Abstractions": "9.0.4"
         }
       },
-      "ProjNET": {
-        "type": "Direct",
-        "requested": "[2.1.0, )",
-        "resolved": "2.1.0",
-        "contentHash": "4F0xEYe+cQCgWgnf1UaDlRPFm9RxTaSFt4C/axNnCgSCNWU1AFDNvTyVdN/RwNmTYoGEWxo4sOYMQrW9kQtwpg=="
-      },
       "SourceLink.Copy.PdbFiles": {
         "type": "Direct",
         "requested": "[2.8.3, )",

@@ -8,7 +8,6 @@
     <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure.Elastic\StreetNameRegistry.Infrastructure.Elastic.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -16,7 +15,6 @@
     <PackageReference Include="Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer" />
     <PackageReference Include="Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac" />
 
-    <PackageReference Include="ProjNet" />
     <PackageReference Include="Elastic.Clients.Elasticsearch" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
 

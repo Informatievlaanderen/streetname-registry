@@ -9,16 +9,11 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
-    using Consumer;
-    using global::Elastic.Clients.Elasticsearch;
-    using Legacy;
     using Microsoft.EntityFrameworkCore;
-    using NetTopologySuite.Geometries;
-    using NetTopologySuite.IO;
     using NodaTime;
     using StreetNameRegistry.Municipality;
     using StreetNameRegistry.Municipality.Events;
-    using StreetNameRegistry.Projections.Elastic;
+    using Syndication;
     using Language = StreetNameRegistry.Infrastructure.Elastic.Language;
     using Name = StreetNameRegistry.Infrastructure.Elastic.Name;
 
@@ -29,17 +24,17 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
         private readonly IDictionary<string, Municipality> _municipalities = new Dictionary<string, Municipality>();
 
         private readonly IStreetNameListElasticClient _searchElasticClient;
-        private readonly IDbContextFactory<LegacyContext> _municipalityConsumerContextFactory;
+        private readonly IDbContextFactory<SyndicationContext> _municipalityContextFactory;
 
         public StreetNameListProjections(
             IStreetNameListElasticClient searchElasticClient,
-            IDbContextFactory<LegacyContext> municipalityConsumerContextFactory
-            )
+            IDbContextFactory<SyndicationContext> municipalityContextFactory
+        )
         {
             _searchElasticClient = searchElasticClient;
-            _municipalityConsumerContextFactory = municipalityConsumerContextFactory;
+            _municipalityContextFactory = municipalityContextFactory;
 
-            When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasMigratedToMunicipality>>(async (_, message, ct) =>
             {
                 var municipality = await GetMunicipality(message.Message.NisCode, ct);
 
@@ -48,10 +43,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     municipality,
                     [],
                     [],
-                    [],
                     message.Message.Status,
-                    //PrimaryLanguage = municipality.PrimaryLanguage, //TODO-pr is dit wel nodig?
-                    RegionFilter.IsFlemishRegion(message.Message.NisCode),
                     message.Message.Provenance.Timestamp
                 );
 
@@ -61,7 +53,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                 await searchElasticClient.CreateDocument(document, ct);
             });
 
-            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (_, message, ct) =>
             {
                 var municipality = await GetMunicipality(message.Message.NisCode, ct);
 
@@ -70,9 +62,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     municipality,
                     [],
                     [],
-                    [],
                     StreetNameStatus.Proposed,
-                    RegionFilter.IsFlemishRegion(message.Message.NisCode),
                     message.Message.Provenance.Timestamp
                 );
 
@@ -82,7 +72,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                 await searchElasticClient.CreateDocument(document, ct);
             });
 
-            When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasProposedV2>>(async (_, message, ct) =>
             {
                 var municipality = await GetMunicipality(message.Message.NisCode, ct);
 
@@ -91,9 +81,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     municipality,
                     [],
                     [],
-                    [],
                     StreetNameStatus.Proposed,
-                    RegionFilter.IsFlemishRegion(message.Message.NisCode),
                     message.Message.Provenance.Timestamp
                 );
 
@@ -102,7 +90,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                 await searchElasticClient.CreateDocument(document, ct);
             });
 
-            When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasApproved>>(async (_, message, ct) =>
             {
                 await searchElasticClient.PartialUpdateDocument(
                     message.Message.PersistentLocalId,
@@ -113,7 +101,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameWasCorrectedFromApprovedToProposed>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasCorrectedFromApprovedToProposed>>(async (_, message, ct) =>
             {
                 await searchElasticClient.PartialUpdateDocument(
                     message.Message.PersistentLocalId,
@@ -124,7 +112,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameWasRejected>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasRejected>>(async (_, message, ct) =>
             {
                 await searchElasticClient.PartialUpdateDocument(
                     message.Message.PersistentLocalId,
@@ -135,7 +123,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (_, message, ct) =>
             {
                 await searchElasticClient.PartialUpdateDocument(
                     message.Message.PersistentLocalId,
@@ -146,7 +134,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (_, message, ct) =>
             {
                 await searchElasticClient.PartialUpdateDocument(
                     message.Message.PersistentLocalId,
@@ -157,7 +145,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasRetiredV2>>(async (_, message, ct) =>
             {
                 await searchElasticClient.PartialUpdateDocument(
                     message.Message.PersistentLocalId,
@@ -168,7 +156,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (_, message, ct) =>
             {
                 await searchElasticClient.PartialUpdateDocument(
                     message.Message.PersistentLocalId,
@@ -179,7 +167,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameWasRenamed>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasRenamed>>(async (_, message, ct) =>
             {
                 await searchElasticClient.PartialUpdateDocument(
                     message.Message.PersistentLocalId,
@@ -190,7 +178,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameWasCorrectedFromRetiredToCurrent>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasCorrectedFromRetiredToCurrent>>(async (_, message, ct) =>
             {
                 await searchElasticClient.PartialUpdateDocument(
                     message.Message.PersistentLocalId,
@@ -201,31 +189,13 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
-            {
-                await UpdateDocuments([message.Message.PersistentLocalId], document =>
-                {
-                    UpdateNameByLanguage(document, message.Message.StreetNameNames);
-                }, message.Message.Provenance.Timestamp, ct);
-            });
+            When<Envelope<StreetNameNamesWereCorrected>>(async (_, message, ct) => { await UpdateDocuments([message.Message.PersistentLocalId], document => { UpdateNameByLanguage(document, message.Message.StreetNameNames); }, message.Message.Provenance.Timestamp, ct); });
 
-            When<Envelope<StreetNameNamesWereChanged>>(async (context, message, ct) =>
-            {
-                await UpdateDocuments([message.Message.PersistentLocalId], document =>
-                {
-                    UpdateNameByLanguage(document, message.Message.StreetNameNames);
-                }, message.Message.Provenance.Timestamp, ct);
-            });
+            When<Envelope<StreetNameNamesWereChanged>>(async (_, message, ct) => { await UpdateDocuments([message.Message.PersistentLocalId], document => { UpdateNameByLanguage(document, message.Message.StreetNameNames); }, message.Message.Provenance.Timestamp, ct); });
 
-            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
-            {
-                await UpdateDocuments([message.Message.PersistentLocalId], document =>
-                {
-                    UpdateHomonymAdditionByLanguage(document, new HomonymAdditions(message.Message.HomonymAdditions));
-                }, message.Message.Provenance.Timestamp, ct);
-            });
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (_, message, ct) => { await UpdateDocuments([message.Message.PersistentLocalId], document => { UpdateHomonymAdditionByLanguage(document, new HomonymAdditions(message.Message.HomonymAdditions)); }, message.Message.Provenance.Timestamp, ct); });
 
-            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (context, message, ct) =>
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (_, message, ct) =>
             {
                 await UpdateDocuments([message.Message.PersistentLocalId], document =>
                 {
@@ -252,93 +222,24 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                 }, message.Message.Provenance.Timestamp, ct);
             });
 
-            When<Envelope<MunicipalityWasImported>>(async (context, message, ct) =>
-            {
-                throw new NotImplementedException();
-                // var streetNameListMunicipality = new StreetNameListMunicipality
-                // {
-                //     MunicipalityId = message.Message.MunicipalityId,
-                //     NisCode = message.Message.NisCode
-                // };
-                //
-                // await context
-                //     .StreetNameListMunicipality
-                //     .AddAsync(streetNameListMunicipality, ct);
-            });
-
-            When<Envelope<MunicipalityOfficialLanguageWasAdded>>(async (context, message, ct) =>
-            {
-                throw new NotImplementedException();
-                // var municipality =
-                //     await context.StreetNameListMunicipality.FindAsync(message.Message.MunicipalityId, cancellationToken: ct);
-                //
-                // if (municipality.PrimaryLanguage == null)
-                // {
-                //     municipality.PrimaryLanguage = message.Message.Language;
-                // }
-                // else if (municipality.SecondaryLanguage == null)
-                // {
-                //     municipality.SecondaryLanguage = message.Message.Language;
-                // }
-                // else
-                // {
-                //     throw new InvalidOperationException(
-                //         $"Cannot add an official language while primary and secondary are assigned for municipality {municipality.MunicipalityId}");
-                // }
-            });
-
-            When<Envelope<MunicipalityOfficialLanguageWasRemoved>>(async (context, message, ct) =>
-            {
-                throw new NotImplementedException();
-                // var municipality =
-                //     await context.StreetNameListMunicipality.FindAsync(message.Message.MunicipalityId, cancellationToken: ct);
-                //
-                // if (municipality.SecondaryLanguage == message.Message.Language)
-                // {
-                //     municipality.SecondaryLanguage = null;
-                // }
-                // else if (municipality.PrimaryLanguage == message.Message.Language)
-                // {
-                //     municipality.PrimaryLanguage = null;
-                //
-                //     // if official is removed for primary, but still has secondary, then move secondary to primary
-                //     if (municipality.SecondaryLanguage != null)
-                //     {
-                //         municipality.PrimaryLanguage = municipality.SecondaryLanguage;
-                //     }
-                // }
-            });
-
-            When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
-            {
-                throw new NotImplementedException();
-                // var municipality =
-                //     await context.StreetNameListMunicipality.FindAsync(message.Message.MunicipalityId,
-                //         cancellationToken: ct);
-                //
-                // municipality.NisCode = message.Message.NisCode;
-                //
-                // var streetNames = context
-                //     .StreetNameListV2
-                //     .Local
-                //     .Where(s => s.MunicipalityId == message.Message.MunicipalityId)
-                //     .Union(context.StreetNameListV2.Where(s => s.MunicipalityId == message.Message.MunicipalityId));
-                //
-                // var streetNameIsInFlemishRegion = RegionFilter.IsFlemishRegion(message.Message.NisCode);
-                // foreach (var streetName in streetNames)
-                // {
-                //     streetName.NisCode = message.Message.NisCode;
-                //     streetName.IsInFlemishRegion = streetNameIsInFlemishRegion;
-                // }
-            });
-
-            When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasRemovedV2>>(async (_, message, ct) =>
             {
                 await searchElasticClient.DeleteDocument(
                     message.Message.PersistentLocalId,
                     ct);
             });
 
+            When<Envelope<MunicipalityNisCodeWasChanged>>(async (_, message, ct) =>
+            {
+                var municipality = await GetMunicipality(message.Message.NisCode, ct);
+
+                await UpdateDocuments(message.Message.StreetNamePersistentLocalIds, document =>
+                {
+                    document.Municipality = municipality;
+                }, message.Message.Provenance.Timestamp, ct);
+            });
+
+            When<Envelope<MunicipalityWasImported>>(DoNothing);
             When<Envelope<MunicipalityBecameCurrent>>(DoNothing);
             When<Envelope<MunicipalityFacilityLanguageWasAdded>>(DoNothing);
             When<Envelope<MunicipalityFacilityLanguageWasRemoved>>(DoNothing);
@@ -348,7 +249,8 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
             When<Envelope<MunicipalityWasNamed>>(DoNothing);
             When<Envelope<MunicipalityWasRetired>>(DoNothing);
             When<Envelope<MunicipalityWasRemoved>>(DoNothing);
-            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
+            When<Envelope<MunicipalityOfficialLanguageWasAdded>>(DoNothing); // Event will happen before StreetNames are created
+            When<Envelope<MunicipalityOfficialLanguageWasRemoved>>(DoNothing);
         }
 
         private static void UpdateNameByLanguage(StreetNameListDocument entity, IDictionary<StreetNameRegistry.Municipality.Language, string> streetNameNames)
@@ -359,22 +261,18 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                 {
                     case StreetNameRegistry.Municipality.Language.Dutch:
                         entity.Names = UpdateLanguageValue(entity.Names, Language.nl, streetNameName);
-                        entity.SearchNames = UpdateLanguageValue(entity.SearchNames, Language.nl, streetNameName.RemoveDiacritics()!);
                         break;
 
                     case StreetNameRegistry.Municipality.Language.French:
                         entity.Names = UpdateLanguageValue(entity.Names, Language.fr, streetNameName);
-                        entity.SearchNames = UpdateLanguageValue(entity.SearchNames, Language.fr, streetNameName.RemoveDiacritics()!);
                         break;
 
                     case StreetNameRegistry.Municipality.Language.German:
                         entity.Names = UpdateLanguageValue(entity.Names, Language.de, streetNameName);
-                        entity.SearchNames = UpdateLanguageValue(entity.SearchNames, Language.de, streetNameName.RemoveDiacritics()!);
                         break;
 
                     case StreetNameRegistry.Municipality.Language.English:
                         entity.Names = UpdateLanguageValue(entity.Names, Language.en, streetNameName);
-                        entity.SearchNames = UpdateLanguageValue(entity.SearchNames, Language.en, streetNameName.RemoveDiacritics()!);
                         break;
                 }
             }
@@ -438,44 +336,14 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                 await _searchElasticClient.UpdateDocument(document, ct);
             }
         }
-        //
-        // private async Task UpdateStreetNameAndFullAddress(
-        //     int streetNamePersistentLocalId,
-        //     ICollection<int> streetNamePersistentLocalIds,
-        //     Instant versionTimestamp,
-        //     CancellationToken ct)
-        // {
-        //     var streetNameLatestItem = await RefreshStreetNames(streetNamePersistentLocalId, ct);
-        //
-        //     var documents = await _searchElasticClient.GetDocuments(streetNamePersistentLocalIds, ct);
-        //
-        //     foreach (var streetNamePersistentLocalId in streetNamePersistentLocalIds)
-        //     {
-        //         var document = documents.SingleOrDefault(x => x.StreetNamePersistentLocalId == streetNamePersistentLocalId);
-        //         if (document is null)
-        //         {
-        //             throw new InvalidOperationException($"No document received for {streetNamePersistentLocalId}");
-        //         }
-        //
-        //         var desiredVersionTimestamp = versionTimestamp.ToBelgianDateTimeOffset() > document.VersionTimestamp
-        //             ? versionTimestamp.ToBelgianDateTimeOffset()
-        //             : document.VersionTimestamp;
-        //         var streetName = StreetName.FromStreetNameLatestItem(streetNameLatestItem);
-        //
-        //         document.VersionTimestamp = desiredVersionTimestamp;
-        //         document.StreetName = streetName;
-        //
-        //         await _searchElasticClient.UpdateDocument(document, ct);
-        //     }
-        // }
 
         private async Task<Municipality> GetMunicipality(string nisCode, CancellationToken ct)
         {
             if (_municipalities.TryGetValue(nisCode, out var value))
                 return value;
 
-            await using var context = await _municipalityConsumerContextFactory.CreateDbContextAsync(ct);
-            var municipalityLatestItem = await context.StreetNameListMunicipality
+            await using var context = await _municipalityContextFactory.CreateDbContextAsync(ct);
+            var municipalityLatestItem = await context.MunicipalityLatestItems
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.NisCode == nisCode, ct);
 
@@ -487,6 +355,6 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
             return _municipalities[nisCode];
         }
 
-        private static Task DoNothing<T>(ElasticRunnerContext context, Envelope<T> envelope, CancellationToken ct) where T: IMessage => Task.CompletedTask;
+        private static Task DoNothing<T>(ElasticRunnerContext context, Envelope<T> envelope, CancellationToken ct) where T : IMessage => Task.CompletedTask;
     }
 }

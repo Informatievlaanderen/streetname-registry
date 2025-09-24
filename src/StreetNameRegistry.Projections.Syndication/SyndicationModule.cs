@@ -36,14 +36,17 @@ namespace StreetNameRegistry.Projections.Syndication
             string backofficeProjectionsConnectionString)
         {
             services
-                .AddDbContext<SyndicationContext>((_, options) => options
-                    .UseLoggerFactory(loggerFactory)
+                .AddDbContext<SyndicationContext>(ConfigureOptions)
+                .AddDbContextFactory<SyndicationContext>(ConfigureOptions);
+
+            void ConfigureOptions(DbContextOptionsBuilder options) =>
+                options.UseLoggerFactory(loggerFactory)
                     .UseSqlServer(backofficeProjectionsConnectionString, sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
                         sqlServerOptions.MigrationsHistoryTable(MigrationTables.Syndication, Schema.Syndication);
                     })
-                    .UseExtendedSqlServerMigrations());
+                    .UseExtendedSqlServerMigrations();
         }
 
         private static void RunInMemoryDb(
@@ -52,11 +55,14 @@ namespace StreetNameRegistry.Projections.Syndication
             ILogger logger)
         {
             services
-                .AddDbContext<SyndicationContext>(options => options
-                    .UseLoggerFactory(loggerFactory)
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString(), sqlServerOptions => { }));
+                .AddDbContext<SyndicationContext>(ConfigureOptions)
+                .AddDbContextFactory<SyndicationContext>(ConfigureOptions);
 
             logger.LogWarning("Running InMemory for {Context}!", nameof(SyndicationContext));
+            void ConfigureOptions(DbContextOptionsBuilder options) =>
+                options
+                    .UseLoggerFactory(loggerFactory)
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString(), sqlServerOptions => { });
         }
 
         private static void RegisterHttpClient(

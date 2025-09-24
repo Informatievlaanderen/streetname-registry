@@ -12,6 +12,7 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using Be.Vlaanderen.Basisregisters.Projector;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
     using Configuration;
+    using Elastic.Clients.Elasticsearch;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -21,11 +22,16 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using Microsoft.Extensions.Logging;
     using Microsoft.OpenApi.Models;
     using Modules;
+    using StreetNameRegistry.Infrastructure.Elastic;
+    using StreetNameRegistry.Projections.Elastic;
+    using StreetNameRegistry.Projections.Elastic.StreetNameList;
     using StreetNameRegistry.Projections.Extract;
     using StreetNameRegistry.Projections.Integration.Infrastructure;
     using StreetNameRegistry.Projections.Legacy;
+    using StreetNameRegistry.Projections.Syndication;
     using StreetNameRegistry.Projections.Wfs;
     using StreetNameRegistry.Projections.Wms;
+    using HealthStatus = Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus;
 
     /// <summary>Represents the startup process for the application.</summary>
     public class Startup
@@ -105,33 +111,41 @@ namespace StreetNameRegistry.Projector.Infrastructure
                                 health.AddSqlServer(
                                     connectionString.Value,
                                     name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
-                                    tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                                    tags: [DatabaseTag, "sql", "sqlserver"]);
 
                             foreach (var connectionString in connectionStrings.Where(x => x.Value.Contains("host", StringComparison.OrdinalIgnoreCase)))
                                 health.AddNpgSql(
                                     connectionString.Value,
                                     name: $"npgsql-{connectionString.Key.ToLowerInvariant()}",
-                                    tags: new[] {DatabaseTag, "sql", "npgsql"});
+                                    tags: [DatabaseTag, "sql", "npgsql"]);
 
                             health.AddDbContextCheck<ExtractContext>(
                                 $"dbcontext-{nameof(ExtractContext).ToLowerInvariant()}",
-                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                                tags: [DatabaseTag, "sql", "sqlserver"]);
 
                             health.AddDbContextCheck<LegacyContext>(
                                 $"dbcontext-{nameof(LegacyContext).ToLowerInvariant()}",
-                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                                tags: [DatabaseTag, "sql", "sqlserver"]);
 
                             health.AddDbContextCheck<LastChangedListContext>(
                                 $"dbcontext-{nameof(LastChangedListContext).ToLowerInvariant()}",
-                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                                tags: [DatabaseTag, "sql", "sqlserver"]);
 
                             health.AddDbContextCheck<WfsContext>(
                                 $"dbcontext-{nameof(WfsContext).ToLowerInvariant()}",
-                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                                tags: [DatabaseTag, "sql", "sqlserver"]);
 
                             health.AddDbContextCheck<WmsContext>(
                                 $"dbcontext-{nameof(WmsContext).ToLowerInvariant()}",
-                                tags: new[] { DatabaseTag, "sql", "sqlserver" });
+                                tags: [DatabaseTag, "sql", "sqlserver"]);
+
+                            health.AddDbContextCheck<SyndicationContext>(
+                                $"dbcontext-{nameof(SyndicationContext).ToLowerInvariant()}",
+                                tags: [DatabaseTag, "sql", "sqlserver"]);
+
+                            health.AddDbContextCheck<ElasticRunnerContext>(
+                                $"dbcontext-{nameof(ElasticRunnerContext).ToLowerInvariant()}",
+                                tags: [DatabaseTag, "sql", "sqlserver"]);
 
                             health.AddCheck<ProjectionsHealthCheck>(
                                 "projections",
@@ -210,6 +224,18 @@ namespace StreetNameRegistry.Projector.Infrastructure
                 var projectionsManager = _applicationContainer.Resolve<IConnectedProjectionsManager>();
                 projectionsManager.Resume(_projectionsCancellationTokenSource.Token);
             });
+
+            var elasticIndices = new ElasticIndexBase[]
+            {
+                new StreetNameListElasticIndex(
+                    _applicationContainer.Resolve<ElasticsearchClient>(),
+                    _configuration)
+            };
+            foreach (var elasticIndex in elasticIndices)
+            {
+                elasticIndex.CreateIndexIfNotExist(_projectionsCancellationTokenSource.Token).GetAwaiter().GetResult();
+                elasticIndex.CreateAliasIfNotExist(_projectionsCancellationTokenSource.Token).GetAwaiter().GetResult();
+            }
         }
 
         private static string GetApiLeadingText(ApiVersionDescription description)

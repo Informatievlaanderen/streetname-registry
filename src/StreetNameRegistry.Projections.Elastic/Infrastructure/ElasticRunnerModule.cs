@@ -38,15 +38,15 @@ namespace StreetNameRegistry.Projections.Elastic.Infrastructure
         private static void RunOnSqlServer(
             IServiceCollection services,
             ILoggerFactory loggerFactory,
-            string legacyConnectionString)
+            string elasticConnectionString)
         {
             services
                 .AddDbContext<ElasticRunnerContext>((_, options) => options
                     .UseLoggerFactory(loggerFactory)
-                    .UseSqlServer(legacyConnectionString, sqlServerOptions =>
+                    .UseSqlServer(elasticConnectionString, sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
-                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.Extract, Schema.Extract);
+                        sqlServerOptions.MigrationsHistoryTable(MigrationTables.Elastic, Schema.Elastic);
                     })
                     .UseExtendedSqlServerMigrations());
         }
