@@ -14,12 +14,15 @@
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
     using Be.Vlaanderen.Basisregisters.Testing.Infrastructure.Events;
     using FluentAssertions;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
     using Moq;
     using Municipality.Events;
     using Newtonsoft.Json;
     using Producer;
     using Producer.Snapshot.Oslo;
+    using Projections.Elastic;
+    using Projections.Elastic.StreetNameList;
     using Projections.Extract;
     using Projections.Extract.StreetNameExtract;
     using Projections.Integration;
@@ -29,6 +32,7 @@
     using Projections.Legacy.StreetNameDetailV2;
     using Projections.Legacy.StreetNameListV2;
     using Projections.Legacy.StreetNameSyndication;
+    using Projections.Syndication;
     using Projections.Wfs;
     using Projections.Wfs.StreetNameHelperV2;
     using Projections.Wms;
@@ -120,6 +124,13 @@
             {
                 new StreetNameRegistry.Producer.Ldes.ProducerProjections(Mock.Of<IProducer>(), "http://s", new JsonSerializerSettings().ConfigureDefaultForApi())
             }];
+
+            yield return [new List<ConnectedProjection<ElasticRunnerContext>>
+                {
+                    new StreetNameListProjections(Mock.Of<IStreetNameListElasticClient>(),
+                        Mock.Of<IDbContextFactory<SyndicationContext>>())
+                }
+            ];
         }
 
         private void AssertHandleEvents<T>(List<ConnectedProjection<T>> projectionsToTest)

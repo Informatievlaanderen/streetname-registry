@@ -83,15 +83,16 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             builder.RegisterEventstreamModule(_configuration);
             builder.RegisterModule(new ProjectorModule(_configuration));
 
-            RegisterLastChangedProjections(builder);
-
-            RegisterExtractProjectionsV2(builder);
-            RegisterLegacyProjectionsV2(builder);
-            RegisterWfsProjectionsV2(builder);
-            RegisterWmsProjectionsV2(builder);
-
-            if(_configuration.GetSection("Integration").GetValue("Enabled", false))
-                RegisterIntegrationProjections(builder);
+            //TODO-pr temp disabled
+            // RegisterLastChangedProjections(builder);
+            //
+            // RegisterExtractProjectionsV2(builder);
+            // RegisterLegacyProjectionsV2(builder);
+            // RegisterWfsProjectionsV2(builder);
+            // RegisterWmsProjectionsV2(builder);
+            //
+            // if(_configuration.GetSection("Integration").GetValue("Enabled", false))
+            //     RegisterIntegrationProjections(builder);
 
             RegisterElasticProjections(builder);
         }

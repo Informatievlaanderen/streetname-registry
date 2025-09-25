@@ -17,22 +17,22 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
     using Language = StreetNameRegistry.Infrastructure.Elastic.Language;
     using Name = StreetNameRegistry.Infrastructure.Elastic.Name;
 
-    [ConnectedProjectionName("API endpoint lijst adressen (elastic)")]
-    [ConnectedProjectionDescription("Projectie die de data voor het adressenlijst endpoint in Elastic Search synchroniseert.")]
+    [ConnectedProjectionName("API endpoint lijst straatnamen (elastic)")]
+    [ConnectedProjectionDescription("Projectie die de data voor de straatnamenlijst endpoint in Elastic Search synchroniseert.")]
     public class StreetNameListProjections : ConnectedProjection<ElasticRunnerContext>
     {
         private readonly IDictionary<string, Municipality> _municipalities = new Dictionary<string, Municipality>();
 
         private readonly IStreetNameListElasticClient _searchElasticClient;
-        private readonly IDbContextFactory<SyndicationContext> _municipalityContextFactory;
+        private readonly IDbContextFactory<SyndicationContext> _syndicationContextFactory;
 
         public StreetNameListProjections(
             IStreetNameListElasticClient searchElasticClient,
-            IDbContextFactory<SyndicationContext> municipalityContextFactory
+            IDbContextFactory<SyndicationContext> syndicationContextFactory
         )
         {
             _searchElasticClient = searchElasticClient;
-            _municipalityContextFactory = municipalityContextFactory;
+            _syndicationContextFactory = syndicationContextFactory;
 
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (_, message, ct) =>
             {
@@ -342,7 +342,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
             if (_municipalities.TryGetValue(nisCode, out var value))
                 return value;
 
-            await using var context = await _municipalityContextFactory.CreateDbContextAsync(ct);
+            await using var context = await _syndicationContextFactory.CreateDbContextAsync(ct);
             var municipalityLatestItem = await context.MunicipalityLatestItems
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.NisCode == nisCode, ct);

@@ -430,11 +430,8 @@
       },
       "Elastic.Transport": {
         "type": "Transitive",
-        "resolved": "0.10.1",
-        "contentHash": "8qUyxd4LzMiR+wtNEzdHHnu+iEpbKfoA001NyYgZZT0YZaNE9fWmFeZMxcTz7HMcYUidZSeT6vvongjZh1j/hQ==",
-        "dependencies": {
-          "Microsoft.CSharp": "4.7.0"
-        }
+        "resolved": "0.5.9",
+        "contentHash": "RXoJAeXKaXq67SeLhyDMBPpvlkG940jqJWd5l+rKglMRLJn6X0dkLNlWehpDuouicNdwnYdcuADnqdSOiSvASw=="
       },
       "FluentValidation": {
         "type": "Transitive",
@@ -1788,7 +1785,7 @@
       "streetnameregistry.infrastructure.elastic": {
         "type": "Project",
         "dependencies": {
-          "Elastic.Clients.Elasticsearch": "[9.1.7, )",
+          "Elastic.Clients.Elasticsearch": "[8.17.4, )",
           "Microsoft.Extensions.Configuration": "[9.0.4, )"
         }
       },
@@ -1798,7 +1795,7 @@
           "Be.Vlaanderen.Basisregisters.EventHandling.Autofac": "[7.0.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
-          "Elastic.Clients.Elasticsearch": "[9.1.7, )",
+          "Elastic.Clients.Elasticsearch": "[8.17.4, )",
           "Microsoft.Extensions.Configuration.Binder": "[9.0.4, )",
           "StreetNameRegistry.Consumer": "[1.0.0, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )",
@@ -2173,11 +2170,11 @@
       },
       "Elastic.Clients.Elasticsearch": {
         "type": "CentralTransitive",
-        "requested": "[9.1.7, )",
-        "resolved": "9.1.7",
-        "contentHash": "9p180UXXk+xu6F1YcctUBDzYQZtnUG3Ztcm1qZMSJ+o62pnYUpUanGKiZT23UXeFR12/2tSlXpbDDj/xx+OVIg==",
+        "requested": "[8.17.4, )",
+        "resolved": "8.17.4",
+        "contentHash": "7zZ4xmQv96PlGZiQBfmuicgh3cUoAV9aZlY/vPdba02vWGz307XW+TbI3HaQrm4EPKrvD2PFNQmkJVBvhMZgxw==",
         "dependencies": {
-          "Elastic.Transport": "0.10.1"
+          "Elastic.Transport": "0.5.9"
         }
       },
       "Fastenshtein": {
