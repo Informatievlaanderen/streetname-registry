@@ -24,15 +24,10 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                 .InstancePerLifetimeScope();
 
             builder.Register(c => (IRequestHandler<OsloListRequest, StreetNameListOsloResponse>)
-                new OsloListHandlerV2(
-                    c.Resolve<LegacyContext>(),
-                    c.Resolve<IOptions<ResponseOptions>>())).InstancePerLifetimeScope();
-
-            // builder.Register(c => (IRequestHandler<OsloListRequest, StreetNameListOsloResponse>)
-            //         new ElasticOsloListHandler(
-            //             c.Resolve<IStreetNameApiElasticSearchClient>(),
-            //             c.Resolve<IOptions<ResponseOptions>>()))
-            //     .InstancePerLifetimeScope();
+                    new ElasticOsloListHandler(
+                        c.Resolve<IStreetNameApiElasticSearchClient>(),
+                        c.Resolve<IOptions<ResponseOptions>>()))
+                .InstancePerLifetimeScope();
 
             builder.Register(c => (IRequestHandler<OsloDetailRequest, StreetNameOsloResponse>)
                 new OsloDetailHandlerV2(
@@ -41,13 +36,9 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                     c.Resolve<IOptions<ResponseOptions>>())).InstancePerLifetimeScope();
 
             builder.Register(c => (IRequestHandler<OsloCountRequest, TotaalAantalResponse>)
-                new OsloCountHandlerV2(
-                    c.Resolve<LegacyContext>())).InstancePerLifetimeScope();
-
-            // builder.Register(c => (IRequestHandler<OsloCountRequest, TotaalAantalResponse>)
-            //     new ElasticOsloCountHandler(
-            //         c.Resolve<IStreetNameApiElasticSearchClient>()))
-            //     .InstancePerLifetimeScope();
+                new ElasticOsloCountHandler(
+                    c.Resolve<IStreetNameApiElasticSearchClient>()))
+                .InstancePerLifetimeScope();
 
             builder.RegisterType<SyndicationHandler>()
                 .AsImplementedInterfaces()
