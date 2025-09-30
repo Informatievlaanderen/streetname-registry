@@ -234,7 +234,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                                 document.HomonymAdditions = document.HomonymAdditions.Where(x => x.Language != Language.en).ToArray();
                                 break;
                             default:
-                                throw new ArgumentOutOfRangeException();
+                                throw new NotImplementedException($"Language {language} not implemented");
                         }
                     }
                 }, message.Message.Provenance.Timestamp, ct);
@@ -318,7 +318,7 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                         entity.HomonymAdditions = UpdateLanguageValue(entity.HomonymAdditions, Language.en, homonymAddition.HomonymAddition);
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(homonymAddition.Language), homonymAddition.Language, null);
+                        throw new NotImplementedException($"Language {homonymAddition.Language} not implemented");
                 }
             }
         }

@@ -1,10 +1,8 @@
 ﻿namespace StreetNameRegistry.Infrastructure.Elastic.Exceptions
 {
     using System;
-    using System.Runtime.Serialization;
     using global::Elastic.Transport.Products.Elasticsearch;
 
-    [Serializable]
     public class ElasticsearchClientException : Exception
     {
         public ElasticsearchClientException()
@@ -24,10 +22,6 @@
 
         public ElasticsearchClientException(string message, Exception? inner)
             : base(message, inner)
-        { }
-
-        private ElasticsearchClientException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         { }
     }
 }

@@ -188,7 +188,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
             var chars = str.ToCharArray();
             for (var i = 0; i < chars.Length; i++)
             {
-                if (i == 0 || i > 0 && char.IsUpper(chars[i]))
+                if (i == 0 || char.IsUpper(chars[i]))
                 {
                     chars[i] = char.ToLowerInvariant(chars[i]);
                 }

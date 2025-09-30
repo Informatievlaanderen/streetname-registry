@@ -18,7 +18,6 @@
     using Municipality.Events;
     using Projections.Elastic;
     using Projections.Elastic.StreetNameList;
-    using Projections.Legacy.StreetNameListV2;
     using Projections.Syndication;
     using Tests.BackOffice;
     using Xunit;
