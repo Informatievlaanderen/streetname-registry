@@ -258,8 +258,6 @@ namespace StreetNameRegistry.Projections.LastChangedList
             When<Envelope<MunicipalityWasNamed>>(DoNothing);
             When<Envelope<MunicipalityWasRetired>>(DoNothing);
             When<Envelope<MunicipalityWasRemoved>>(DoNothing);
-            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
-            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }
 
         private static void RebuildKeyAndUri(IEnumerable<LastChangedRecord>? attachedRecords, int persistentLocalId)

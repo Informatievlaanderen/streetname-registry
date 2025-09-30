@@ -1,10 +1,10 @@
-namespace StreetNameRegistry.Tests.ProjectionTests
+namespace StreetNameRegistry.Tests.ProjectionTests.Legacy
 {
     using System;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Testing;
     using Microsoft.EntityFrameworkCore;
-    using Projections.Legacy;
+    using StreetNameRegistry.Projections.Legacy;
 
     public abstract class StreetNameLegacyProjectionTest<TProjection>
         where TProjection : ConnectedProjection<LegacyContext>, new()

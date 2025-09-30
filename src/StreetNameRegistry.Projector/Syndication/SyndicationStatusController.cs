@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Projector.Syndication
     [ApiRoute("syndication")]
     public class SyndicationStatusController : ApiController
     {
-        private const string? SyndicationConnectionStringKey = "Syndication";
+        private const string? SyndicationConnectionStringKey = "SyndicationProjections";
 
         [HttpGet]
         public async Task<IActionResult> Get(

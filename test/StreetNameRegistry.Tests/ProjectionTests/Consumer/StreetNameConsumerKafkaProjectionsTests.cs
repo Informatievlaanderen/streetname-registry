@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.ProjectionTests
+namespace StreetNameRegistry.Tests.ProjectionTests.Consumer
 {
     using System;
     using System.Collections;
@@ -7,21 +7,21 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System.Threading;
     using System.Threading.Tasks;
     using AutoFixture;
-    using BackOffice;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Consumer;
-    using Consumer.Municipality;
-    using Consumer.Projections;
     using FluentAssertions;
     using global::AutoFixture;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging.Abstractions;
     using Moq;
-    using Municipality;
-    using Municipality.Commands;
     using NodaTime;
+    using StreetNameRegistry.Consumer;
+    using StreetNameRegistry.Consumer.Municipality;
+    using StreetNameRegistry.Consumer.Projections;
+    using StreetNameRegistry.Municipality;
+    using StreetNameRegistry.Municipality.Commands;
+    using StreetNameRegistry.Tests.BackOffice;
     using Xunit;
     using Xunit.Abstractions;
     using Provenance = Be.Vlaanderen.Basisregisters.GrAr.Contracts.Common.Provenance;

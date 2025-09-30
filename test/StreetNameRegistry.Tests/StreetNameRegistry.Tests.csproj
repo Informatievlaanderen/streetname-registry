@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\src\StreetNameRegistry.Producer.Ldes\StreetNameRegistry.Producer.Ldes.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Producer\StreetNameRegistry.Producer.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.BackOffice\StreetNameRegistry.Projections.BackOffice.csproj" />
+    <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Elastic\StreetNameRegistry.Projections.Elastic.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Extract\StreetNameRegistry.Projections.Extract.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Integration\StreetNameRegistry.Projections.Integration.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.LastChangedList\StreetNameRegistry.Projections.LastChangedList.csproj" />

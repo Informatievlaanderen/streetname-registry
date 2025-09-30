@@ -538,6 +538,11 @@
           "System.Diagnostics.DiagnosticSource": "4.4.1"
         }
       },
+      "Elastic.Transport": {
+        "type": "Transitive",
+        "resolved": "0.5.9",
+        "contentHash": "RXoJAeXKaXq67SeLhyDMBPpvlkG940jqJWd5l+rKglMRLJn6X0dkLNlWehpDuouicNdwnYdcuADnqdSOiSvASw=="
+      },
       "Fare": {
         "type": "Transitive",
         "resolved": "2.1.1",
@@ -2699,6 +2704,13 @@
           "StreetNameRegistry": "[1.0.0, )"
         }
       },
+      "streetnameregistry.infrastructure.elastic": {
+        "type": "Project",
+        "dependencies": {
+          "Elastic.Clients.Elasticsearch": "[8.17.4, )",
+          "Microsoft.Extensions.Configuration": "[9.0.4, )"
+        }
+      },
       "streetnameregistry.producer": {
         "type": "Project",
         "dependencies": {
@@ -2758,6 +2770,20 @@
           "Datadog.Trace.Bundle": "[3.16.0, )",
           "Microsoft.EntityFrameworkCore.Design": "[9.0.4, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
+        }
+      },
+      "streetnameregistry.projections.elastic": {
+        "type": "Project",
+        "dependencies": {
+          "Be.Vlaanderen.Basisregisters.EventHandling.Autofac": "[7.0.0, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
+          "Elastic.Clients.Elasticsearch": "[8.17.4, )",
+          "Microsoft.Extensions.Configuration.Binder": "[9.0.4, )",
+          "StreetNameRegistry.Consumer": "[1.0.0, )",
+          "StreetNameRegistry.Infrastructure": "[1.0.0, )",
+          "StreetNameRegistry.Infrastructure.Elastic": "[1.0.0, )",
+          "StreetNameRegistry.Projections.Syndication": "[1.0.0, )"
         }
       },
       "streetnameregistry.projections.extract": {
@@ -3357,6 +3383,15 @@
         "dependencies": {
           "Newtonsoft.Json": "13.0.3",
           "Serilog": "4.2.0"
+        }
+      },
+      "Elastic.Clients.Elasticsearch": {
+        "type": "CentralTransitive",
+        "requested": "[8.17.4, )",
+        "resolved": "8.17.4",
+        "contentHash": "7zZ4xmQv96PlGZiQBfmuicgh3cUoAV9aZlY/vPdba02vWGz307XW+TbI3HaQrm4EPKrvD2PFNQmkJVBvhMZgxw==",
+        "dependencies": {
+          "Elastic.Transport": "0.5.9"
         }
       },
       "Fastenshtein": {

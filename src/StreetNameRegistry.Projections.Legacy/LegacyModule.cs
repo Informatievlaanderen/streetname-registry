@@ -44,14 +44,16 @@ namespace StreetNameRegistry.Projections.Legacy
             string backofficeProjectionsConnectionString)
         {
             services
-                .AddDbContext<LegacyContext>((provider, options) => options
-                    .UseLoggerFactory(loggerFactory)
+                .AddDbContext<LegacyContext>(ConfigureOptions)
+                .AddDbContextFactory<LegacyContext>(ConfigureOptions);
+            void ConfigureOptions(DbContextOptionsBuilder options) =>
+                options.UseLoggerFactory(loggerFactory)
                     .UseSqlServer(backofficeProjectionsConnectionString, sqlServerOptions =>
                     {
                         sqlServerOptions.EnableRetryOnFailure();
                         sqlServerOptions.MigrationsHistoryTable(MigrationTables.Legacy, Schema.Legacy);
                     })
-                    .UseExtendedSqlServerMigrations());
+                    .UseExtendedSqlServerMigrations();
         }
 
         private static void RunInMemoryDb(
@@ -60,11 +62,14 @@ namespace StreetNameRegistry.Projections.Legacy
             ILogger logger)
         {
             services
-                .AddDbContext<LegacyContext>(options => options
-                    .UseLoggerFactory(loggerFactory)
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString(), sqlServerOptions => { }));
+                .AddDbContext<LegacyContext>(ConfigureOptions)
+                .AddDbContextFactory<LegacyContext>(ConfigureOptions);
 
             logger.LogWarning("Running InMemory for {Context}!", nameof(LegacyContext));
+            void ConfigureOptions(DbContextOptionsBuilder options) =>
+                options
+                    .UseLoggerFactory(loggerFactory)
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString(), sqlServerOptions => { });
         }
     }
 }

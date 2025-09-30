@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.ProjectionTests
+namespace StreetNameRegistry.Tests.ProjectionTests.Consumer
 {
     using System;
     using System.Threading;
@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector.Testing;
     using FluentAssertions.Execution;
-    using Testing;
+    using StreetNameRegistry.Tests.Testing;
     using Xunit.Abstractions;
 
     public abstract class StreetNameConsumerKafkaProjectionTest<TContext, TProjection> : StreetNameRegistryTest

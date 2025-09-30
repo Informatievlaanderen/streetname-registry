@@ -340,8 +340,6 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             When<Envelope<MunicipalityWasNamed>>(DoNothing);
             When<Envelope<MunicipalityWasRetired>>(DoNothing);
             When<Envelope<MunicipalityWasRemoved>>(DoNothing);
-            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
-            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }
 
         private void UpdateHomoniemtv(StreetNameExtractItemV2 streetName, List<StreetNameHomonymAddition> homonymAdditions)

@@ -418,6 +418,11 @@
           "System.Diagnostics.DiagnosticSource": "4.4.1"
         }
       },
+      "Elastic.Transport": {
+        "type": "Transitive",
+        "resolved": "0.5.9",
+        "contentHash": "RXoJAeXKaXq67SeLhyDMBPpvlkG940jqJWd5l+rKglMRLJn6X0dkLNlWehpDuouicNdwnYdcuADnqdSOiSvASw=="
+      },
       "FluentValidation": {
         "type": "Transitive",
         "resolved": "11.5.1",
@@ -1239,11 +1244,11 @@
       },
       "System.Configuration.ConfigurationManager": {
         "type": "Transitive",
-        "resolved": "9.0.0",
-        "contentHash": "PdkuMrwDhXoKFo/JxISIi9E8L+QGn9Iquj2OKDWHB6Y/HnUOuBouF7uS3R4Hw3FoNmwwMo6hWgazQdyHIIs27A==",
+        "resolved": "9.0.3",
+        "contentHash": "0kw80ykL/iFhNtFbPpjxIavmCk7/l6MqQwNSNhEoSNuI9C82ZZ251thzQZ/btHut21Y2G9M+amQY1K5bhaAjKg==",
         "dependencies": {
-          "System.Diagnostics.EventLog": "9.0.0",
-          "System.Security.Cryptography.ProtectedData": "9.0.0"
+          "System.Diagnostics.EventLog": "9.0.3",
+          "System.Security.Cryptography.ProtectedData": "9.0.3"
         }
       },
       "System.Diagnostics.Debug": {
@@ -1452,8 +1457,8 @@
       },
       "System.Security.Cryptography.ProtectedData": {
         "type": "Transitive",
-        "resolved": "9.0.0",
-        "contentHash": "CJW+x/F6fmRQ7N6K8paasTw9PDZp4t7G76UjGNlSDgoHPF0h08vTzLYbLZpOLEJSg35d5wy2jCXGo84EN05DpQ=="
+        "resolved": "9.0.3",
+        "contentHash": "4PAwR9l3rhAESfymptisnO2KWpHmiTnKxovnREqmiY4BEakXD2ahQU4/NO0vzEarMw8RGzwpmWoiHwvL/waHfQ=="
       },
       "System.Text.Encoding": {
         "type": "Transitive",
@@ -1509,6 +1514,11 @@
           "System.Runtime": "4.3.0"
         }
       },
+      "System.Threading.Tasks.Dataflow": {
+        "type": "Transitive",
+        "resolved": "9.0.3",
+        "contentHash": "m/1HEjn2ipNAhZIVEaKbfkQZTInHJ5oG92Jiixs3ZOsiuF71QDPwTtem/YjBkRrXeOEqXb2itd06rTyKGY98tg=="
+      },
       "System.Threading.Tasks.Extensions": {
         "type": "Transitive",
         "resolved": "4.5.4",
@@ -1556,6 +1566,31 @@
           "NodaTime": "[3.2.2, )"
         }
       },
+      "streetnameregistry.consumer": {
+        "type": "Project",
+        "dependencies": {
+          "Be.Vlaanderen.Basisregisters.Aws.DistributedMutex": "[5.0.0, )",
+          "Be.Vlaanderen.Basisregisters.GrAr.Contracts": "[22.1.1, )",
+          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": "[6.0.3, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector": "[15.0.1, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
+          "Be.Vlaanderen.Basisregisters.Projector": "[16.0.0, )",
+          "Datadog.Trace.Bundle": "[3.16.0, )",
+          "Destructurama.JsonNet": "[4.0.2, )",
+          "Microsoft.EntityFrameworkCore.SqlServer": "[9.0.4, )",
+          "Microsoft.Extensions.Hosting": "[9.0.4, )",
+          "Serilog": "[4.2.0, )",
+          "Serilog.Enrichers.Environment": "[3.0.1, )",
+          "Serilog.Enrichers.Thread": "[4.0.0, )",
+          "Serilog.Extensions.Logging": "[9.0.1, )",
+          "Serilog.Formatting.Compact": "[3.0.0, )",
+          "Serilog.Settings.Configuration": "[9.0.0, )",
+          "Serilog.Sinks.Console": "[6.0.0, )",
+          "Serilog.Sinks.File": "[7.0.0, )",
+          "StreetNameRegistry.Infrastructure": "[1.0.0, )"
+        }
+      },
       "streetnameregistry.consumer.read.postal": {
         "type": "Project",
         "dependencies": {
@@ -1590,6 +1625,27 @@
           "Microsoft.Extensions.Configuration": "[9.0.4, )",
           "Polly": "[8.5.2, )",
           "StreetNameRegistry": "[1.0.0, )"
+        }
+      },
+      "streetnameregistry.infrastructure.elastic": {
+        "type": "Project",
+        "dependencies": {
+          "Elastic.Clients.Elasticsearch": "[8.17.4, )",
+          "Microsoft.Extensions.Configuration": "[9.0.4, )"
+        }
+      },
+      "streetnameregistry.projections.elastic": {
+        "type": "Project",
+        "dependencies": {
+          "Be.Vlaanderen.Basisregisters.EventHandling.Autofac": "[7.0.0, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[15.0.1, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[15.0.1, )",
+          "Elastic.Clients.Elasticsearch": "[8.17.4, )",
+          "Microsoft.Extensions.Configuration.Binder": "[9.0.4, )",
+          "StreetNameRegistry.Consumer": "[1.0.0, )",
+          "StreetNameRegistry.Infrastructure": "[1.0.0, )",
+          "StreetNameRegistry.Infrastructure.Elastic": "[1.0.0, )",
+          "StreetNameRegistry.Projections.Syndication": "[1.0.0, )"
         }
       },
       "streetnameregistry.projections.legacy": {
@@ -1768,6 +1824,19 @@
           "Newtonsoft.Json": "13.0.3"
         }
       },
+      "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": {
+        "type": "CentralTransitive",
+        "requested": "[6.0.3, )",
+        "resolved": "6.0.3",
+        "contentHash": "Ty3Ac44+0Pb4uOuBKnutrJfmpfAILNpJe/yc/Ha53cmeoiSz0vdoXjy1daZjT/M3z0XvMgHol05fdmroz6IDGA==",
+        "dependencies": {
+          "Confluent.Kafka": "2.10.0",
+          "Microsoft.EntityFrameworkCore": "9.0.4",
+          "Microsoft.EntityFrameworkCore.SqlServer": "9.0.4",
+          "Microsoft.Extensions.Logging": "9.0.4",
+          "Newtonsoft.Json": "13.0.3"
+        }
+      },
       "Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector": {
         "type": "CentralTransitive",
         "requested": "[15.0.1, )",
@@ -1822,11 +1891,34 @@
           "Microsoft.SyndicationFeed.ReaderWriter": "1.0.2"
         }
       },
+      "Be.Vlaanderen.Basisregisters.Projector": {
+        "type": "CentralTransitive",
+        "requested": "[16.0.0, )",
+        "resolved": "16.0.0",
+        "contentHash": "ADGQ+ELuRfBsrrHpO7pqy3uVBu3NN8O3VdSJvrORtyFqG1xMwIpAhTOdu7df7cgIR2ExH4LCTJCebeV1SqPjPQ==",
+        "dependencies": {
+          "Autofac": "8.2.1",
+          "Autofac.Extensions.DependencyInjection": "10.0.0",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector": "15.0.0",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner": "15.0.0",
+          "Dapper": "2.1.66",
+          "Microsoft.Data.SqlClient": "6.0.1",
+          "Polly": "8.5.2",
+          "System.Configuration.ConfigurationManager": "9.0.3",
+          "System.Threading.Tasks.Dataflow": "9.0.3"
+        }
+      },
       "Be.Vlaanderen.Basisregisters.Utilities.HexByteConvertor": {
         "type": "CentralTransitive",
         "requested": "[5.0.0, )",
         "resolved": "5.0.0",
         "contentHash": "DI3ETyL4lW+/SQcVAHE1F2fkNLZ5UV8GtVMoPZxX73gTdlfcKHASnsKrxVS/IcQu/5dzwQR70OIpC7kKTQzKcg=="
+      },
+      "Dapper": {
+        "type": "CentralTransitive",
+        "requested": "[2.1.66, )",
+        "resolved": "2.1.66",
+        "contentHash": "/q77jUgDOS+bzkmk3Vy9SiWMaetTw+NOoPAV0xPBsGVAyljd5S6P+4RUW7R3ZUGGr9lDRyPKgAMj2UAOwvqZYw=="
       },
       "Destructurama.JsonNet": {
         "type": "CentralTransitive",
@@ -1836,6 +1928,15 @@
         "dependencies": {
           "Newtonsoft.Json": "13.0.3",
           "Serilog": "4.2.0"
+        }
+      },
+      "Elastic.Clients.Elasticsearch": {
+        "type": "CentralTransitive",
+        "requested": "[8.17.4, )",
+        "resolved": "8.17.4",
+        "contentHash": "7zZ4xmQv96PlGZiQBfmuicgh3cUoAV9aZlY/vPdba02vWGz307XW+TbI3HaQrm4EPKrvD2PFNQmkJVBvhMZgxw==",
+        "dependencies": {
+          "Elastic.Transport": "0.5.9"
         }
       },
       "Fastenshtein": {

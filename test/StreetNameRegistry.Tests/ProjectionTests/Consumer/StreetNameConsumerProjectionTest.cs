@@ -1,10 +1,10 @@
-namespace StreetNameRegistry.Tests.ProjectionTests
+namespace StreetNameRegistry.Tests.ProjectionTests.Consumer
 {
     using System;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Testing;
-    using Consumer;
     using Microsoft.EntityFrameworkCore;
+    using StreetNameRegistry.Consumer;
 
     public class StreetNameConsumerProjectionTest<TProjection>
         where TProjection : ConnectedProjection<ConsumerContext>, new()

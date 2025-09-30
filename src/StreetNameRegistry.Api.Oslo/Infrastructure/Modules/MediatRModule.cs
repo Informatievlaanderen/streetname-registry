@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
     using Microsoft.Extensions.Options;
     using Projections.Legacy;
     using Projections.Syndication;
+    using StreetName;
     using StreetName.Count;
     using StreetName.Detail;
     using StreetName.List;
@@ -27,6 +28,12 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
                     c.Resolve<LegacyContext>(),
                     c.Resolve<IOptions<ResponseOptions>>())).InstancePerLifetimeScope();
 
+            // builder.Register(c => (IRequestHandler<OsloListRequest, StreetNameListOsloResponse>)
+            //         new ElasticOsloListHandler(
+            //             c.Resolve<IStreetNameApiElasticSearchClient>(),
+            //             c.Resolve<IOptions<ResponseOptions>>()))
+            //     .InstancePerLifetimeScope();
+
             builder.Register(c => (IRequestHandler<OsloDetailRequest, StreetNameOsloResponse>)
                 new OsloDetailHandlerV2(
                     c.Resolve<LegacyContext>(),
@@ -36,6 +43,11 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
             builder.Register(c => (IRequestHandler<OsloCountRequest, TotaalAantalResponse>)
                 new OsloCountHandlerV2(
                     c.Resolve<LegacyContext>())).InstancePerLifetimeScope();
+
+            // builder.Register(c => (IRequestHandler<OsloCountRequest, TotaalAantalResponse>)
+            //     new ElasticOsloCountHandler(
+            //         c.Resolve<IStreetNameApiElasticSearchClient>()))
+            //     .InstancePerLifetimeScope();
 
             builder.RegisterType<SyndicationHandler>()
                 .AsImplementedInterfaces()

@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Count
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using List;
     using MediatR;
     using Projections.Legacy;
     using Query;

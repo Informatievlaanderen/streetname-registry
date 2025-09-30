@@ -24,21 +24,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StreetNameRegistry.Projections.Extract\StreetNameRegistry.Projections.Extract.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice\StreetNameRegistry.Api.BackOffice.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Elastic\StreetNameRegistry.Projections.Elastic.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Extract\StreetNameRegistry.Projections.Extract.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.LastChangedList\StreetNameRegistry.Projections.LastChangedList.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Wfs\StreetNameRegistry.Projections.Wfs.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Wms\StreetNameRegistry.Projections.Wms.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice\StreetNameRegistry.Api.BackOffice.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry.Producer\StreetNameRegistry.Producer.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry.Consumer.Read.Postal\StreetNameRegistry.Consumer.Read.Postal.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry.Producer.Ldes\StreetNameRegistry.Producer.Ldes.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.BackOffice\StreetNameRegistry.Projections.BackOffice.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Integration\StreetNameRegistry.Projections.Integration.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Consumer.Read.Postal\StreetNameRegistry.Consumer.Read.Postal.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Producer\StreetNameRegistry.Producer.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Producer.Ldes\StreetNameRegistry.Producer.Ldes.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj" />
   </ItemGroup>
 
   <ItemGroup>

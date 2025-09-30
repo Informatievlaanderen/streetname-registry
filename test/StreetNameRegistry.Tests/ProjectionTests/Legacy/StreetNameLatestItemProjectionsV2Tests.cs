@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.ProjectionTests
+namespace StreetNameRegistry.Tests.ProjectionTests.Legacy
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,12 +7,12 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Pipes;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
-    using Builders;
     using FluentAssertions;
     using global::AutoFixture;
-    using Municipality;
-    using Municipality.Events;
-    using Projections.Legacy.StreetNameDetailV2;
+    using StreetNameRegistry.Municipality;
+    using StreetNameRegistry.Municipality.Events;
+    using StreetNameRegistry.Projections.Legacy.StreetNameDetailV2;
+    using StreetNameRegistry.Tests.Builders;
     using Xunit;
 
     public sealed class StreetNameLatestItemProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameDetailProjectionsV2>

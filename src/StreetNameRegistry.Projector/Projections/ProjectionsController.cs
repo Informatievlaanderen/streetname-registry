@@ -23,6 +23,7 @@ namespace StreetNameRegistry.Projector.Projections
             RegisterConnectionString(Schema.Wfs, configuration.GetConnectionString("WfsProjections"));
             RegisterConnectionString(Schema.Wms, configuration.GetConnectionString("WmsProjections"));
             RegisterConnectionString(Schema.Integration, configuration.GetConnectionString("IntegrationProjections"));
+            RegisterConnectionString(Schema.Elastic, configuration.GetConnectionString("ElasticProjections"));
         }
     }
 }

@@ -1,11 +1,11 @@
-namespace StreetNameRegistry.Tests.ProjectionTests
+namespace StreetNameRegistry.Tests.ProjectionTests.Legacy
 {
     using System.Threading.Tasks;
     using FluentAssertions;
-    using Generate;
-    using Projections.Legacy.StreetNameDetail;
-    using StreetName;
-    using Testing;
+    using StreetNameRegistry.Projections.Legacy.StreetNameDetail;
+    using StreetNameRegistry.StreetName;
+    using StreetNameRegistry.Tests.Generate;
+    using StreetNameRegistry.Tests.Testing;
     using Xunit;
     using Xunit.Abstractions;
 

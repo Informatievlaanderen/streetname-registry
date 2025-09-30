@@ -242,8 +242,6 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
             When<Envelope<MunicipalityWasNamed>>(DoNothing);
             When<Envelope<MunicipalityWasRetired>>(DoNothing);
             When<Envelope<MunicipalityWasRemoved>>(DoNothing);
-            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(DoNothing);
-            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(DoNothing);
         }
 
         private static void UpdateNameByLanguage(StreetNameHelperV2 entity, IDictionary<Language, string> streetNameNames)

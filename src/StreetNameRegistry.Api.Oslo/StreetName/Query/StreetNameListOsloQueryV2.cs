@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Converters;
+    using List;
     using Microsoft.EntityFrameworkCore;
     using Municipality;
     using Projections.Legacy;
@@ -84,26 +85,6 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
                         x.MunicipalityNameGermanSearch == filterMunicipalityName);
             }
 
-            if (!string.IsNullOrEmpty(filtering.Filter.NameDutch))
-            {
-                streetNames = streetNames.Where(s => s.StreetNameDutch.Contains(filtering.Filter.NameDutch));
-            }
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameEnglish))
-            {
-                streetNames = streetNames.Where(s => s.StreetNameEnglish.Contains(filtering.Filter.NameEnglish));
-            }
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameFrench))
-            {
-                streetNames = streetNames.Where(s => s.StreetNameFrench.Contains(filtering.Filter.NameFrench));
-            }
-
-            if (!string.IsNullOrEmpty(filtering.Filter.NameGerman))
-            {
-                streetNames = streetNames.Where(s => s.StreetNameGerman.Contains(filtering.Filter.NameGerman));
-            }
-
             var filterStreetName = filtering.Filter.StreetNameName.RemoveDiacritics();
             if (!string.IsNullOrEmpty(filtering.Filter.StreetNameName))
             {
@@ -147,18 +128,5 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
 
         public SortingHeader DefaultSortingHeader { get; } =
             new SortingHeader(nameof(StreetNameListView.StreetNamePersistentLocalId), SortOrder.Ascending);
-    }
-
-    public class StreetNameFilter
-    {
-        public string StreetNameName { get; set; }
-        public string MunicipalityName { get; set; }
-        public string NameDutch { get; set; }
-        public string NameFrench { get; set; }
-        public string NameGerman { get; set; }
-        public string NameEnglish { get; set; }
-        public string Status { get; set; }
-        public string? NisCode { get; set; }
-        public bool? IsInFlemishRegion { get; set; } = null;
     }
 }

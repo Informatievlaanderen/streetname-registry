@@ -102,6 +102,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
             var containerBuilder = new ContainerBuilder();
             containerBuilder
                 .RegisterModule(new ApiModule(_configuration, services, _loggerFactory))
+                .RegisterModule(new ElasticModule(_configuration))
                 .RegisterModule(new MediatRModule());
             _applicationContainer = containerBuilder.Build();
 

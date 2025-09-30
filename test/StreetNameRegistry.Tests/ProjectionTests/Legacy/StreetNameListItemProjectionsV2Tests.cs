@@ -1,18 +1,17 @@
-namespace StreetNameRegistry.Tests.ProjectionTests
+namespace StreetNameRegistry.Tests.ProjectionTests.Legacy
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Builders;
     using FluentAssertions;
     using global::AutoFixture;
-    using Municipality;
-    using Municipality.Events;
-    using Projections.Legacy.StreetNameListV2;
+    using StreetNameRegistry.Municipality;
+    using StreetNameRegistry.Municipality.Events;
+    using StreetNameRegistry.Projections.Legacy.StreetNameListV2;
+    using StreetNameRegistry.Tests.Builders;
     using Xunit;
 
     public sealed class StreetNameListItemProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameListProjectionsV2>

@@ -11,12 +11,16 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.Projector.Modules;
     using Be.Vlaanderen.Basisregisters.Shaperon;
     using Microsoft.Data.SqlClient;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using SqlStreamStore;
     using StreetNameRegistry.Infrastructure;
+    using StreetNameRegistry.Projections.Elastic;
+    using StreetNameRegistry.Projections.Elastic.Infrastructure;
+    using StreetNameRegistry.Projections.Elastic.StreetNameList;
     using StreetNameRegistry.Projections.Extract;
     using StreetNameRegistry.Projections.Extract.StreetNameExtract;
     using StreetNameRegistry.Projections.Integration;
@@ -27,6 +31,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using StreetNameRegistry.Projections.Legacy.StreetNameDetailV2;
     using StreetNameRegistry.Projections.Legacy.StreetNameListV2;
     using StreetNameRegistry.Projections.Legacy.StreetNameSyndication;
+    using StreetNameRegistry.Projections.Syndication;
     using StreetNameRegistry.Projections.Wfs;
     using StreetNameRegistry.Projections.Wfs.StreetNameHelperV2;
     using StreetNameRegistry.Projections.Wms;
@@ -84,8 +89,11 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             RegisterLegacyProjectionsV2(builder);
             RegisterWfsProjectionsV2(builder);
             RegisterWmsProjectionsV2(builder);
-            if(_configuration.GetSection("Integration").GetValue("Enabled", false))
+
+            if (_configuration.GetSection("Integration").GetValue("Enabled", false))
                 RegisterIntegrationProjections(builder);
+
+            RegisterElasticProjections(builder);
         }
 
         private void RegisterIntegrationProjections(ContainerBuilder builder)
@@ -200,6 +208,35 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjections<StreetNameRegistry.Projections.Wms.StreetNameHelperV2.StreetNameHelperV2Projections, WmsContext>(() =>
                         new StreetNameRegistry.Projections.Wms.StreetNameHelperV2.StreetNameHelperV2Projections(),
                     wmsProjectionSettings);
+        }
+
+        private void RegisterElasticProjections(ContainerBuilder builder)
+        {
+            builder
+                .RegisterModule(
+                    new ElasticRunnerModule(
+                        _configuration,
+                        _services,
+                        _loggerFactory))
+                .RegisterModule(new ElasticModule(_configuration));
+
+            builder
+                .RegisterModule(
+                    new SyndicationModule(
+                        _configuration,
+                        _services,
+                        _loggerFactory));
+
+            builder
+                .RegisterProjectionMigrator<ElasticRunnerContextMigrationFactory>(
+                    _configuration,
+                    _loggerFactory)
+                .RegisterProjections<StreetNameListProjections, ElasticRunnerContext>(c =>
+                        new StreetNameListProjections(
+                            c.Resolve<IStreetNameListElasticClient>(),
+                            c.Resolve<IDbContextFactory<SyndicationContext>>()),
+                    ConnectedProjectionSettings.Configure(x => { x.ConfigureCatchUpUpdatePositionMessageInterval(1); }))
+                ;
         }
     }
 }

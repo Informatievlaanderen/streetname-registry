@@ -1,11 +1,11 @@
-namespace StreetNameRegistry.Tests.ProjectionTests
+namespace StreetNameRegistry.Tests.ProjectionTests.Consumer
 {
     using System.Threading.Tasks;
     using AutoFixture;
-    using Consumer.Projections;
     using FluentAssertions;
     using global::AutoFixture;
-    using Municipality.Events;
+    using StreetNameRegistry.Consumer.Projections;
+    using StreetNameRegistry.Municipality.Events;
     using Xunit;
 
     public sealed class StreetNameConsumerProjectionsTests : StreetNameConsumerProjectionTest<MunicipalityConsumerProjection>

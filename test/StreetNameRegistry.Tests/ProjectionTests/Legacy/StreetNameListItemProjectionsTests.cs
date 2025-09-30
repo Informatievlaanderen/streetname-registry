@@ -1,17 +1,17 @@
-namespace StreetNameRegistry.Tests.ProjectionTests
+namespace StreetNameRegistry.Tests.ProjectionTests.Legacy
 {
     using System;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using FluentAssertions;
-    using Generate;
     using Microsoft.EntityFrameworkCore;
-    using Projections.Legacy;
-    using Projections.Legacy.StreetNameList;
-    using Testing;
+    using StreetNameRegistry.Projections.Legacy;
+    using StreetNameRegistry.Projections.Legacy.StreetNameList;
+    using StreetNameRegistry.StreetName;
+    using StreetNameRegistry.Tests.Generate;
+    using StreetNameRegistry.Tests.Testing;
     using Xunit;
     using Xunit.Abstractions;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
-    using StreetName;
 
     public sealed class StreetNameListItemProjectionsTests : ProjectionTest<LegacyContext, StreetNameListProjections>
     {

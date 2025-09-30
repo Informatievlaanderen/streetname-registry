@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>    
+    <ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\StreetNameRegistry.Consumer.Read.Postal\StreetNameRegistry.Consumer.Read.Postal.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\StreetNameRegistry.Projections.Elastic\StreetNameRegistry.Projections.Elastic.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\StreetNameRegistry\StreetNameRegistry.csproj" PrivateAssets="All" />
   </ItemGroup>

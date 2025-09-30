@@ -1,13 +1,11 @@
-namespace StreetNameRegistry.Tests.ProjectionTests
+namespace StreetNameRegistry.Tests.ProjectionTests.BackOffice
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Api.BackOffice.Abstractions;
     using AutoFixture;
-    using BackOffice;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Testing;
@@ -16,9 +14,11 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Moq;
-    using Municipality;
-    using Municipality.Events;
-    using Projections.BackOffice;
+    using StreetNameRegistry.Api.BackOffice.Abstractions;
+    using StreetNameRegistry.Municipality;
+    using StreetNameRegistry.Municipality.Events;
+    using StreetNameRegistry.Projections.BackOffice;
+    using StreetNameRegistry.Tests.BackOffice;
     using Xunit;
 
     public class StreetNameBackOfficeProjectionsTests : StreetNameBackOfficeProjectionsTest
