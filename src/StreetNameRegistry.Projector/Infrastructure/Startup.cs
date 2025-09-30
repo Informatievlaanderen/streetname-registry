@@ -98,60 +98,59 @@ namespace StreetNameRegistry.Projector.Infrastructure
 
                         AfterHealthChecks = health =>
                         {
-                            //TODO-pr temp disable
-                            // var connectionStrings = _configuration
-                            //     .GetSection("ConnectionStrings")
-                            //     .GetChildren();
-                            //
-                            // if (!_configuration.GetSection("Integration").GetValue("Enabled", false))
-                            //     connectionStrings = connectionStrings
-                            //         .Where(x => !x.Key.StartsWith("Integration", StringComparison.OrdinalIgnoreCase))
-                            //         .ToList();
-                            //
-                            // foreach (var connectionString in connectionStrings.Where(x => !x.Value.Contains("host", StringComparison.OrdinalIgnoreCase)))
-                            //     health.AddSqlServer(
-                            //         connectionString.Value,
-                            //         name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
-                            //         tags: [DatabaseTag, "sql", "sqlserver"]);
-                            //
-                            // foreach (var connectionString in connectionStrings.Where(x => x.Value.Contains("host", StringComparison.OrdinalIgnoreCase)))
-                            //     health.AddNpgSql(
-                            //         connectionString.Value,
-                            //         name: $"npgsql-{connectionString.Key.ToLowerInvariant()}",
-                            //         tags: [DatabaseTag, "sql", "npgsql"]);
-                            //
-                            // health.AddDbContextCheck<ExtractContext>(
-                            //     $"dbcontext-{nameof(ExtractContext).ToLowerInvariant()}",
-                            //     tags: [DatabaseTag, "sql", "sqlserver"]);
-                            //
-                            // health.AddDbContextCheck<LegacyContext>(
-                            //     $"dbcontext-{nameof(LegacyContext).ToLowerInvariant()}",
-                            //     tags: [DatabaseTag, "sql", "sqlserver"]);
-                            //
-                            // health.AddDbContextCheck<LastChangedListContext>(
-                            //     $"dbcontext-{nameof(LastChangedListContext).ToLowerInvariant()}",
-                            //     tags: [DatabaseTag, "sql", "sqlserver"]);
-                            //
-                            // health.AddDbContextCheck<WfsContext>(
-                            //     $"dbcontext-{nameof(WfsContext).ToLowerInvariant()}",
-                            //     tags: [DatabaseTag, "sql", "sqlserver"]);
-                            //
-                            // health.AddDbContextCheck<WmsContext>(
-                            //     $"dbcontext-{nameof(WmsContext).ToLowerInvariant()}",
-                            //     tags: [DatabaseTag, "sql", "sqlserver"]);
-                            //
-                            // health.AddDbContextCheck<SyndicationContext>(
-                            //     $"dbcontext-{nameof(SyndicationContext).ToLowerInvariant()}",
-                            //     tags: [DatabaseTag, "sql", "sqlserver"]);
-                            //
-                            // health.AddDbContextCheck<ElasticRunnerContext>(
-                            //     $"dbcontext-{nameof(ElasticRunnerContext).ToLowerInvariant()}",
-                            //     tags: [DatabaseTag, "sql", "sqlserver"]);
-                            //
-                            // health.AddCheck<ProjectionsHealthCheck>(
-                            //     "projections",
-                            //     failureStatus: HealthStatus.Unhealthy,
-                            //     tags: ["projections"]);
+                             var connectionStrings = _configuration
+                                 .GetSection("ConnectionStrings")
+                                 .GetChildren();
+
+                             if (!_configuration.GetSection("Integration").GetValue("Enabled", false))
+                                 connectionStrings = connectionStrings
+                                     .Where(x => !x.Key.StartsWith("Integration", StringComparison.OrdinalIgnoreCase))
+                                     .ToList();
+
+                             foreach (var connectionString in connectionStrings.Where(x => !x.Value.Contains("host", StringComparison.OrdinalIgnoreCase)))
+                                 health.AddSqlServer(
+                                     connectionString.Value,
+                                     name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
+                                     tags: [DatabaseTag, "sql", "sqlserver"]);
+
+                             foreach (var connectionString in connectionStrings.Where(x => x.Value.Contains("host", StringComparison.OrdinalIgnoreCase)))
+                                 health.AddNpgSql(
+                                     connectionString.Value,
+                                     name: $"npgsql-{connectionString.Key.ToLowerInvariant()}",
+                                     tags: [DatabaseTag, "sql", "npgsql"]);
+
+                             health.AddDbContextCheck<ExtractContext>(
+                                 $"dbcontext-{nameof(ExtractContext).ToLowerInvariant()}",
+                                 tags: [DatabaseTag, "sql", "sqlserver"]);
+
+                             health.AddDbContextCheck<LegacyContext>(
+                                 $"dbcontext-{nameof(LegacyContext).ToLowerInvariant()}",
+                                 tags: [DatabaseTag, "sql", "sqlserver"]);
+
+                             health.AddDbContextCheck<LastChangedListContext>(
+                                 $"dbcontext-{nameof(LastChangedListContext).ToLowerInvariant()}",
+                                 tags: [DatabaseTag, "sql", "sqlserver"]);
+
+                             health.AddDbContextCheck<WfsContext>(
+                                 $"dbcontext-{nameof(WfsContext).ToLowerInvariant()}",
+                                 tags: [DatabaseTag, "sql", "sqlserver"]);
+
+                             health.AddDbContextCheck<WmsContext>(
+                                 $"dbcontext-{nameof(WmsContext).ToLowerInvariant()}",
+                                 tags: [DatabaseTag, "sql", "sqlserver"]);
+
+                             health.AddDbContextCheck<SyndicationContext>(
+                                 $"dbcontext-{nameof(SyndicationContext).ToLowerInvariant()}",
+                                 tags: [DatabaseTag, "sql", "sqlserver"]);
+
+                             health.AddDbContextCheck<ElasticRunnerContext>(
+                                 $"dbcontext-{nameof(ElasticRunnerContext).ToLowerInvariant()}",
+                                 tags: [DatabaseTag, "sql", "sqlserver"]);
+
+                             health.AddCheck<ProjectionsHealthCheck>(
+                                 "projections",
+                                 failureStatus: HealthStatus.Unhealthy,
+                                 tags: ["projections"]);
                         }
                     }
                 })

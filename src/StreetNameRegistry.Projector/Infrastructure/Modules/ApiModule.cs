@@ -83,16 +83,15 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             builder.RegisterEventstreamModule(_configuration);
             builder.RegisterModule(new ProjectorModule(_configuration));
 
-            //TODO-pr temp disabled
-            // RegisterLastChangedProjections(builder);
-            //
-            // RegisterExtractProjectionsV2(builder);
-            // RegisterLegacyProjectionsV2(builder);
-            // RegisterWfsProjectionsV2(builder);
-            // RegisterWmsProjectionsV2(builder);
-            //
-            // if(_configuration.GetSection("Integration").GetValue("Enabled", false))
-            //     RegisterIntegrationProjections(builder);
+            RegisterLastChangedProjections(builder);
+
+            RegisterExtractProjectionsV2(builder);
+            RegisterLegacyProjectionsV2(builder);
+            RegisterWfsProjectionsV2(builder);
+            RegisterWmsProjectionsV2(builder);
+
+            if (_configuration.GetSection("Integration").GetValue("Enabled", false))
+                RegisterIntegrationProjections(builder);
 
             RegisterElasticProjections(builder);
         }
@@ -236,10 +235,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                         new StreetNameListProjections(
                             c.Resolve<IStreetNameListElasticClient>(),
                             c.Resolve<IDbContextFactory<SyndicationContext>>()),
-                    ConnectedProjectionSettings.Configure(x =>
-                    {
-                        x.ConfigureCatchUpUpdatePositionMessageInterval(1);
-                    }))
+                    ConnectedProjectionSettings.Configure(x => { x.ConfigureCatchUpUpdatePositionMessageInterval(1); }))
                 ;
         }
     }

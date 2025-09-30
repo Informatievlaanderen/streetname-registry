@@ -189,11 +189,29 @@ namespace StreetNameRegistry.Projections.Elastic.StreetNameList
                     ct);
             });
 
-            When<Envelope<StreetNameNamesWereCorrected>>(async (_, message, ct) => { await UpdateDocuments([message.Message.PersistentLocalId], document => { UpdateNameByLanguage(document, message.Message.StreetNameNames); }, message.Message.Provenance.Timestamp, ct); });
+            When<Envelope<StreetNameNamesWereCorrected>>(async (_, message, ct) =>
+            {
+                await UpdateDocuments([message.Message.PersistentLocalId], document =>
+                {
+                    UpdateNameByLanguage(document, message.Message.StreetNameNames);
+                }, message.Message.Provenance.Timestamp, ct);
+            });
 
-            When<Envelope<StreetNameNamesWereChanged>>(async (_, message, ct) => { await UpdateDocuments([message.Message.PersistentLocalId], document => { UpdateNameByLanguage(document, message.Message.StreetNameNames); }, message.Message.Provenance.Timestamp, ct); });
+            When<Envelope<StreetNameNamesWereChanged>>(async (_, message, ct) =>
+            {
+                await UpdateDocuments([message.Message.PersistentLocalId], document =>
+                {
+                    UpdateNameByLanguage(document, message.Message.StreetNameNames);
+                }, message.Message.Provenance.Timestamp, ct);
+            });
 
-            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (_, message, ct) => { await UpdateDocuments([message.Message.PersistentLocalId], document => { UpdateHomonymAdditionByLanguage(document, new HomonymAdditions(message.Message.HomonymAdditions)); }, message.Message.Provenance.Timestamp, ct); });
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (_, message, ct) =>
+            {
+                await UpdateDocuments([message.Message.PersistentLocalId], document =>
+                {
+                    UpdateHomonymAdditionByLanguage(document, new HomonymAdditions(message.Message.HomonymAdditions));
+                }, message.Message.Provenance.Timestamp, ct);
+            });
 
             When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (_, message, ct) =>
             {
