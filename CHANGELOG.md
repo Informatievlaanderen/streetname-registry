@@ -1,3 +1,10 @@
+# [5.2.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.1.2...v5.2.0) (2025-09-30)
+
+
+### Features
+
+* add streetnames list to Elastic (projections) ([c9c1cf4](https://github.com/informatievlaanderen/streetname-registry/commit/c9c1cf4783e4bd176a7acce4538f03052a11aafb))
+
 ## [5.1.2](https://github.com/informatievlaanderen/streetname-registry/compare/v5.1.1...v5.1.2) (2025-08-27)
 
 
