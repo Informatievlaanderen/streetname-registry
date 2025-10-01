@@ -2,8 +2,13 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using List;
     using MediatR;
+
+    public sealed record OsloCountRequest(FilteringHeader<StreetNameFilter> Filtering, SortingHeader Sorting) : IRequest<TotaalAantalResponse>;
 
     public sealed class ElasticOsloCountHandler: IRequestHandler<OsloCountRequest, TotaalAantalResponse>
     {

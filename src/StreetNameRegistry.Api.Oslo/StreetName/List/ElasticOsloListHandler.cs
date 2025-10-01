@@ -4,7 +4,9 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions.Infrastructure.Options;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
+    using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Converters;
@@ -13,6 +15,8 @@
     using NodaTime.Extensions;
     using Projections.Elastic.StreetNameList;
     using Language = StreetNameRegistry.Infrastructure.Elastic.Language;
+
+    public sealed record OsloListRequest(FilteringHeader<StreetNameFilter> Filtering, SortingHeader Sorting, IPaginationRequest PaginationRequest) : IRequest<StreetNameListOsloResponse>;
 
     public sealed class ElasticOsloListHandler : IRequestHandler<OsloListRequest, StreetNameListOsloResponse>
 
