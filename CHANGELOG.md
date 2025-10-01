@@ -1,3 +1,15 @@
+# [5.3.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.2.0...v5.3.0) (2025-10-01)
+
+
+### Bug Fixes
+
+* add missing connectionstrings to default appsettings ([b501d9c](https://github.com/informatievlaanderen/streetname-registry/commit/b501d9ccd5d019c0ce2ea7368d4bf0ed70990530))
+
+
+### Features
+
+* **api:** use elasticsearch for oslo list ([5c70882](https://github.com/informatievlaanderen/streetname-registry/commit/5c7088215998ac152e6809bf33532a7e201e59ca))
+
 # [5.2.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.1.2...v5.2.0) (2025-09-30)
 
 
