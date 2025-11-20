@@ -4,13 +4,13 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
-    using Abstractions.Infrastructure.Options;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.BasicApiProblem;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using Infrastructure.Options;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
@@ -68,6 +68,13 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
         [JsonProperty(Required = Required.DisallowNull)]
         public StraatnaamStatus StraatnaamStatus { get; set; }
 
+        /// <summary>
+        /// De hyperlinks die gerelateerd zijn aan de straatnaam.
+        /// </summary>
+        [DataMember(Name = "_links", Order = 99)]
+        [JsonProperty(Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public StreetNameDetailOsloResponseLinks? Links { get; set; }
+
         [IgnoreDataMember]
         [JsonIgnore]
         internal string? LastEventHash { get; set; }
@@ -87,6 +94,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
             string? homonymAdditionFrench = "",
             string? homonymAdditionGerman = "",
             string? homonymAdditionEnglish = "",
+            string selfDetailUrl = "",
+            string addressLinkUrl = "",
             string? lastEventHash = "")
         {
             Context = contextUrlDetail;
@@ -114,6 +123,35 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
             };
 
             HomoniemToevoegingen = homoniemen.Where(x => !string.IsNullOrEmpty(x.Spelling)).ToList();
+            Links = new StreetNameDetailOsloResponseLinks(
+                new Link
+                {
+                    Href = new Uri(string.Format(selfDetailUrl, persistentLocalId))
+                },
+                new Link
+                {
+                    Href = new Uri(string.Format(addressLinkUrl, persistentLocalId))
+                });
+        }
+    }
+
+    [DataContract(Name = "_links", Namespace = "")]
+    public class StreetNameDetailOsloResponseLinks
+    {
+        [DataMember(Name = "self")]
+        [JsonProperty(Required = Required.DisallowNull)]
+        public Link Self { get; set; }
+
+        [DataMember(Name = "adressen", EmitDefaultValue = false)]
+        [JsonProperty(Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Link? Adressen { get; set; }
+
+        public StreetNameDetailOsloResponseLinks(
+            Link self,
+            Link? adressen = null)
+        {
+            Self = self;
+            Adressen = adressen;
         }
     }
 
@@ -149,7 +187,9 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
                 homonymAdditionDutch:string.Empty,
                 homonymAdditionFrench:string.Empty,
                 homonymAdditionGerman:string.Empty,
-                homonymAdditionEnglish:string.Empty);
+                homonymAdditionEnglish:string.Empty,
+                _responseOptions.DetailUrl,
+                _responseOptions.StreetNameDetailAddressesLink);
         }
     }
 

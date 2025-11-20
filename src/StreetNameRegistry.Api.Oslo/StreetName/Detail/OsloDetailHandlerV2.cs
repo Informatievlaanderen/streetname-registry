@@ -4,13 +4,13 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions.Infrastructure.Options;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Converters;
+    using Infrastructure.Options;
     using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
@@ -69,6 +69,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
                 streetNameV2.HomonymAdditionFrench,
                 streetNameV2.HomonymAdditionGerman,
                 streetNameV2.HomonymAdditionEnglish,
+                _responseOptions.Value.DetailUrl,
+                _responseOptions.Value.StreetNameDetailAddressesLink,
                 streetNameV2.LastEventHash);
         }
 

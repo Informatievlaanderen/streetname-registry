@@ -1,11 +1,11 @@
 namespace StreetNameRegistry.Api.Oslo.Infrastructure.Modules
 {
-    using Abstractions.Infrastructure.Options;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Consumer.Read.Postal;
     using MediatR;
     using Microsoft.Extensions.Options;
+    using Options;
     using Projections.Legacy;
     using Projections.Syndication;
     using StreetName;

@@ -3,7 +3,6 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using System;
     using System.Linq;
     using System.Reflection;
-    using Abstractions.Infrastructure.Options;
     using Asp.Versioning.ApiExplorer;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
@@ -18,6 +17,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Microsoft.Extensions.Logging;
     using Microsoft.OpenApi.Models;
     using Modules;
+    using Options;
 
     /// <summary>Represents the startup process for the application.</summary>
     public class Startup
