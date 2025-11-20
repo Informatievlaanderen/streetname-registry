@@ -6,7 +6,6 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
-    using Abstractions.Infrastructure.Options;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
@@ -14,6 +13,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Syndication;
     using Infrastructure;
+    using Infrastructure.Options;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;

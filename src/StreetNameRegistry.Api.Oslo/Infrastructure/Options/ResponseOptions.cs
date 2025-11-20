@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.Abstractions.Infrastructure.Options
+namespace StreetNameRegistry.Api.Oslo.Infrastructure.Options
 {
     public class ResponseOptions
     {
@@ -9,5 +9,6 @@ namespace StreetNameRegistry.Api.Oslo.Abstractions.Infrastructure.Options
         public string GemeenteDetailUrl { get; set; }
         public string ContextUrlList { get; set; }
         public string ContextUrlDetail { get; set; }
+        public string StreetNameDetailAddressesLink { get; set; }
     }
 }

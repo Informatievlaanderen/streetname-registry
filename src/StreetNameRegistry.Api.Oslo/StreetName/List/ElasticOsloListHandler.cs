@@ -3,13 +3,13 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions.Infrastructure.Options;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Converters;
+    using Infrastructure.Options;
     using MediatR;
     using Microsoft.Extensions.Options;
     using NodaTime.Extensions;
