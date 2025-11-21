@@ -1,3 +1,10 @@
+# [5.4.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.3.0...v5.4.0) (2025-11-21)
+
+
+### Features
+
+* **oslo:** add streetname detail links GAWR-7137 ([e060f38](https://github.com/informatievlaanderen/streetname-registry/commit/e060f38d1fbc281274ebdeef5f2cebc7b3649e6a))
+
 # [5.3.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.2.0...v5.3.0) (2025-10-01)
 
 
