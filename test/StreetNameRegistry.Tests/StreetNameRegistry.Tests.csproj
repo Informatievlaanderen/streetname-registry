@@ -8,7 +8,6 @@
     <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice.Handlers.Lambda\StreetNameRegistry.Api.BackOffice.Handlers.Lambda.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice\StreetNameRegistry.Api.BackOffice.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj" />
-    <ProjectReference Include="..\..\src\StreetNameRegistry.Producer.Ldes\StreetNameRegistry.Producer.Ldes.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Producer\StreetNameRegistry.Producer.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.BackOffice\StreetNameRegistry.Projections.BackOffice.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Elastic\StreetNameRegistry.Projections.Elastic.csproj" />
