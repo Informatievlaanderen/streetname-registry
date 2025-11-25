@@ -120,11 +120,6 @@
                 new ProducerMigrateProjections(Mock.Of<IProducer>())
             }];
 
-            yield return [new List<ConnectedProjection<StreetNameRegistry.Producer.Ldes.ProducerContext>>
-            {
-                new StreetNameRegistry.Producer.Ldes.ProducerProjections(Mock.Of<IProducer>(), "http://s", new JsonSerializerSettings().ConfigureDefaultForApi())
-            }];
-
             yield return [new List<ConnectedProjection<ElasticRunnerContext>>
                 {
                     new StreetNameListProjections(Mock.Of<IStreetNameListElasticClient>(),

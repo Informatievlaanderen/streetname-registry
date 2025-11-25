@@ -40,7 +40,6 @@ jobs:
           'streetname-consumer',
           'streetname-producer',
           'streetname-producer-snapshot-oslo',
-          'streetname-producer-ldes',
           'streetname-projections-backoffice',
           'streetname-last-changed-list'
         ]

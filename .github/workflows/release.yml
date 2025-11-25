@@ -214,22 +214,6 @@ jobs:
       prerestore-script: ./pre-restore.sh
     secrets: inherit
 
-  build-producer-ldes:
-    name: Build Producer Ldes
-    uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image-v2.yml@main
-    needs: [ set-release-version ]
-    if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
-    with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
-      image-file: sr-producer-ldes-image.tar
-      image-name: producer-ldes
-      test-project: StreetNameRegistry.Tests
-      build-project: StreetNameRegistry.Producer.Ldes
-      semver: ${{ needs.set-release-version.outputs.version }}
-      dotnet-version: ${{ vars.VBR_DOTNET_VERSION_9 }}
-      prerestore-script: ./pre-restore.sh
-    secrets: inherit
-
   build-snapshot-verifier:
     name: Build Snapshot Verifier
     uses: Informatievlaanderen/build-pipeline/.github/workflows/build-image-v2.yml@main
@@ -339,7 +323,6 @@ jobs:
       , build-consumer
       , build-producer
       , build-producer-snapshot-oslo
-      , build-producer-ldes
       , build-lambda-backoffice
       , build-snapshot-verifier
       , build-consumer-read-postal]
@@ -563,7 +546,6 @@ jobs:
           , 'consumer'
           , 'producer'
           , 'producer-snapshot-oslo'
-          , 'producer-ldes'
           , 'snapshot-verifier'
           , 'lambda-sqsbackofficefunction'
         ]
@@ -637,7 +619,6 @@ jobs:
           , 'streetname-consumer'
           , 'streetname-producer'
           , 'streetname-producer-snapshot-oslo'
-          , 'streetname-producer-ldes'
           , 'streetname-projections-backoffice'
           , 'streetname-last-changed-list'
         ]
@@ -775,7 +756,6 @@ jobs:
           , 'streetname-consumer'
           , 'streetname-producer'
           , 'streetname-producer-snapshot-oslo'
-          , 'streetname-producer-ldes'
           , 'streetname-projections-backoffice'
           , 'streetname-last-changed-list'
         ]

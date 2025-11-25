@@ -19,7 +19,6 @@ namespace StreetNameRegistry.Infrastructure
         public const string BackOfficeProjections = "StreetNameRegistryBackOfficeProjections";
         public const string Producer = "StreetNameRegistryProducer";
         public const string ProducerSnapshotOslo = "StreetNameRegistryProducerSnapshotOslo";
-        public const string ProducerLdes = "StreetNameRegistryProducerLdes";
         public const string Integration = "integration_streetname";
     }
 
@@ -40,7 +39,6 @@ namespace StreetNameRegistry.Infrastructure
         public const string BackOfficeProjections = "__EFMigrationsHistoryBackOfficeProjections";
         public const string Producer = "__EFMigrationsHistoryProducer";
         public const string ProducerSnapshotOslo = "__EFMigrationsHistoryProducerSnapshotOslo";
-        public const string ProducerLdes = "__EFMigrationsHistoryProducerLdes";
         public const string Integration = "__EFMigrationsHistory";
     }
 }

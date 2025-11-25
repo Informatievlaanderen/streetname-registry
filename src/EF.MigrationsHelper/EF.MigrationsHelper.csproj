@@ -38,7 +38,6 @@
     <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Consumer.Read.Postal\StreetNameRegistry.Consumer.Read.Postal.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Producer\StreetNameRegistry.Producer.csproj" />
-    <ProjectReference Include="..\StreetNameRegistry.Producer.Ldes\StreetNameRegistry.Producer.Ldes.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj" />
   </ItemGroup>
 
