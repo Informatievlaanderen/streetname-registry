@@ -1,3 +1,10 @@
+# [5.5.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.4.0...v5.5.0) (2025-12-01)
+
+
+### Features
+
+* remove ldes GAWR-7170 ([1446ec7](https://github.com/informatievlaanderen/streetname-registry/commit/1446ec7f0b9d43ddd0ec428f9de4b91b79230f33))
+
 # [5.4.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.3.0...v5.4.0) (2025-11-21)
 
 
