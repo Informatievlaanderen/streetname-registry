@@ -135,6 +135,9 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
         }
     }
 
+    /// <summary>
+    /// De hyperlinks die gerelateerd zijn aan de straatnaam.
+    /// </summary>
     [DataContract(Name = "_links", Namespace = "")]
     public class StreetNameDetailOsloResponseLinks
     {
