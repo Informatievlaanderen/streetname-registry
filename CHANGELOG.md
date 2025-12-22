@@ -1,3 +1,10 @@
+## [5.5.2](https://github.com/informatievlaanderen/streetname-registry/compare/v5.5.1...v5.5.2) (2025-12-22)
+
+
+### Bug Fixes
+
+* **style:** to trigger build ([1229c50](https://github.com/informatievlaanderen/streetname-registry/commit/1229c50e441ab972264e902a45689b3d94a8a2ce))
+
 ## [5.5.1](https://github.com/informatievlaanderen/streetname-registry/compare/v5.5.0...v5.5.1) (2025-12-04)
 
 
