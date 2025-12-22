@@ -19,7 +19,6 @@
     public sealed record OsloListRequest(FilteringHeader<StreetNameFilter> Filtering, SortingHeader Sorting, IPaginationRequest PaginationRequest) : IRequest<StreetNameListOsloResponse>;
 
     public sealed class ElasticOsloListHandler : IRequestHandler<OsloListRequest, StreetNameListOsloResponse>
-
     {
         private readonly IStreetNameApiElasticSearchClient _streetNameApiElasticSearchClient;
         private readonly IOptions<ResponseOptions> _responseOptions;
