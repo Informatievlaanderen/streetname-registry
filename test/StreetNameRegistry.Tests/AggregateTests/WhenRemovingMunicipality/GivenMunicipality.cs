@@ -55,6 +55,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipality
             var command = Fixture.Create<RemoveMunicipality>();
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+
+            Fixture.Register(() => false);
             var streetNameMigratedToMunicipality = Fixture.Create<StreetNameWasMigratedToMunicipality>();
 
             // Act, Assert

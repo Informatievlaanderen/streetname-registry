@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Municipality.Events
         public IEnumerable<Language> FacilityLanguages { get; }
 
         public IEnumerable<StreetNameData> StreetNames { get; }
-        public bool IsRemoved { get; set; }
+        public bool IsRemoved { get; }
 
         public MunicipalitySnapshot(
             MunicipalityId municipalityId,

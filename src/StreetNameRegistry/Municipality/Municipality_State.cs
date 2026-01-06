@@ -202,6 +202,8 @@ namespace StreetNameRegistry.Municipality
 
                 StreetNames.Add(streetName);
             }
+
+            IsRemoved = @event.IsRemoved;
         }
     }
 }

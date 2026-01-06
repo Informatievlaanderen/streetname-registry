@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Tests.Testing
 {
+    using System;
     using System.Collections.Generic;
     using Autofac;
     using AutoFixture;
@@ -7,6 +8,7 @@ namespace StreetNameRegistry.Tests.Testing
     using Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore.Autofac;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
+    using FluentAssertions;
     using global::AutoFixture;
     using Infrastructure.Modules;
     using Microsoft.Extensions.Configuration;

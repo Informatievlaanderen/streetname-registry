@@ -15,6 +15,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
         {
             fixture.Customize(new NodaTimeCustomization());
             fixture.Customize(new SetProvenanceImplementationsCallSetProvenance());
+            fixture.Register<bool>(() => new Random().Next(2) == 1);
         }
     }
     public sealed class SetProvenanceImplementationsCallSetProvenance : ICustomization

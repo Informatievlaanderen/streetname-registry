@@ -48,6 +48,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
             municipalitySnapshot.StreetNames.Should().BeEmpty();
             municipalitySnapshot.OfficialLanguages.Should().BeEmpty();
             municipalitySnapshot.FacilityLanguages.Should().BeEmpty();
+            municipalitySnapshot.IsRemoved.Should().BeFalse();
         }
 
         [Fact]
@@ -794,6 +795,26 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     streetNameWasProposedForMunicipalityMerger.GetHash(),
                     streetNameWasProposedForMunicipalityMerger.Provenance)
             });
+        }
+
+        [Fact]
+        public void MunicipalityWasRemovedIsSavedInSnapshot()
+        {
+            var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();
+
+            var municipalityWasRemoved = Fixture.Create<MunicipalityWasRemoved>();
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>(),
+                municipalityWasRemoved
+            });
+
+            var snapshot = aggregate.TakeSnapshot();
+
+            snapshot.Should().BeOfType<MunicipalitySnapshot>();
+            var municipalitySnapshot = (MunicipalitySnapshot)snapshot;
+
+            municipalitySnapshot.IsRemoved.Should().BeTrue();
         }
     }
 }

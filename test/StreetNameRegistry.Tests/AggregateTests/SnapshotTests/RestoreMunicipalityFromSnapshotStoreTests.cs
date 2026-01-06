@@ -27,8 +27,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
 
         public RestoreMunicipalityFromSnapshotStoreTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
-            var random = new Random(Fixture.Create<int>());
 
+            var random = new Random(Fixture.Create<int>());
+;
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             Fixture.Customize(new WithMunicipalityStatus());
@@ -78,7 +79,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
 
             _sut = new MunicipalityFactory(IntervalStrategy.Default).Create();
             _municipalitySnapshot = Fixture.Create<MunicipalitySnapshot>();
-
             var eventSerializer = Container.Resolve<EventSerializer>();
             var eventMapping = Container.Resolve<EventMapping>();
 
@@ -108,6 +108,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
             _sut.MunicipalityStatus.Should().Be(MunicipalityStatus.Parse(_municipalitySnapshot.MunicipalityStatus));
             _sut.OfficialLanguages.Should().BeEquivalentTo(_municipalitySnapshot.OfficialLanguages);
             _sut.FacilityLanguages.Should().BeEquivalentTo(_municipalitySnapshot.FacilityLanguages);
+            _sut.IsRemoved.Should().Be(_municipalitySnapshot.IsRemoved);
         }
 
         [Fact]
