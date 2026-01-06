@@ -1,3 +1,10 @@
+## [5.5.3](https://github.com/informatievlaanderen/streetname-registry/compare/v5.5.2...v5.5.3) (2026-01-06)
+
+
+### Bug Fixes
+
+* snapshot IsRemoved + bool in tests ([6e21ffc](https://github.com/informatievlaanderen/streetname-registry/commit/6e21ffc96fc0c2cd162e391317562c5f7726d668))
+
 ## [5.5.2](https://github.com/informatievlaanderen/streetname-registry/compare/v5.5.1...v5.5.2) (2025-12-22)
 
 
