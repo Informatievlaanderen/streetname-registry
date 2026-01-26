@@ -20,7 +20,7 @@
         <PackageVersion Include="Polly" Version="8.5.2" />
         <PackageVersion Include="CsvHelper" Version="33.0.1" />
 
-        <PackageVersion Include="Datadog.Trace.Bundle" Version="3.16.0" />
+        <PackageVersion Include="Datadog.Trace.Bundle" Version="3.36.0" />
 
         <PackageVersion Include="Destructurama.JsonNet" Version="4.0.2" />
         <PackageVersion Include="Dapper" Version="2.1.66" />
