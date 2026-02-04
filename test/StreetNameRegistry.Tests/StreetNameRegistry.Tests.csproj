@@ -15,6 +15,7 @@
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Integration\StreetNameRegistry.Projections.Integration.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.LastChangedList\StreetNameRegistry.Projections.LastChangedList.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" />
+    <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Feed\StreetNameRegistry.Projections.Feed.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Wfs\StreetNameRegistry.Projections.Wfs.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Wms\StreetNameRegistry.Projections.Wms.csproj" />

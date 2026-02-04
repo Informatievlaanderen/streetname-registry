@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api;
+    using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
     using Be.Vlaanderen.Basisregisters.Projector;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
@@ -26,6 +27,7 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using StreetNameRegistry.Projections.Elastic;
     using StreetNameRegistry.Projections.Elastic.StreetNameList;
     using StreetNameRegistry.Projections.Extract;
+    using StreetNameRegistry.Projections.Feed;
     using StreetNameRegistry.Projections.Integration.Infrastructure;
     using StreetNameRegistry.Projections.Legacy;
     using StreetNameRegistry.Projections.Syndication;
@@ -131,6 +133,10 @@ namespace StreetNameRegistry.Projector.Infrastructure
                                  $"dbcontext-{nameof(LastChangedListContext).ToLowerInvariant()}",
                                  tags: [DatabaseTag, "sql", "sqlserver"]);
 
+                             health.AddDbContextCheck<FeedContext>(
+                                 $"dbcontext-{nameof(FeedContext).ToLowerInvariant()}",
+                                 tags: [DatabaseTag, "sql", "sqlserver"]);
+
                              health.AddDbContextCheck<WfsContext>(
                                  $"dbcontext-{nameof(WfsContext).ToLowerInvariant()}",
                                  tags: [DatabaseTag, "sql", "sqlserver"]);
@@ -155,7 +161,8 @@ namespace StreetNameRegistry.Projector.Infrastructure
                     }
                 })
                 .Configure<ExtractConfig>(_configuration.GetSection("Extract"))
-                .Configure<IntegrationOptions>(_configuration.GetSection("Integration"));
+                .Configure<IntegrationOptions>(_configuration.GetSection("Integration"))
+                .Configure<ChangeFeedConfig>(_configuration.GetSection("StreetNameFeed"));
 
             services.AddSingleton<ProjectionsHealthCheck>(
                 c => new ProjectionsHealthCheck(

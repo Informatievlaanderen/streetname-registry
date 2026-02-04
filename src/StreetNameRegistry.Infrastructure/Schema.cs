@@ -20,6 +20,7 @@ namespace StreetNameRegistry.Infrastructure
         public const string Producer = "StreetNameRegistryProducer";
         public const string ProducerSnapshotOslo = "StreetNameRegistryProducerSnapshotOslo";
         public const string Integration = "integration_streetname";
+        public const string Feed = "StreetNameRegistryFeed";
     }
 
     public static class MigrationTables
@@ -40,5 +41,6 @@ namespace StreetNameRegistry.Infrastructure
         public const string Producer = "__EFMigrationsHistoryProducer";
         public const string ProducerSnapshotOslo = "__EFMigrationsHistoryProducerSnapshotOslo";
         public const string Integration = "__EFMigrationsHistory";
+        public const string Feed = "__EFMigrationsHistoryFeed";
     }
 }

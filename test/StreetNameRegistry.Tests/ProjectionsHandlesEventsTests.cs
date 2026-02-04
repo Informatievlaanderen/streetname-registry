@@ -6,8 +6,8 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Text;
-    using Be.Vlaanderen.Basisregisters.AspNetCore.Mvc.Formatters.Json;
     using Be.Vlaanderen.Basisregisters.EventHandling;
+    using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
     using Be.Vlaanderen.Basisregisters.GrAr.Oslo.SnapshotProducer;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Producer;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
@@ -18,13 +18,14 @@
     using Microsoft.Extensions.Options;
     using Moq;
     using Municipality.Events;
-    using Newtonsoft.Json;
     using Producer;
     using Producer.Snapshot.Oslo;
     using Projections.Elastic;
     using Projections.Elastic.StreetNameList;
     using Projections.Extract;
     using Projections.Extract.StreetNameExtract;
+    using Projections.Feed;
+    using Projections.Feed.StreetNameFeed;
     using Projections.Integration;
     using Projections.Integration.Infrastructure;
     using Projections.LastChangedList;
@@ -85,6 +86,11 @@
                 new StreetNameSyndicationProjections()
             }];
 
+            yield return [new List<ConnectedProjection<FeedContext>>
+            {
+                new StreetNameFeedProjections(Mock.Of<IChangeFeedService>())
+            }];
+
             yield return [new List<ConnectedProjection<WfsContext>>
             {
                 new StreetNameHelperV2Projections()
@@ -92,7 +98,7 @@
 
             yield return [new List<ConnectedProjection<WmsContext>>
             {
-                new StreetNameRegistry.Projections.Wms.StreetNameHelperV2.StreetNameHelperV2Projections()
+                new Projections.Wms.StreetNameHelperV2.StreetNameHelperV2Projections()
             }];
 
             yield return [new List<ConnectedProjection<LastChangedListContext>>
