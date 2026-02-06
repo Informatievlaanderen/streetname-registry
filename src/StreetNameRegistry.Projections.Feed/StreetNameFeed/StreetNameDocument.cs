@@ -92,6 +92,9 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 .HasKey(x => x.PersistentLocalId)
                 .IsClustered();
 
+            b.Property(x => x.PersistentLocalId)
+                .ValueGeneratedNever();
+
             b.Property(x => x.LastChangedOnAsDateTimeOffset)
                 .HasColumnName("LastChangedOn");
 

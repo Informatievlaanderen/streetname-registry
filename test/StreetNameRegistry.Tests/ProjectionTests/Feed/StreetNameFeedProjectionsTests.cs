@@ -236,7 +236,29 @@
             var homonymGerman = new StreetNameHomonymAddition("homonymGerman", Language.German);
             _fixture.Register(() => new Names([nameDutch, nameEnglish, nameFrench, nameGerman]));
             _fixture.Register(() => new HomonymAdditions([homonymDutch, homonymEnglish, homonymFrench, homonymGerman]));
-            var streetNameWasProposedForMunicipalityMerger = _fixture.Create<StreetNameWasProposedForMunicipalityMerger>();
+            var streetNameWasProposedForMunicipalityMerger = new StreetNameWasProposedForMunicipalityMerger(
+                _fixture.Create<MunicipalityId>(),
+                _fixture.Create<NisCode>(),
+                _fixture.Create<StreetNameStatus>(),
+                _fixture.Create<Names>(),
+                _fixture.Create<HomonymAdditions>(),
+                _fixture.Create<PersistentLocalId>(),
+                [new PersistentLocalId(_fixture.Create<int>()), new PersistentLocalId(_fixture.Create<int>())]);
+            ((ISetProvenance)streetNameWasProposedForMunicipalityMerger).SetProvenance(_fixture.Create<Provenance>());
+
+            _feedContext.StreetNameDocuments.Add(
+                new StreetNameDocument(
+                    streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.First(),
+                    "11001",
+                    streetNameWasProposedForMunicipalityMerger.Provenance.Timestamp,
+                    _fixture.CreateMany<GeografischeNaam>(2).ToList()));
+
+            _feedContext.StreetNameDocuments.Add(
+                new StreetNameDocument(
+                    streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.LastOrDefault(),
+                    "11002",
+                    streetNameWasProposedForMunicipalityMerger.Provenance.Timestamp,
+                    _fixture.CreateMany<GeografischeNaam>(2).ToList()));
 
             var position = 2L;
 
@@ -261,7 +283,7 @@
                     document.Document.HomonymAdditions.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(homonymFrench.HomonymAddition);
                     document.Document.HomonymAdditions.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(homonymGerman.HomonymAddition);
 
-                    var feedItem = await context.StreetNameFeed.SingleOrDefaultAsync(x =>
+                    var feedItem = await context.StreetNameFeed.FirstOrDefaultAsync(x =>
                         x.PersistentLocalId == streetNameWasProposedForMunicipalityMerger.PersistentLocalId);
                     AssertFeedItem(feedItem, position, streetNameWasProposedForMunicipalityMerger);
 
@@ -289,8 +311,20 @@
                             It.IsAny<string>()),
                         Times.Once);
 
-                    ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Once);
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Once);
+                    ChangeFeedServiceMock.Verify(x => x.CreateCloudEvent(
+                            It.IsAny<long>(),
+                            streetNameWasProposedForMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                            StreetNameEventTypes.TransformV1,
+                            It.Is<StreetNameCloudTransformEvent>(e => e.NisCodes.SequenceEqual(new List<string> { "11001", "11002", streetNameWasProposedForMunicipalityMerger.NisCode })
+                                                                      && e.To.SequenceEqual(new List<string>{OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedForMunicipalityMerger.PersistentLocalId.ToString())})
+                                                                      && e.From.SequenceEqual(streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.Select(s => OsloNamespaces.StraatNaam.ToPuri(s.ToString())).ToList())),
+                            It.IsAny<Uri>(),
+                            StreetNameWasProposedForMunicipalityMerger.EventName,
+                            It.IsAny<string>()),
+                        Times.Once);
+
+                    ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
                 });
         }
 

@@ -3,9 +3,11 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.AspNetCore.Mvc.Formatters.Json;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Be.Vlaanderen.Basisregisters.Projector;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
@@ -17,6 +19,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Newtonsoft.Json;
     using SqlStreamStore;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Projections.Elastic;
@@ -223,6 +226,14 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                         _services,
                         _loggerFactory,
                         EventsJsonSerializerSettingsProvider.CreateSerializerSettings()));
+
+            builder.Register(c => new ChangeFeedService(
+                    c.Resolve<IOptions<ChangeFeedConfig>>().Value,
+                    c.Resolve<LastChangedListContext>(),
+                    new JsonSerializerSettings().ConfigureDefaultForApi()))
+                .AsImplementedInterfaces()
+                .AsSelf()
+                .SingleInstance();
 
             builder
                 .RegisterProjectionMigrator<FeedContextMigrationFactory>(

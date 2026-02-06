@@ -20,50 +20,42 @@
                          [
                              {
                                  "specversion": "1.0",
-                                 "id": "3534",
-                                 "time": "2020-02-10T12:42:50.6472584+01:00",
-                                 "type": "basisregisters.postalinformation.create.v1",
+                                 "id": "1",
+                                 "time": "2023-11-01T08:18:40.8661748+01:00",
+                                 "type": "basisregisters.streetname.create.v1",
                                  "source": "{{_feedConfig.StreetNameFeed.FeedUrl}}",
                                  "datacontenttype": "application/json",
                                  "dataschema": "{{_feedConfig.StreetNameFeed.DataSchemaUrl}}",
-                                 "basisregisterseventtype": "PostalInformationWasRegistered",
-                                 "basisregisterscausationid": "446287de-032c-529b-8338-cd7209051d33",
+                                 "basisregisterseventtype": "StreetNameWasMigratedToMunicipality",
+                                 "basisregisterscausationid": "b42dcc08-a41e-50d2-ab21-87f2be687e42",
                                  "data": {
-                                     "@id": "https://data.vlaanderen.be/id/postinfo/9000",
-                                     "objectId": "9000",
-                                     "naamruimte": "https://data.vlaanderen.be/id/postinfo",
-                                     "versieId": "2020-02-10T12:42:50.6472584+01:00",
-                                     "nisCodes": [],
+                                     "@id": "https://data.vlaanderen.be/id/straatnaam/84008",
+                                     "objectId": "84008",
+                                     "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
+                                     "versieId": "2023-11-01T08:18:40.8661748+01:00",
+                                     "nisCodes": [
+                                         "52043"
+                                     ],
                                      "attributen": [
                                          {
-                                             "naam": "postcode",
+                                             "naam": "gemeente.id",
                                              "oudeWaarde": null,
-                                             "nieuweWaarde": "9000"
-                                         }
-                                     ]
-                                 }
-                             },
-                             {
-                                 "specversion": "1.0",
-                                 "id": "3535",
-                                 "time": "2020-02-10T12:42:50.6472584+01:00",
-                                 "type": "basisregisters.postalinformation.update.v1",
-                                 "source": "{{_feedConfig.StreetNameFeed.FeedUrl}}",
-                                 "datacontenttype": "application/json",
-                                 "dataschema": "{{_feedConfig.StreetNameFeed.DataSchemaUrl}}",
-                                 "basisregisterseventtype": "PostalInformationWasRealized",
-                                 "basisregisterscausationid": "446287de-032c-529b-8338-cd7209051d33",
-                                 "data": {
-                                     "@id": "https://data.vlaanderen.be/id/postinfo/9000",
-                                     "objectId": "9000",
-                                     "naamruimte": "https://data.vlaanderen.be/id/postinfo",
-                                     "versieId": "2020-02-10T12:42:50.6472584+01:00",
-                                     "nisCodes": [],
-                                     "attributen": [
+                                             "nieuweWaarde": "https://data.vlaanderen.be/id/gemeente/52043"
+                                         },
                                          {
-                                             "naam": "postInfoStatus",
+                                             "naam": "straatnaamStatus",
                                              "oudeWaarde": null,
-                                             "nieuweWaarde": "gerealiseerd"
+                                             "nieuweWaarde": "voorgesteld"
+                                         },
+                                         {
+                                             "naam": "straatnamen",
+                                             "oudeWaarde": null,
+                                             "nieuweWaarde": [
+                                                 {
+                                                     "spelling": "Rue Jules Stracmans",
+                                                     "taal": "fr"
+                                                 }
+                                             ]
                                          }
                                      ]
                                  }

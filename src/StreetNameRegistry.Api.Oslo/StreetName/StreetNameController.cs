@@ -171,7 +171,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         /// Vraag wijzigingen van een bepaalde gemeente op.
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="postcode">Postcode</param>
+        /// <param name="persistentLocalId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{persistentLocalId}/wijzigingen")]

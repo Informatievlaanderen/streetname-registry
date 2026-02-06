@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
@@ -107,6 +108,50 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     baseRegistriesCloudEventAttributes.Add(new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.HomonymAdditions, null, document.Document.HomonymAdditions));
 
                 await AddCloudEvent(message, document, context, baseRegistriesCloudEventAttributes, StreetNameEventTypes.CreateV1);
+
+                var page = await context.CalculatePage();
+                var streetNameFeedItem = new StreetNameFeedItem(
+                    position: message.Position,
+                    page: page,
+                    persistentLocalId: document.PersistentLocalId)
+                {
+                    Application = message.Message.Provenance.Application,
+                    Modification = message.Message.Provenance.Modification,
+                    Operator = message.Message.Provenance.Operator,
+                    Organisation = message.Message.Provenance.Organisation,
+                    Reason = message.Message.Provenance.Reason
+                };
+                await context.StreetNameFeed.AddAsync(streetNameFeedItem, ct);
+                var nisCodes = context
+                    .StreetNameDocuments
+                    .Local
+                    .Where(x => message.Message.MergedStreetNamePersistentLocalIds.Contains(x.PersistentLocalId))
+                    .Select(x => x.Document.NisCode)
+                    .Union(context
+                        .StreetNameDocuments
+                        .Where(x => message.Message.MergedStreetNamePersistentLocalIds.Contains(x.PersistentLocalId))
+                        .Select(x => x.Document.NisCode))
+                    .ToList();
+
+                nisCodes.Add(document.Document.NisCode);
+                nisCodes = nisCodes.Distinct().ToList();
+
+                var cloudEvent = _changeFeedService.CreateCloudEvent(
+                    streetNameFeedItem.Id,
+                    message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                    StreetNameEventTypes.TransformV1,
+                    new StreetNameCloudTransformEvent
+                    {
+                        NisCodes =  nisCodes,
+                        To = [OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString())],
+                        From = message.Message.MergedStreetNamePersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
+                    },
+                    _changeFeedService.DataSchemaUriTransform,
+                    message.EventName,
+                    message.Metadata["CommandId"].ToString()!);
+
+                streetNameFeedItem.CloudEventAsString = _changeFeedService.SerializeCloudEvent(cloudEvent);
+                await CheckToUpdateCache(page, context);
             });
 
             When<Envelope<StreetNameWasCorrectedFromApprovedToProposed>>(async (context, message, ct) =>
@@ -153,7 +198,6 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Afgekeurd)
                 ]);
 
-                //TODO: calculating page before saving the document will cause the feed item to be on the wrong page, but calculating it after saving the document will cause concurrency issues. This needs to be solved when implementing paging in the feed.
                 var page = await context.CalculatePage();
                 var streetNameFeedItem = new StreetNameFeedItem(
                     position: message.Position,
@@ -423,6 +467,22 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
 
                 await AddCloudEvent(message, document, context, [], StreetNameEventTypes.DeleteV1);
             });
+
+            // What should we do here? This event isn't supposed to happen in the first place.
+            When<Envelope<MunicipalityNisCodeWasChanged>>((context, message, ct) => throw new NotImplementedException());
+
+            When<Envelope<MunicipalityWasImported>>(DoNothing);
+            When<Envelope<MunicipalityBecameCurrent>>(DoNothing);
+            When<Envelope<MunicipalityFacilityLanguageWasAdded>>(DoNothing);
+            When<Envelope<MunicipalityFacilityLanguageWasRemoved>>(DoNothing);
+            When<Envelope<MunicipalityWasCorrectedToCurrent>>(DoNothing);
+            When<Envelope<MunicipalityWasCorrectedToRetired>>(DoNothing);
+            When<Envelope<MunicipalityWasMerged>>(DoNothing);
+            When<Envelope<MunicipalityWasNamed>>(DoNothing);
+            When<Envelope<MunicipalityWasRetired>>(DoNothing);
+            When<Envelope<MunicipalityWasRemoved>>(DoNothing);
+            When<Envelope<MunicipalityOfficialLanguageWasAdded>>(DoNothing); // Event will happen before StreetNames are created
+            When<Envelope<MunicipalityOfficialLanguageWasRemoved>>(DoNothing);
         }
 
         private async Task AddCloudEvent<T>(
@@ -505,5 +565,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
             };
         }
+
+        private static Task DoNothing<T>(FeedContext context, Envelope<T> envelope, CancellationToken ct) where T : IMessage => Task.CompletedTask;
     }
 }
