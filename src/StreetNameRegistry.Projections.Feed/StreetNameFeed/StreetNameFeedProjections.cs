@@ -34,8 +34,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     message.Message.PersistentLocalId,
                     message.Message.NisCode,
                     message.Message.Provenance.Timestamp,
-                    message.Message.Names.Select(x =>
-                        new GeografischeNaam(x.Value, MapLanguage(x.Key))).ToList());
+                    MapNames(message.Message.Names));
 
                 document.Document.Status = MapStatus(message.Message.Status);
                 document.Document.HomonymAdditions = message.Message.HomonymAdditions.Select(x =>
@@ -60,8 +59,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     message.Message.PersistentLocalId,
                     message.Message.NisCode,
                     message.Message.Provenance.Timestamp,
-                    message.Message.StreetNameNames.Select(x =>
-                        new GeografischeNaam(x.Value, MapLanguage(x.Key))).ToList());
+                    MapNames(message.Message.StreetNameNames));
                 await context.StreetNameDocuments.AddAsync(document, ct);
 
                 await AddCloudEvent(message, document, context, [
@@ -92,8 +90,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     message.Message.PersistentLocalId,
                     message.Message.NisCode,
                     message.Message.Provenance.Timestamp,
-                    message.Message.StreetNameNames.Select(x =>
-                        new GeografischeNaam(x.Value, MapLanguage(x.Key))).ToList());
+                    MapNames(message.Message.StreetNameNames));
 
                 document.Document.Status = StraatnaamStatus.Voorgesteld;
                 document.Document.HomonymAdditions = message.Message.HomonymAdditions.Select(x =>
@@ -110,6 +107,321 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     baseRegistriesCloudEventAttributes.Add(new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.HomonymAdditions, null, document.Document.HomonymAdditions));
 
                 await AddCloudEvent(message, document, context, baseRegistriesCloudEventAttributes, StreetNameEventTypes.CreateV1);
+            });
+
+            When<Envelope<StreetNameWasCorrectedFromApprovedToProposed>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldStatus = document.Document.Status;
+                document.Document.Status = StraatnaamStatus.Voorgesteld;
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Voorgesteld)
+                ]);
+            });
+
+            When<Envelope<StreetNameWasRejected>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldStatus = document.Document.Status;
+                document.Document.Status = StraatnaamStatus.Afgekeurd;
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Afgekeurd)
+                ]);
+            });
+
+            When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldStatus = document.Document.Status;
+                document.Document.Status = StraatnaamStatus.Afgekeurd;
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Afgekeurd)
+                ]);
+
+                //TODO: calculating page before saving the document will cause the feed item to be on the wrong page, but calculating it after saving the document will cause concurrency issues. This needs to be solved when implementing paging in the feed.
+                var page = await context.CalculatePage();
+                var streetNameFeedItem = new StreetNameFeedItem(
+                    position: message.Position,
+                    page: page,
+                    persistentLocalId: document.PersistentLocalId)
+                {
+                    Application = message.Message.Provenance.Application,
+                    Modification = message.Message.Provenance.Modification,
+                    Operator = message.Message.Provenance.Operator,
+                    Organisation = message.Message.Provenance.Organisation,
+                    Reason = message.Message.Provenance.Reason
+                };
+                await context.StreetNameFeed.AddAsync(streetNameFeedItem, ct);
+                var nisCodes = context
+                    .StreetNameDocuments
+                    .Local
+                    .Where(x => message.Message.NewPersistentLocalIds.Contains(x.PersistentLocalId))
+                    .Select(x => x.Document.NisCode)
+                    .Union(context
+                        .StreetNameDocuments
+                        .Where(x => message.Message.NewPersistentLocalIds.Contains(x.PersistentLocalId))
+                        .Select(x => x.Document.NisCode))
+                    .ToList();
+
+                nisCodes.Add(document.Document.NisCode);
+                nisCodes = nisCodes.Distinct().ToList();
+
+                var cloudEvent = _changeFeedService.CreateCloudEvent(
+                    streetNameFeedItem.Id,
+                    message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                    StreetNameEventTypes.TransformV1,
+                    new StreetNameCloudTransformEvent
+                    {
+                        NisCodes =  nisCodes,
+                        From = [OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString())],
+                        To = message.Message.NewPersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
+                    },
+                    _changeFeedService.DataSchemaUriTransform,
+                    message.EventName,
+                    message.Metadata["CommandId"].ToString()!);
+
+                streetNameFeedItem.CloudEventAsString = _changeFeedService.SerializeCloudEvent(cloudEvent);
+                await CheckToUpdateCache(page, context);
+            });
+
+            When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldStatus = document.Document.Status;
+                document.Document.Status = StraatnaamStatus.Voorgesteld;
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Voorgesteld)
+                ]);
+            });
+
+            When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldStatus = document.Document.Status;
+                document.Document.Status = StraatnaamStatus.Gehistoreerd;
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Gehistoreerd)
+                ]);
+            });
+
+            When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldStatus = document.Document.Status;
+                document.Document.Status = StraatnaamStatus.Gehistoreerd;
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Gehistoreerd)
+                ]);
+
+                var page = await context.CalculatePage();
+                var streetNameFeedItem = new StreetNameFeedItem(
+                    position: message.Position,
+                    page: page,
+                    persistentLocalId: document.PersistentLocalId)
+                {
+                    Application = message.Message.Provenance.Application,
+                    Modification = message.Message.Provenance.Modification,
+                    Operator = message.Message.Provenance.Operator,
+                    Organisation = message.Message.Provenance.Organisation,
+                    Reason = message.Message.Provenance.Reason
+                };
+                await context.StreetNameFeed.AddAsync(streetNameFeedItem, ct);
+                var nisCodes = context
+                    .StreetNameDocuments
+                    .Local
+                    .Where(x => message.Message.NewPersistentLocalIds.Contains(x.PersistentLocalId))
+                    .Select(x => x.Document.NisCode)
+                    .Union(context
+                        .StreetNameDocuments
+                        .Where(x => message.Message.NewPersistentLocalIds.Contains(x.PersistentLocalId))
+                        .Select(x => x.Document.NisCode))
+                    .ToList();
+
+                nisCodes.Add(document.Document.NisCode);
+                nisCodes = nisCodes.Distinct().ToList();
+
+                var cloudEvent = _changeFeedService.CreateCloudEvent(
+                    streetNameFeedItem.Id,
+                    message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                    StreetNameEventTypes.TransformV1,
+                    new StreetNameCloudTransformEvent
+                    {
+                        NisCodes =  nisCodes,
+                        From = [OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString())],
+                        To = message.Message.NewPersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
+                    },
+                    _changeFeedService.DataSchemaUriTransform,
+                    message.EventName,
+                    message.Metadata["CommandId"].ToString()!);
+
+                streetNameFeedItem.CloudEventAsString = _changeFeedService.SerializeCloudEvent(cloudEvent);
+                await CheckToUpdateCache(page, context);
+            });
+
+            When<Envelope<StreetNameWasRenamed>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldStatus = document.Document.Status;
+                document.Document.Status = StraatnaamStatus.Gehistoreerd;
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Gehistoreerd)
+                ]);
+
+                var page = await context.CalculatePage();
+                var streetNameFeedItem = new StreetNameFeedItem(
+                    position: message.Position,
+                    page: page,
+                    persistentLocalId: document.PersistentLocalId)
+                {
+                    Application = message.Message.Provenance.Application,
+                    Modification = message.Message.Provenance.Modification,
+                    Operator = message.Message.Provenance.Operator,
+                    Organisation = message.Message.Provenance.Organisation,
+                    Reason = message.Message.Provenance.Reason
+                };
+                await context.StreetNameFeed.AddAsync(streetNameFeedItem, ct);
+
+                var cloudEvent = _changeFeedService.CreateCloudEvent(
+                    streetNameFeedItem.Id,
+                    message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                    StreetNameEventTypes.TransformV1,
+                    new StreetNameCloudTransformEvent
+                    {
+                        NisCodes =  [document.Document.NisCode],
+                        From = [OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString())],
+                        To = [OsloNamespaces.StraatNaam.ToPuri(message.Message.DestinationPersistentLocalId.ToString())]
+                    },
+                    _changeFeedService.DataSchemaUriTransform,
+                    message.EventName,
+                    message.Metadata["CommandId"].ToString()!);
+
+                streetNameFeedItem.CloudEventAsString = _changeFeedService.SerializeCloudEvent(cloudEvent);
+                await CheckToUpdateCache(page, context);
+            });
+
+            When<Envelope<StreetNameWasCorrectedFromRetiredToCurrent>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldStatus = document.Document.Status;
+                document.Document.Status = StraatnaamStatus.InGebruik;
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.InGebruik)
+                ]);
+            });
+
+            When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldNames = document.Document.Names;
+                document.Document.Names = MapNames(message.Message.StreetNameNames);
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StreetNameNames, oldNames, document.Document.Names)
+                ]);
+            });
+
+            When<Envelope<StreetNameNamesWereChanged>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldNames = document.Document.Names;
+                document.Document.Names = MapNames(message.Message.StreetNameNames);
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StreetNameNames, oldNames, document.Document.Names)
+                ]);
+            });
+
+            When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldHomonyms = document.Document.HomonymAdditions;
+                document.Document.HomonymAdditions = MapNames(message.Message.HomonymAdditions);
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.HomonymAdditions, oldHomonyms, document.Document.HomonymAdditions)
+                ]);
+            });
+
+            When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                var oldHomonyms = document.Document.HomonymAdditions.ToList();
+                foreach (var language in message.Message.Languages)
+                    document.Document.HomonymAdditions.Remove(
+                        document.Document.HomonymAdditions.Single(x => x.Taal == MapLanguage(language)));
+
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.HomonymAdditions, oldHomonyms, document.Document.HomonymAdditions)
+                ]);
+            });
+
+            When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
+            {
+                var document = await context.StreetNameDocuments.FindAsync(message.Message.PersistentLocalId, cancellationToken: ct);
+                if (document is null)
+                    throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
+
+                document.IsRemoved = true;
+                document.LastChangedOn = message.Message.Provenance.Timestamp;
+
+                await AddCloudEvent(message, document, context, [], StreetNameEventTypes.DeleteV1);
             });
         }
 
@@ -159,6 +471,9 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 context,
                 async p => await context.StreetNameFeed.CountAsync(x => x.Page == p));
         }
+
+        private static List<GeografischeNaam> MapNames(IDictionary<Language, string> streetNameNames)
+            => streetNameNames.Select(x => new GeografischeNaam(x.Value, MapLanguage(x.Key))).ToList();
 
         private static Taal MapLanguage(Language language)
         {

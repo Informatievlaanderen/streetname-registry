@@ -14,6 +14,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
     public sealed class StreetNameDocument
     {
         public int PersistentLocalId { get; set; }
+        public bool IsRemoved { get; set; }
         public StreetNameDocumentContent Document { get; set; }
 
         public DateTimeOffset LastChangedOnAsDateTimeOffset { get; set; }
@@ -34,6 +35,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
         private StreetNameDocument()
         {
             Document = new StreetNameDocumentContent();
+            IsRemoved = false;
         }
 
         public StreetNameDocument(
