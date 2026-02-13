@@ -217,15 +217,61 @@ namespace StreetNameRegistry.Api.BackOffice
                 if (dryRun)
                     return NoContent();
 
+                // This code is extracted from the ProposeStreetNamesForMunicipalityMergerSqsRequest
+                var streetNamesToPropose = streetNamesByNisCode
+                    .Select(x => new
+                    {
+                        NewPersistentLocalId = persistentLocalIdGenerator.GenerateNextPersistentLocalId(),
+                        x.Key.StreetName,
+                        x.Key.HomonymAddition,
+                        MergedStreetNames = x.Value,
+                        Siblings = new Dictionary<int, int>() // Siblings are streetnames with the same old streetname (split)
+                    })
+                    .ToList();
+
+                // Calculate the old streetnames which were split into multiple new streetnames
+                var splittedStreetNames = streetNamesToPropose
+                    .SelectMany(x => x.MergedStreetNames.Select(y => new
+                    {
+                        OldPersistentLocalId = y.StreetNamePersistentLocalId,
+                        x.NewPersistentLocalId
+                    }))
+                    .GroupBy(x => x.OldPersistentLocalId)
+                    .Where(x => x.Count() > 1)
+                    .ToDictionary(
+                        x => x.Key,
+                        y => y.ToList());
+
+                // We can't have both a split and a merge. So iterate the new streetnames which are not a merge.
+                foreach (var streetNameToPropose in streetNamesToPropose
+                             .Where(x => x.MergedStreetNames.Count == 1))
+                {
+                    var oldStreetName = streetNameToPropose.MergedStreetNames.Single();
+
+                    if (!splittedStreetNames.TryGetValue(oldStreetName.StreetNamePersistentLocalId, out var newStreetNames))
+                        continue;
+
+                    // Don't register yourself as sibling.
+                    foreach (var newStreetName in newStreetNames
+                                 .Where(x => x.NewPersistentLocalId != streetNameToPropose.NewPersistentLocalId))
+                    {
+                        streetNameToPropose.Siblings.Add(newStreetName.OldPersistentLocalId, newStreetName.NewPersistentLocalId);
+                    }
+                }
+
                 var result = await _mediator
                     .Send(
                         new ProposeStreetNamesForMunicipalityMergerSqsRequest(
                             nisCode,
-                            streetNamesByNisCode.Select(x => new ProposeStreetNamesForMunicipalityMergerSqsRequestItem(
-                                persistentLocalIdGenerator.GenerateNextPersistentLocalId(),
-                                x.Key.StreetName,
-                                x.Key.HomonymAddition,
-                                x.Value)).ToList(),
+                            streetNamesToPropose
+                                .Select(x => new ProposeStreetNamesForMunicipalityMergerSqsRequestItem(
+                                    x.NewPersistentLocalId,
+                                    x.StreetName,
+                                    x.HomonymAddition,
+                                    x.MergedStreetNames
+                                    // , x.Siblings
+                                    ))
+                                .ToList(),
                             new ProvenanceData(CreateProvenance(Modification.Insert, $"Fusie {nisCode}")))
                         , cancellationToken);
 
