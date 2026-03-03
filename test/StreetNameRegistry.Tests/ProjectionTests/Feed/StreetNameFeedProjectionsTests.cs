@@ -311,20 +311,23 @@
                             It.IsAny<string>()),
                         Times.Once);
 
-                    ChangeFeedServiceMock.Verify(x => x.CreateCloudEvent(
-                            It.IsAny<long>(),
-                            streetNameWasProposedForMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
-                            StreetNameEventTypes.TransformV1,
-                            It.Is<StreetNameCloudTransformEvent>(e => e.NisCodes.SequenceEqual(new List<string> { "11001", "11002", streetNameWasProposedForMunicipalityMerger.NisCode })
-                                                                      && e.To.SequenceEqual(new List<string>{OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedForMunicipalityMerger.PersistentLocalId.ToString())})
-                                                                      && e.From.SequenceEqual(streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.Select(s => OsloNamespaces.StraatNaam.ToPuri(s.ToString())).ToList())),
-                            It.IsAny<Uri>(),
-                            StreetNameWasProposedForMunicipalityMerger.EventName,
-                            It.IsAny<string>()),
-                        Times.Once);
+                    // We will only create a transform event for the merged street names, not for the proposed street name for municipality merger itself, as the proposed street name for municipality merger is not really a transformation of the merged street names,
+                    // but rather a new street name that is proposed in the context of a municipality merger.
+                    // The merged street names will be transformed to have a new persistent local id and be linked to the proposed street name for municipality merger as part of the transformation process, but the proposed street name for municipality merger itself is not a transformation of the merged street names.
+                    // ChangeFeedServiceMock.Verify(x => x.CreateCloudEvent(
+                    //         It.IsAny<long>(),
+                    //         streetNameWasProposedForMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                    //         StreetNameEventTypes.TransformV1,
+                    //         It.Is<StreetNameCloudTransformEvent>(e => e.NisCodes.SequenceEqual(new List<string> { "11001", "11002", streetNameWasProposedForMunicipalityMerger.NisCode })
+                    //                                                   && e.To.SequenceEqual(new List<string>{OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedForMunicipalityMerger.PersistentLocalId.ToString())})
+                    //                                                   && e.From.SequenceEqual(streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.Select(s => OsloNamespaces.StraatNaam.ToPuri(s.ToString())).ToList())),
+                    //         It.IsAny<Uri>(),
+                    //         StreetNameWasProposedForMunicipalityMerger.EventName,
+                    //         It.IsAny<string>()),
+                    //     Times.Once);
 
-                    ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(1));
+                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(1));
                 });
         }
 

@@ -109,49 +109,49 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
 
                 await AddCloudEvent(message, document, context, baseRegistriesCloudEventAttributes, StreetNameEventTypes.CreateV1);
 
-                var page = await context.CalculatePage();
-                var streetNameFeedItem = new StreetNameFeedItem(
-                    position: message.Position,
-                    page: page,
-                    persistentLocalId: document.PersistentLocalId)
-                {
-                    Application = message.Message.Provenance.Application,
-                    Modification = message.Message.Provenance.Modification,
-                    Operator = message.Message.Provenance.Operator,
-                    Organisation = message.Message.Provenance.Organisation,
-                    Reason = message.Message.Provenance.Reason
-                };
-                await context.StreetNameFeed.AddAsync(streetNameFeedItem, ct);
-                var nisCodes = context
-                    .StreetNameDocuments
-                    .Local
-                    .Where(x => message.Message.MergedStreetNamePersistentLocalIds.Contains(x.PersistentLocalId))
-                    .Select(x => x.Document.NisCode)
-                    .Union(context
-                        .StreetNameDocuments
-                        .Where(x => message.Message.MergedStreetNamePersistentLocalIds.Contains(x.PersistentLocalId))
-                        .Select(x => x.Document.NisCode))
-                    .ToList();
+                // var page = await context.CalculatePage();
+                // var streetNameFeedItem = new StreetNameFeedItem(
+                //     position: message.Position,
+                //     page: page,
+                //     persistentLocalId: document.PersistentLocalId)
+                // {
+                //     Application = message.Message.Provenance.Application,
+                //     Modification = message.Message.Provenance.Modification,
+                //     Operator = message.Message.Provenance.Operator,
+                //     Organisation = message.Message.Provenance.Organisation,
+                //     Reason = message.Message.Provenance.Reason
+                // };
+                // await context.StreetNameFeed.AddAsync(streetNameFeedItem, ct);
+                // var nisCodes = context
+                //     .StreetNameDocuments
+                //     .Local
+                //     .Where(x => message.Message.MergedStreetNamePersistentLocalIds.Contains(x.PersistentLocalId))
+                //     .Select(x => x.Document.NisCode)
+                //     .Union(context
+                //         .StreetNameDocuments
+                //         .Where(x => message.Message.MergedStreetNamePersistentLocalIds.Contains(x.PersistentLocalId))
+                //         .Select(x => x.Document.NisCode))
+                //     .ToList();
+                //
+                // nisCodes.Add(document.Document.NisCode);
+                // nisCodes = nisCodes.Distinct().ToList();
+                //
+                // var cloudEvent = _changeFeedService.CreateCloudEvent(
+                //     streetNameFeedItem.Id,
+                //     message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                //     StreetNameEventTypes.TransformV1,
+                //     new StreetNameCloudTransformEvent
+                //     {
+                //         NisCodes =  nisCodes,
+                //         To = [OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString())],
+                //         From = message.Message.MergedStreetNamePersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
+                //     },
+                //     _changeFeedService.DataSchemaUriTransform,
+                //     message.EventName,
+                //     message.Metadata["CommandId"].ToString()!);
 
-                nisCodes.Add(document.Document.NisCode);
-                nisCodes = nisCodes.Distinct().ToList();
-
-                var cloudEvent = _changeFeedService.CreateCloudEvent(
-                    streetNameFeedItem.Id,
-                    message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
-                    StreetNameEventTypes.TransformV1,
-                    new StreetNameCloudTransformEvent
-                    {
-                        NisCodes =  nisCodes,
-                        To = [OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString())],
-                        From = message.Message.MergedStreetNamePersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
-                    },
-                    _changeFeedService.DataSchemaUriTransform,
-                    message.EventName,
-                    message.Metadata["CommandId"].ToString()!);
-
-                streetNameFeedItem.CloudEventAsString = _changeFeedService.SerializeCloudEvent(cloudEvent);
-                await CheckToUpdateCache(page, context);
+                //streetNameFeedItem.CloudEventAsString = _changeFeedService.SerializeCloudEvent(cloudEvent);
+                //await CheckToUpdateCache(page, context);
             });
 
             When<Envelope<StreetNameWasCorrectedFromApprovedToProposed>>(async (context, message, ct) =>
