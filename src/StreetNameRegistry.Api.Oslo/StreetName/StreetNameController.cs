@@ -135,7 +135,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         public async Task<IActionResult> Changes(
             [FromServices] FeedContext context,
-            [FromRoute] int? page,
+            [FromQuery] int? page,
             CancellationToken cancellationToken = default)
         {
             var filtering = Request.ExtractFilteringRequest<StreetNameFeedFilter>();
@@ -240,7 +240,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
                     var changeFeed = await feedContext
                         .StreetNameFeed
                         .AsNoTracking()
-                        .Where(x => x.Position <= filtering.Filter.Download.Value)
+                        .Where(x => x.Position <= filtering.Filter.Sync.Value)
                         .OrderByDescending(x => x.Position)
                         .Select(x => new { x.Id, x.Page })
                         .FirstOrDefaultAsync(cancellationToken);

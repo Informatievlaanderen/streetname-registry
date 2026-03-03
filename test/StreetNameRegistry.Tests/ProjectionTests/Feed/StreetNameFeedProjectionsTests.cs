@@ -112,7 +112,7 @@
                                                a.NewValue == document.Document.HomonymAdditions) &&
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName &&
                                                a.OldValue == null &&
-                                               a.NewValue!.ToString() == nameof(StraatnaamStatus.Voorgesteld))),
+                                               a.NewValue!.ToString() == document.Document.Status.ToString())),
                             StreetNameWasMigratedToMunicipality.EventName,
                             It.IsAny<string>()),
                         Times.Once);

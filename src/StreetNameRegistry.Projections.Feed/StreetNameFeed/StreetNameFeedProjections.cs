@@ -44,7 +44,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
 
                 List<BaseRegistriesCloudEventAttribute> baseRegistriesCloudEventAttributes = [
                     new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.MunicipalityId, null, OsloNamespaces.Gemeente.ToPuri(document.Document.NisCode)),
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, null, StraatnaamStatus.Voorgesteld),
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, null, document.Document.Status),
                     new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StreetNameNames, null, document.Document.Names)
                 ];
 
