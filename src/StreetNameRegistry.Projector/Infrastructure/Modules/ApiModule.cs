@@ -3,8 +3,11 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.AspNetCore.Mvc.Formatters.Json;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
+    using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Be.Vlaanderen.Basisregisters.Projector;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
@@ -16,6 +19,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Newtonsoft.Json;
     using SqlStreamStore;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Projections.Elastic;
@@ -23,6 +27,8 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using StreetNameRegistry.Projections.Elastic.StreetNameList;
     using StreetNameRegistry.Projections.Extract;
     using StreetNameRegistry.Projections.Extract.StreetNameExtract;
+    using StreetNameRegistry.Projections.Feed;
+    using StreetNameRegistry.Projections.Feed.StreetNameFeed;
     using StreetNameRegistry.Projections.Integration;
     using StreetNameRegistry.Projections.Integration.Infrastructure;
     using StreetNameRegistry.Projections.Integration.Merger;
@@ -89,6 +95,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             RegisterLegacyProjectionsV2(builder);
             RegisterWfsProjectionsV2(builder);
             RegisterWmsProjectionsV2(builder);
+            RegisterFeedProjections(builder);
 
             if (_configuration.GetSection("Integration").GetValue("Enabled", false))
                 RegisterIntegrationProjections(builder);
@@ -208,6 +215,37 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjections<StreetNameRegistry.Projections.Wms.StreetNameHelperV2.StreetNameHelperV2Projections, WmsContext>(() =>
                         new StreetNameRegistry.Projections.Wms.StreetNameHelperV2.StreetNameHelperV2Projections(),
                     wmsProjectionSettings);
+        }
+
+        private void RegisterFeedProjections(ContainerBuilder builder)
+        {
+            builder
+                .RegisterModule(
+                    new FeedModule(
+                        _configuration,
+                        _services,
+                        _loggerFactory,
+                        EventsJsonSerializerSettingsProvider.CreateSerializerSettings()));
+
+            builder.Register(c => new ChangeFeedService(
+                    c.Resolve<IOptions<ChangeFeedConfig>>().Value,
+                    c.Resolve<LastChangedListContext>(),
+                    new JsonSerializerSettings().ConfigureDefaultForApi()))
+                .AsImplementedInterfaces()
+                .AsSelf()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterProjectionMigrator<FeedContextMigrationFactory>(
+                    _configuration,
+                    _loggerFactory)
+                .RegisterProjections<StreetNameFeedProjections, FeedContext>(context =>
+                        new StreetNameFeedProjections(context.Resolve<IChangeFeedService>()),
+                    ConnectedProjectionSettings.Configure(c =>
+                    {
+                        c.ConfigureCatchUpPageSize(1);
+                        c.ConfigureCatchUpUpdatePositionMessageInterval(1);
+                    }));
         }
 
         private void RegisterElasticProjections(ContainerBuilder builder)

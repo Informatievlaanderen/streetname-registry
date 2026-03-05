@@ -785,10 +785,5 @@ namespace StreetNameRegistry.Tests.ProjectionTests.Legacy
                     expectedStreetName.LastEventHash.Should().Be(streetNameWasRemovedV2.GetHash());
                 });
         }
-
-        private string DetermineExpectedNameForLanguage(IEnumerable<StreetNameName> streetNameNames, Language language)
-        {
-            return streetNameNames.SingleOrDefault(x => x.Language == language)?.Name;
-        }
     }
 }
