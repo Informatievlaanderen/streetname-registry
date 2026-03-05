@@ -1,3 +1,10 @@
+# [5.6.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.5.3...v5.6.0) (2026-03-05)
+
+
+### Features
+
+* add feed change events ([a90fcac](https://github.com/informatievlaanderen/streetname-registry/commit/a90fcace31bf083585a18fec69d2f0c0bac8a831))
+
 ## [5.5.3](https://github.com/informatievlaanderen/streetname-registry/compare/v5.5.2...v5.5.3) (2026-01-06)
 
 
