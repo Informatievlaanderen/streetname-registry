@@ -19,7 +19,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
     using Municipality;
     using Municipality.Events;
 
-    [ConnectedProjectionName("Feed endpoint straatnaam")]
+    [ConnectedProjectionName("Feed endpoint straatnamen (cloudevents)")]
     [ConnectedProjectionDescription("Projectie die de straatnaam data voor de straatnaam cloudevent feed voorziet.")]
     public class StreetNameFeedProjections : ConnectedProjection<FeedContext>
     {
