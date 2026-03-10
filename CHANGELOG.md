@@ -1,3 +1,10 @@
+## [5.6.1](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.0...v5.6.1) (2026-03-10)
+
+
+### Bug Fixes
+
+* **feed:** reorder transform before producing updates ([e23fb1f](https://github.com/informatievlaanderen/streetname-registry/commit/e23fb1f54eea3b3df38d85db8ca7d2a63956415a))
+
 # [5.6.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.5.3...v5.6.0) (2026-03-05)
 
 
