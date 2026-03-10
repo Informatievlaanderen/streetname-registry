@@ -180,7 +180,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameFeedResultExample))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
-        public async Task<IActionResult> ChangesByNisCode(
+        public async Task<IActionResult> ChangesByPersistentLocalId(
             [FromServices] FeedContext context,
             [FromRoute] int persistentLocalId,
             CancellationToken cancellationToken = default)
