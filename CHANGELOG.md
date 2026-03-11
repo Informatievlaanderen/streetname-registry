@@ -1,3 +1,5 @@
+## [5.6.2](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.1...v5.6.2) (2026-03-11)
+
 ## [5.6.1](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.0...v5.6.1) (2026-03-10)
 
 
