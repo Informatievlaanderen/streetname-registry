@@ -1,3 +1,10 @@
+## [5.6.3](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.2...v5.6.3) (2026-03-11)
+
+
+### Bug Fixes
+
+* **feed:** check cache also counts local items ([714e768](https://github.com/informatievlaanderen/streetname-registry/commit/714e7689b50d41c8ce8a4fdb248d1847f095b6a2))
+
 ## [5.6.2](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.1...v5.6.2) (2026-03-11)
 
 ## [5.6.1](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.0...v5.6.1) (2026-03-10)
