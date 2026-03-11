@@ -21,8 +21,8 @@ namespace StreetNameRegistry.Projections.Feed.Contract
 
     public sealed class StreetNameCloudTransformEvent
     {
-        [JsonProperty("vanIds", Order = 0)]
-        public required List<string> From { get; set; }
+        [JsonProperty("vanId", Order = 0)]
+        public required string From { get; set; }
 
         [JsonProperty("naarIds", Order = 1)]
         public required List<string> To { get; set; }

@@ -320,7 +320,7 @@
                     //         StreetNameEventTypes.TransformV1,
                     //         It.Is<StreetNameCloudTransformEvent>(e => e.NisCodes.SequenceEqual(new List<string> { "11001", "11002", streetNameWasProposedForMunicipalityMerger.NisCode })
                     //                                                   && e.To.SequenceEqual(new List<string>{OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedForMunicipalityMerger.PersistentLocalId.ToString())})
-                    //                                                   && e.From.SequenceEqual(streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.Select(s => OsloNamespaces.StraatNaam.ToPuri(s.ToString())).ToList())),
+                    //                                                   && e.From == OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedForMunicipalityMerger.MergedStreetNamePersistentLocalIds.First().ToString())),
                     //         It.IsAny<Uri>(),
                     //         StreetNameWasProposedForMunicipalityMerger.EventName,
                     //         It.IsAny<string>()),
@@ -469,7 +469,7 @@
                         streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                         StreetNameEventTypes.TransformV1,
                         It.Is<StreetNameCloudTransformEvent>(e => e.NisCodes.SequenceEqual(new List<string> { "11001", streetNameWasProposedV2.NisCode })
-                        && e.From.SequenceEqual(new List<string>{OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedV2.PersistentLocalId.ToString())})
+                        && e.From == OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedV2.PersistentLocalId.ToString())
                         && e.To.SequenceEqual(streetNameWasRejectedBecauseOfMunicipalityMerger.NewPersistentLocalIds.Select(s => OsloNamespaces.StraatNaam.ToPuri(s.ToString())).ToList())),
                         It.IsAny<Uri>(),
                         StreetNameWasRejectedBecauseOfMunicipalityMerger.EventName,
@@ -624,7 +624,7 @@
                             streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                             StreetNameEventTypes.TransformV1,
                             It.Is<StreetNameCloudTransformEvent>(e => e.NisCodes.SequenceEqual(new List<string> { "11001", streetNameWasProposedV2.NisCode })
-                                                                      && e.From.SequenceEqual(new List<string>{OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedV2.PersistentLocalId.ToString())})
+                                                                      && e.From == OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedV2.PersistentLocalId.ToString())
                                                                       && e.To.SequenceEqual(streetNameWasRetiredBecauseOfMunicipalityMerger.NewPersistentLocalIds.Select(s => OsloNamespaces.StraatNaam.ToPuri(s.ToString())).ToList())),
                             It.IsAny<Uri>(),
                             StreetNameWasRetiredBecauseOfMunicipalityMerger.EventName,
@@ -680,7 +680,7 @@
                             streetNameWasRenamed.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                             StreetNameEventTypes.TransformV1,
                             It.Is<StreetNameCloudTransformEvent>(e => e.NisCodes.SequenceEqual(new List<string> { streetNameWasProposedV2.NisCode })
-                                                                      && e.From.SequenceEqual(new List<string>{OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedV2.PersistentLocalId.ToString())})
+                                                                      && e.From == OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedV2.PersistentLocalId.ToString())
                                                                       && e.To.SequenceEqual(new List<string>{OsloNamespaces.StraatNaam.ToPuri(streetNameWasRenamed.DestinationPersistentLocalId.ToString())})),
                             It.IsAny<Uri>(),
                             StreetNameWasRenamed.EventName,

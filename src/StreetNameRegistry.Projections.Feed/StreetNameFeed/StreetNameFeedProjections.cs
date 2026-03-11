@@ -224,7 +224,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     new StreetNameCloudTransformEvent
                     {
                         NisCodes =  nisCodes,
-                        From = [OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString())],
+                        From = OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString()),
                         To = message.Message.NewPersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
                     },
                     _changeFeedService.DataSchemaUriTransform,
@@ -313,7 +313,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     new StreetNameCloudTransformEvent
                     {
                         NisCodes =  nisCodes,
-                        From = [OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString())],
+                        From = OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString()),
                         To = message.Message.NewPersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
                     },
                     _changeFeedService.DataSchemaUriTransform,
@@ -359,7 +359,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     new StreetNameCloudTransformEvent
                     {
                         NisCodes =  [document.Document.NisCode],
-                        From = [OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString())],
+                        From = OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString()),
                         To = [OsloNamespaces.StraatNaam.ToPuri(message.Message.DestinationPersistentLocalId.ToString())]
                     },
                     _changeFeedService.DataSchemaUriTransform,
