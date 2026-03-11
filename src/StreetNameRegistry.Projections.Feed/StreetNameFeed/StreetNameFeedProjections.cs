@@ -529,7 +529,12 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
             await _changeFeedService.CheckToUpdateCacheAsync(
                 page,
                 context,
-                async p => await context.StreetNameFeed.CountAsync(x => x.Page == p));
+                async p =>
+                {
+                    var localCount = context.StreetNameFeed.Local
+                        .Count(x => x.Page == page && context.Entry(x).State == EntityState.Added);
+                    return await context.StreetNameFeed.CountAsync(x => x.Page == p) + localCount - 1; //exclude current item
+                });
         }
 
         private static List<GeografischeNaam> MapNames(IDictionary<Language, string> streetNameNames)
