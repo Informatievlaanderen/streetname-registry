@@ -77,6 +77,7 @@
                     document!.IsRemoved.Should().BeFalse();
                     document.RecordCreatedAt.Should().Be(streetNameWasMigrated.Provenance.Timestamp);
                     document.LastChangedOn.Should().Be(streetNameWasMigrated.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasMigrated.Provenance.Timestamp.ToBelgianDateTimeOffset());
 
                     document.Document.PersistentLocalId.Should().Be(streetNameWasMigrated.PersistentLocalId);
                     document.Document.NisCode.Should().Be(streetNameWasMigrated.NisCode);
@@ -142,6 +143,7 @@
                     document.Should().NotBeNull();
                     document!.RecordCreatedAt.Should().Be(streetNameWasProposedV2.Provenance.Timestamp);
                     document.LastChangedOn.Should().Be(streetNameWasProposedV2.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasProposedV2.Provenance.Timestamp.ToBelgianDateTimeOffset());
 
                     document.Document.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     document.Document.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
@@ -198,6 +200,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasApproved.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasApproved.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Status.Should().Be(StraatnaamStatus.InGebruik);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasApproved.PersistentLocalId);
@@ -270,6 +273,7 @@
                     document.Should().NotBeNull();
                     document!.RecordCreatedAt.Should().Be(streetNameWasProposedForMunicipalityMerger.Provenance.Timestamp);
                     document.LastChangedOn.Should().Be(streetNameWasProposedForMunicipalityMerger.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasProposedForMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset());
 
                     document.Document.PersistentLocalId.Should().Be(streetNameWasProposedForMunicipalityMerger.PersistentLocalId);
                     document.Document.NisCode.Should().Be(streetNameWasProposedForMunicipalityMerger.NisCode);
@@ -350,6 +354,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasCorrectedFromApprovedToProposed.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasCorrectedFromApprovedToProposed.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Status.Should().Be(StraatnaamStatus.Voorgesteld);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasCorrectedFromApprovedToProposed.PersistentLocalId);
@@ -392,6 +397,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRejected.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasRejected.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Status.Should().Be(StraatnaamStatus.Afgekeurd);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRejected.PersistentLocalId);
@@ -444,6 +450,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Status.Should().Be(StraatnaamStatus.Afgekeurd);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId);
@@ -500,6 +507,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasCorrectedFromRejectedToProposed.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasCorrectedFromRejectedToProposed.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Status.Should().Be(StraatnaamStatus.Voorgesteld);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasCorrectedFromRejectedToProposed.PersistentLocalId);
@@ -544,6 +552,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRetiredV2.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasRetiredV2.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Status.Should().Be(StraatnaamStatus.Gehistoreerd);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRetiredV2.PersistentLocalId);
@@ -599,6 +608,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Status.Should().Be(StraatnaamStatus.Gehistoreerd);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId);
@@ -655,6 +665,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRenamed.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasRenamed.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Status.Should().Be(StraatnaamStatus.Gehistoreerd);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRenamed.PersistentLocalId);
@@ -713,6 +724,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasCorrectedFromRetiredToCurrent.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasCorrectedFromRetiredToCurrent.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Status.Should().Be(StraatnaamStatus.InGebruik);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasCorrectedFromRetiredToCurrent.PersistentLocalId);
@@ -761,6 +773,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameNamesWereCorrected.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameNamesWereCorrected.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(correctedNameDutch.Name);
                     document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(correctedNameFrench.Name);
 
@@ -811,6 +824,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameNamesWereChanged.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameNamesWereChanged.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(changedNameDutch.Name);
                     document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(changedNameFrench.Name);
 
@@ -865,6 +879,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasMigrated.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameHomonymAdditionsWereCorrected.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameHomonymAdditionsWereCorrected.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.HomonymAdditions.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(correctedHomonymDutch.HomonymAddition);
                     document.Document.HomonymAdditions.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(correctedHomonymFrench.HomonymAddition);
 
@@ -917,6 +932,7 @@
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasMigrated.PersistentLocalId);
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameHomonymAdditionsWereRemoved.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameHomonymAdditionsWereRemoved.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.HomonymAdditions.Should().Contain(x => x.Taal == Taal.NL && x.Spelling == initialHomonymDutch.HomonymAddition);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameHomonymAdditionsWereRemoved.PersistentLocalId);
@@ -961,6 +977,7 @@
                     document.Should().NotBeNull();
                     document!.IsRemoved.Should().BeTrue();
                     document.LastChangedOn.Should().Be(streetNameWasRemovedV2.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasRemovedV2.Provenance.Timestamp.ToBelgianDateTimeOffset());
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRemovedV2.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameWasRemovedV2);
