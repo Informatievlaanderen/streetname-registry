@@ -31,8 +31,9 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
             get => Instant.FromDateTimeOffset(LastChangedOnAsDateTimeOffset);
             set
             {
-                LastChangedOnAsDateTimeOffset = value.ToBelgianDateTimeOffset();
-                Document.VersionId = value.ToBelgianDateTimeOffset();
+                var belgianDateTimeOffset = value.ToBelgianDateTimeOffset();
+                LastChangedOnAsDateTimeOffset = belgianDateTimeOffset;
+                Document.VersionId = belgianDateTimeOffset;
             }
         }
 
