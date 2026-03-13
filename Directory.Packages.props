@@ -36,7 +36,7 @@
         <PackageVersion Include="Microsoft.SyndicationFeed.ReaderWriter" Version="1.0.2" />
 
         <PackageVersion Include="Be.Vlaanderen.Basisregisters.Testing.Infrastructure.Events" Version="5.0.0" />
-        <PackageVersion Include="Be.Vlaanderen.Basisregisters.DockerUtilities" Version="4.0.0" />
+        <PackageVersion Include="Be.Vlaanderen.Basisregisters.DockerUtilities" Version="4.0.1" />
         <PackageVersion Include="Be.Vlaanderen.Basisregisters.AggregateSource.ExplicitRouting" Version="10.0.2" />
         <PackageVersion Include="Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore" Version="10.0.2" />
         <PackageVersion Include="Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore.Autofac" Version="10.0.2" />
