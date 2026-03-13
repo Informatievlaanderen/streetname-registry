@@ -1,3 +1,10 @@
+## [5.6.4](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.3...v5.6.4) (2026-03-13)
+
+
+### Bug Fixes
+
+* **feed:** set Document.VersionId when LastChangedOn is updated ([ad228a8](https://github.com/informatievlaanderen/streetname-registry/commit/ad228a847ebd9aa47170d5eca7a6af88ff943dad))
+
 ## [5.6.3](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.2...v5.6.3) (2026-03-11)
 
 
