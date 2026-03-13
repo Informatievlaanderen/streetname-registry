@@ -29,7 +29,11 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
         public Instant LastChangedOn
         {
             get => Instant.FromDateTimeOffset(LastChangedOnAsDateTimeOffset);
-            set => LastChangedOnAsDateTimeOffset = value.ToBelgianDateTimeOffset();
+            set
+            {
+                LastChangedOnAsDateTimeOffset = value.ToBelgianDateTimeOffset();
+                Document.VersionId = value.ToBelgianDateTimeOffset();
+            }
         }
 
         private StreetNameDocument()
@@ -45,7 +49,6 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
             List<GeografischeNaam> names)
         {
             PersistentLocalId = persistentLocalId;
-            LastChangedOn = createdTimestamp;
             RecordCreatedAt = createdTimestamp;
 
             Document = new StreetNameDocumentContent
@@ -55,8 +58,9 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 Names = names,
                 HomonymAdditions = new List<GeografischeNaam>(),
                 Status = StraatnaamStatus.Voorgesteld,
-                VersionId = createdTimestamp.ToBelgianDateTimeOffset()
             };
+
+            LastChangedOn = createdTimestamp;
         }
     }
 
