@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using StreetNameRegistry.Projections.Wfs;
+using StreetNameRegistry.Projections.Wms;
 
 #nullable disable
 
-namespace StreetNameRegistry.Projections.Wfs.Migrations
+namespace StreetNameRegistry.Projections.Wms.Migrations
 {
-    [DbContext(typeof(WfsContext))]
-    partial class WfsContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(WmsContext))]
+    [Migration("20260319102831_DeleteHelperV1")]
+    partial class DeleteHelperV1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,10 +44,10 @@ namespace StreetNameRegistry.Projections.Wfs.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("ProjectionStates", "wfs.streetname");
+                    b.ToTable("ProjectionStates", "wms.streetname");
                 });
 
-            modelBuilder.Entity("StreetNameRegistry.Projections.Wfs.StreetNameHelperV2.StreetNameHelperV2", b =>
+            modelBuilder.Entity("StreetNameRegistry.Projections.Wms.StreetNameHelperV2.StreetNameHelperV2", b =>
                 {
                     b.Property<int>("PersistentLocalId")
                         .HasColumnType("int");
@@ -101,9 +104,9 @@ namespace StreetNameRegistry.Projections.Wfs.Migrations
 
                     b.HasIndex("Removed");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Removed"), new[] { "NisCode", "PersistentLocalId" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Removed"), new[] { "NisCode" });
 
-                    b.ToTable("StreetNameHelperV2", "wfs.streetname");
+                    b.ToTable("StreetNameHelperV2", "wms.streetname");
                 });
 #pragma warning restore 612, 618
         }
