@@ -1,3 +1,10 @@
+## [5.6.5](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.4...v5.6.5) (2026-04-03)
+
+
+### Bug Fixes
+
+* **feed:** update packages + disable cache ([ef1fd65](https://github.com/informatievlaanderen/streetname-registry/commit/ef1fd65a211055b8cfb67735973e309337d6e22a))
+
 ## [5.6.4](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.3...v5.6.4) (2026-03-13)
 
 
