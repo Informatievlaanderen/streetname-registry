@@ -31,19 +31,20 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
 
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
             {
-                if (message.Message.IsRemoved)
-                    return;
-
                 var document = new StreetNameDocument(
                     message.Message.PersistentLocalId,
                     message.Message.NisCode,
                     message.Message.Provenance.Timestamp,
                     MapNames(message.Message.Names));
 
+                document.IsRemoved = message.Message.IsRemoved;
                 document.Document.Status = MapStatus(message.Message.Status);
                 document.Document.HomonymAdditions = message.Message.HomonymAdditions.Select(x =>
                     new GeografischeNaam(x.Value, MapLanguage(x.Key))).ToList();
                 await context.StreetNameDocuments.AddAsync(document, ct);
+
+                if (message.Message.IsRemoved)
+                    return;
 
                 List<BaseRegistriesCloudEventAttribute> baseRegistriesCloudEventAttributes = [
                     new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.MunicipalityId, null, OsloNamespaces.Gemeente.ToPuri(document.Document.NisCode)),

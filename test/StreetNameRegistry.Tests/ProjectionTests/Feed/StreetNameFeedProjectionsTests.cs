@@ -51,7 +51,7 @@
         }
 
         [Fact]
-        public async Task WhenRemovedStreetNameWasMigratedToMunicipality_ThenFeedItemAndDocumentAreNotAdded()
+        public async Task WhenRemovedStreetNameWasMigratedToMunicipality_ThenFeedItemIsNotAddedAndDocumentIsAdded()
         {
             var nameDutch = new StreetNameName(_fixture.Create<string>(), Language.Dutch);
             var nameEnglish = new StreetNameName(_fixture.Create<string>(), Language.English);
@@ -74,7 +74,24 @@
                 .Then(async context =>
                 {
                     var document = await context.StreetNameDocuments.FindAsync(streetNameWasMigrated.PersistentLocalId);
-                    document.Should().BeNull();
+                    document.Should().NotBeNull();
+                    document!.IsRemoved.Should().BeTrue();
+                    document.RecordCreatedAt.Should().Be(streetNameWasMigrated.Provenance.Timestamp);
+                    document.LastChangedOn.Should().Be(streetNameWasMigrated.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasMigrated.Provenance.Timestamp.ToBelgianDateTimeOffset());
+
+                    document.Document.PersistentLocalId.Should().Be(streetNameWasMigrated.PersistentLocalId);
+                    document.Document.NisCode.Should().Be(streetNameWasMigrated.NisCode);
+                    document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(nameDutch.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.EN).Spelling.Should().Be(nameEnglish.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(nameFrench.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(nameGerman.Name);
+                    document.Document.Status.Should().Be(StraatnaamStatus.Voorgesteld);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(homonymDutch.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.EN).Spelling.Should().Be(homonymEnglish.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(homonymFrench.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(homonymGerman.HomonymAddition);
+
 
                     var feedItem = await context.StreetNameFeed.SingleOrDefaultAsync(x => x.PersistentLocalId == streetNameWasMigrated.PersistentLocalId);
                     feedItem.Should().BeNull();
