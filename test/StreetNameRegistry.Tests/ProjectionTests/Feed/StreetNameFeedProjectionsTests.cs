@@ -51,6 +51,53 @@
         }
 
         [Fact]
+        public async Task WhenRemovedStreetNameWasMigratedToMunicipality_ThenFeedItemAndDocumentAreNotAdded()
+        {
+            var nameDutch = new StreetNameName(_fixture.Create<string>(), Language.Dutch);
+            var nameEnglish = new StreetNameName(_fixture.Create<string>(), Language.English);
+            var nameFrench = new StreetNameName(_fixture.Create<string>(), Language.French);
+            var nameGerman = new StreetNameName(_fixture.Create<string>(), Language.German);
+
+            var homonymDutch = new StreetNameHomonymAddition("homonymDutch", Language.Dutch);
+            var homonymFrench = new StreetNameHomonymAddition("homonymFrench", Language.French);
+            var homonymEnglish = new StreetNameHomonymAddition("homonymEnglish", Language.English);
+            var homonymGerman = new StreetNameHomonymAddition("homonymGerman", Language.German);
+            _fixture.Register(() => new Names([nameDutch, nameEnglish, nameFrench, nameGerman]));
+            _fixture.Register(() => new HomonymAdditions([homonymDutch, homonymEnglish, homonymFrench, homonymGerman]));
+            _fixture.Register(() => true);
+            var streetNameWasMigrated = _fixture.Create<StreetNameWasMigratedToMunicipality>();
+
+            var position = 2L;
+
+            await Sut
+                .Given(_fixture.Create<MunicipalityWasImported>(), CreateEnvelope(streetNameWasMigrated, position))
+                .Then(async context =>
+                {
+                    var document = await context.StreetNameDocuments.FindAsync(streetNameWasMigrated.PersistentLocalId);
+                    document.Should().BeNull();
+
+                    var feedItem = await context.StreetNameFeed.SingleOrDefaultAsync(x => x.PersistentLocalId == streetNameWasMigrated.PersistentLocalId);
+                    feedItem.Should().BeNull();
+
+                    ChangeFeedServiceMock.Verify(x => x.CreateCloudEventWithData(
+                            It.IsAny<long>(),
+                            It.IsAny<DateTimeOffset>(),
+                            It.IsAny<string>(),
+                            It.IsAny<string>(),
+                            It.IsAny<DateTimeOffset>(),
+                            It.IsAny<List<string>>(),
+                            It.IsAny<List<BaseRegistriesCloudEventAttribute>>(),
+                            It.IsAny<string>(),
+                            It.IsAny<string>()),
+                        Times.Never);
+
+                    ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Never);
+                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(It.IsAny<int>(), It.IsAny<FeedContext>(), It.IsAny<Func<int, Task<int>>>()), Times.Never);
+                });
+        }
+
+
+        [Fact]
         public async Task WhenStreetNameWasMigratedToMunicipality_ThenFeedItemAndDocumentAreAdded()
         {
             var nameDutch = new StreetNameName(_fixture.Create<string>(), Language.Dutch);
@@ -64,6 +111,7 @@
             var homonymGerman = new StreetNameHomonymAddition("homonymGerman", Language.German);
             _fixture.Register(() => new Names([nameDutch, nameEnglish, nameFrench, nameGerman]));
             _fixture.Register(() => new HomonymAdditions([homonymDutch, homonymEnglish, homonymFrench, homonymGerman]));
+            _fixture.Register(() => false);
             var streetNameWasMigrated = _fixture.Create<StreetNameWasMigratedToMunicipality>();
 
             var position = 2L;
@@ -861,6 +909,8 @@
             var initialHomonymFrench = new StreetNameHomonymAddition("initialFrench", Language.French);
             _fixture.Register(() => new Names([nameDutch, nameFrench]));
             _fixture.Register(() => new HomonymAdditions([initialHomonymDutch, initialHomonymFrench]));
+            _fixture.Register(() => false);
+
             var streetNameWasMigrated = _fixture.Create<StreetNameWasMigratedToMunicipality>();
 
             var correctedHomonymDutch = new StreetNameHomonymAddition("correctedDutch", Language.Dutch);
@@ -916,6 +966,7 @@
             var initialHomonymFrench = new StreetNameHomonymAddition("initialHomonymFrench", Language.French);
             _fixture.Register(() => new Names([nameDutch, nameFrench]));
             _fixture.Register(() => new HomonymAdditions([initialHomonymDutch, initialHomonymFrench]));
+            _fixture.Register(() => false);
             var streetNameWasMigrated = _fixture.Create<StreetNameWasMigratedToMunicipality>();
 
             _fixture.Register(() => new List<Language> { Language.French });

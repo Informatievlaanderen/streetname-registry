@@ -31,6 +31,9 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
 
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
             {
+                if (message.Message.IsRemoved)
+                    return;
+
                 var document = new StreetNameDocument(
                     message.Message.PersistentLocalId,
                     message.Message.NisCode,
