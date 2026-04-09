@@ -1,3 +1,10 @@
+## [5.6.7](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.6...v5.6.7) (2026-04-09)
+
+
+### Bug Fixes
+
+* **feed:** removed migrated add document but not to feed ([a836642](https://github.com/informatievlaanderen/streetname-registry/commit/a8366426d3c220cffd82fc713cc0e199e1a1376f))
+
 ## [5.6.6](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.5...v5.6.6) (2026-04-09)
 
 
