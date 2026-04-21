@@ -194,19 +194,6 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 if (document is null)
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
-                var page = await context.CalculatePage();
-                var streetNameFeedItem = new StreetNameFeedItem(
-                    position: message.Position,
-                    page: page,
-                    persistentLocalId: document.PersistentLocalId)
-                {
-                    Application = message.Message.Provenance.Application,
-                    Modification = message.Message.Provenance.Modification,
-                    Operator = message.Message.Provenance.Operator,
-                    Organisation = message.Message.Provenance.Organisation,
-                    Reason = message.Message.Provenance.Reason
-                };
-                await context.StreetNameFeed.AddAsync(streetNameFeedItem, ct);
                 var nisCodes = context
                     .StreetNameDocuments
                     .Local
@@ -221,22 +208,39 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 nisCodes.Add(document.Document.NisCode);
                 nisCodes = nisCodes.Distinct().ToList();
 
-                var cloudEvent = _changeFeedService.CreateCloudEvent(
-                    streetNameFeedItem.Id,
-                    message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
-                    StreetNameEventTypes.TransformV1,
-                    new StreetNameCloudTransformEvent
+                if (message.Message.NewPersistentLocalIds.Any())
+                {
+                    var page = await context.CalculatePage();
+                    var streetNameFeedItem = new StreetNameFeedItem(
+                        position: message.Position,
+                        page: page,
+                        persistentLocalId: document.PersistentLocalId)
                     {
-                        NisCodes =  nisCodes,
-                        From = OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString()),
-                        To = message.Message.NewPersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
-                    },
-                    _changeFeedService.DataSchemaUriTransform,
-                    message.EventName,
-                    message.Metadata["CommandId"].ToString()!);
+                        Application = message.Message.Provenance.Application,
+                        Modification = message.Message.Provenance.Modification,
+                        Operator = message.Message.Provenance.Operator,
+                        Organisation = message.Message.Provenance.Organisation,
+                        Reason = message.Message.Provenance.Reason
+                    };
+                    await context.StreetNameFeed.AddAsync(streetNameFeedItem, ct);
 
-                streetNameFeedItem.CloudEventAsString = _changeFeedService.SerializeCloudEvent(cloudEvent);
-                await CheckToUpdateCache(page, context);
+                    var cloudEvent = _changeFeedService.CreateCloudEvent(
+                        streetNameFeedItem.Id,
+                        message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                        StreetNameEventTypes.TransformV1,
+                        new StreetNameCloudTransformEvent
+                        {
+                            NisCodes = nisCodes,
+                            From = OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString()),
+                            To = message.Message.NewPersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
+                        },
+                        _changeFeedService.DataSchemaUriTransform,
+                        message.EventName,
+                        message.Metadata["CommandId"].ToString()!);
+
+                    streetNameFeedItem.CloudEventAsString = _changeFeedService.SerializeCloudEvent(cloudEvent);
+                    await CheckToUpdateCache(page, context);
+                }
 
                 var oldStatus = document.Document.Status;
                 document.Document.Status = StraatnaamStatus.Afgekeurd;
@@ -283,19 +287,6 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 if (document is null)
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
-                var page = await context.CalculatePage();
-                var streetNameFeedItem = new StreetNameFeedItem(
-                    position: message.Position,
-                    page: page,
-                    persistentLocalId: document.PersistentLocalId)
-                {
-                    Application = message.Message.Provenance.Application,
-                    Modification = message.Message.Provenance.Modification,
-                    Operator = message.Message.Provenance.Operator,
-                    Organisation = message.Message.Provenance.Organisation,
-                    Reason = message.Message.Provenance.Reason
-                };
-                await context.StreetNameFeed.AddAsync(streetNameFeedItem, ct);
                 var nisCodes = context
                     .StreetNameDocuments
                     .Local
@@ -310,22 +301,39 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 nisCodes.Add(document.Document.NisCode);
                 nisCodes = nisCodes.Distinct().ToList();
 
-                var cloudEvent = _changeFeedService.CreateCloudEvent(
-                    streetNameFeedItem.Id,
-                    message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
-                    StreetNameEventTypes.TransformV1,
-                    new StreetNameCloudTransformEvent
+                if (message.Message.NewPersistentLocalIds.Any())
+                {
+                    var page = await context.CalculatePage();
+                    var streetNameFeedItem = new StreetNameFeedItem(
+                        position: message.Position,
+                        page: page,
+                        persistentLocalId: document.PersistentLocalId)
                     {
-                        NisCodes =  nisCodes,
-                        From = OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString()),
-                        To = message.Message.NewPersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
-                    },
-                    _changeFeedService.DataSchemaUriTransform,
-                    message.EventName,
-                    message.Metadata["CommandId"].ToString()!);
+                        Application = message.Message.Provenance.Application,
+                        Modification = message.Message.Provenance.Modification,
+                        Operator = message.Message.Provenance.Operator,
+                        Organisation = message.Message.Provenance.Organisation,
+                        Reason = message.Message.Provenance.Reason
+                    };
+                    await context.StreetNameFeed.AddAsync(streetNameFeedItem, ct);
 
-                streetNameFeedItem.CloudEventAsString = _changeFeedService.SerializeCloudEvent(cloudEvent);
-                await CheckToUpdateCache(page, context);
+                    var cloudEvent = _changeFeedService.CreateCloudEvent(
+                        streetNameFeedItem.Id,
+                        message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                        StreetNameEventTypes.TransformV1,
+                        new StreetNameCloudTransformEvent
+                        {
+                            NisCodes = nisCodes,
+                            From = OsloNamespaces.StraatNaam.ToPuri(document.PersistentLocalId.ToString()),
+                            To = message.Message.NewPersistentLocalIds.Select(id => OsloNamespaces.StraatNaam.ToPuri(id.ToString())).ToList()
+                        },
+                        _changeFeedService.DataSchemaUriTransform,
+                        message.EventName,
+                        message.Metadata["CommandId"].ToString()!);
+
+                    streetNameFeedItem.CloudEventAsString = _changeFeedService.SerializeCloudEvent(cloudEvent);
+                    await CheckToUpdateCache(page, context);
+                }
 
                 var oldStatus = document.Document.Status;
                 document.Document.Status = StraatnaamStatus.Gehistoreerd;

@@ -92,7 +92,6 @@
                     document.Document.HomonymAdditions.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(homonymFrench.HomonymAddition);
                     document.Document.HomonymAdditions.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(homonymGerman.HomonymAddition);
 
-
                     var feedItem = await context.StreetNameFeed.SingleOrDefaultAsync(x => x.PersistentLocalId == streetNameWasMigrated.PersistentLocalId);
                     feedItem.Should().BeNull();
 
@@ -554,6 +553,63 @@
         }
 
         [Fact]
+        public async Task WhenStreetNameWasRejectedBecauseOfMunicipalityMergerWithNoNewPersistentLocalId_ThenFeedItemIsAddedAndDocumentUpdated()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+            var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasRejectedBecauseOfMunicipalityMerger = new StreetNameWasRejectedBecauseOfMunicipalityMerger(
+                new MunicipalityId(streetNameWasProposedV2.MunicipalityId),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId),
+                []);
+            ((ISetProvenance)streetNameWasRejectedBecauseOfMunicipalityMerger).SetProvenance(_fixture.Create<Provenance>());
+
+            var position = 1L;
+
+            await Sut
+                .Given(CreateEnvelope(streetNameWasProposedV2, position),
+                    CreateEnvelope(streetNameWasRejectedBecauseOfMunicipalityMerger, position + 1))
+                .Then(async context =>
+                {
+                    var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
+                    document.Should().NotBeNull();
+                    document!.LastChangedOn.Should().Be(streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset());
+                    document.Document.Status.Should().Be(StraatnaamStatus.Afgekeurd);
+
+                    var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId);
+                    AssertFeedItem(feedItem, position + 1, streetNameWasRejectedBecauseOfMunicipalityMerger);
+
+                    ChangeFeedServiceMock.Verify(x => x.CreateCloudEventWithData(
+                            It.IsAny<long>(),
+                            streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                            StreetNameEventTypes.UpdateV1,
+                            streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId.ToString(),
+                            streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                            It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
+                            It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
+                                attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
+                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.Voorgesteld)
+                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Afgekeurd))),
+                            StreetNameWasRejectedBecauseOfMunicipalityMerger.EventName,
+                            It.IsAny<string>()),
+                        Times.Once);
+
+                    ChangeFeedServiceMock.Verify(x => x.CreateCloudEvent(
+                            It.IsAny<long>(),
+                            It.IsAny<DateTimeOffset>(),
+                            StreetNameEventTypes.TransformV1,
+                            It.IsAny<StreetNameCloudTransformEvent>(),
+                            It.IsAny<Uri>(),
+                            It.IsAny<string>(),
+                            It.IsAny<string>()),
+                        Times.Never);
+
+                    ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameWasCorrectedFromRejectedToProposed_ThenFeedItemIsAddedAndDocumentUpdated()
         {
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
@@ -708,6 +764,65 @@
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(4));
                     ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(4));
+                });
+        }
+
+        [Fact]
+        public async Task WhenStreetNameWasRetiredBecauseOfMunicipalityMergerWithNoNewPersistentLocalId_ThenFeedItemIsAddedAndDocumentUpdated()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+            var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasApproved = _fixture.Create<StreetNameWasApproved>();
+            var streetNameWasRetiredBecauseOfMunicipalityMerger = new StreetNameWasRetiredBecauseOfMunicipalityMerger(
+                new MunicipalityId(streetNameWasProposedV2.MunicipalityId),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId),
+                []);
+            ((ISetProvenance)streetNameWasRetiredBecauseOfMunicipalityMerger).SetProvenance(_fixture.Create<Provenance>());
+
+            var position = 1L;
+
+            await Sut
+                .Given(CreateEnvelope(streetNameWasProposedV2, position),
+                    CreateEnvelope(streetNameWasApproved, position + 1),
+                    CreateEnvelope(streetNameWasRetiredBecauseOfMunicipalityMerger, position + 2))
+                .Then(async context =>
+                {
+                    var document = await context.StreetNameDocuments.FindAsync(streetNameWasProposedV2.PersistentLocalId);
+                    document.Should().NotBeNull();
+                    document!.LastChangedOn.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp);
+                    document.Document.VersionId.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset());
+                    document.Document.Status.Should().Be(StraatnaamStatus.Gehistoreerd);
+
+                    var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId);
+                    AssertFeedItem(feedItem, position + 2, streetNameWasRetiredBecauseOfMunicipalityMerger);
+
+                    ChangeFeedServiceMock.Verify(x => x.CreateCloudEventWithData(
+                            It.IsAny<long>(),
+                            streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                            StreetNameEventTypes.UpdateV1,
+                            streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId.ToString(),
+                            streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
+                            It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
+                            It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
+                                attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
+                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.InGebruik)
+                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Gehistoreerd))),
+                            StreetNameWasRetiredBecauseOfMunicipalityMerger.EventName,
+                            It.IsAny<string>()),
+                        Times.Once);
+
+                    ChangeFeedServiceMock.Verify(x => x.CreateCloudEvent(
+                            It.IsAny<long>(),
+                            It.IsAny<DateTimeOffset>(),
+                            StreetNameEventTypes.TransformV1,
+                            It.IsAny<StreetNameCloudTransformEvent>(),
+                            It.IsAny<Uri>(),
+                            It.IsAny<string>(),
+                            It.IsAny<string>()),
+                        Times.Never);
+
+                    ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(3));
+                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
                 });
         }
 
