@@ -1,3 +1,10 @@
+## [5.6.8](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.7...v5.6.8) (2026-04-21)
+
+
+### Bug Fixes
+
+* **feed:** no transform event when no destination ([2aa27ed](https://github.com/informatievlaanderen/streetname-registry/commit/2aa27ed62794f34925af04afcef6e4edb4509d20))
+
 ## [5.6.7](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.6...v5.6.7) (2026-04-09)
 
 
