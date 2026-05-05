@@ -1,3 +1,10 @@
+## [5.6.9](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.8...v5.6.9) (2026-05-05)
+
+
+### Bug Fixes
+
+* **ci:** change to new ci/cd pipelines ([0a828ec](https://github.com/informatievlaanderen/streetname-registry/commit/0a828ecbb6790147deb90e133eccb743b3e1518d))
+
 ## [5.6.8](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.7...v5.6.8) (2026-04-21)
 
 
