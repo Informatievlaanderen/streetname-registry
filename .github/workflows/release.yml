@@ -60,7 +60,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-backoffice-api-image.tar
       image-name: backoffice-api
       test-project: StreetNameRegistry.Tests
@@ -76,7 +76,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-api-oslo-image.tar
       image-name: api-oslo
       test-project: StreetNameRegistry.Tests
@@ -92,7 +92,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-api-extract-image.tar
       image-name: api-extract
       test-project: StreetNameRegistry.Tests
@@ -108,7 +108,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-projector-image.tar
       image-name: projector
       test-project: StreetNameRegistry.Tests
@@ -124,7 +124,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-last-changed-list-image.tar
       image-name: last-changed-list
       test-project: StreetNameRegistry.Tests
@@ -140,7 +140,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-projections-backoffice-image.tar
       image-name: projections-backoffice
       test-project: StreetNameRegistry.Tests
@@ -156,7 +156,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-projections-syndication-image.tar
       image-name: projections-syndication
       test-project: StreetNameRegistry.Tests
@@ -172,7 +172,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-consumer-image.tar
       image-name: consumer
       test-project: StreetNameRegistry.Tests
@@ -188,7 +188,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-producer-image.tar
       image-name: producer
       test-project: StreetNameRegistry.Tests
@@ -204,7 +204,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-producer-snapshot-oslo-image.tar
       image-name: producer-snapshot-oslo
       test-project: StreetNameRegistry.Tests
@@ -220,7 +220,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-snapshot-verifier-image.tar
       image-name: snapshot-verifier
       test-project: StreetNameRegistry.Tests
@@ -236,7 +236,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-consumer-read-postal-image.tar
       image-name: consumer-read-postal
       test-project: StreetNameRegistry.Tests
@@ -295,7 +295,7 @@ jobs:
     needs: [ set-release-version ]
     if: ${{ (github.repository_owner == 'Informatievlaanderen') && (needs.set-release-version.outputs.version != 'none') }}
     with:
-      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname-registry
+      registry: ${{ vars.VBR_DEVOPS_DOCKER_REGISTRY }}/streetname
       image-file: sr-lambda-sqsbackofficefunction-image.tar
       image-name: lambda-sqsbackofficefunction
       test-project: StreetNameRegistry.Tests
@@ -526,7 +526,7 @@ jobs:
         shell: bash
         run: |
           echo $IMAGE:$SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/$IMAGE:$SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname/$IMAGE:$SEMVER
         env:
           BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_DEVOPS_DOCKER_REGISTRY }}
           IMAGE: ${{ matrix.image }}
