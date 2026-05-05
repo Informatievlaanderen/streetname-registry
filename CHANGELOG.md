@@ -1,3 +1,10 @@
+## [5.6.10](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.9...v5.6.10) (2026-05-05)
+
+
+### Bug Fixes
+
+* **ci:** push images to trigger build ([97eacb4](https://github.com/informatievlaanderen/streetname-registry/commit/97eacb43da60a5b27756271fd798f19c3e2b56a7))
+
 ## [5.6.9](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.8...v5.6.9) (2026-05-05)
 
 
