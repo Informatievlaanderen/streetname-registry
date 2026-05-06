@@ -552,7 +552,7 @@ jobs:
 
   deploy_services_to_test:
     if: github.repository_owner == 'Informatievlaanderen'
-    needs: [ deploy_to_test_start_slack ]
+    needs: [ deploy_to_test_start_slack, release ]
     name: Deploy
     uses: informatievlaanderen/build-pipeline/.github/workflows/deploy-v4.1.yml@main
     strategy:
@@ -572,7 +572,7 @@ jobs:
       environment: 'test'
       service-name: ${{ matrix.services }}
       application: ${{ matrix.services }}
-      version: ${{ github.event.inputs.version }}
+      version: ${{ needs.release.outputs.version }}
       domain: 'streetname'
       project: 'grawr'
       use-subfolder: true
@@ -580,7 +580,7 @@ jobs:
 
   deploy_lambda_to_test:
     if: github.repository_owner == 'Informatievlaanderen'
-    needs: [deploy_to_test_start_slack, deploy_services_to_test]
+    needs: [deploy_to_test_start_slack, deploy_services_to_test, release]
     name: Deploy lambdas
     uses: informatievlaanderen/build-pipeline/.github/workflows/deploy-v4.1.yml@main
     strategy:
@@ -592,7 +592,7 @@ jobs:
       environment: 'test'
       service-name: ${{ matrix.functions }}
       application: "lambda"
-      version: ${{ github.event.inputs.version }}
+      version: ${{ needs.release.outputs.version }}
       domain: "streetname"
       project: "grawr"
       use-subfolder: true
@@ -633,7 +633,7 @@ jobs:
 
   deploy_services_to_staging:
     if: github.repository_owner == 'Informatievlaanderen'
-    needs: [ deploy_to_staging_start_slack ]
+    needs: [ deploy_to_staging_start_slack, release ]
     name: Deploy
     uses: informatievlaanderen/build-pipeline/.github/workflows/deploy-v4.1.yml@main
     strategy:
@@ -653,7 +653,7 @@ jobs:
       environment: 'stg'
       service-name: ${{ matrix.services }}
       application: ${{ matrix.services }}
-      version: ${{ github.event.inputs.version }}
+      version: ${{ needs.release.outputs.version }}
       domain: 'streetname'
       project: 'grawr'
       use-subfolder: true
@@ -661,7 +661,7 @@ jobs:
 
   deploy_lambda_to_staging:
     if: github.repository_owner == 'Informatievlaanderen'
-    needs: [deploy_to_staging_start_slack, deploy_services_to_staging ]
+    needs: [deploy_to_staging_start_slack, deploy_services_to_staging, release]
     name: Deploy lambdas
     uses: informatievlaanderen/build-pipeline/.github/workflows/deploy-v4.1.yml@main
     strategy:
@@ -673,7 +673,7 @@ jobs:
       environment: "stg"
       service-name: ${{ matrix.functions }}
       application: "lambda"
-      version: ${{ github.event.inputs.version }}
+      version: ${{ needs.release.outputs.version }}
       domain: "streetname"
       project: "grawr"
       use-subfolder: true

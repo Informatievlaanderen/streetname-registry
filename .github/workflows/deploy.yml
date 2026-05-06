@@ -61,7 +61,7 @@ jobs:
       service-name: ${{ matrix.services }}
       application: ${{ matrix.services }}
       version: ${{ github.event.inputs.version }}
-      domain: 'municipality'
+      domain: 'streetname'
       project: 'grawr'
       use-subfolder: true
     secrets: inherit
