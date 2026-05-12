@@ -1,3 +1,10 @@
+## [5.6.12](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.11...v5.6.12) (2026-05-12)
+
+
+### Bug Fixes
+
+* **feed:** merge partial name and homonym feed updates ([001edca](https://github.com/informatievlaanderen/streetname-registry/commit/001edcaf2c5eb9072bd4606db65232340624af30))
+
 ## [5.6.11](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.10...v5.6.11) (2026-05-07)
 
 
