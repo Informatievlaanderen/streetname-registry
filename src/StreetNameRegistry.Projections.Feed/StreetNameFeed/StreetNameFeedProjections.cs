@@ -411,8 +411,8 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 if (document is null)
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
-                var oldNames = document.Document.Names;
-                document.Document.Names = MapNames(message.Message.StreetNameNames);
+                var oldNames = CloneNames(document.Document.Names);
+                document.Document.Names = MergeNames(oldNames, message.Message.StreetNameNames);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
@@ -426,8 +426,8 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 if (document is null)
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
-                var oldNames = document.Document.Names;
-                document.Document.Names = MapNames(message.Message.StreetNameNames);
+                var oldNames = CloneNames(document.Document.Names);
+                document.Document.Names = MergeNames(oldNames, message.Message.StreetNameNames);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
@@ -441,8 +441,8 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 if (document is null)
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
-                var oldHomonyms = document.Document.HomonymAdditions;
-                document.Document.HomonymAdditions = MapNames(message.Message.HomonymAdditions);
+                var oldHomonyms = CloneNames(document.Document.HomonymAdditions);
+                document.Document.HomonymAdditions = MergeNames(oldHomonyms, message.Message.HomonymAdditions);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
@@ -551,6 +551,27 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
 
         private static List<GeografischeNaam> MapNames(IDictionary<Language, string> streetNameNames)
             => streetNameNames.Select(x => new GeografischeNaam(x.Value, MapLanguage(x.Key))).ToList();
+
+        private static List<GeografischeNaam> CloneNames(IEnumerable<GeografischeNaam> names)
+            => names.Select(x => new GeografischeNaam(x.Spelling, x.Taal)).ToList();
+
+        private static List<GeografischeNaam> MergeNames(
+            IEnumerable<GeografischeNaam> currentNames,
+            IDictionary<Language, string> updatedNames)
+        {
+            var mergedNames = CloneNames(currentNames);
+
+            foreach (var updatedName in MapNames(updatedNames))
+            {
+                var existingIndex = mergedNames.FindIndex(x => x.Taal == updatedName.Taal);
+                if (existingIndex >= 0)
+                    mergedNames[existingIndex] = updatedName;
+                else
+                    mergedNames.Add(updatedName);
+            }
+
+            return mergedNames;
+        }
 
         private static Taal MapLanguage(Language language)
         {
