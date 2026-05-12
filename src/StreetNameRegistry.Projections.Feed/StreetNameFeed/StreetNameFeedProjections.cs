@@ -559,18 +559,22 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
             IEnumerable<GeografischeNaam> currentNames,
             IDictionary<Language, string> updatedNames)
         {
-            var mergedNames = CloneNames(currentNames);
+            var mergedNames = currentNames.ToList();
+            var mergedNamesByLanguage = mergedNames.ToDictionary(x => x.Taal);
 
             foreach (var updatedName in MapNames(updatedNames))
             {
-                var existingIndex = mergedNames.FindIndex(x => x.Taal == updatedName.Taal);
-                if (existingIndex >= 0)
-                    mergedNames[existingIndex] = updatedName;
-                else
+                if (!mergedNamesByLanguage.ContainsKey(updatedName.Taal))
                     mergedNames.Add(updatedName);
+
+                mergedNamesByLanguage[updatedName.Taal] = updatedName;
             }
 
-            return mergedNames;
+            return mergedNames
+                .Select(x => x.Taal)
+                .Distinct()
+                .Select(taal => mergedNamesByLanguage[taal])
+                .ToList();
         }
 
         private static Taal MapLanguage(Language language)
