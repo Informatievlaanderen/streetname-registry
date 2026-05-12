@@ -939,8 +939,7 @@
             var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
 
             var correctedNameDutch = new StreetNameName(_fixture.Create<string>(), Language.Dutch);
-            var correctedNameFrench = new StreetNameName(_fixture.Create<string>(), Language.French);
-            _fixture.Register(() => new Names([correctedNameDutch, correctedNameFrench]));
+            _fixture.Register(() => new Names([correctedNameDutch]));
             var streetNameNamesWereCorrected = _fixture.Create<StreetNameNamesWereCorrected>();
 
             var position = 1L;
@@ -955,7 +954,7 @@
                     document!.LastChangedOn.Should().Be(streetNameNamesWereCorrected.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameNamesWereCorrected.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(correctedNameDutch.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(correctedNameFrench.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(initialNameFrench.Name);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameNamesWereCorrected.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameNamesWereCorrected);
@@ -970,8 +969,9 @@
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StreetNameNames &&
                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.NL && n.Spelling == initialNameDutch.Name) &&
-                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialNameFrench.Name) &&
-                                               a.NewValue == document.Document.Names)),
+                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialNameFrench.Name) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.NL && n.Spelling == correctedNameDutch.Name) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialNameFrench.Name))),
                             StreetNameNamesWereCorrected.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -990,8 +990,7 @@
             var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
 
             var changedNameDutch = new StreetNameName(_fixture.Create<string>(), Language.Dutch);
-            var changedNameFrench = new StreetNameName(_fixture.Create<string>(), Language.French);
-            _fixture.Register(() => new Names([changedNameDutch, changedNameFrench]));
+            _fixture.Register(() => new Names([changedNameDutch]));
             var streetNameNamesWereChanged = _fixture.Create<StreetNameNamesWereChanged>();
 
             var position = 1L;
@@ -1006,7 +1005,7 @@
                     document!.LastChangedOn.Should().Be(streetNameNamesWereChanged.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameNamesWereChanged.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(changedNameDutch.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(changedNameFrench.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(initialNameFrench.Name);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameNamesWereChanged.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameNamesWereChanged);
@@ -1021,8 +1020,9 @@
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StreetNameNames &&
                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.NL && n.Spelling == initialNameDutch.Name) &&
-                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialNameFrench.Name) &&
-                                               a.NewValue == document.Document.Names)),
+                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialNameFrench.Name) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.NL && n.Spelling == changedNameDutch.Name) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialNameFrench.Name))),
                             StreetNameNamesWereChanged.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -1046,8 +1046,7 @@
             var streetNameWasMigrated = _fixture.Create<StreetNameWasMigratedToMunicipality>();
 
             var correctedHomonymDutch = new StreetNameHomonymAddition("correctedDutch", Language.Dutch);
-            var correctedHomonymFrench = new StreetNameHomonymAddition("correctedFrench", Language.French);
-            _fixture.Register(() => new List<StreetNameHomonymAddition>([correctedHomonymDutch, correctedHomonymFrench]));
+            _fixture.Register(() => new List<StreetNameHomonymAddition>([correctedHomonymDutch]));
             var streetNameHomonymAdditionsWereCorrected = _fixture.Create<StreetNameHomonymAdditionsWereCorrected>();
 
             var position = 2L;
@@ -1063,7 +1062,7 @@
                     document!.LastChangedOn.Should().Be(streetNameHomonymAdditionsWereCorrected.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameHomonymAdditionsWereCorrected.Provenance.Timestamp.ToBelgianDateTimeOffset());
                     document.Document.HomonymAdditions.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(correctedHomonymDutch.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(correctedHomonymFrench.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(initialHomonymFrench.HomonymAddition);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameHomonymAdditionsWereCorrected.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameHomonymAdditionsWereCorrected);
@@ -1078,8 +1077,9 @@
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.HomonymAdditions &&
                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.NL && n.Spelling == initialHomonymDutch.HomonymAddition) &&
-                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialHomonymFrench.HomonymAddition) &&
-                                               a.NewValue == document.Document.HomonymAdditions)),
+                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialHomonymFrench.HomonymAddition) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.NL && n.Spelling == correctedHomonymDutch.HomonymAddition) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialHomonymFrench.HomonymAddition))),
                             StreetNameHomonymAdditionsWereCorrected.EventName,
                             It.IsAny<string>()),
                         Times.Once);
