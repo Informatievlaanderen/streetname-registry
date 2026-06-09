@@ -5,26 +5,25 @@ namespace StreetNameRegistry.Api.BackOffice
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using Microsoft.AspNetCore.Http;
 
     public abstract class BackOfficeApiController : ApiController
     {
-        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IProvenanceFactory _provenanceFactory;
 
         protected BackOfficeApiController(
-            IActionContextAccessor actionContextAccessor,
+            IHttpContextAccessor httpContextAccessor,
             IProvenanceFactory provenanceFactory)
         {
-            _actionContextAccessor = actionContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
             _provenanceFactory = provenanceFactory;
         }
 
         protected IDictionary<string, object> GetMetadata()
         {
-            var correlationId = _actionContextAccessor
-                .ActionContext?
-                .HttpContext
+            var correlationId = _httpContextAccessor
+                .HttpContext!
                 .Request
                 .Headers["x-correlation-id"].FirstOrDefault() ?? Guid.NewGuid().ToString("D");
 

@@ -3,10 +3,7 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     using Abstractions;
     using Abstractions.Requests;
     using Abstractions.Validation;
-    using Azure.Core;
     using Be.Vlaanderen.Basisregisters.GrAr.Edit.Validators;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using FluentValidation;
 
     public sealed class RenameStreetNameRequestValidator : AbstractValidator<RenameStreetNameRequest>

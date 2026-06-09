@@ -1,9 +1,14 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using Abstractions.Requests;
-    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
+    using Abstractions.SqsRequests;
+    using Abstractions.Validation;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Auth.AcmIdm;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Infrastructure;
@@ -11,13 +16,9 @@ namespace StreetNameRegistry.Api.BackOffice
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.OpenApi;
     using Municipality;
     using Swashbuckle.AspNetCore.Filters;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Abstractions.SqsRequests;
-    using Abstractions.Validation;
-    using Be.Vlaanderen.Basisregisters.AggregateSource;
 
     public partial class StreetNameController
     {
@@ -34,7 +35,7 @@ namespace StreetNameRegistry.Api.BackOffice
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseHeader(StatusCodes.Status202Accepted, "location", "string", "De URL van het aangemaakte ticket.")]
+        [SwaggerResponseHeader(StatusCodes.Status202Accepted, "location", JsonSchemaType.String, "De URL van het aangemaakte ticket.")]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status412PreconditionFailed, typeof(PreconditionFailedResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]

@@ -1,7 +1,13 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 {
+    using Autofac;
+    using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api;
-    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Modules;
+    using Serilog;
+    using Serilog.Extensions.Logging;
 
     public class Program
     {
@@ -10,10 +16,18 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
             // ignore
         }
 
-        public static void Main(string[] args) => CreateWebHostBuilder(args).Build().Run();
+        public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
-            => new WebHostBuilder()
+        public static IHostBuilder CreateHostBuilder(string[] args)
+            => new HostBuilder()
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureContainer<ContainerBuilder>((hostContext, containerBuilder) =>
+                {
+                    var services = new ServiceCollection();
+                    var logger = new SerilogLoggerFactory(Log.Logger);
+
+                    containerBuilder.RegisterModule(new ApiModule(hostContext.Configuration, services, logger));
+                })
                 .UseDefaultForApi<Startup>(
                     new ProgramOptions
                     {

@@ -13,8 +13,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     using global::AutoFixture;
     using MediatR;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.Extensions.Options;
     using Moq;
     using Municipality;
@@ -32,7 +30,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
         protected const string InternalTicketUrl = "https://www.internalticketing.com";
         protected IOptions<TicketingOptions> TicketingOptions { get; }
         protected Mock<IMediator> MockMediator { get; }
-        protected Mock<IActionContextAccessor> MockActionContext { get; set; }
+        protected Mock<IHttpContextAccessor> MockHttpContext { get; set; }
 
         protected BackOfficeApiTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
@@ -40,8 +38,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
             TicketingOptions.Value.PublicBaseUrl = PublicTicketUrl;
             TicketingOptions.Value.InternalBaseUrl = InternalTicketUrl;
 
-            MockActionContext = new Mock<IActionContextAccessor>();
-            MockActionContext.SetupProperty(x => x.ActionContext, new ActionContext{ HttpContext = new DefaultHttpContext()});
+            MockHttpContext = new Mock<IHttpContextAccessor>();
+            MockHttpContext.SetupProperty(x => x.HttpContext, new DefaultHttpContext());
 
             MockMediator = new Mock<IMediator>();
             Controller = CreateApiBusControllerWithUser();
@@ -85,8 +83,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
             var controller = Activator.CreateInstance(typeof(TController),
                 MockMediator.Object,
                 TicketingOptions,
-                MockActionContext.Object,
-                new AcmIdmProvenanceFactory(Application.StreetNameRegistry, MockActionContext.Object)) as TController;
+                MockHttpContext.Object,
+                new AcmIdmProvenanceFactory(Application.StreetNameRegistry, MockHttpContext.Object)) as TController;
 
             var claims = new List<Claim>()
             {

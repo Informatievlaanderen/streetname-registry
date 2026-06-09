@@ -35,11 +35,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
 
             var sqsRequest = Fixture.Create<ProposeStreetNamesForMunicipalityMergerSqsRequest>();
             sqsRequest.NisCode = nisCode;
+            sqsRequest.TicketId = Guid.Empty;
 
             var ticketId = Fixture.Create<Guid>();
             var ticketingMock = new Mock<ITicketing>();
             ticketingMock
-                .Setup(x => x.CreateTicket(It.IsAny<IDictionary<string, string>>(), CancellationToken.None))
+                .Setup(x => x.CreateTicket(It.IsAny<IDictionary<string, string>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ticketId);
 
             var ticketingUrl = new TicketingUrl(Fixture.Create<Uri>().ToString());

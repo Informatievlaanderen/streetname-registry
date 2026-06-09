@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance.AcmIdm;
     using Consumer.Infrastructure.Modules;
-    using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -46,7 +46,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 .As<IIfMatchHeaderValidator>()
                 .AsSelf();
 
-            builder.Register(c => new AcmIdmProvenanceFactory(Application.StreetNameRegistry, c.Resolve<IActionContextAccessor>()))
+            builder.Register(c => new AcmIdmProvenanceFactory(Application.StreetNameRegistry, c.Resolve<IHttpContextAccessor>()))
                 .As<IProvenanceFactory>()
                 .InstancePerLifetimeScope()
                 .AsSelf();

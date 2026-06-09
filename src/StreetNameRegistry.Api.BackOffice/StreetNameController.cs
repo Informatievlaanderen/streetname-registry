@@ -9,8 +9,8 @@ namespace StreetNameRegistry.Api.BackOffice
     using FluentValidation.Results;
     using Infrastructure.Options;
     using MediatR;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.Extensions.Options;
 
     [ApiVersion("2.0")]
@@ -25,9 +25,9 @@ namespace StreetNameRegistry.Api.BackOffice
         public StreetNameController(
             IMediator mediator,
             IOptions<TicketingOptions> ticketingOptions,
-            IActionContextAccessor actionContextAccessor,
+            IHttpContextAccessor httpContextAccessor,
             IProvenanceFactory provenanceFactory)
-            : base(actionContextAccessor, provenanceFactory)
+            : base(httpContextAccessor, provenanceFactory)
         {
             _mediator = mediator;
             _ticketingOptions = ticketingOptions.Value;
