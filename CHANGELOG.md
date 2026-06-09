@@ -1,3 +1,16 @@
+# [6.0.0](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.12...v6.0.0) (2026-06-09)
+
+
+### Features
+
+* update packages ([7fe09ed](https://github.com/informatievlaanderen/streetname-registry/commit/7fe09ed84c603b85d16147e65289d44fc4a5b876))
+* update packages + upgrade to dotnet 10 ([#491](https://github.com/informatievlaanderen/streetname-registry/issues/491)) ([2a6befe](https://github.com/informatievlaanderen/streetname-registry/commit/2a6befed11bfa78e9e97c5792e1478ae9952a625))
+
+
+### BREAKING CHANGES
+
+* update to dotnet 10
+
 ## [5.6.12](https://github.com/informatievlaanderen/streetname-registry/compare/v5.6.11...v5.6.12) (2026-05-12)
 
 
