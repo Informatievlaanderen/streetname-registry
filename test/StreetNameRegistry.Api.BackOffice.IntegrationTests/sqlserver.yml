@@ -1,7 +1,7 @@
 version: '3'
 services:
   sqldata:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2025-latest
     environment:
       - SA_PASSWORD=Pass@word
       - ACCEPT_EULA=Y

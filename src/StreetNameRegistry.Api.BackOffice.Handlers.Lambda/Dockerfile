@@ -1,9 +1,9 @@
-﻿FROM public.ecr.aws/lambda/dotnet:9-arm64 as base
+﻿FROM public.ecr.aws/lambda/dotnet:10-arm64 as base
 
 # Stage to download and extract the Datadog .NET tracer
 # https://docs.datadoghq.com/serverless/aws_lambda/installation/dotnet/?tab=containerimage
-FROM alpine:3.21 AS dd-tracer
-ARG TRACER_VERSION=3.15.0
+FROM alpine:3.23.4 AS dd-tracer
+ARG TRACER_VERSION=3.45.0
 ARG TRACER_ARCH=arm64
 
 RUN apk add --no-cache wget tar \
