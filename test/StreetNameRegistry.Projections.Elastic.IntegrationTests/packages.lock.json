@@ -729,7 +729,7 @@
         "dependencies": {
           "Be.Vlaanderen.Basisregisters.Aws.DistributedMutex": "[5.1.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Contracts": "[24.1.0, )",
-          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": "[7.0.0, )",
+          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": "[7.1.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[16.0.0, )",
@@ -957,9 +957,9 @@
       },
       "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": {
         "type": "CentralTransitive",
-        "requested": "[7.0.0, )",
-        "resolved": "7.0.0",
-        "contentHash": "0xTB9uZEshD+C7QyJ07smSycq1WlYK4TQotKUfzeOIraEky07KWDLmRDd9LlyNIzb47UXl7XzL+zUP5vTaXM9A==",
+        "requested": "[7.1.0, )",
+        "resolved": "7.1.0",
+        "contentHash": "YzchCws1+WBhURGC27dYu5PyE9fnTguRpMX43Do6VqC7mAYjxCyp1w1aASr0Nmkv8MCzB2kkiyYgrirzEAzF2Q==",
         "dependencies": {
           "Confluent.Kafka": "2.14.2",
           "Microsoft.EntityFrameworkCore": "10.0.8",

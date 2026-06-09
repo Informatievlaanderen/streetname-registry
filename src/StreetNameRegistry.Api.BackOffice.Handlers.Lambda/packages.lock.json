@@ -41,12 +41,12 @@
       },
       "Be.Vlaanderen.Basisregisters.Sqs.Lambda": {
         "type": "Direct",
-        "requested": "[5.2.0, )",
-        "resolved": "5.2.0",
-        "contentHash": "8WQAen3BQMsIS3xH2M66Kva5TmDV+aDq0QoB5C6iBtswhTuGU7GeLzDesRVTGtBd0eIC6Q6qqv6iJA3OKNERVA==",
+        "requested": "[5.3.0, )",
+        "resolved": "5.3.0",
+        "contentHash": "2TNSzX6mG80SMuZ4gUk6xhx3WAgXKC2kOGhnIph002VoprX5K3unBPI5Q4KhSnjnrt6baD2DTaYJrKP/XGUc7w==",
         "dependencies": {
           "Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency": "11.0.0",
-          "Be.Vlaanderen.Basisregisters.Sqs": "5.2.0",
+          "Be.Vlaanderen.Basisregisters.Sqs": "5.3.0",
           "Be.Vlaanderen.Basisregisters.TicketingService.Abstractions": "4.0.0",
           "FluentValidation": "12.1.1",
           "MediatR": "[12.5.0, 13.0.0)",
@@ -199,8 +199,8 @@
       },
       "AWSSDK.Core": {
         "type": "Transitive",
-        "resolved": "4.0.7.4",
-        "contentHash": "qNlzH2ygJ6JG8uefpvws782PnJlkVEwqRD5vz4fR8wFfwWU3ttyAjiwEOPEYcxl84mhQdYGI9gR+kroGFI2+wA=="
+        "resolved": "4.0.8.1",
+        "contentHash": "Zu5g0zQ3WNZrL+0RqRSa2guAcLJqbFwK7mxfm6stx/b3cfOdqt/k9Y6c/8rxyHSeVf+8iUJGV4J7WhbLs9zOpA=="
       },
       "AWSSDK.DynamoDBv2": {
         "type": "Transitive",
@@ -212,10 +212,10 @@
       },
       "AWSSDK.SQS": {
         "type": "Transitive",
-        "resolved": "3.7.400.129",
-        "contentHash": "vc1OnZscfyKbuucR6Ru1SQj6o6SYizmmd3P/BBgP7Oph9I2UMirSs92iDisKjI6kuun3qv5K9SJBasZA3di1lQ==",
+        "resolved": "4.0.3.2",
+        "contentHash": "2yP5f3kI+JQkfa34+zDXT9dqSg37NGR5VBcXxLMLm7Z3SoZnzhzR3/40Apm3cZUQGfAxtCUA8H0cGfr36EE4pA==",
         "dependencies": {
-          "AWSSDK.Core": "[3.7.402.35, 4.0.0)"
+          "AWSSDK.Core": "[4.0.8.1, 5.0.0)"
         }
       },
       "Be.Vlaanderen.Basisregisters.AggregateSource": {
@@ -357,6 +357,18 @@
         "resolved": "5.1.0",
         "contentHash": "wqxONDr0cPep5v+bS+Is8Xl7BzDxZ2mvm0CfWSN+dC7adndzieFepWIfyGyVrSpIfrvCvMx7YPbRQtT1xhHnMQ==",
         "dependencies": {
+          "Newtonsoft.Json": "13.0.4"
+        }
+      },
+      "Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple": {
+        "type": "Transitive",
+        "resolved": "7.1.0",
+        "contentHash": "LLp7nuT/bDLQh1LSaf/d1aasj/DB9+cZds7i5yySM00KGNDww8p+ggBOpQv/bfyqtd9tgCbftVoawKi4ET+ATA==",
+        "dependencies": {
+          "AWSSDK.Core": "4.0.8.1",
+          "AWSSDK.SQS": "4.0.3.2",
+          "Microsoft.Extensions.Configuration.Json": "10.0.8",
+          "Microsoft.Extensions.DependencyInjection": "10.0.8",
           "Newtonsoft.Json": "13.0.4"
         }
       },
@@ -1237,7 +1249,7 @@
         "dependencies": {
           "Be.Vlaanderen.Basisregisters.Api": "[27.0.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Legacy": "[24.1.0, )",
-          "Be.Vlaanderen.Basisregisters.Sqs": "[5.2.0, )",
+          "Be.Vlaanderen.Basisregisters.Sqs": "[5.3.0, )",
           "Be.Vlaanderen.Basisregisters.TicketingService.Abstractions": "[4.0.0, )",
           "MediatR.Contracts": "[2.0.1, )"
         }
@@ -1262,7 +1274,7 @@
         "dependencies": {
           "Be.Vlaanderen.Basisregisters.Aws.DistributedMutex": "[5.1.0, )",
           "Be.Vlaanderen.Basisregisters.GrAr.Contracts": "[24.1.0, )",
-          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": "[7.0.0, )",
+          "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": "[7.1.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[16.0.0, )",
@@ -1485,24 +1497,11 @@
           "CompareNETObjects": "4.84.0"
         }
       },
-      "Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple": {
-        "type": "CentralTransitive",
-        "requested": "[7.0.0, )",
-        "resolved": "7.0.0",
-        "contentHash": "ML2ypeNMXV7E5x4XF/HWI0C4RTqHv0Bhb2lBEocBSXaJTv2Lx7Hmss7Hk+1jTqQoZcj1L7vBjBbv2gQn/DEjhA==",
-        "dependencies": {
-          "AWSSDK.Core": "3.7.402.35",
-          "AWSSDK.SQS": "3.7.400.129",
-          "Microsoft.Extensions.Configuration.Json": "10.0.8",
-          "Microsoft.Extensions.DependencyInjection": "10.0.8",
-          "Newtonsoft.Json": "13.0.4"
-        }
-      },
       "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer.SqlServer": {
         "type": "CentralTransitive",
-        "requested": "[7.0.0, )",
-        "resolved": "7.0.0",
-        "contentHash": "0xTB9uZEshD+C7QyJ07smSycq1WlYK4TQotKUfzeOIraEky07KWDLmRDd9LlyNIzb47UXl7XzL+zUP5vTaXM9A==",
+        "requested": "[7.1.0, )",
+        "resolved": "7.1.0",
+        "contentHash": "YzchCws1+WBhURGC27dYu5PyE9fnTguRpMX43Do6VqC7mAYjxCyp1w1aASr0Nmkv8MCzB2kkiyYgrirzEAzF2Q==",
         "dependencies": {
           "Confluent.Kafka": "2.14.2",
           "Microsoft.EntityFrameworkCore": "10.0.8",
@@ -1571,12 +1570,12 @@
       },
       "Be.Vlaanderen.Basisregisters.Sqs": {
         "type": "CentralTransitive",
-        "requested": "[5.2.0, )",
-        "resolved": "5.2.0",
-        "contentHash": "lMnbWbdzunnZB+rL8OFYIEmsa7Mych6dloNgSwBL2GXYW7VjgOCaq4j37lIpH5BABeNkX1KxAqVvrYcOMo/HlA==",
+        "requested": "[5.3.0, )",
+        "resolved": "5.3.0",
+        "contentHash": "/mUDa6J0TqVmy3F+kEdL26NNmXpvlvCWaYNkhqB/XSwI0jAafkwPzmGSitzfBfARsyqdhF2Flr302o/6aIE2+Q==",
         "dependencies": {
           "Be.Vlaanderen.Basisregisters.GrAr.Provenance": "24.1.0",
-          "Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple": "7.0.0",
+          "Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple": "7.1.0",
           "Be.Vlaanderen.Basisregisters.TicketingService.Abstractions": "4.0.0",
           "MediatR": "[12.5.0, 13.0.0)"
         }

@@ -22,9 +22,9 @@
       },
       "Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Consumer": {
         "type": "Direct",
-        "requested": "[7.0.0, )",
-        "resolved": "7.0.0",
-        "contentHash": "dorOPtYu/vkcU80X2mQZ//XXk4nIvGdagBfzw4IbKk3Xhny0/EBPkRpmHupT4bLXZlsRaP2HqOlP56cpq09m0Q==",
+        "requested": "[7.1.0, )",
+        "resolved": "7.1.0",
+        "contentHash": "9U6hFquC1vi5KXmG6sifE5ymBU1AHd0lgRzFDutw6+FIhEFcciTwZzdznfZaB8/6XfUTg1zwAd5zRCkyl9MtKg==",
         "dependencies": {
           "Confluent.Kafka": "2.14.2",
           "Microsoft.EntityFrameworkCore": "10.0.8",
