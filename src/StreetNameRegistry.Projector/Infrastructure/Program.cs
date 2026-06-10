@@ -4,9 +4,9 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
-    using Consumer.Infrastructure.Modules;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Modules;
     using Serilog;
     using Serilog.Extensions.Logging;
     using LoggingModule = Modules.LoggingModule;
