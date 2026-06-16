@@ -1,3 +1,11 @@
+## [6.0.2](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.1...v6.0.2) (2026-06-16)
+
+
+### Bug Fixes
+
+* **api:** api xml docs ([7da3cae](https://github.com/informatievlaanderen/streetname-registry/commit/7da3cae246880ab7a4f3f4da6f1d965ff8122ee8))
+* revert "fix(lambda): try removing dd" ([3432e2f](https://github.com/informatievlaanderen/streetname-registry/commit/3432e2f76633b69e560206058e074ee6d57a360c))
+
 ## [6.0.1](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.0...v6.0.1) (2026-06-10)
 
 
