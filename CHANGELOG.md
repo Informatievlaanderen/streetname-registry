@@ -1,3 +1,10 @@
+## [6.0.3](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.2...v6.0.3) (2026-06-19)
+
+
+### Bug Fixes
+
+* **projector:** fix logger factory injection ([d17d488](https://github.com/informatievlaanderen/streetname-registry/commit/d17d488553d4a57a5a936581b1dab663cbc68358))
+
 ## [6.0.2](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.1...v6.0.2) (2026-06-16)
 
 
