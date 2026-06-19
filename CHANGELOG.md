@@ -1,3 +1,10 @@
+## [6.0.4](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.3...v6.0.4) (2026-06-19)
+
+
+### Bug Fixes
+
+* **projector:** resume projections ([f03b41f](https://github.com/informatievlaanderen/streetname-registry/commit/f03b41f7473b94f2bf976b93df85a0be4728dba9))
+
 ## [6.0.3](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.2...v6.0.3) (2026-06-19)
 
 
