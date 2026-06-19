@@ -4,8 +4,8 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using System.Linq;
     using System.Reflection;
     using System.Threading;
+    using System.Threading.Tasks;
     using Asp.Versioning.ApiExplorer;
-    using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
@@ -23,7 +23,8 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Microsoft.OpenApi;
-    using Modules;
+    using Serilog;
+    using Serilog.Extensions.Logging;
     using StreetNameRegistry.Infrastructure.Elastic;
     using StreetNameRegistry.Projections.Elastic;
     using StreetNameRegistry.Projections.Elastic.StreetNameList;
@@ -45,12 +46,10 @@ namespace StreetNameRegistry.Projector.Infrastructure
         private readonly ILoggerFactory _loggerFactory;
         private readonly CancellationTokenSource _projectionsCancellationTokenSource = new CancellationTokenSource();
 
-        public Startup(
-            IConfiguration configuration,
-            ILoggerFactory loggerFactory)
+        public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
-            _loggerFactory = loggerFactory;
+            _loggerFactory = new SerilogLoggerFactory(Log.Logger);
         }
 
         /// <summary>Configures services for the application.</summary>
@@ -220,7 +219,9 @@ namespace StreetNameRegistry.Projector.Infrastructure
             appLifetime.ApplicationStarted.Register(() =>
             {
                 var projectionsManager = serviceProvider.GetRequiredService<IConnectedProjectionsManager>();
-                projectionsManager.Resume(_projectionsCancellationTokenSource.Token);
+                Task.Run(async () =>
+                    await projectionsManager.Resume(_projectionsCancellationTokenSource.Token).ConfigureAwait(false)
+                ).ConfigureAwait(false);
             });
 
             var elasticIndices = new ElasticIndexBase[]
