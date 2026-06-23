@@ -8,7 +8,6 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
     using Modules;
     using Serilog;
     using Serilog.Extensions.Logging;
-    using ApiModule = Consumer.Infrastructure.Modules.ApiModule;
 
     public static class Program
     {
