@@ -1,3 +1,10 @@
+## [6.0.5](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.4...v6.0.5) (2026-06-23)
+
+
+### Bug Fixes
+
+* **api:** startup ([1d97ba6](https://github.com/informatievlaanderen/streetname-registry/commit/1d97ba63fe5eaadef9a343bc5684bdf4f52c83e0))
+
 ## [6.0.4](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.3...v6.0.4) (2026-06-19)
 
 
