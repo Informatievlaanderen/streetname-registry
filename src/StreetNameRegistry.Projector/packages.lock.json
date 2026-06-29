@@ -103,11 +103,11 @@
       },
       "Datadog.Trace.Bundle": {
         "type": "Direct",
-        "requested": "[3.45.0, )",
-        "resolved": "3.45.0",
-        "contentHash": "ax3lAy2poa1SRgxkMXUpQaCe2vl/Kf0DnopfIltXyRw6o6TSkChFB4Rj9JO3K41Od6A5oMLuf4tMhrCdRRUdfg==",
+        "requested": "[3.48.0, )",
+        "resolved": "3.48.0",
+        "contentHash": "wL8OJP9Jii4TgeTSigSOppzd7OUfnlGigYaCfBa3PaJ9WRk9giqmEuz32MubiGO8e0zwC/rYThuFG2XIsVQIrg==",
         "dependencies": {
-          "Datadog.Trace": "3.45.0"
+          "Datadog.Trace": "3.48.0"
         }
       },
       "NodaTime": {
@@ -389,8 +389,8 @@
       },
       "Datadog.Trace": {
         "type": "Transitive",
-        "resolved": "3.45.0",
-        "contentHash": "X9pNQFNLdElEAvJv/rNDnqjivFIChAAdMbq13QqdPVIy9eykkRYEpP/MZus21WxW1XhxG/h/735F/UVDWbi3+w=="
+        "resolved": "3.48.0",
+        "contentHash": "2SGQTXM+t3E9BBNTylpXy0wQZD0h4c27gzICUtW402GpPPoh7VWhFw2f9BGBb7koazAr6OjCsjHhNp11gACmnQ=="
       },
       "Elastic.Transport": {
         "type": "Transitive",
@@ -1048,7 +1048,7 @@
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.Projector": "[17.0.0, )",
-          "Datadog.Trace.Bundle": "[3.45.0, )",
+          "Datadog.Trace.Bundle": "[3.48.0, )",
           "Destructurama.JsonNet": "[4.0.2, )",
           "Microsoft.EntityFrameworkCore.SqlServer": "[10.0.8, )",
           "Serilog": "[4.3.1, )",
@@ -1160,7 +1160,7 @@
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.SqlServer": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication": "[16.0.0, )",
-          "Datadog.Trace.Bundle": "[3.45.0, )",
+          "Datadog.Trace.Bundle": "[3.48.0, )",
           "Destructurama.JsonNet": "[4.0.2, )",
           "Microsoft.Extensions.Http.Polly": "[10.0.8, )",
           "Microsoft.SyndicationFeed.ReaderWriter": "[1.0.2, )",
