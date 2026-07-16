@@ -25,5 +25,27 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Converters
                     return StraatnaamStatus.InGebruik;
             }
         }
+
+        public static Be.Vlaanderen.Basisregisters.GrAr.Oslo.Straatnaam.StraatnaamStatusValue ConvertOsloFromMunicipalityStreetNameStatus(this Municipality.StreetNameStatus? status)
+            => ConvertOsloFromMunicipalityStreetNameStatus(status ?? Municipality.StreetNameStatus.Current);
+
+        public static Be.Vlaanderen.Basisregisters.GrAr.Oslo.Straatnaam.StraatnaamStatusValue ConvertOsloFromMunicipalityStreetNameStatus(this Municipality.StreetNameStatus status)
+        {
+            switch (status)
+            {
+                case Municipality.StreetNameStatus.Retired:
+                    return Be.Vlaanderen.Basisregisters.GrAr.Oslo.Straatnaam.StraatnaamStatusValue.Gehistoreerd;
+
+                case Municipality.StreetNameStatus.Proposed:
+                    return Be.Vlaanderen.Basisregisters.GrAr.Oslo.Straatnaam.StraatnaamStatusValue.Voorgesteld;
+
+                case Municipality.StreetNameStatus.Rejected:
+                    return Be.Vlaanderen.Basisregisters.GrAr.Oslo.Straatnaam.StraatnaamStatusValue.Afgekeurd;
+
+                default:
+                case Municipality.StreetNameStatus.Current:
+                    return Be.Vlaanderen.Basisregisters.GrAr.Oslo.Straatnaam.StraatnaamStatusValue.InGebruik;
+            }
+        }
     }
 }

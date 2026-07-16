@@ -5,8 +5,8 @@
     using global::Elastic.Clients.Elasticsearch;
     using global::Elastic.Transport;
     using Microsoft.Extensions.Configuration;
-    using StreetName;
-    using StreetName.List;
+    using StreetName.V2;
+    using StreetName.V2.List;
 
     public class ElasticModule : Module
     {
@@ -53,6 +53,16 @@
             builder
                 .Register(c =>
                     new StreetNameApiElasticSearchClient(
+                        c.Resolve<ElasticsearchClient>(),
+                        elasticOptions["StreetNameListIndexAlias"]!
+                    ))
+                .AsSelf()
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            builder
+                .Register(c =>
+                    new StreetName.V3.StreetNameApiElasticSearchClient(
                         c.Resolve<ElasticsearchClient>(),
                         elasticOptions["StreetNameListIndexAlias"]!
                     ))

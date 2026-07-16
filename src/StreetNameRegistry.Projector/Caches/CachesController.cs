@@ -20,7 +20,8 @@ namespace StreetNameRegistry.Projector.Caches
     {
         private static Dictionary<string, string> _projectionNameMapper = new Dictionary<string, string>()
         {
-            {"StreetNameRegistry.Projections.LastChangedList.LastChangedProjections", LastChangedProjections.ProjectionName}
+            {"StreetNameRegistry.Projections.LastChangedList.LastChangedProjections", LastChangedProjections.ProjectionName},
+            {"StreetNameRegistry.Projections.LastChangedList.LastChangedProjectionsV3", LastChangedProjectionsV3.ProjectionName}
         };
 
         [HttpGet]

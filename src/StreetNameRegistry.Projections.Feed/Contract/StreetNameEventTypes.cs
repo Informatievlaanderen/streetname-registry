@@ -13,10 +13,10 @@ namespace StreetNameRegistry.Projections.Feed.Contract
 
     public static class StreetNameAttributeNames
     {
-        public const string MunicipalityId = "gemeente.id";
-        public const string StatusName = "straatnaamStatus";
-        public const string StreetNameNames = "straatnamen";
-        public const string HomonymAdditions = "homoniemToevoegingen";
+        public const string MunicipalityId = "isToegekendDoor";
+        public const string StatusName = "status";
+        public const string StreetNameNames = "straatnaam";
+        public const string HomonymAdditions = "homoniemToevoeging";
     }
 
     public sealed class StreetNameCloudTransformEvent

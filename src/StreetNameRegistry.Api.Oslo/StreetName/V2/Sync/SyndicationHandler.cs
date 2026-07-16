@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
+namespace StreetNameRegistry.Api.Oslo.StreetName.V2.Sync
 {
     using System;
     using System.Linq;
@@ -29,12 +29,12 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
     public sealed class SyndicationHandler : IRequestHandler<SyndicationRequest, SyndicationAtomContent>
     {
         private readonly LegacyContext _legacyContext;
-        private readonly IOptions<ResponseOptions> _responseOptions;
+        private readonly IOptions<ResponseOptionsV2> _responseOptions;
         private readonly IConfiguration _configuration;
 
         public SyndicationHandler(
             LegacyContext legacyContext,
-            IOptions<ResponseOptions> responseOptions,
+            IOptions<ResponseOptionsV2> responseOptions,
             IConfiguration configuration)
         {
             _legacyContext = legacyContext;
@@ -74,7 +74,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
             {
                 var formatter = new AtomFormatter(null, xmlWriter.Settings) { UseCDATA = true };
                 var writer = new AtomFeedWriter(xmlWriter, null, formatter);
-                var syndicationConfiguration = _configuration.GetSection("Syndication");
+                var syndicationConfiguration = _configuration.GetSection("V2:Syndication");
                 var atomFeedConfig = AtomFeedConfigurationBuilder.CreateFrom(syndicationConfiguration, lastFeedUpdate);
 
                 await writer.WriteDefaultMetadata(atomFeedConfig);

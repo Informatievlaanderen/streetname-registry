@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Api.Oslo.StreetName.ChangeFeed
+﻿namespace StreetNameRegistry.Api.Oslo.StreetName.V3.ChangeFeed
 {
     public sealed class StreetNameFeedFilter
     {

@@ -3,8 +3,8 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
     using System;
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using Be.Vlaanderen.Basisregisters.GrAr.Oslo;
+    using Be.Vlaanderen.Basisregisters.GrAr.Oslo.Straatnaam;
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -58,7 +58,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 NisCode = nisCode,
                 Names = names,
                 HomonymAdditions = new List<GeografischeNaam>(),
-                Status = StraatnaamStatus.Voorgesteld,
+                Status = new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld),
             };
 
             LastChangedOn = createdTimestamp;

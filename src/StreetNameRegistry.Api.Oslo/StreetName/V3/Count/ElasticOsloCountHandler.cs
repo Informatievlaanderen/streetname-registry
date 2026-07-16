@@ -1,10 +1,10 @@
-﻿namespace StreetNameRegistry.Api.Oslo.StreetName.Count
+﻿namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Count
 {
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.GrAr.Oslo;
     using List;
     using MediatR;
 

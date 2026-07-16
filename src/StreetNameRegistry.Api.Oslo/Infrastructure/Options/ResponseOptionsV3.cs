@@ -1,0 +1,16 @@
+namespace StreetNameRegistry.Api.Oslo.Infrastructure.Options
+{
+    using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
+
+    public sealed class ResponseOptionsV3
+    {
+        public string VolgendeUrl { get; set; }
+        public string DetailUrl { get; set; }
+        public string GemeenteDetailUrl { get; set; }
+        public string ContextUrlList { get; set; }
+        public string ContextUrlDetail { get; set; }
+        public string StreetNameDetailAddressesLink { get; set; }
+
+        public ChangeFeedConfig StreetNameFeed { get; set; }
+    }
+}

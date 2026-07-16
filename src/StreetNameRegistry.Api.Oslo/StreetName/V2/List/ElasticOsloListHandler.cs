@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Api.Oslo.StreetName.List
+﻿namespace StreetNameRegistry.Api.Oslo.StreetName.V2.List
 {
     using System.Linq;
     using System.Threading;
@@ -21,11 +21,11 @@
     public sealed class ElasticOsloListHandler : IRequestHandler<OsloListRequest, StreetNameListOsloResponse>
     {
         private readonly IStreetNameApiElasticSearchClient _streetNameApiElasticSearchClient;
-        private readonly IOptions<ResponseOptions> _responseOptions;
+        private readonly IOptions<ResponseOptionsV2> _responseOptions;
 
         public ElasticOsloListHandler(
             IStreetNameApiElasticSearchClient streetNameApiElasticSearchClient,
-            IOptions<ResponseOptions> responseOptions)
+            IOptions<ResponseOptionsV2> responseOptions)
         {
             _streetNameApiElasticSearchClient = streetNameApiElasticSearchClient;
             _responseOptions = responseOptions;

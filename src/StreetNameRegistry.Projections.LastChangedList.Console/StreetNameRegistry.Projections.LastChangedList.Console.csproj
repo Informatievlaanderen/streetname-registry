@@ -11,6 +11,7 @@
     <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
     <Content Include="appsettings.*.json" CopyToOutputDirectory="Always" />
     <Content Include="init.sh" CopyToOutputDirectory="Always" />
+    <Content Include="packages.lock.json" />
   </ItemGroup>
 
   <ItemGroup>

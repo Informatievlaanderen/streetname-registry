@@ -8,8 +8,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using Be.Vlaanderen.Basisregisters.GrAr.Oslo.Straatnaam;
     using Be.Vlaanderen.Basisregisters.GrAr.Oslo;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
@@ -48,7 +47,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
 
                 List<BaseRegistriesCloudEventAttribute> baseRegistriesCloudEventAttributes = [
                     new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.MunicipalityId, null, OsloNamespaces.Gemeente.ToPuri(document.Document.NisCode)),
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, null, document.Document.Status),
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, null, document.Document.Status.Id),
                     new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StreetNameNames, null, document.Document.Names)
                 ];
 
@@ -69,7 +68,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
 
                 await AddCloudEvent(message, document, context, [
                     new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.MunicipalityId, null, OsloNamespaces.Gemeente.ToPuri(document.Document.NisCode)),
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, null, StraatnaamStatus.Voorgesteld),
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, null, document.Document.Status.Id),
                     new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StreetNameNames, null, document.Document.Names)
                 ], StreetNameEventTypes.CreateV1);
             });
@@ -81,11 +80,11 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
                 var oldStatus = document.Document.Status;
-                document.Document.Status = StraatnaamStatus.InGebruik;
+                document.Document.Status = MapStatus(StreetNameStatus.Current);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.InGebruik)
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus.Id, document.Document.Status.Id)
                 ]);
             });
 
@@ -97,14 +96,14 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     message.Message.Provenance.Timestamp,
                     MapNames(message.Message.StreetNameNames));
 
-                document.Document.Status = StraatnaamStatus.Voorgesteld;
+                document.Document.Status = MapStatus(StreetNameStatus.Proposed);
                 document.Document.HomonymAdditions = message.Message.HomonymAdditions.Select(x =>
                     new GeografischeNaam(x.Value, MapLanguage(x.Key))).ToList();
                 await context.StreetNameDocuments.AddAsync(document, ct);
 
                 List<BaseRegistriesCloudEventAttribute> baseRegistriesCloudEventAttributes = [
                     new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.MunicipalityId, null, OsloNamespaces.Gemeente.ToPuri(document.Document.NisCode)),
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, null, StraatnaamStatus.Voorgesteld),
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, null, document.Document.Status.Id),
                     new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StreetNameNames, null, document.Document.Names)
                 ];
 
@@ -165,11 +164,11 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
                 var oldStatus = document.Document.Status;
-                document.Document.Status = StraatnaamStatus.Voorgesteld;
+                document.Document.Status = MapStatus(StreetNameStatus.Proposed);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Voorgesteld)
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus.Id, document.Document.Status.Id)
                 ]);
             });
 
@@ -180,11 +179,11 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
                 var oldStatus = document.Document.Status;
-                document.Document.Status = StraatnaamStatus.Afgekeurd;
+                document.Document.Status = MapStatus(StreetNameStatus.Rejected);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Afgekeurd)
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus.Id, document.Document.Status.Id)
                 ]);
             });
 
@@ -228,6 +227,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                         streetNameFeedItem.Id,
                         message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                         StreetNameEventTypes.TransformV1,
+                        document.PersistentLocalId.ToString(),
                         new StreetNameCloudTransformEvent
                         {
                             NisCodes = nisCodes,
@@ -243,11 +243,11 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 }
 
                 var oldStatus = document.Document.Status;
-                document.Document.Status = StraatnaamStatus.Afgekeurd;
+                document.Document.Status = MapStatus(StreetNameStatus.Rejected);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Afgekeurd)
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus.Id, document.Document.Status.Id)
                 ]);
             });
 
@@ -258,11 +258,11 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
                 var oldStatus = document.Document.Status;
-                document.Document.Status = StraatnaamStatus.Voorgesteld;
+                document.Document.Status = MapStatus(StreetNameStatus.Proposed);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Voorgesteld)
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus.Id, document.Document.Status.Id)
                 ]);
             });
 
@@ -273,11 +273,11 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
                 var oldStatus = document.Document.Status;
-                document.Document.Status = StraatnaamStatus.Gehistoreerd;
+                document.Document.Status = MapStatus(StreetNameStatus.Retired);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Gehistoreerd)
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus.Id, document.Document.Status.Id)
                 ]);
             });
 
@@ -321,6 +321,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                         streetNameFeedItem.Id,
                         message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                         StreetNameEventTypes.TransformV1,
+                        document.PersistentLocalId.ToString(),
                         new StreetNameCloudTransformEvent
                         {
                             NisCodes = nisCodes,
@@ -336,11 +337,11 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 }
 
                 var oldStatus = document.Document.Status;
-                document.Document.Status = StraatnaamStatus.Gehistoreerd;
+                document.Document.Status = MapStatus(StreetNameStatus.Retired);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Gehistoreerd)
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus.Id, document.Document.Status.Id)
                 ]);
             });
 
@@ -368,6 +369,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     streetNameFeedItem.Id,
                     message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                     StreetNameEventTypes.TransformV1,
+                    document.PersistentLocalId.ToString(),
                     new StreetNameCloudTransformEvent
                     {
                         NisCodes =  [document.Document.NisCode],
@@ -382,11 +384,11 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                 await CheckToUpdateCache(page, context);
 
                 var oldStatus = document.Document.Status;
-                document.Document.Status = StraatnaamStatus.Gehistoreerd;
+                document.Document.Status = MapStatus(StreetNameStatus.Retired);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.Gehistoreerd)
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus.Id, document.Document.Status.Id)
                 ]);
             });
 
@@ -397,11 +399,11 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     throw new InvalidOperationException($"Could not find document for streetname {message.Message.PersistentLocalId}");
 
                 var oldStatus = document.Document.Status;
-                document.Document.Status = StraatnaamStatus.InGebruik;
+                document.Document.Status = MapStatus(StreetNameStatus.Current);
                 document.LastChangedOn = message.Message.Provenance.Timestamp;
 
                 await AddCloudEvent(message, document, context, [
-                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus, StraatnaamStatus.InGebruik)
+                    new BaseRegistriesCloudEventAttribute(StreetNameAttributeNames.StatusName, oldStatus.Id, document.Document.Status.Id)
                 ]);
             });
 
@@ -583,16 +585,16 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
             {
                 default:
                 case Language.Dutch:
-                    return Taal.NL;
+                    return Taal.Nl;
 
                 case Language.French:
-                    return Taal.FR;
+                    return Taal.Fr;
 
                 case Language.German:
-                    return Taal.DE;
+                    return Taal.De;
 
                 case Language.English:
-                    return Taal.EN;
+                    return Taal.En;
             }
         }
 
@@ -600,10 +602,10 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
         {
             return status switch
             {
-                StreetNameStatus.Proposed => StraatnaamStatus.Voorgesteld,
-                StreetNameStatus.Current => StraatnaamStatus.InGebruik,
-                StreetNameStatus.Retired => StraatnaamStatus.Gehistoreerd,
-                StreetNameStatus.Rejected => StraatnaamStatus.Afgekeurd,
+                StreetNameStatus.Proposed => new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld),
+                StreetNameStatus.Current => new StraatnaamStatus(StraatnaamStatusValue.InGebruik),
+                StreetNameStatus.Retired => new StraatnaamStatus(StraatnaamStatusValue.Gehistoreerd),
+                StreetNameStatus.Rejected => new StraatnaamStatus(StraatnaamStatusValue.Afgekeurd),
                 _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
             };
         }
