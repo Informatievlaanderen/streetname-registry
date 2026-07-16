@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
+namespace StreetNameRegistry.Api.Oslo.StreetName.V2.Sync
 {
     using System;
     using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Sync
     {
         public static async Task WriteStreetName(
             this ISyndicationFeedWriter writer,
-            IOptions<ResponseOptions> responseOptions,
+            IOptions<ResponseOptionsV2> responseOptions,
             AtomFormatter formatter,
             string category,
             StreetNameSyndicationQueryResult streetName)

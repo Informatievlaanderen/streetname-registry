@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Api.Oslo.StreetName.List
+﻿namespace StreetNameRegistry.Api.Oslo.StreetName.V3.List
 {
     using System.Collections.Generic;
     using Projections.Elastic.StreetNameList;

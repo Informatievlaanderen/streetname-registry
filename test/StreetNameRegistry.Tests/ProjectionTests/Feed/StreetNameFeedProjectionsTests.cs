@@ -9,8 +9,7 @@
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using Be.Vlaanderen.Basisregisters.GrAr.Oslo.Straatnaam;
     using Be.Vlaanderen.Basisregisters.GrAr.Oslo;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
@@ -82,15 +81,15 @@
 
                     document.Document.PersistentLocalId.Should().Be(streetNameWasMigrated.PersistentLocalId);
                     document.Document.NisCode.Should().Be(streetNameWasMigrated.NisCode);
-                    document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(nameDutch.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.EN).Spelling.Should().Be(nameEnglish.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(nameFrench.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(nameGerman.Name);
-                    document.Document.Status.Should().Be(StraatnaamStatus.Voorgesteld);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(homonymDutch.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.EN).Spelling.Should().Be(homonymEnglish.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(homonymFrench.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(homonymGerman.HomonymAddition);
+                    document.Document.Names.Single(x => x.Taal == Taal.Nl).Spelling.Should().Be(nameDutch.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.En).Spelling.Should().Be(nameEnglish.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.Fr).Spelling.Should().Be(nameFrench.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.De).Spelling.Should().Be(nameGerman.Name);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld));
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.Nl).Spelling.Should().Be(homonymDutch.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.En).Spelling.Should().Be(homonymEnglish.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.Fr).Spelling.Should().Be(homonymFrench.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.De).Spelling.Should().Be(homonymGerman.HomonymAddition);
 
                     var feedItem = await context.StreetNameFeed.SingleOrDefaultAsync(x => x.PersistentLocalId == streetNameWasMigrated.PersistentLocalId);
                     feedItem.Should().BeNull();
@@ -145,15 +144,15 @@
 
                     document.Document.PersistentLocalId.Should().Be(streetNameWasMigrated.PersistentLocalId);
                     document.Document.NisCode.Should().Be(streetNameWasMigrated.NisCode);
-                    document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(nameDutch.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.EN).Spelling.Should().Be(nameEnglish.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(nameFrench.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(nameGerman.Name);
-                    document.Document.Status.Should().Be(StraatnaamStatus.Voorgesteld);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(homonymDutch.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.EN).Spelling.Should().Be(homonymEnglish.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(homonymFrench.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(homonymGerman.HomonymAddition);
+                    document.Document.Names.Single(x => x.Taal == Taal.Nl).Spelling.Should().Be(nameDutch.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.En).Spelling.Should().Be(nameEnglish.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.Fr).Spelling.Should().Be(nameFrench.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.De).Spelling.Should().Be(nameGerman.Name);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld));
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.Nl).Spelling.Should().Be(homonymDutch.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.En).Spelling.Should().Be(homonymEnglish.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.Fr).Spelling.Should().Be(homonymFrench.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.De).Spelling.Should().Be(homonymGerman.HomonymAddition);
 
                     var feedItem = await context.StreetNameFeed.SingleOrDefaultAsync(x => x.PersistentLocalId == streetNameWasMigrated.PersistentLocalId);
                     AssertFeedItem(feedItem, position, streetNameWasMigrated);
@@ -177,7 +176,7 @@
                                                a.NewValue == document.Document.HomonymAdditions) &&
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName &&
                                                a.OldValue == null &&
-                                               a.NewValue!.ToString() == document.Document.Status.ToString())),
+                                               a.NewValue!.ToString() == document.Document.Status.Id)),
                             StreetNameWasMigratedToMunicipality.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -211,11 +210,11 @@
 
                     document.Document.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     document.Document.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
-                    document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(nameDutch.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.EN).Spelling.Should().Be(nameEnglish.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(nameFrench.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(nameGerman.Name);
-                    document.Document.Status.Should().Be(StraatnaamStatus.Voorgesteld);
+                    document.Document.Names.Single(x => x.Taal == Taal.Nl).Spelling.Should().Be(nameDutch.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.En).Spelling.Should().Be(nameEnglish.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.Fr).Spelling.Should().Be(nameFrench.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.De).Spelling.Should().Be(nameGerman.Name);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld));
                     document.Document.HomonymAdditions.Should().BeEmpty();
 
                     var feedItem = await context.StreetNameFeed.SingleOrDefaultAsync(x => x.PersistentLocalId == streetNameWasProposedV2.PersistentLocalId);
@@ -237,7 +236,7 @@
                                                a.NewValue == document.Document.Names) &&
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName &&
                                                a.OldValue == null &&
-                                               a.NewValue!.ToString() == nameof(StraatnaamStatus.Voorgesteld))),
+                                               a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld).Id)),
                             StreetNameWasProposedV2.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -265,7 +264,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasApproved.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasApproved.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.InGebruik);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.InGebruik));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasApproved.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameWasApproved);
@@ -279,8 +278,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.Voorgesteld)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.InGebruik))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.InGebruik).Id)),
                             StreetNameWasApproved.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -341,15 +340,15 @@
 
                     document.Document.PersistentLocalId.Should().Be(streetNameWasProposedForMunicipalityMerger.PersistentLocalId);
                     document.Document.NisCode.Should().Be(streetNameWasProposedForMunicipalityMerger.NisCode);
-                    document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(nameDutch.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.EN).Spelling.Should().Be(nameEnglish.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(nameFrench.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(nameGerman.Name);
-                    document.Document.Status.Should().Be(StraatnaamStatus.Voorgesteld);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(homonymDutch.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.EN).Spelling.Should().Be(homonymEnglish.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(homonymFrench.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.DE).Spelling.Should().Be(homonymGerman.HomonymAddition);
+                    document.Document.Names.Single(x => x.Taal == Taal.Nl).Spelling.Should().Be(nameDutch.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.En).Spelling.Should().Be(nameEnglish.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.Fr).Spelling.Should().Be(nameFrench.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.De).Spelling.Should().Be(nameGerman.Name);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld));
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.Nl).Spelling.Should().Be(homonymDutch.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.En).Spelling.Should().Be(homonymEnglish.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.Fr).Spelling.Should().Be(homonymFrench.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.De).Spelling.Should().Be(homonymGerman.HomonymAddition);
 
                     var feedItem = await context.StreetNameFeed.FirstOrDefaultAsync(x =>
                         x.PersistentLocalId == streetNameWasProposedForMunicipalityMerger.PersistentLocalId);
@@ -374,7 +373,7 @@
                                                a.NewValue == document.Document.HomonymAdditions) &&
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName &&
                                                a.OldValue == null &&
-                                               a.NewValue!.ToString() == nameof(StraatnaamStatus.Voorgesteld))),
+                                               a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld).Id)),
                             StreetNameWasProposedForMunicipalityMerger.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -419,7 +418,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasCorrectedFromApprovedToProposed.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasCorrectedFromApprovedToProposed.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.Voorgesteld);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasCorrectedFromApprovedToProposed.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 2, streetNameWasCorrectedFromApprovedToProposed);
@@ -433,8 +432,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.InGebruik)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Voorgesteld))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.InGebruik).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld).Id)),
                             StreetNameWasCorrectedFromApprovedToProposed.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -462,7 +461,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRejected.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasRejected.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.Afgekeurd);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Afgekeurd));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRejected.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameWasRejected);
@@ -476,8 +475,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.Voorgesteld)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Afgekeurd))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Afgekeurd).Id)),
                             StreetNameWasRejected.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -515,7 +514,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.Afgekeurd);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Afgekeurd));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameWasRejectedBecauseOfMunicipalityMerger);
@@ -529,8 +528,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.Voorgesteld)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Afgekeurd))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Afgekeurd).Id)),
                             StreetNameWasRejectedBecauseOfMunicipalityMerger.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -539,6 +538,7 @@
                         It.IsAny<long>(),
                         streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                         StreetNameEventTypes.TransformV1,
+                        streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId.ToString(),
                         It.Is<StreetNameCloudTransformEvent>(e => e.NisCodes.SequenceEqual(new List<string> { "11001", streetNameWasProposedV2.NisCode })
                         && e.From == OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedV2.PersistentLocalId.ToString())
                         && e.To.SequenceEqual(streetNameWasRejectedBecauseOfMunicipalityMerger.NewPersistentLocalIds.Select(s => OsloNamespaces.StraatNaam.ToPuri(s.ToString())).ToList())),
@@ -574,7 +574,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasRejectedBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.Afgekeurd);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Afgekeurd));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRejectedBecauseOfMunicipalityMerger.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameWasRejectedBecauseOfMunicipalityMerger);
@@ -588,8 +588,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.Voorgesteld)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Afgekeurd))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Afgekeurd).Id)),
                             StreetNameWasRejectedBecauseOfMunicipalityMerger.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -598,6 +598,7 @@
                             It.IsAny<long>(),
                             It.IsAny<DateTimeOffset>(),
                             StreetNameEventTypes.TransformV1,
+                            It.IsAny<string>(),
                             It.IsAny<StreetNameCloudTransformEvent>(),
                             It.IsAny<Uri>(),
                             It.IsAny<string>(),
@@ -629,7 +630,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasCorrectedFromRejectedToProposed.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasCorrectedFromRejectedToProposed.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.Voorgesteld);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasCorrectedFromRejectedToProposed.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 2, streetNameWasCorrectedFromRejectedToProposed);
@@ -643,8 +644,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.Afgekeurd)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Voorgesteld))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Afgekeurd).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Voorgesteld).Id)),
                             StreetNameWasCorrectedFromRejectedToProposed.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -674,7 +675,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRetiredV2.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasRetiredV2.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.Gehistoreerd);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Gehistoreerd));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRetiredV2.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 2, streetNameWasRetiredV2);
@@ -688,8 +689,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.InGebruik)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Gehistoreerd))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.InGebruik).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Gehistoreerd).Id)),
                             StreetNameWasRetiredV2.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -730,7 +731,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.Gehistoreerd);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Gehistoreerd));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 2, streetNameWasRetiredBecauseOfMunicipalityMerger);
@@ -744,8 +745,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.InGebruik)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Gehistoreerd))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.InGebruik).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Gehistoreerd).Id)),
                             StreetNameWasRetiredBecauseOfMunicipalityMerger.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -754,6 +755,7 @@
                             It.IsAny<long>(),
                             streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                             StreetNameEventTypes.TransformV1,
+                            streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId.ToString(),
                             It.Is<StreetNameCloudTransformEvent>(e => e.NisCodes.SequenceEqual(new List<string> { "11001", streetNameWasProposedV2.NisCode })
                                                                       && e.From == OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedV2.PersistentLocalId.ToString())
                                                                       && e.To.SequenceEqual(streetNameWasRetiredBecauseOfMunicipalityMerger.NewPersistentLocalIds.Select(s => OsloNamespaces.StraatNaam.ToPuri(s.ToString())).ToList())),
@@ -791,7 +793,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasRetiredBecauseOfMunicipalityMerger.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.Gehistoreerd);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Gehistoreerd));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRetiredBecauseOfMunicipalityMerger.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 2, streetNameWasRetiredBecauseOfMunicipalityMerger);
@@ -805,8 +807,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.InGebruik)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Gehistoreerd))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.InGebruik).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Gehistoreerd).Id)),
                             StreetNameWasRetiredBecauseOfMunicipalityMerger.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -815,6 +817,7 @@
                             It.IsAny<long>(),
                             It.IsAny<DateTimeOffset>(),
                             StreetNameEventTypes.TransformV1,
+                            It.IsAny<string>(),
                             It.IsAny<StreetNameCloudTransformEvent>(),
                             It.IsAny<Uri>(),
                             It.IsAny<string>(),
@@ -846,7 +849,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasRenamed.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasRenamed.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.Gehistoreerd);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.Gehistoreerd));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasRenamed.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 2, streetNameWasRenamed);
@@ -860,8 +863,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.InGebruik)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.Gehistoreerd))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.InGebruik).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Gehistoreerd).Id)),
                             StreetNameWasRenamed.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -870,6 +873,7 @@
                             It.IsAny<long>(),
                             streetNameWasRenamed.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                             StreetNameEventTypes.TransformV1,
+                            streetNameWasRenamed.PersistentLocalId.ToString(),
                             It.Is<StreetNameCloudTransformEvent>(e => e.NisCodes.SequenceEqual(new List<string> { streetNameWasProposedV2.NisCode })
                                                                       && e.From == OsloNamespaces.StraatNaam.ToPuri(streetNameWasProposedV2.PersistentLocalId.ToString())
                                                                       && e.To.SequenceEqual(new List<string>{OsloNamespaces.StraatNaam.ToPuri(streetNameWasRenamed.DestinationPersistentLocalId.ToString())})),
@@ -905,7 +909,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameWasCorrectedFromRetiredToCurrent.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameWasCorrectedFromRetiredToCurrent.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Status.Should().Be(StraatnaamStatus.InGebruik);
+                    document.Document.Status.Should().BeEquivalentTo(new StraatnaamStatus(StraatnaamStatusValue.InGebruik));
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameWasCorrectedFromRetiredToCurrent.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 3, streetNameWasCorrectedFromRetiredToCurrent);
@@ -919,8 +923,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StatusName
-                                               && a.OldValue!.ToString() == nameof(StraatnaamStatus.Gehistoreerd)
-                                               && a.NewValue!.ToString() == nameof(StraatnaamStatus.InGebruik))),
+                                               && a.OldValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.Gehistoreerd).Id
+                                               && a.NewValue!.ToString() == new StraatnaamStatus(StraatnaamStatusValue.InGebruik).Id)),
                             StreetNameWasCorrectedFromRetiredToCurrent.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -953,8 +957,8 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameNamesWereCorrected.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameNamesWereCorrected.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(correctedNameDutch.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(initialNameFrench.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.Nl).Spelling.Should().Be(correctedNameDutch.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.Fr).Spelling.Should().Be(initialNameFrench.Name);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameNamesWereCorrected.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameNamesWereCorrected);
@@ -968,10 +972,10 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StreetNameNames &&
-                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.NL && n.Spelling == initialNameDutch.Name) &&
-                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialNameFrench.Name) &&
-                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.NL && n.Spelling == correctedNameDutch.Name) &&
-                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialNameFrench.Name))),
+                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.Nl && n.Spelling == initialNameDutch.Name) &&
+                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.Fr && n.Spelling == initialNameFrench.Name) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.Nl && n.Spelling == correctedNameDutch.Name) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.Fr && n.Spelling == initialNameFrench.Name))),
                             StreetNameNamesWereCorrected.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -1004,8 +1008,8 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameNamesWereChanged.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameNamesWereChanged.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.Names.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(changedNameDutch.Name);
-                    document.Document.Names.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(initialNameFrench.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.Nl).Spelling.Should().Be(changedNameDutch.Name);
+                    document.Document.Names.Single(x => x.Taal == Taal.Fr).Spelling.Should().Be(initialNameFrench.Name);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameNamesWereChanged.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameNamesWereChanged);
@@ -1019,10 +1023,10 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasProposedV2.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.StreetNameNames &&
-                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.NL && n.Spelling == initialNameDutch.Name) &&
-                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialNameFrench.Name) &&
-                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.NL && n.Spelling == changedNameDutch.Name) &&
-                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialNameFrench.Name))),
+                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.Nl && n.Spelling == initialNameDutch.Name) &&
+                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.Fr && n.Spelling == initialNameFrench.Name) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.Nl && n.Spelling == changedNameDutch.Name) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.Fr && n.Spelling == initialNameFrench.Name))),
                             StreetNameNamesWereChanged.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -1061,8 +1065,8 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameHomonymAdditionsWereCorrected.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameHomonymAdditionsWereCorrected.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.NL).Spelling.Should().Be(correctedHomonymDutch.HomonymAddition);
-                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.FR).Spelling.Should().Be(initialHomonymFrench.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.Nl).Spelling.Should().Be(correctedHomonymDutch.HomonymAddition);
+                    document.Document.HomonymAdditions.Single(x => x.Taal == Taal.Fr).Spelling.Should().Be(initialHomonymFrench.HomonymAddition);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameHomonymAdditionsWereCorrected.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameHomonymAdditionsWereCorrected);
@@ -1076,10 +1080,10 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasMigrated.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.HomonymAdditions &&
-                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.NL && n.Spelling == initialHomonymDutch.HomonymAddition) &&
-                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialHomonymFrench.HomonymAddition) &&
-                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.NL && n.Spelling == correctedHomonymDutch.HomonymAddition) &&
-                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialHomonymFrench.HomonymAddition))),
+                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.Nl && n.Spelling == initialHomonymDutch.HomonymAddition) &&
+                                                ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.Fr && n.Spelling == initialHomonymFrench.HomonymAddition) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.Nl && n.Spelling == correctedHomonymDutch.HomonymAddition) &&
+                                                ((List<GeografischeNaam>)a.NewValue).Any(n => n.Taal == Taal.Fr && n.Spelling == initialHomonymFrench.HomonymAddition))),
                             StreetNameHomonymAdditionsWereCorrected.EventName,
                             It.IsAny<string>()),
                         Times.Once);
@@ -1116,7 +1120,7 @@
                     document.Should().NotBeNull();
                     document!.LastChangedOn.Should().Be(streetNameHomonymAdditionsWereRemoved.Provenance.Timestamp);
                     document.Document.VersionId.Should().Be(streetNameHomonymAdditionsWereRemoved.Provenance.Timestamp.ToBelgianDateTimeOffset());
-                    document.Document.HomonymAdditions.Should().Contain(x => x.Taal == Taal.NL && x.Spelling == initialHomonymDutch.HomonymAddition);
+                    document.Document.HomonymAdditions.Should().Contain(x => x.Taal == Taal.Nl && x.Spelling == initialHomonymDutch.HomonymAddition);
 
                     var feedItem = await context.StreetNameFeed.LastAsync(x => x.PersistentLocalId == streetNameHomonymAdditionsWereRemoved.PersistentLocalId);
                     AssertFeedItem(feedItem, position + 1, streetNameHomonymAdditionsWereRemoved);
@@ -1130,8 +1134,8 @@
                             It.Is<List<string>>(l => l.Contains(streetNameWasMigrated.NisCode)),
                             It.Is<List<BaseRegistriesCloudEventAttribute>>(attrs =>
                                 attrs.Any(a => a.Name == StreetNameAttributeNames.HomonymAdditions &&
-                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.NL && n.Spelling == initialHomonymDutch.HomonymAddition) &&
-                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.FR && n.Spelling == initialHomonymFrench.HomonymAddition) &&
+                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.Nl && n.Spelling == initialHomonymDutch.HomonymAddition) &&
+                                               ((List<GeografischeNaam>)a.OldValue).Any(n => n.Taal == Taal.Fr && n.Spelling == initialHomonymFrench.HomonymAddition) &&
                                                a.NewValue == document.Document.HomonymAdditions)),
                             StreetNameHomonymAdditionsWereRemoved.EventName,
                             It.IsAny<string>()),

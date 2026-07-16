@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Converters;
-    using List;
+    using V2.List;
     using Microsoft.EntityFrameworkCore;
     using Municipality;
     using Projections.Legacy;

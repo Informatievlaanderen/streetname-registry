@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
+namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Detail
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,9 +6,9 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
+    using Be.Vlaanderen.Basisregisters.GrAr.Oslo;
+    using Be.Vlaanderen.Basisregisters.GrAr.Oslo.Gemeente;
+    using Be.Vlaanderen.Basisregisters.GrAr.Oslo.Straatnaam;
     using Converters;
     using Infrastructure.Options;
     using MediatR;
@@ -19,24 +19,24 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
     using Projections.Syndication;
     using Projections.Syndication.Municipality;
 
-    public sealed record OsloDetailRequest(int PersistentLocalId) : IRequest<StreetNameOsloResponse>;
+    public sealed record OsloDetailRequest(int PersistentLocalId) : IRequest<StreetNameOsloV3Response>;
 
-    public sealed class OsloDetailHandlerV2 : IRequestHandler<OsloDetailRequest, StreetNameOsloResponse>
+    public sealed class OsloDetailHandler : IRequestHandler<OsloDetailRequest, StreetNameOsloV3Response>
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
-        private readonly IOptions<ResponseOptions> _responseOptions;
+        private readonly IOptions<ResponseOptionsV3> _responseOptions;
 
-        public OsloDetailHandlerV2(
+        public OsloDetailHandler(
             LegacyContext legacyContext,
             SyndicationContext syndicationContext,
-            IOptions<ResponseOptions> responseOptions)
+            IOptions<ResponseOptionsV3> responseOptions)
         {
             _legacyContext = legacyContext;
             _syndicationContext = syndicationContext;
             _responseOptions = responseOptions;
         }
-        public async Task<StreetNameOsloResponse> Handle(OsloDetailRequest request, CancellationToken cancellationToken)
+        public async Task<StreetNameOsloV3Response> Handle(OsloDetailRequest request, CancellationToken cancellationToken)
         {
             var streetNameV2 = await _legacyContext
                 .StreetNameDetailV2
@@ -54,11 +54,10 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
             }
 
             var gemeenteV2 = await GetStraatnaamDetailGemeente(_syndicationContext, streetNameV2.NisCode, _responseOptions.Value.GemeenteDetailUrl, cancellationToken);
-            return new StreetNameOsloResponse(
-                _responseOptions.Value.Naamruimte,
+            return new StreetNameOsloV3Response(
                 _responseOptions.Value.ContextUrlDetail,
                 request.PersistentLocalId,
-                streetNameV2.Status.ConvertFromMunicipalityStreetNameStatus(),
+                streetNameV2.Status.ConvertOsloFromMunicipalityStreetNameStatus(),
                 gemeenteV2,
                 streetNameV2.VersionTimestamp.ToBelgianDateTimeOffset(),
                 streetNameV2.NameDutch,
@@ -74,39 +73,38 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
                 streetNameV2.LastEventHash);
         }
 
-        public async Task<StraatnaamDetailGemeente> GetStraatnaamDetailGemeente(SyndicationContext syndicationContext, string nisCode, string gemeenteDetailUrl, CancellationToken ct)
+        private async Task<StraatnaamToegekendDoorGemeente> GetStraatnaamDetailGemeente(SyndicationContext syndicationContext, string nisCode, string gemeenteDetailUrl, CancellationToken ct)
         {
             var municipality = await syndicationContext
                 .MunicipalityLatestItems
                 .AsNoTracking()
                 .OrderByDescending(m => m.Position)
-                .FirstOrDefaultAsync(m => m.NisCode == nisCode, ct);
+                .FirstAsync(m => m.NisCode == nisCode, ct);
 
-            var municipalityDefaultName = GetDefaultMunicipalityName(municipality);
-            var gemeente = new StraatnaamDetailGemeente
+            var municipalityNames = GetMunicipalityNames(municipality);
+            var gemeente = new StraatnaamToegekendDoorGemeente
             {
-                ObjectId = nisCode,
+                Id = OsloNamespaces.Gemeente.ToPuri(nisCode),
                 Detail = string.Format(gemeenteDetailUrl, nisCode),
-                Gemeentenaam = new Gemeentenaam(new GeografischeNaam(municipalityDefaultName.Value, municipalityDefaultName.Key))
+                Gemeentenaam = new Gemeentenaam
+                {
+                    Gemeentenamen = municipalityNames.ToList()
+                }
             };
             return gemeente;
         }
 
-        private static KeyValuePair<Taal, string> GetDefaultMunicipalityName(MunicipalityLatestItem? municipality)
+        private static IEnumerable<GeografischeNaam> GetMunicipalityNames(MunicipalityLatestItem municipality)
         {
-            switch (municipality?.PrimaryLanguage)
+            var names = new List<GeografischeNaam>
             {
-                default:
-                case null:
-                case Taal.NL:
-                    return new KeyValuePair<Taal, string>(Taal.NL, municipality?.NameDutch ?? string.Empty);
-                case Taal.FR:
-                    return new KeyValuePair<Taal, string>(Taal.FR, municipality.NameFrench ?? string.Empty);
-                case Taal.DE:
-                    return new KeyValuePair<Taal, string>(Taal.DE, municipality.NameGerman ?? string.Empty);
-                case Taal.EN:
-                    return new KeyValuePair<Taal, string>(Taal.EN, municipality.NameEnglish ?? string.Empty);
-            }
+                new GeografischeNaam(municipality.NameDutch ?? string.Empty, Taal.Nl),
+                new GeografischeNaam(municipality.NameFrench ?? string.Empty, Taal.Fr),
+                new GeografischeNaam(municipality.NameGerman ?? string.Empty, Taal.De),
+                new GeografischeNaam(municipality.NameEnglish ?? string.Empty, Taal.En)
+            };
+
+            return names.Where(name => !string.IsNullOrWhiteSpace(name.Spelling));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Api.Oslo.StreetName.List
+﻿namespace StreetNameRegistry.Api.Oslo.StreetName.V2.List
 {
     public class StreetNameFilter
     {

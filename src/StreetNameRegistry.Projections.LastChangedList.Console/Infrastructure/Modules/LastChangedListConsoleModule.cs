@@ -88,6 +88,9 @@ namespace StreetNameRegistry.Projections.LastChangedList.Console.Infrastructure.
                     _loggerFactory)
                 .RegisterProjections<LastChangedProjections, LastChangedListContext>(
                     context => new LastChangedProjections(context.Resolve<LastChangedListStreetNameCacheValidator>()),
+                    ConnectedProjectionSettings.Default)
+                .RegisterProjections<LastChangedProjectionsV3, LastChangedListContext>(
+                    context => new LastChangedProjectionsV3(context.Resolve<LastChangedListStreetNameCacheValidator>()),
                     ConnectedProjectionSettings.Default);
         }
     }

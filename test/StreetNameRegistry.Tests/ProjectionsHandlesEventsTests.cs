@@ -103,7 +103,8 @@
 
             yield return [new List<ConnectedProjection<LastChangedListContext>>
             {
-                new LastChangedProjections(Mock.Of<ICacheValidator>())
+                new LastChangedProjections(Mock.Of<ICacheValidator>()),
+                new LastChangedProjectionsV3(Mock.Of<ICacheValidator>())
             }];
 
             yield return [new List<ConnectedProjection<IntegrationContext>>

@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Api.Oslo.StreetName.ChangeFeed
+﻿namespace StreetNameRegistry.Api.Oslo.StreetName.V3.ChangeFeed
 {
     using Infrastructure.Options;
     using Microsoft.Extensions.Options;
@@ -7,9 +7,9 @@
 
     public sealed class StreetNameFeedResultExample : IExamplesProvider<object>
     {
-        private readonly ResponseOptions _feedConfig;
+        private readonly ResponseOptionsV3 _feedConfig;
 
-        public StreetNameFeedResultExample(IOptions<ResponseOptions> feedConfig)
+        public StreetNameFeedResultExample(IOptions<ResponseOptionsV3> feedConfig)
         {
             _feedConfig = feedConfig.Value;
         }
@@ -25,11 +25,11 @@
                                  "type": "basisregisters.streetname.create.v1",
                                  "source": "{{_feedConfig.StreetNameFeed.FeedUrl}}",
                                  "datacontenttype": "application/json",
+                                 "subject": "https://data.vlaanderen.be/id/straatnaam/84008",
                                  "dataschema": "{{_feedConfig.StreetNameFeed.DataSchemaUrl}}",
                                  "basisregisterseventtype": "StreetNameWasMigratedToMunicipality",
                                  "basisregisterscausationid": "b42dcc08-a41e-50d2-ab21-87f2be687e42",
                                  "data": {
-                                     "@id": "https://data.vlaanderen.be/id/straatnaam/84008",
                                      "objectId": "84008",
                                      "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
                                      "versieId": "2023-11-01T08:18:40.8661748+01:00",
@@ -38,22 +38,22 @@
                                      ],
                                      "attributen": [
                                          {
-                                             "naam": "gemeente.id",
+                                             "naam": "isToegekendDoor",
                                              "oudeWaarde": null,
                                              "nieuweWaarde": "https://data.vlaanderen.be/id/gemeente/52043"
                                          },
                                          {
-                                             "naam": "straatnaamStatus",
+                                             "naam": "status",
                                              "oudeWaarde": null,
-                                             "nieuweWaarde": "voorgesteld"
+                                             "nieuweWaarde": "https://data.vlaanderen.be/id/concept/straatnaamstatus/voorgesteld"
                                          },
                                          {
-                                             "naam": "straatnamen",
+                                             "naam": "straatnaam",
                                              "oudeWaarde": null,
                                              "nieuweWaarde": [
                                                  {
-                                                     "spelling": "Rue Jules Stracmans",
-                                                     "taal": "fr"
+                                                     "@value": "Rue Jules Stracmans",
+                                                     "@language": "fr"
                                                  }
                                              ]
                                          }

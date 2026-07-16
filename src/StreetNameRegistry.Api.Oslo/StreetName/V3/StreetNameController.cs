@@ -1,7 +1,6 @@
-namespace StreetNameRegistry.Api.Oslo.StreetName
+namespace StreetNameRegistry.Api.Oslo.StreetName.V3
 {
     using System.Linq;
-    using System.Net.Mime;
     using System.Threading;
     using System.Threading.Tasks;
     using Asp.Versioning;
@@ -13,7 +12,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
     using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.GrAr.Oslo;
     using ChangeFeed;
     using CloudNative.CloudEvents;
     using Count;
@@ -26,13 +25,11 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
     using Microsoft.EntityFrameworkCore;
     using Projections.Feed;
     using Projections.Legacy;
-    using Query;
     using Swashbuckle.AspNetCore.Filters;
-    using Sync;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
 
-    [ApiVersion("2.0")]
-    [AdvertiseApiVersions("2.0")]
+    [ApiVersion("3.0")]
+    [AdvertiseApiVersions("3.0")]
     [ApiRoute("straatnamen")]
     [ApiExplorerSettings(GroupName = "Straatnamen")]
     public class StreetNameController : ApiController
@@ -55,7 +52,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         /// <response code="500">Als er een interne fout is opgetreden.</response>
         [HttpGet("{persistentLocalId}")]
         [Produces(AcceptTypes.JsonLd)]
-        [ProducesResponseType(typeof(StreetNameOsloResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StreetNameOsloV3Response), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status410Gone)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
@@ -82,7 +79,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         /// <response code="500">Als er een interne fout is opgetreden.</response>
         [HttpGet]
         [Produces(AcceptTypes.JsonLd)]
-        [ProducesResponseType(typeof(StreetNameListOsloResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StreetNameListOsloV3Response), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameListOsloResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
@@ -268,35 +265,6 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
             }
 
             return Ok(response);
-        }
-
-        /// <summary>
-        /// Vraag een lijst met wijzigingen van straatnamen op.
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpGet("sync")]
-        [Produces("text/xml")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameSyndicationResponseExamples))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
-        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
-        public async Task<IActionResult> Sync(CancellationToken cancellationToken = default)
-        {
-            var filtering = Request.ExtractFilteringRequest<StreetNameSyndicationFilter>();
-            var sorting = Request.ExtractSortingRequest();
-            var pagination = Request.ExtractPaginationRequest();
-
-            var result = await _mediator.Send(new SyndicationRequest(filtering, sorting, pagination), cancellationToken);
-
-            return new ContentResult
-            {
-                Content = result.Content,
-                ContentType = MediaTypeNames.Text.Xml,
-                StatusCode = StatusCodes.Status200OK
-            };
         }
     }
 }

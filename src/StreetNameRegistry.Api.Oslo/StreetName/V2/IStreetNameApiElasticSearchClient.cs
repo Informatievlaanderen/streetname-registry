@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.StreetName
+namespace StreetNameRegistry.Api.Oslo.StreetName.V2
 {
     using System;
     using System.Collections.Generic;
@@ -80,7 +80,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
 
             if (!searchResponse.IsValidResponse)
             {
-                throw new ElasticsearchClientException("Failed to search for addresses", searchResponse.ElasticsearchServerError, searchResponse.DebugInformation);
+                throw new ElasticsearchClientException("Failed to search for streetnames", searchResponse.ElasticsearchServerError, searchResponse.DebugInformation);
             }
 
             return new StreetNameListResult(searchResponse.Documents, searchResponse.Total);

@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
+namespace StreetNameRegistry.Api.Oslo.StreetName.V2.Detail
 {
     using System;
     using System.Collections.Generic;
@@ -160,9 +160,9 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Detail
 
     public class StreetNameOsloResponseExamples : IExamplesProvider<StreetNameOsloResponse>
     {
-        private readonly ResponseOptions _responseOptions;
+        private readonly ResponseOptionsV2 _responseOptions;
 
-        public StreetNameOsloResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
+        public StreetNameOsloResponseExamples(IOptions<ResponseOptionsV2> responseOptionsProvider)
             => _responseOptions = responseOptionsProvider.Value;
 
         public StreetNameOsloResponse GetExamples()
