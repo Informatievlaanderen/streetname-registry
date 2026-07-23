@@ -103,10 +103,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.V3.List
             Straatnamen = new List<GeografischeNaam>(geografischeNamen);
             StraatnaamStatus = new StraatnaamStatus(status);
 
-            if (homoniemToevoegingen != null)
-            {
+            if (homoniemToevoegingen != null)            
                 HomoniemToevoegingen = new List<GeografischeNaam>(homoniemToevoegingen);
-            }
         }
     }
 
