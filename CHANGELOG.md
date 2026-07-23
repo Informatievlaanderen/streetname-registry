@@ -1,3 +1,10 @@
+# [6.1.0](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.5...v6.1.0) (2026-07-23)
+
+
+### Features
+
+* **oslo:** add v3 endpoints ([ca8fabd](https://github.com/informatievlaanderen/streetname-registry/commit/ca8fabd9fcbf30d9b002af4f9ac3119d3f7d35ed))
+
 ## [6.0.5](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.4...v6.0.5) (2026-06-23)
 
 
