@@ -1,3 +1,10 @@
+## [6.1.2](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.1...v6.1.2) (2026-07-23)
+
+
+### Bug Fixes
+
+* **style:** to trigger build ([c44bd59](https://github.com/informatievlaanderen/streetname-registry/commit/c44bd59185c2def45b2aa7b626f8bc54eacf87e2))
+
 ## [6.1.1](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.0...v6.1.1) (2026-07-23)
 
 
