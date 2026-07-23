@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Options
 {
     using Be.Vlaanderen.Basisregisters.GrAr.ChangeFeed;
 
-    public sealed class ResponseOptionsV3
+    public class ResponseOptionsV3
     {
         public string VolgendeUrl { get; set; }
         public string DetailUrl { get; set; }
