@@ -1,3 +1,10 @@
+## [6.1.1](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.0...v6.1.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **oslo:** make options inheritable ([f5d8293](https://github.com/informatievlaanderen/streetname-registry/commit/f5d8293c543cbfb1129a0782af69499114b5298d))
+
 # [6.1.0](https://github.com/informatievlaanderen/streetname-registry/compare/v6.0.5...v6.1.0) (2026-07-23)
 
 
