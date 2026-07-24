@@ -97,7 +97,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Detail
         /// <summary>
         /// Het linked-data type van de straatnaam.
         /// </summary>
-        [JsonProperty("straatnaam", Order = 0, Required = Required.DisallowNull)]
+        [JsonProperty("@type", Order = 0, Required = Required.DisallowNull)]
         public string Type => "Straatnaam";
 
         /// <summary>
