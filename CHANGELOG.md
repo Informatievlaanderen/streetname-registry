@@ -1,3 +1,10 @@
+## [6.1.3](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.2...v6.1.3) (2026-07-24)
+
+
+### Bug Fixes
+
+* **oslo:** fix contract streetname detail ([2a21e4b](https://github.com/informatievlaanderen/streetname-registry/commit/2a21e4bedf80b95c19bbdb5aaceb9304a25450ff))
+
 ## [6.1.2](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.1...v6.1.2) (2026-07-23)
 
 
