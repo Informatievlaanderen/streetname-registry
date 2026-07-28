@@ -145,99 +145,100 @@ namespace StreetNameRegistry.Projections.LastChangedList
 
             #endregion
 
-           When<Envelope<StreetNameWasMigrated>>(async (context, message, ct) =>
+            When<Envelope<StreetNameWasMigrated>>(async (context, message, ct) =>
             {
-                var attachedRecords = await GetLastChangedRecordsAndUpdatePosition(message.Message.StreetNameId.ToString(), message.Position, context, ct);
+                var attachedRecords =
+                    await GetLastChangedRecordsAndUpdatePosition(message.Message.StreetNameId.ToString(), message.Position, context, ct);
 
                 context.LastChangedList.RemoveRange(attachedRecords);
             });
 
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
             {
-                var records = await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                var records = await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
                 RebuildKeyAndUri(records, message.Message.PersistentLocalId);
             });
 
             When<Envelope<StreetNameWasProposedForMunicipalityMerger>>(async (context, message, ct) =>
             {
-                var records = await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                var records = await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
                 RebuildKeyAndUri(records, message.Message.PersistentLocalId);
             });
 
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
-                var records = await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                var records = await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
                 RebuildKeyAndUri(records, message.Message.PersistentLocalId);
             });
 
             When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameWasCorrectedFromApprovedToProposed>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameWasRejected>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameWasRejectedBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameWasCorrectedFromRejectedToProposed>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameWasRetiredBecauseOfMunicipalityMerger>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameWasRenamed>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameWasCorrectedFromRetiredToCurrent>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
              When<Envelope<StreetNameNamesWereChanged>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameHomonymAdditionsWereCorrected>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameHomonymAdditionsWereRemoved>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<StreetNameWasRemovedV2>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                await GetLastChangedRecordsAndUpdatePosition(GetIdentifier(message.Message.PersistentLocalId.ToString()), message.Position, context, ct);
             });
 
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
@@ -259,6 +260,9 @@ namespace StreetNameRegistry.Projections.LastChangedList
             When<Envelope<MunicipalityWasRetired>>(DoNothing);
             When<Envelope<MunicipalityWasRemoved>>(DoNothing);
         }
+
+        private static string GetIdentifier(string streetNamePersistentLocalId)
+            => $"v3.{streetNamePersistentLocalId}";
 
         private static void RebuildKeyAndUri(IEnumerable<LastChangedRecord>? attachedRecords, int persistentLocalId)
         {
