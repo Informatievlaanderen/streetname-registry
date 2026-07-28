@@ -1,3 +1,11 @@
+## [6.1.4](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.3...v6.1.4) (2026-07-28)
+
+
+### Bug Fixes
+
+* **lastchanged:** add new v3 identifier ([54ecd13](https://github.com/informatievlaanderen/streetname-registry/commit/54ecd1325c8f0edd6ef6063e86a623340bfcdb96))
+* **projector:** feed v3 config ([323b8c4](https://github.com/informatievlaanderen/streetname-registry/commit/323b8c4cad53d0f8b52104ece2401c769cd512ae))
+
 ## [6.1.3](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.2...v6.1.3) (2026-07-24)
 
 
