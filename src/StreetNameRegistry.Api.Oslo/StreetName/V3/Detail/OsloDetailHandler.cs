@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Detail
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -85,7 +86,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Detail
             var gemeente = new StraatnaamToegekendDoorGemeente
             {
                 Id = OsloNamespaces.Gemeente.ToPuri(nisCode),
-                Detail = string.Format(gemeenteDetailUrl, nisCode),
+                Detail = new Uri(string.Format(gemeenteDetailUrl, nisCode)),
                 Gemeentenaam = new Gemeentenaam
                 {
                     Gemeentenamen = municipalityNames.ToList()

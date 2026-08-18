@@ -209,7 +209,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Detail
             var gemeente = new StraatnaamToegekendDoorGemeente
             {
                 Id = OsloNamespaces.Gemeente.ToPuri("31005"),
-                Detail = string.Format(_responseOptions.GemeenteDetailUrl, "31005"),
+                Detail = new Uri(string.Format(_responseOptions.GemeenteDetailUrl, "31005")),
                 Gemeentenaam = new Gemeentenaam
                 {
                     Gemeentenamen = [new GeografischeNaam("Brugge", Taal.Nl)]
