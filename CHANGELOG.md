@@ -1,3 +1,10 @@
+## [6.1.5](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.4...v6.1.5) (2026-08-18)
+
+
+### Bug Fixes
+
+* **oslo:** update common packages ([dcf7992](https://github.com/informatievlaanderen/streetname-registry/commit/dcf7992d0343fc7268b7a4f76326151f4656f891))
+
 ## [6.1.4](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.3...v6.1.4) (2026-07-28)
 
 
