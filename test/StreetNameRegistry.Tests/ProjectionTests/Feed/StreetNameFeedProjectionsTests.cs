@@ -107,7 +107,7 @@
                         Times.Never);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Never);
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(It.IsAny<int>(), It.IsAny<FeedContext>(), It.IsAny<Func<int, Task<int>>>()), Times.Never);
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(It.IsAny<int>(), It.IsAny<Func<int, Task<int>>>()), Times.Never);
                 });
         }
 
@@ -182,7 +182,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Once);
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Once);
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Once);
                 });
         }
 
@@ -242,7 +242,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Once);
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Once);
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Once);
                 });
         }
 
@@ -285,7 +285,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
                 });
         }
 
@@ -394,7 +394,7 @@
                     //     Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(1));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(1));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(1));
                 });
         }
 
@@ -439,7 +439,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(3));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
                 });
         }
 
@@ -482,7 +482,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
                 });
         }
 
@@ -548,7 +548,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(3));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
                 });
         }
 
@@ -606,7 +606,7 @@
                         Times.Never);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
                 });
         }
 
@@ -651,7 +651,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(3));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
                 });
         }
 
@@ -696,7 +696,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(3));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
                 });
         }
 
@@ -765,7 +765,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(4));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(4));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(4));
                 });
         }
 
@@ -825,7 +825,7 @@
                         Times.Never);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(3));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(3));
                 });
         }
 
@@ -883,7 +883,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(4));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(4));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(4));
                 });
         }
 
@@ -930,7 +930,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(4));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(4));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(4));
                 });
         }
 
@@ -981,7 +981,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
                 });
         }
 
@@ -1032,7 +1032,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
                 });
         }
 
@@ -1089,7 +1089,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
                 });
         }
 
@@ -1142,7 +1142,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
                 });
         }
 
@@ -1182,7 +1182,7 @@
                         Times.Once);
 
                     ChangeFeedServiceMock.Verify(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>()), Times.Exactly(2));
-                    ChangeFeedServiceMock.Verify(x => x.CheckToUpdateCacheAsync(1, context, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
+                    ChangeFeedServiceMock.Verify(x => x.MarkCompletedPageAsync(1, It.IsAny<Func<int, Task<int>>>()), Times.Exactly(2));
                 });
         }
 
@@ -1230,9 +1230,8 @@
 
             ChangeFeedServiceMock.Setup(x => x.SerializeCloudEvent(It.IsAny<CloudEvent>())).Returns("serialized cloud event");
 
-            ChangeFeedServiceMock.Setup(x => x.CheckToUpdateCacheAsync(
+            ChangeFeedServiceMock.Setup(x => x.MarkCompletedPageAsync(
                 It.IsAny<int>(),
-                It.IsAny<FeedContext>(),
                 It.IsAny<Func<int, Task<int>>>()));
         }
 
