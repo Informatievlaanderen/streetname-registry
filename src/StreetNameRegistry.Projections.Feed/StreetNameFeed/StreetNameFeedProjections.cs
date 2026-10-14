@@ -227,7 +227,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                         streetNameFeedItem.Id,
                         message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                         StreetNameEventTypes.TransformV1,
-                        document.PersistentLocalId.ToString(),
+                        null,
                         new StreetNameCloudTransformEvent
                         {
                             NisCodes = nisCodes,
@@ -321,7 +321,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                         streetNameFeedItem.Id,
                         message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                         StreetNameEventTypes.TransformV1,
-                        document.PersistentLocalId.ToString(),
+                        null,
                         new StreetNameCloudTransformEvent
                         {
                             NisCodes = nisCodes,
@@ -369,7 +369,7 @@ namespace StreetNameRegistry.Projections.Feed.StreetNameFeed
                     streetNameFeedItem.Id,
                     message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset(),
                     StreetNameEventTypes.TransformV1,
-                    document.PersistentLocalId.ToString(),
+                    null,
                     new StreetNameCloudTransformEvent
                     {
                         NisCodes =  [document.Document.NisCode],
