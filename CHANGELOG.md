@@ -1,3 +1,11 @@
+## [6.1.6](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.5...v6.1.6) (2026-10-14)
+
+
+### Bug Fixes
+
+* **feed:** concurrency in feed projections ([87e0ee7](https://github.com/informatievlaanderen/streetname-registry/commit/87e0ee7000406973f3a9a1797b4b35e8470d02d3))
+* **feed:** remove subjects for transform ([1162d49](https://github.com/informatievlaanderen/streetname-registry/commit/1162d49a7d6f3d097c0e54c47f646f7bac682f01))
+
 ## [6.1.5](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.4...v6.1.5) (2026-08-18)
 
 
