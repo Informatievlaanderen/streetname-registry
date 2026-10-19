@@ -79,6 +79,11 @@ namespace StreetNameRegistry.Projections.LastChangedList.Console.Infrastructure.
                         "StreetNameRegistry.Projections.Legacy.StreetNameDetailV2.StreetNameDetailProjectionsV2"))
                 .AsSelf();
 
+            // Retry transient failures (e.g. sql timeouts) before the projection gets stopped.
+            var projectionSettings = ConnectedProjectionSettings
+                .Configure(settings =>
+                    settings.ConfigureLinearBackoff<Exception>(_configuration, "LastChangedList"));
+
             builder
                 .RegisterProjectionMigrator<LastChangedListContextMigrationFactory>(
                     _configuration,
@@ -88,10 +93,10 @@ namespace StreetNameRegistry.Projections.LastChangedList.Console.Infrastructure.
                     _loggerFactory)
                 .RegisterProjections<LastChangedProjections, LastChangedListContext>(
                     context => new LastChangedProjections(context.Resolve<LastChangedListStreetNameCacheValidator>()),
-                    ConnectedProjectionSettings.Default)
+                    projectionSettings)
                 .RegisterProjections<LastChangedProjectionsV3, LastChangedListContext>(
                     context => new LastChangedProjectionsV3(context.Resolve<LastChangedListStreetNameCacheValidator>()),
-                    ConnectedProjectionSettings.Default);
+                    projectionSettings);
         }
     }
 }
