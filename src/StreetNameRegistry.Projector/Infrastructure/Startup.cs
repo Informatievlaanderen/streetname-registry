@@ -26,6 +26,7 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using Serilog;
     using Serilog.Extensions.Logging;
     using StreetNameRegistry.Infrastructure.Elastic;
+    using StreetNameRegistry.Projections.Bosa.Infrastructure;
     using StreetNameRegistry.Projections.Elastic;
     using StreetNameRegistry.Projections.Elastic.StreetNameList;
     using StreetNameRegistry.Projections.Extract;
@@ -105,6 +106,11 @@ namespace StreetNameRegistry.Projector.Infrastructure
                                      .Where(x => !x.Key.StartsWith("Integration", StringComparison.OrdinalIgnoreCase))
                                      .ToList();
 
+                             if (!_configuration.GetSection("Bosa").GetValue("Enabled", false))
+                                 connectionStrings = connectionStrings
+                                     .Where(x => !x.Key.StartsWith("Bosa", StringComparison.OrdinalIgnoreCase))
+                                     .ToList();
+
                              foreach (var connectionString in connectionStrings.Where(x => !x.Value.Contains("host", StringComparison.OrdinalIgnoreCase)))
                                  health.AddSqlServer(
                                      connectionString.Value,
@@ -158,6 +164,7 @@ namespace StreetNameRegistry.Projector.Infrastructure
                 })
                 .Configure<ExtractConfig>(_configuration.GetSection("Extract"))
                 .Configure<IntegrationOptions>(_configuration.GetSection("Integration"))
+                .Configure<BosaOptions>(_configuration.GetSection("Bosa"))
                 .Configure<ChangeFeedConfig>(_configuration.GetSection("StreetNameFeed"))
                 .AddValidatorsFromAssemblyContaining<Startup>();
 
