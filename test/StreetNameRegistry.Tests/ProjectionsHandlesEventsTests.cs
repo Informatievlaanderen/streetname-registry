@@ -28,6 +28,8 @@
     using Projections.Feed.StreetNameFeed;
     using Projections.Integration;
     using Projections.Integration.Infrastructure;
+    using Projections.Bosa;
+    using Projections.Bosa.Infrastructure;
     using Projections.LastChangedList;
     using Projections.Legacy;
     using Projections.Legacy.StreetNameDetailV2;
@@ -110,6 +112,11 @@
             yield return [new List<ConnectedProjection<IntegrationContext>>
             {
                 new StreetNameLatestItemProjections(Mock.Of<IOptions<IntegrationOptions>>()), new StreetNameVersionProjections(Mock.Of<IOptions<IntegrationOptions>>(), Mock.Of<IEventsRepository>())
+            }];
+
+            yield return [new List<ConnectedProjection<BosaContext>>
+            {
+                new StreetNameBosaProjections(Mock.Of<IOptions<BosaOptions>>(), new BosaDay(new BosaOptions { ChangesFrom = "2026-01-01T00:00:00+01:00" }))
             }];
 
             yield return [new List<ConnectedProjection<ExtractContext>>
