@@ -1,3 +1,10 @@
+## [6.1.7](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.6...v6.1.7) (2026-10-23)
+
+
+### Bug Fixes
+
+* **lastchangedlist:** add recovery lastchangedlist console ([4c43302](https://github.com/informatievlaanderen/streetname-registry/commit/4c4330278ef7cc323e99c7f74459cbbc341e2f9b))
+
 ## [6.1.6](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.5...v6.1.6) (2026-10-14)
 
 
