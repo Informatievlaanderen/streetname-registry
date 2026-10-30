@@ -22,6 +22,8 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Newtonsoft.Json;
     using SqlStreamStore;
     using StreetNameRegistry.Infrastructure;
+    using StreetNameRegistry.Projections.Bosa;
+    using StreetNameRegistry.Projections.Bosa.Infrastructure;
     using StreetNameRegistry.Projections.Elastic;
     using StreetNameRegistry.Projections.Elastic.Infrastructure;
     using StreetNameRegistry.Projections.Elastic.StreetNameList;
@@ -100,7 +102,27 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             if (_configuration.GetSection("Integration").GetValue("Enabled", false))
                 RegisterIntegrationProjections(builder);
 
+            if (_configuration.GetSection("Bosa").GetValue("Enabled", false))
+                RegisterBosaProjections(builder);
+
             RegisterElasticProjections(builder);
+        }
+
+        private void RegisterBosaProjections(ContainerBuilder builder)
+        {
+            builder.RegisterModule(
+                new BosaModule(
+                    _configuration,
+                    _services,
+                    _loggerFactory));
+
+            builder
+                .RegisterProjectionMigrator<BosaContextMigrationFactory>(
+                    _configuration,
+                    _loggerFactory)
+                .RegisterProjections<StreetNameBosaProjections, BosaContext>(
+                    context => new StreetNameBosaProjections(context.Resolve<IOptions<BosaOptions>>(), context.Resolve<BosaDay>()),
+                    ConnectedProjectionSettings.Default);
         }
 
         private void RegisterIntegrationProjections(ContainerBuilder builder)

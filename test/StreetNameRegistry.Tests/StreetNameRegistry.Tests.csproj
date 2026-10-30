@@ -10,6 +10,7 @@
     <ProjectReference Include="..\..\src\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Producer\StreetNameRegistry.Producer.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.BackOffice\StreetNameRegistry.Projections.BackOffice.csproj" />
+    <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Bosa\StreetNameRegistry.Projections.Bosa.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Elastic\StreetNameRegistry.Projections.Elastic.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Extract\StreetNameRegistry.Projections.Extract.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Integration\StreetNameRegistry.Projections.Integration.csproj" />
@@ -42,5 +43,9 @@
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="AutoFixture" />
     <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Bosa\Xsd\*.xsd" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
