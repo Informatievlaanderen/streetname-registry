@@ -71,6 +71,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Detail
                 streetNameV2.HomonymAdditionEnglish,
                 _responseOptions.Value.DetailUrl,
                 _responseOptions.Value.StreetNameDetailAddressesLink,
+                _responseOptions.Value.StreetNameDetailRoadSegmentsLink,
                 streetNameV2.LastEventHash);
         }
 

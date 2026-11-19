@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure.Options
         public string ContextUrlList { get; set; }
         public string ContextUrlDetail { get; set; }
         public string StreetNameDetailAddressesLink { get; set; }
+        public string? StreetNameDetailRoadSegmentsLink { get; set; }
 
         public ChangeFeedConfig StreetNameFeed { get; set; }
     }

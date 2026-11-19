@@ -60,6 +60,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Detail
             string? homonymAdditionEnglish = "",
             string selfDetailUrl = "",
             string addressLinkUrl = "",
+            string? roadSegmentsLinkUrl = "",
             string? lastEventHash = "")
         {
             Context = contextUrlDetail;
@@ -84,7 +85,14 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Detail
                 new Link
                 {
                     Href = new Uri(string.Format(addressLinkUrl, persistentLocalId))
-                });
+                },
+                // Left out until the link is configured, which it is once the list of road segments is public.
+                string.IsNullOrWhiteSpace(roadSegmentsLinkUrl)
+                    ? null
+                    : new Link
+                    {
+                        Href = new Uri(string.Format(roadSegmentsLinkUrl, persistentLocalId))
+                    });
             LastEventHash = lastEventHash;
         }
     }
@@ -188,12 +196,17 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Detail
         [JsonProperty("adressen", NullValueHandling = NullValueHandling.Ignore, Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Link? Adressen { get; set; }
 
+        [JsonProperty("wegsegmenten", NullValueHandling = NullValueHandling.Ignore, Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Link? Wegsegmenten { get; set; }
+
         public StreetNameDetailOsloV3ResponseLinks(
             Link self,
-            Link? adressen = null)
+            Link? adressen = null,
+            Link? wegsegmenten = null)
         {
             Self = self;
             Adressen = adressen;
+            Wegsegmenten = wegsegmenten;
         }
     }
 
@@ -233,7 +246,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.V3.Detail
                 homonymAdditionGerman:string.Empty,
                 homonymAdditionEnglish:string.Empty,
                 _responseOptions.DetailUrl,
-                _responseOptions.StreetNameDetailAddressesLink);
+                _responseOptions.StreetNameDetailAddressesLink,
+                _responseOptions.StreetNameDetailRoadSegmentsLink);
         }
     }
 
