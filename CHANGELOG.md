@@ -1,3 +1,10 @@
+# [6.2.0](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.7...v6.2.0) (2026-11-19)
+
+
+### Features
+
+* **oslo:** link to the road segments of a street name in its v3 detail GAWR-7815 ([18fdb22](https://github.com/informatievlaanderen/streetname-registry/commit/18fdb22d57054d865fcc5460cd4b72455ef13e4b))
+
 ## [6.1.7](https://github.com/informatievlaanderen/streetname-registry/compare/v6.1.6...v6.1.7) (2026-10-23)
 
 
