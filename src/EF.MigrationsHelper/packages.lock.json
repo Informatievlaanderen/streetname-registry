@@ -1545,7 +1545,7 @@
           "Be.Vlaanderen.Basisregisters.GrAr.Legacy": "[26.0.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.Npgsql": "[16.0.0, )",
           "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[16.0.0, )",
-          "Dapper": "[2.1.79, )",
+          "Dapper": "[2.1.100, )",
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
@@ -2096,9 +2096,9 @@
       },
       "Dapper": {
         "type": "CentralTransitive",
-        "requested": "[2.1.79, )",
-        "resolved": "2.1.79",
-        "contentHash": "8YijbzgTfmqmQOnVNorYM6K++pxqnW3nJ4aC1sRHzxUA2CcuoJ9gsTem3kgBnPRMc38zZHl4Esb6hAezXIEEuw=="
+        "requested": "[2.1.100, )",
+        "resolved": "2.1.100",
+        "contentHash": "zKwgGfxkDIVLGU2WIsl57DwTgj17+fa5v0u2eiVMxU92GXN2fRIn2M8QMGtyGFrPSbVOYKgGFxAxEFL6CB9tTw=="
       },
       "Datadog.Trace.Bundle": {
         "type": "CentralTransitive",
