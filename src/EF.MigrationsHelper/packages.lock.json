@@ -65,8 +65,8 @@
       },
       "AWSSDK.Core": {
         "type": "Transitive",
-        "resolved": "4.0.8.1",
-        "contentHash": "Zu5g0zQ3WNZrL+0RqRSa2guAcLJqbFwK7mxfm6stx/b3cfOdqt/k9Y6c/8rxyHSeVf+8iUJGV4J7WhbLs9zOpA=="
+        "resolved": "4.0.100.5",
+        "contentHash": "OYkCEqfNDh6uDlsCF+pBCOi9LvaEg9m2iU5xtbMci3yW8SpCIPOijiqB5OINIhdDvrQAltFd0x4BeYfF7GJVSw=="
       },
       "AWSSDK.DynamoDBv2": {
         "type": "Transitive",
@@ -1498,6 +1498,18 @@
           "StreetNameRegistry.Infrastructure": "[1.0.0, )"
         }
       },
+      "streetnameregistry.projections.bosa": {
+        "type": "Project",
+        "dependencies": {
+          "AWSSDK.S3": "[4.0.101.2, )",
+          "Be.Vlaanderen.Basisregisters.EventHandling.Autofac": "[7.1.0, )",
+          "Be.Vlaanderen.Basisregisters.GrAr.Common": "[26.0.0, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.Npgsql": "[16.0.0, )",
+          "Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac": "[16.0.0, )",
+          "NodaTime": "[3.3.2, )",
+          "StreetNameRegistry.Infrastructure": "[1.0.0, )"
+        }
+      },
       "streetnameregistry.projections.elastic": {
         "type": "Project",
         "dependencies": {
@@ -1633,6 +1645,15 @@
         "requested": "[9.1.0, )",
         "resolved": "9.1.0",
         "contentHash": "onT/BcnnfWcQNXiuC7R/0h8ALQzRdsAI20gpB7nfrudXpFMXdVZKz1umdtHXDwjc/bmWEsrCBAxck3+Arnk15g=="
+      },
+      "AWSSDK.S3": {
+        "type": "CentralTransitive",
+        "requested": "[4.0.101.2, )",
+        "resolved": "4.0.101.2",
+        "contentHash": "kYd4oTKCNUE1JGTCyrdUFDKZYiKgLLzgoJB9KdgPGfrPP+KjUFA2IOI03N+4C5Ihv9YKKCgsUArYQnaWw2HJjQ==",
+        "dependencies": {
+          "AWSSDK.Core": "[4.0.100.5, 5.0.0)"
+        }
       },
       "Be.Vlaanderen.Basisregisters.AggregateSource.ExplicitRouting": {
         "type": "CentralTransitive",
